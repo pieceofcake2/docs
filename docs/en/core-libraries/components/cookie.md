@@ -38,7 +38,7 @@ allows you to define how the CookieComponent works.
 <td>string $key</td>
 <td>null</td>
 <td><p>This string is used to encrypt the value written to the cookie. The string should be random and difficult to guess.</p>
-<p>When using rijndael or aes encryption, this value must be longer than 32 bytes. Defaults to the value of <code>Security.salt</code>.</p></td>
+<p>When using rijndael or aes encryption, this value must be longer than 32 bytes. Defaults to the value of <code>Security.salt</code>. From v2.12.6, defaults to <code>Cookie.key</code> when it is set.</p></td>
 </tr>
 <tr>
 <td>string $domain</td>
@@ -89,7 +89,6 @@ public function beforeFilter()
     $this->Cookie->path = '/bakers/preferences/';
     $this->Cookie->domain = 'example.com';
     $this->Cookie->secure = true; // i.e. only sent if using secure HTTPS
-    $this->Cookie->key = env('COOKIE_KEY'); // 32 random bytes or more
     $this->Cookie->httpOnly = true;
 }
 ```
@@ -100,11 +99,16 @@ can also set it in `beforeFilter()` with `$this->Cookie->type('aes');`.
 > [!IMPORTANT]
 > The default type is `'cipher'`, which is insecure whatever
 > `Security.cipherSeed` is set to. Use `'aes'` with its own random key of at
-> least 32 bytes, read from an environment variable as in the example above
-> rather than written in the code, and make sure `Security.useOpenSsl` is
-> `true` (the app skeleton sets it; see below). See
-> [cipherSeed and the 'cipher' Cookie Type](/development/configuration#cipher-seed)
-> for how to generate the key and migrate existing cookies.
+> least 32 bytes, and make sure `Security.useOpenSsl` is `true` (the app
+> skeleton sets it; see below). Do not write the key in the code: set
+> `Configure::write('Cookie.type', 'aes');` and
+> `Configure::write('Cookie.key', env('COOKIE_KEY') ?: null);` in
+> `config/core.php`. From v2.12.6, `Cookie.type` and `Cookie.key` can be set
+> in configuration and `CookieComponent` uses them as its defaults; in v2.12.5
+> and earlier, set the type as in the example above and assign the key to
+> `$this->Cookie->key` in `beforeFilter()`. See
+> [Migrating to 'aes'](/development/configuration#migrating-to-aes) for how to
+> generate the key and migrate existing cookies.
 
 ::: pieceofcake2
 The `'type'` setting in `$components` is honored since v2.12.3. In v2.12.2 and

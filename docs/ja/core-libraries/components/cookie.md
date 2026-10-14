@@ -35,7 +35,7 @@ Cookie コンポーネントがどのように動くかは、コントローラ�
 <td>string $key</td>
 <td>null</td>
 <td><p>この文字列は Cookie の値を暗号化するために使われます。 ランダムで特定されにくい文字列を使うべきです。</p>
-<p>rijndael または aes 暗号化を使うときは32バイトより長い値にしなければなりません。デフォルトでは <code>Security.salt</code> の値が使われます。</p></td>
+<p>rijndael または aes 暗号化を使うときは32バイトより長い値にしなければなりません。デフォルトでは <code>Security.salt</code> の値が使われます。v2.12.6 からは、<code>Cookie.key</code> が設定されていればその値がデフォルトになります。</p></td>
 </tr>
 <tr>
 <td>string $domain</td>
@@ -84,7 +84,6 @@ public function beforeFilter()
     $this->Cookie->path = '/bakers/preferences/';
     $this->Cookie->domain = 'example.com';
     $this->Cookie->secure = true; // セキュアな HTTPS で接続している時のみ発行されます
-    $this->Cookie->key = env('COOKIE_KEY'); // 32 バイト以上の乱数
     $this->Cookie->httpOnly = true;
 }
 ```
@@ -94,10 +93,13 @@ public function beforeFilter()
 
 > [!IMPORTANT]
 > デフォルトのタイプは `'cipher'` で、`Security.cipherSeed` をどの値にしても安全ではありません。
-> `'aes'` を使い、32 バイト以上の乱数の専用のキーを設定してください。キーはコードに書かず、
-> 上の例のように環境変数から読み込みます。また、`Security.useOpenSsl` が `true` になっていることを
-> 確認してください (app スケルトンでは設定済みです。下記を参照してください)。キーの生成方法と既存の Cookie の移行方法は
-> [cipherSeed と Cookie の 'cipher' タイプ](/ja/development/configuration#cipher-seed) を参照してください。
+> `'aes'` を使い、32 バイト以上の乱数の専用のキーを設定してください。また、`Security.useOpenSsl` が
+> `true` になっていることを確認してください (app スケルトンでは設定済みです。下記を参照してください)。
+> キーはコードに書かず、`config/core.php` で `Configure::write('Cookie.type', 'aes');` と
+> `Configure::write('Cookie.key', env('COOKIE_KEY') ?: null);` を設定します。v2.12.6 からは
+> `Cookie.type` と `Cookie.key` を設定で指定でき、`CookieComponent` がデフォルトとして使います。v2.12.5 以前では、
+> 上の例のようにタイプを設定し、`beforeFilter()` でキーを `$this->Cookie->key` に代入してください。キーの生成方法と
+> 既存の Cookie の移行方法は [`'aes'` への移行](/ja/development/configuration#migrating-to-aes) を参照してください。
 
 ::: pieceofcake2
 `$components` の `'type'` は v2.12.3 から反映されます。v2.12.2 以前では無視され、

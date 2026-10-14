@@ -172,7 +172,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
 - [Cookie](/ja/core-libraries/components/cookie)
   - 例で type('aes') と Security.useOpenSsl を使用。デフォルトの 'cipher' は脆弱で 'rijndael' は mcrypt が必要という警告を追加
   - タイプは `$components` の `'Cookie' => ['type' => 'aes']` で設定 (type() でも設定可能)。v2.12.3 より前はこの設定が無視されていたことを変更点として記載。pieceofcake2/app v2.3.1 のスケルトンでは Security.useOpenSsl が有効
-  - デフォルトのタイプは 'cipher' で、cipherSeed をどの値にしても安全でないことを記載。'aes' と環境変数から読み込む専用のキー、`Security.useOpenSsl` の有効化 (例のキーを `env('COOKIE_KEY')` に変更) を推奨し、'aes' への移行へのリンクを追加
+  - デフォルトのタイプは 'cipher' で、cipherSeed をどの値にしても安全でないことを記載。'aes' と、環境変数 `COOKIE_KEY` から `Cookie.key` に設定する専用のキー、`Security.useOpenSsl` の有効化を推奨。例ではキーをコードに書かないように変更。v2.12.6 から `config/core.php` の `Cookie.type` と `Cookie.key` がデフォルトになることを記載し、'aes' への移行へのリンクを追加
 - [フラッシュ](/ja/core-libraries/components/flash)
   - フラッシュ用エレメントの場所を templates/Elements/Flash に変更
 - [ページ制御](/ja/core-libraries/components/pagination)
@@ -271,7 +271,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - Inflector のパス `src/Cake/Utility/Inflector.php` と `config/bootstrap.php` を本文に反映。古い IE/Chrome Frame や AMF/SOAP の例を更新。ja: `$merge` の説明を修正し `Configure::consume()` を追加
   - 「環境変数」の節を追加: pieceofcake2/app スケルトンが `config/core.php` の先頭で josegonzalez/dotenv により `config/.env` とプロジェクトルートの `.env` を読み込むこと (CakePHP 3〜5 のアプリケーションスケルトンの `.env` サポートのバックポート。変更点: app v2.4.0 で追加)、優先順位 (実際の環境変数 > `config/.env` > ルートの `.env`)、値のクォート、レガシー構成や以前のアプリケーションへの読み込み処理の追加方法、スケルトンが読み込む環境変数 (`DEBUG`、`SECURITY_SALT`、`SECURITY_CIPHER_SEED`、`DB_*`、`DB_TEST_*`)
   - 「セキュリティ用のソルトの生成」の節を追加: 安全な生成コマンド (PHP とシェル)、それぞれの値に依存するもの (Cookie の 'aes' タイプは専用のキーを設定しても `Security.salt` を組み合わせる)、値の変更手順
-  - 「cipherSeed と Cookie の 'cipher' タイプ」の節を追加: `Security::cipher()` でのシードの使われ方、意味があるのは 1〜4294967295 だけで、27 桁以上の値 (本家の `config/core.php` のデフォルト値、ブログチュートリアルのサンプル値、以前の `.env.example` の生成コマンド) はシード 0 になること、範囲内のシードでも安全ではないこと、影響、どうすればよいか、32 バイトの `COOKIE_KEY` と `Security.useOpenSsl` を使った 'aes' への移行、次のリリースで予定している警告
+  - 「cipherSeed と Cookie の 'cipher' タイプ」の節を追加: `Security::cipher()` でのシードの使われ方、意味があるのは 1〜4294967295 だけで、27 桁以上の値 (本家の `config/core.php` のデフォルト値、ブログチュートリアルのサンプル値、以前の `.env.example` の生成コマンド) はシード 0 になること、範囲内のシードでも安全ではないこと、影響、どうすればよいか、`COOKIE_KEY` から `Cookie.key` に読み込む 32 バイトのキー、'aes' にした `Cookie.type`、`Security.useOpenSsl` を使った 'aes' への移行 (v2.12.6 からは `Cookie.type` と `Cookie.key` を設定で指定できること、v2.12.5 以前でのコントローラーでの設定、代わりのキーの `Security.salt` が 32 バイト未満のときの例外)、v2.12.6 で予定している警告
   - `Security.cipherSeed` の説明: 意味があるのは 1〜4294967295 だけで、どの値でも 'cipher' は安全にならないことを記載し、新しい節へのリンクを追加
 - [ルーティング](/ja/development/routing)
   - ルート設定ファイルのパスを config/routes.php に変更（従来の app/Config/routes.php はフォルダ構造ページへのリンク付きで併記）

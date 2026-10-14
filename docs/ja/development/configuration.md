@@ -311,7 +311,8 @@ unset($dotenvFile);
 |----------|------|------------------------|
 | `DEBUG` | `debug`: `0`、`1`、`2` (`true` は 2、`false` は 0) | `2` |
 | `SECURITY_SALT` | `Security.salt` | `config/core.php` の値 |
-| `SECURITY_CIPHER_SEED` | `Security.cipherSeed` (数字のみ) | `config/core.php` の値 |
+| `SECURITY_CIPHER_SEED` | `Security.cipherSeed` (1〜4294967295。[cipherSeed](#cipher-seed) を参照) | `config/core.php` の値 |
+| `COOKIE_KEY` | `Cookie.key`。`'aes'` タイプの `CookieComponent` のキー ([`'aes'` への移行](#migrating-to-aes) を参照) | `null`。`CookieComponent` は `Security.salt` を使います |
 | `DB_DATASOURCE`、`DB_HOST`、`DB_PORT`、`DB_USERNAME`、`DB_PASSWORD`、`DB_DATABASE` | `default` 接続の `datasource`、`host`、`port`、`login`、`password`、`database` | `config/database.php` の値 |
 | `DB_TEST_DATASOURCE`、`DB_TEST_HOST`、`DB_TEST_PORT`、`DB_TEST_USERNAME`、`DB_TEST_PASSWORD`、`DB_TEST_DATABASE` | `test` 接続の同じ設定 | `config/database.php` の値 |
 
@@ -791,7 +792,7 @@ printf 'export SECURITY_SALT="%s"\nexport SECURITY_CIPHER_SEED="%s"\n' "$(openss
 #### その他の秘密の値
 
 - `Security::encrypt()` と `Security::decrypt()` に渡すキーや、`CookieComponent` のキーは 32 バイト以上に
-  してください。`Security.salt` と同じ方法で生成し、`env('COOKIE_KEY')` のように環境変数から読み込みます
+  してください。`Security.salt` と同じ方法で生成し、`COOKIE_KEY` から `Cookie.key` に読み込むように、環境変数から設定に読み込みます
   ([`'aes'` への移行](#migrating-to-aes) を参照してください)。
 - データベースやメールのパスワード、API キーは、コミットするコードではなく、環境変数や、
   `config/database.php` と `config/email.php` のような Git で無視されるファイルに置いてください。
@@ -894,25 +895,63 @@ printf 'export SECURITY_SALT="%s"\nexport SECURITY_CIPHER_SEED="%s"\n' "$(openss
    Configure::write('Security.useOpenSsl', true);
    ```
 
-3. `AppController`、または `$components` に `Cookie` を指定しているすべてのコントローラーで
-   `CookieComponent` を設定します。
+3. `CookieComponent` のタイプとキーを設定します。方法は `pieceofcake2/cakephp` のバージョンによって
+   異なります。下記を参照してください。
 
-   ```php
-   // src/Controller/AppController.php
-   public $components = [
-       'Cookie' => ['type' => 'aes'],
-   ];
+::: pieceofcake2
+v2.12.6 からは、`Cookie.type` と `Cookie.key` を設定で指定できます。
 
-   public function beforeFilter()
-   {
-       parent::beforeFilter();
-       $this->Cookie->key = env('COOKIE_KEY');
-   }
-   ```
+**v2.12.6 以降:** `config/core.php` のソルトの近くで設定します。コントローラーを変更する必要は
+ありません。`pieceofcake2/app` スケルトンの新しいバージョンにはこれらの行があります。
+`config/core.php` にない場合は追加してください。
 
-   PHP ではプロパティの宣言で `env()` のような関数を呼び出せないため、キーは Cookie を読む前に
-   `beforeFilter()` で設定します。タイプも `beforeFilter()` で `$this->Cookie->type('aes');` として
-   設定できます。
+```php
+// config/core.php
+/**
+ * Default encryption type and key of CookieComponent. The key is a random
+ * value of at least 32 bytes.
+ *
+ * The key can be set with the COOKIE_KEY environment variable.
+ */
+Configure::write('Cookie.type', 'aes');
+Configure::write('Cookie.key', env('COOKIE_KEY') ?: null);
+```
+
+`CookieComponent` のタイプは、`'type'` の設定または `$this->Cookie->type()` が最優先で、次に
+`Cookie.type`、どちらもなければ `'cipher'` です。キーは、`'key'` の設定または `$this->Cookie->key` が
+最優先で、次に `Cookie.key`、どちらもなければ `Security.salt` です。
+
+**v2.12.5 以前:** `CookieComponent` は `Cookie.type` と `Cookie.key` を読まないため、上の設定は
+効果がありません。`config/core.php` の `Cookie.key` の行は残し、タイプとキーはコントローラーで渡します。
+タイプはコンポーネントの設定で指定し、キーは Cookie を読む前に `beforeFilter()` で設定します。
+`AppController`、またはこのコンポーネントを使うすべてのコントローラーで設定してください。
+
+```php
+// src/Controller/AppController.php
+public $components = [
+    'Cookie' => ['type' => 'aes'],
+];
+
+public function beforeFilter()
+{
+    parent::beforeFilter();
+    $key = Configure::read('Cookie.key');
+    if ($key) {
+        $this->Cookie->key = $key;
+    }
+}
+```
+
+`null` を代入するとデフォルトのキーが置き換えられて暗号化に失敗するため、キーは値が設定されている
+場合だけ代入してください。`'type'` の設定は v2.12.3 から反映されます。それより古いバージョンでは
+`beforeFilter()` で `$this->Cookie->type('aes');` を呼び出してください。明示的な設定が優先される
+ため、このコードは v2.12.6 以降もそのまま動作します。
+:::
+
+`'aes'` タイプには 32 バイト以上のキーが必要です。`COOKIE_KEY` が設定されていない場合、`Cookie.key`
+は `null` になり、キーには `Security.salt` が使われます。ソルトが 32 バイト未満の場合、暗号化した
+Cookie を書き込んだり読んだりするたびに、`Security::encrypt()` と `Security::decrypt()` が
+`CakeException` を投げます。
 
 4. 必要に応じて `$this->Cookie->name` で Cookie の名前を変更します。そうすると、古い `'cipher'` の
    Cookie は新しいタイプで復号されずに無視され、そのまま期限切れになります。
@@ -940,9 +979,9 @@ od -An -N4 -tu4 /dev/urandom | tr -dc 0-9; echo
 
 :::
 
-#### 次のリリースで予定している変更
+#### v2.12.6 で予定している変更
 
-`pieceofcake2/cakephp` の次のリリースでは、動作を変えずに次の問題を報告する予定です。
+v2.12.6 からは、`pieceofcake2/cakephp` が動作を変えずに次の問題を報告する予定です。
 
 - `'cipher'` タイプまたは `Security::cipher()` を使うと、リクエストごとに一度だけ非推奨の警告を
   ログに記録します。
@@ -950,6 +989,9 @@ od -An -N4 -tu4 /dev/urandom | tr -dc 0-9; echo
   警告を表示します。
 
 値の暗号化と復号は以前とまったく同じなので、既存の Cookie はそのまま読めます。
+
+また、v2.12.6 からは、`CookieComponent` のデフォルトのタイプとキーを `Cookie.type` と `Cookie.key` として
+設定で指定できます ([`'aes'` への移行](#migrating-to-aes) を参照してください)。
 
 ### 構成用定数
 

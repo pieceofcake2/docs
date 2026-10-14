@@ -319,7 +319,8 @@ The `config/core.php` and `config/database.php.default` files of the
 |----------|---------|--------------|
 | `DEBUG` | `debug`: `0`, `1` or `2` (`true` is 2, `false` is 0) | `2` |
 | `SECURITY_SALT` | `Security.salt` | the value in `config/core.php` |
-| `SECURITY_CIPHER_SEED` | `Security.cipherSeed` (digits only) | the value in `config/core.php` |
+| `SECURITY_CIPHER_SEED` | `Security.cipherSeed` (1 to 4294967295; see [cipherSeed](#cipher-seed)) | the value in `config/core.php` |
+| `COOKIE_KEY` | `Cookie.key`, the `CookieComponent` key for the `'aes'` type (see [Migrating to 'aes'](#migrating-to-aes)) | `null`: `CookieComponent` uses `Security.salt` |
 | `DB_DATASOURCE`, `DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD`, `DB_DATABASE` | `datasource`, `host`, `port`, `login`, `password` and `database` of the `default` connection | the values in `config/database.php` |
 | `DB_TEST_DATASOURCE`, `DB_TEST_HOST`, `DB_TEST_PORT`, `DB_TEST_USERNAME`, `DB_TEST_PASSWORD`, `DB_TEST_DATABASE` | the same settings of the `test` connection | the values in `config/database.php` |
 
@@ -815,8 +816,9 @@ change it, move the long-lived values away from it:
 
 - Keys that you pass to `Security::encrypt()` and `Security::decrypt()`, or set
   as the `CookieComponent` key, must be at least 32 bytes long. Generate them
-  like `Security.salt` and read them from environment variables, for example
-  `env('COOKIE_KEY')` (see [Migrating to 'aes'](#migrating-to-aes)).
+  like `Security.salt`, and read them into the configuration from environment
+  variables, for example `Cookie.key` from `COOKIE_KEY` (see
+  [Migrating to 'aes'](#migrating-to-aes)).
 - Database and email passwords and API keys belong in environment variables or
   in ignored files such as `config/database.php` and `config/email.php`, not in
   committed code.
@@ -917,8 +919,8 @@ Do not rely on `'cipher'` to keep a value secret, whatever the seed.
 
    :::
 
-   Set it as the `COOKIE_KEY` environment variable: in `config/.env` for
-   development, and as a real environment variable in production.
+   Set it as the `COOKIE_KEY` environment variable: in `config/.env`
+   for development, and as a real environment variable in production.
 
 2. Make sure `Security.useOpenSsl` is `true` (the app skeleton sets it). The
    `'aes'` type uses `Security::encrypt()` and `Security::decrypt()`, which use
@@ -931,25 +933,66 @@ Do not rely on `'cipher'` to keep a value secret, whatever the seed.
    Configure::write('Security.useOpenSsl', true);
    ```
 
-3. Configure `CookieComponent` in `AppController`, or in every controller that
-   lists `Cookie` in `$components`:
+3. Configure the type and the key of `CookieComponent`. How depends on the
+   version of `pieceofcake2/cakephp`; see below.
 
-   ```php
-   // src/Controller/AppController.php
-   public $components = [
-       'Cookie' => ['type' => 'aes'],
-   ];
+::: pieceofcake2
+From v2.12.6, `Cookie.type` and `Cookie.key` can be set in configuration.
 
-   public function beforeFilter()
-   {
-       parent::beforeFilter();
-       $this->Cookie->key = env('COOKIE_KEY');
-   }
-   ```
+**v2.12.6 and later:** set them in `config/core.php`, next to the salts. No
+controller changes are needed. Newer versions of the `pieceofcake2/app`
+skeleton have these lines; add them if your `config/core.php` does not:
 
-   PHP does not allow function calls such as `env()` in a property
-   declaration, so set the key in `beforeFilter()`, before any cookie is read.
-   You can also set the type there with `$this->Cookie->type('aes');`.
+```php
+// config/core.php
+/**
+ * Default encryption type and key of CookieComponent. The key is a random
+ * value of at least 32 bytes.
+ *
+ * The key can be set with the COOKIE_KEY environment variable.
+ */
+Configure::write('Cookie.type', 'aes');
+Configure::write('Cookie.key', env('COOKIE_KEY') ?: null);
+```
+
+`CookieComponent` uses the `'type'` setting or `$this->Cookie->type()` first,
+then `Cookie.type`, then `'cipher'`. For the key, it uses the `'key'` setting or
+`$this->Cookie->key` first, then `Cookie.key`, then `Security.salt`.
+
+**v2.12.5 and earlier:** `CookieComponent` does not read `Cookie.type` and
+`Cookie.key`, so the lines above have no effect on it. Keep the `Cookie.key`
+line in `config/core.php`, and pass the type and the key in the controller:
+the type in the component settings, and the key in `beforeFilter()`, before
+any cookie is read. Do this in `AppController` or in every controller that
+uses the component:
+
+```php
+// src/Controller/AppController.php
+public $components = [
+    'Cookie' => ['type' => 'aes'],
+];
+
+public function beforeFilter()
+{
+    parent::beforeFilter();
+    $key = Configure::read('Cookie.key');
+    if ($key) {
+        $this->Cookie->key = $key;
+    }
+}
+```
+
+Assign the key only when it is set, because a `null` key would replace the
+default key and encryption would fail. The `'type'` setting is honored since
+v2.12.3; on older versions, call `$this->Cookie->type('aes');` in
+`beforeFilter()`. This code keeps working on v2.12.6 and later, because
+explicit settings take precedence.
+:::
+
+The `'aes'` type needs a key of at least 32 bytes. When `COOKIE_KEY` is not
+set, `Cookie.key` is `null` and the key is `Security.salt`. If the salt is
+shorter than 32 bytes, `Security::encrypt()` and `Security::decrypt()` throw
+a `CakeException` whenever an encrypted cookie is written or read.
 
 4. Optionally, give the cookie a new name with `$this->Cookie->name`, so that
    old `'cipher'` cookies are ignored instead of being decrypted with the new
@@ -978,10 +1021,10 @@ od -An -N4 -tu4 /dev/urandom | tr -dc 0-9; echo
 
 :::
 
-#### Planned for the Next Release
+#### Planned for v2.12.6
 
-The next release of `pieceofcake2/cakephp` is planned to report these
-problems without changing behaviour:
+From v2.12.6, `pieceofcake2/cakephp` is planned to report these problems
+without changing behaviour:
 
 - A deprecation warning is logged once per request when the `'cipher'` type
   or `Security::cipher()` is used.
@@ -990,6 +1033,10 @@ problems without changing behaviour:
 
 Values are encrypted and decrypted exactly as before, so existing cookies stay
 readable.
+
+From v2.12.6, `Cookie.type` and `Cookie.key` can also be set in configuration
+as the default type and key of `CookieComponent` (see
+[Migrating to 'aes'](#migrating-to-aes)).
 
 ### Configuration Constants
 
