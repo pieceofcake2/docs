@@ -67,6 +67,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - 「composer.json の設定」を追加: 最小限の composer.json、cakephp-plugin パッケージのために composer/installers の allow-plugins と plugins/{$name}/ への installer-paths が必須であることを説明
   - 新規アプリケーション: デバッグレベル、ソルト、データベースの設定を環境変数 (`config/.env` またはプロジェクトルートの `.env`) でもセットできることを記載
   - 「既存のアプリケーションへの導入」を「新しいアプリケーションの作成」の前に移動。最後のリンクは「入門」ではなくブログチュートリアルを指すように変更
+  - 新規アプリケーション: `Security.salt` と `Security.cipherSeed` を生成するコマンドを記載
 - [応用インストール](/ja/installation/advanced-installation)
   - PEAR でのインストール、旧来の Composer/bake によるプロジェクト作成、CAKE_CORE_INCLUDE_PATH によるコア共有を削除
   - Composer 設定の詳細を追加: replace、プラグインの installer-paths、classmap オートロード、exclude-from-classmap
@@ -214,6 +215,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
 - [Security](/ja/core-utility-libraries/security)
   - mcrypt は PHP 7.2 以降同梱されないため config/core.php で Security.useOpenSsl を有効にすること (互換の形式)、rijndael() は PECL の mcrypt が必要、Cookie の 'cipher' タイプへの警告を本文で説明
   - pieceofcake2/app のスケルトン (v2.3.1 以降) では Security.useOpenSsl が有効になっていることを追記
+  - `Security.salt` と `Security.cipherSeed` を使うメソッドと、それらの生成方法へのリンクを追記
 - [Set](/ja/core-utility-libraries/set)
   - テストファイルのパスを tests/TestCase/Utility/SetTest.php に変更
 - [CakeText](/ja/core-utility-libraries/string)
@@ -266,6 +268,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - 設定リーダー: デフォルトの読み込み先は `CONFIG`。独自リーダーの例を `src/Lib/Configure` に移し、プロパティを宣言 (PHP 8.2)、`App::uses()` を削除。ja の例のクラス名を PHP の XMLReader と衝突する `XmlReader` から `MyXmlReader` に変更。ConfigReaderInterface/ConfigureException の説明を修正
   - Inflector のパス `src/Cake/Utility/Inflector.php` と `config/bootstrap.php` を本文に反映。古い IE/Chrome Frame や AMF/SOAP の例を更新。ja: `$merge` の説明を修正し `Configure::consume()` を追加
   - 「環境変数」の節を追加: pieceofcake2/app スケルトンが `config/core.php` の先頭で josegonzalez/dotenv により `config/.env` とプロジェクトルートの `.env` を読み込むこと (CakePHP 3〜5 のアプリケーションスケルトンの `.env` サポートのバックポート。変更点: app v2.4.0 で追加)、優先順位 (実際の環境変数 > `config/.env` > ルートの `.env`)、値のクォート、レガシー構成や以前のアプリケーションへの読み込み処理の追加方法、スケルトンが読み込む環境変数 (`DEBUG`、`SECURITY_SALT`、`SECURITY_CIPHER_SEED`、`DB_*`、`DB_TEST_*`)
+  - 「セキュリティ用のソルトの生成」の節を追加: 安全な生成コマンド (PHP とシェル)、32 ビットしか使われないため cipherSeed は 1〜4294967295 にすること、それぞれの値に依存するもの、値の変更手順
 - [ルーティング](/ja/development/routing)
   - ルート設定ファイルのパスを config/routes.php に変更（従来の app/Config/routes.php はフォルダ構造ページへのリンク付きで併記）
   - 組み込みルートの場所を vendor/pieceofcake2/cakephp/config/routes.php に修正し、無効化は config/routes.php の require 行を削除すると説明
@@ -329,6 +332,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - セットアップを書き直し: `composer create-project pieceofcake2/app blog`、PHP 8.0 以上、`bin/cake server` によるビルトインサーバ (デフォルトのポートは 8765)。アーカイブのダウンロードと git clone の手順を削除
   - パスを `config/database.php`、`config/core.php`、`tmp/`、`logs/` に更新。MySQL の設定例で `utf8mb4` を使用
   - mod_rewrite の節を短い「Apache を使う場合」の節 (DocumentRoot は `webroot/`) に置き換え
+  - ソルトとサイファシードはサンプル値ではなくコマンドで生成するように変更。サイファシードは 1〜4294967295
 - [ブログチュートリアル - レイヤーの追加](/ja/tutorials-and-examples/blog/part-two)
   - ファイルの配置を `src/Model`、`src/Controller`、`templates/Posts`、`config/routes.php` に変更
   - `view()` と `delete()` の引数を `$id = null` にし、ID がない場合に PHP 8 で ArgumentCountError ではなく NotFoundException になるよう修正

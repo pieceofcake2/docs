@@ -630,6 +630,7 @@ Security.salt
 アプリケーションごとに一意な値に変更し、秘密にしておいてください。
 スケルトンのデフォルト値のままだと、CakePHP が警告を表示します。
 スケルトンは、環境変数 `SECURITY_SALT` が設定されていればその値を使います。
+生成方法と、変更したときの影響は [セキュリティ用のソルトの生成](#security-salts) を参照してください。
 
 ::: pieceofcake2
 `SecurityComponent` が発行する CSRF トークンは
@@ -643,6 +644,8 @@ Security.cipherSeed
 このメソッドを使うのは `CookieComponent` の暗号化タイプ `'cipher'` だけです。
 このタイプは脆弱で、後方互換性のためだけに残されています。Cookie には `'aes'` タイプを使ってください。
 スケルトンは、環境変数 `SECURITY_CIPHER_SEED` が設定されていればその値を使います。
+1 から 4294967295 までの数値を使ってください。これより長い値にしても強くはなりません。
+[セキュリティ用のソルトの生成](#security-salts) を参照してください。
 
 Security.useOpenSsl  
 true にすると、`Security::encrypt()` と `Security::decrypt()` (つまり Cookie の暗号化タイプ
@@ -677,6 +680,141 @@ CakePHP のアクセス制御リスト(ACL)機能で使われる定数。
 `Configure` クラスは、コアの設定をその場で読み書き
 するのに使われます。これは、たとえばあなたのアプリケーションの
 限られた範囲でデバッグ設定を有効にしたい場合などに特に便利です。
+
+### セキュリティ用のソルトの生成 {#security-salts}
+
+`Security.salt` と `Security.cipherSeed` は、アプリケーションごとに一意で秘密の値にする必要があります。
+暗号論的に安全な乱数生成器で生成してください。自分で考えた値や、サンプルにある値を使ってはいけません。
+以下のコマンドは、Linux と macOS の POSIX シェル (`sh`、`bash`、`zsh`) で動作します。
+
+`Security.salt` には、32 バイトの乱数を 64 文字の 16 進数で表した値を使います。
+
+::: code-group
+
+```bash [PHP]
+php -r 'echo bin2hex(random_bytes(32)), PHP_EOL;'
+```
+
+```bash [OpenSSL]
+openssl rand -hex 32
+```
+
+:::
+
+ソルトは 32 文字以上にしてください。ソルトは `CookieComponent` のデフォルトの暗号化キーで、
+暗号化タイプ `'aes'` (`Security::encrypt()`) は 32 バイト未満のキーに対して例外を投げます。
+
+`Security.cipherSeed` には、1 から 4294967295 までの数値 (数字のみ) を使います。
+
+::: code-group
+
+```bash [PHP]
+php -r 'echo random_int(1, 4294967295), PHP_EOL;'
+```
+
+```bash [Shell]
+od -An -N4 -tu4 /dev/urandom | tr -dc 0-9; echo
+```
+
+:::
+
+> [!WARNING]
+> これより長いシードは使わないでください。`Security::cipher()` は値を `(int)(float)$seed` として
+> `mt_srand()` に渡し、`mt_srand()` は整数の下位 32 ビットしか使いません。そのため、シードが持てるのは
+> 最大 32 ビットで、意味があるのは 10 桁までです。それより長くしても強くはなりません。19 桁を超える値は
+> 整数に収まらずにビットが失われ、27 桁以上の値 (と 26 桁のほとんどの値) は、すべて `0` と同じシードに
+> なります。`config/core.php` にある 29 桁のサンプル値もこれに当たります。
+
+Windows では、コマンドプロンプトや PowerShell で PHP のコマンドを実行するとき、シングルクォートの代わりに
+ダブルクォートを使ってください。たとえば `php -r "echo bin2hex(random_bytes(32)), PHP_EOL;"` のようにします。
+
+`pieceofcake2/app` のスケルトンから作成したアプリケーションでは、これらの値を
+[環境変数](#environment-variables) `SECURITY_SALT` と `SECURITY_CIPHER_SEED` で設定します。
+開発環境では、次のコマンドで両方を `config/.env` に追記できます (先に `config/.env.example` を
+コピーしておいてください。同じ変数が 2 回設定されている場合は、後の行が有効になります)。
+
+::: code-group
+
+```bash [PHP]
+php -r 'printf("export SECURITY_SALT=\"%s\"\nexport SECURITY_CIPHER_SEED=\"%d\"\n", bin2hex(random_bytes(32)), random_int(1, 4294967295));' >> config/.env
+```
+
+```bash [Shell]
+printf 'export SECURITY_SALT="%s"\nexport SECURITY_CIPHER_SEED="%s"\n' "$(openssl rand -hex 32)" "$(od -An -N4 -tu4 /dev/urandom | tr -dc 0-9)" >> config/.env
+```
+
+:::
+
+値は秘密にし、環境ごとに分けてください。
+
+- 環境 (開発、ステージング、本番) ごと、アプリケーションごとに異なる値を使います。
+- 値をコミットしないでください。スケルトンでは `config/.env` と `.env` は Git で無視されます。
+  本番環境では `.env` ファイルではなく、実際の環境変数を設定してください。値を `config/core.php`
+  に書く場合は、そのファイルを公開リポジトリに置かないでください。
+- ソルトが漏れた場合 (コミットした、共有した、サンプル値のままだった場合など) は、値を変更してください。
+
+#### ソルトに依存するもの
+
+`Security.salt` を変更すると、次のものに影響します。
+
+- **ソルトを使ってハッシュ化したパスワード。** `FormAuthenticate` と `BasicAuthenticate` のデフォルトの
+  パスワードハッシャーである `SimplePasswordHasher` と、非推奨の `AuthComponent::password()` は、
+  パスワードの前にソルトを付けてハッシュ化します (`$salt = true` での `Security::hash()`)。
+  保存済みのハッシュが一致しなくなり、ユーザーはログインできなくなります。bcrypt のハッシュ
+  (`BlowfishPasswordHasher`、`Security::hash($password, 'blowfish')`) はソルトを使わないので影響を受けません。
+- **暗号化した Cookie。** `CookieComponent` は、`$this->Cookie->key` を設定しない限りソルトをキーに使います。
+  そのため、暗号化タイプにかかわらず、変更前に書き込んだ Cookie は読めなくなります。
+- **`Security::encrypt()` で暗号化したデータ。** `$hmacSalt` を指定しない場合はソルトが暗号化キーの一部になるため、
+  変更前に暗号化した値に対して `Security::decrypt()` は `false` を返します。
+- **セッション。** `Session.checkAgent` が `false` でない場合 (デフォルト)、セッションにはユーザーエージェントと
+  ソルトのハッシュが保存されているため、既存のセッションは破棄され、ユーザーはログアウトされます。
+- **CSRF トークンとフォーム改ざん防止用トークン。** `SecurityComponent` と `FormHelper` が発行するトークンは
+  ソルトで署名されています。変更前に表示したフォームは一度だけ拒否されます。
+
+`Security.cipherSeed` を使うのは `Security::cipher()` だけです。変更すると `Security::cipher()` で暗号化した値が
+読めなくなります。実際には、`CookieComponent` のデフォルトの暗号化タイプ `'cipher'` で書き込んだ Cookie が該当します。
+
+#### ソルトの変更手順
+
+セッション、CSRF トークン、フォームのトークンは自然に回復します。ユーザーがログインし直し、フォームを
+送信し直せばよいので、利用の少ない時間帯にソルトを変更してください。変更する前に、長く保存される値を
+ソルトに依存しないようにしておきます。
+
+1. ソルトを使ったパスワードのハッシュを bcrypt (`'passwordHasher' => 'Blowfish'`) に移行します。
+   ハッシュは変換できないので、ユーザーのログイン時に古いハッシュで確認し、パスワードの bcrypt ハッシュを
+   保存します。ソルトを使ったハッシュがなくなってからソルトを変更するか、残ったユーザーにパスワードの
+   再設定を求めてください。
+2. デフォルトの `$hmacSalt` で `Security::encrypt()` を使って暗号化した保存済みの値は、古いソルトを
+   `Security::decrypt()` に渡して暗号化し直します。`Security.salt` と一緒に変わらない専用の `$hmacSalt`
+   を渡すようにすると、より安全です。
+
+   ```php
+   $plain = Security::decrypt($encrypted, $key, $oldSalt);
+   $encrypted = Security::encrypt($plain, $key, $hmacSalt);
+   ```
+
+3. ソルトを変更しても Cookie を残す必要がある場合は、`CookieComponent` に専用のキーを設定します。
+   また、`'cipher'` の代わりに `'aes'` タイプを使えば、`Security.cipherSeed` はまったく使われなくなります。
+
+   ```php
+   // src/Controller/AppController.php
+   public function beforeFilter()
+   {
+       parent::beforeFilter();
+       $this->Cookie->key = env('COOKIE_KEY');
+       $this->Cookie->type('aes');
+   }
+   ```
+
+   この変更でも、古いキーやタイプで書き込んだ Cookie は読めなくなるため、ユーザーは一度ログインし直す
+   必要があります。
+
+#### その他の秘密の値
+
+- `Security::encrypt()` と `Security::decrypt()` に渡すキーや、`CookieComponent` のキーは 32 バイト以上に
+  してください。`Security.salt` と同じ方法で生成し、`env('COOKIE_KEY')` のように環境変数から読み込みます。
+- データベースやメールのパスワード、API キーは、コミットするコードではなく、環境変数や、
+  `config/database.php` と `config/email.php` のような Git で無視されるファイルに置いてください。
 
 ### 構成用定数
 

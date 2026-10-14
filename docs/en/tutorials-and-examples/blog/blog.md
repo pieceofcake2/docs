@@ -182,25 +182,41 @@ a notice on every page until you change them.
 
 The security salt is used for generating hashes. Change the default
 `Security.salt` value in `config/core.php`. The replacement value
-should be long, hard to guess and be as random as you can make it:
+should be long, hard to guess and be as random as you can make it. Generate
+one with:
+
+```bash
+php -r 'echo bin2hex(random_bytes(32)), PHP_EOL;'
+```
+
+and paste the output into `config/core.php`:
 
 ``` php
 /**
  * A random string used in security hashing methods.
  */
-Configure::write('Security.salt', 'pl345e-P45s_7h3*S@l7!');
+Configure::write('Security.salt', 'paste-the-generated-salt-here');
 ```
 
 The cipher seed is used for encrypt/decrypt strings. Change the default
 `Security.cipherSeed` value by editing `config/core.php`. The
-replacement value should be a large random integer:
+replacement value should be a random number from 1 to 4294967295; longer
+values are not stronger. Generate one with:
+
+```bash
+php -r 'echo random_int(1, 4294967295), PHP_EOL;'
+```
 
 ``` php
 /**
  * A random numeric string (digits only) used to encrypt/decrypt strings.
  */
-Configure::write('Security.cipherSeed', '7485712659625147843639846751');
+Configure::write('Security.cipherSeed', 'paste-the-generated-seed-here');
 ```
+
+Instead of editing `config/core.php`, you can set the values with the
+`SECURITY_SALT` and `SECURITY_CIPHER_SEED` environment variables. See
+[Generating the Security Salts](/development/configuration#security-salts).
 
 ## Using Apache
 

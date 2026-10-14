@@ -69,6 +69,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - Added "Configuring composer.json": minimal composer.json; config.allow-plugins for composer/installers and extra.installer-paths to plugins/{$name}/ are required for cakephp-plugin packages
   - New application: debug level, salts and database settings can also be set with environment variables (`config/.env` or `.env` in the project root)
   - "Adding CakePHP to an Existing Application" comes before "Creating a New Application"; the closing link points to the blog tutorial instead of Getting Started
+  - New application: commands to generate `Security.salt` and `Security.cipherSeed`
 - [Advanced Installation](/installation/advanced-installation)
   - Removed PEAR installation, the old Composer/bake project setup and CAKE_CORE_INCLUDE_PATH core sharing
   - Added Composer setup details: replace directive, plugin installer-paths, classmap autoloading, exclude-from-classmap
@@ -219,6 +220,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
 - [Security](/core-utility-libraries/security)
   - Explain that mcrypt is not bundled since PHP 7.2 and Security.useOpenSsl should be enabled in config/core.php (compatible format); rijndael() needs PECL mcrypt; Cookie 'cipher' type warning
   - Noted that the pieceofcake2/app skeleton (v2.3.1 and later) already enables Security.useOpenSsl
+  - Which methods use `Security.salt` and `Security.cipherSeed`, with a link to generating them
 - [Set](/core-utility-libraries/set)
   - Test file path updated to tests/TestCase/Utility/SetTest.php
 - [CakeText](/core-utility-libraries/string)
@@ -271,6 +273,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - Config readers: readers default to `CONFIG`; custom reader example moved to `src/Lib/Configure`, declares its property (PHP 8.2), no `App::uses()`; ja example renamed from `XmlReader` (clashes with PHP's XMLReader) to `MyXmlReader`; ConfigReaderInterface/ConfigureException reference fixed
   - Inflector path `src/Cake/Utility/Inflector.php` and bootstrap `config/bootstrap.php` folded into text; era-specific examples (old IE/Chrome Frame, AMF/SOAP) modernized; ja: `$merge` description corrected, `Configure::consume()` added
   - New "Environment Variables" section: the pieceofcake2/app skeleton loads `config/.env` and the project-root `.env` with josegonzalez/dotenv at the top of `config/core.php` (backport of the `.env` support of the CakePHP 3+/5 app skeleton; change note: added in app v2.4.0), precedence (real environment > `config/.env` > root `.env`), quoting advice, adding the loader to legacy-layout and older applications, and the variables read by the skeleton (`DEBUG`, `SECURITY_SALT`, `SECURITY_CIPHER_SEED`, `DB_*`, `DB_TEST_*`)
+  - New "Generating the Security Salts" section: secure one-liners (PHP and shell), cipherSeed limited to 1-4294967295 because only 32 bits are used, what depends on each value, and how to rotate them
 - [Routing](/development/routing)
   - Routes file path changed to config/routes.php (legacy app/Config/routes.php noted with link to the folder structure page)
   - Built-in routes located in vendor/pieceofcake2/cakephp/config/routes.php; disabling them means removing the require line from config/routes.php
@@ -334,6 +337,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - Setup rewritten: `composer create-project pieceofcake2/app blog`, PHP 8.0+, built-in server via `bin/cake server` (default port 8765); removed archive download/git clone steps
   - Paths updated to `config/database.php`, `config/core.php`, `tmp/` and `logs/`; MySQL example uses `utf8mb4`
   - mod_rewrite section replaced by a short "Using Apache" section (DocumentRoot = `webroot/`)
+  - Salt and cipher seed generated with commands instead of example values; cipher seed from 1 to 4294967295
 - [Blog Tutorial - Adding a layer](/tutorials-and-examples/blog/part-two)
   - Files placed in `src/Model`, `src/Controller`, `templates/Posts`, `config/routes.php`
   - `view()` and `delete()` take `$id = null` so a missing ID raises NotFoundException instead of an ArgumentCountError on PHP 8

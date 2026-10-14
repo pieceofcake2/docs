@@ -19,6 +19,12 @@
 > OpenSSL による実装は `mcrypt` と同じ形式で暗号化するため、以前に暗号化した値も復号できます。
 > `Security::rijndael()` には OpenSSL による実装がなく、常に `mcrypt` が必要です。
 
+`$salt = true` を指定した `hash()` と、`$hmacSalt` を指定しない `encrypt()` と `decrypt()` は
+アプリケーションの `Security.salt` を使い、`cipher()` は `Security.cipherSeed` を使います。
+これらの値の生成方法と、変更したときの影響は
+[セキュリティ用のソルトの生成](/ja/development/configuration#security-salts) を参照してください。
+`encrypt()` と `decrypt()` に渡すキーも、`openssl rand -hex 32` のようにソルトと同じ方法で生成できます。
+
 ## Security API
 
 `static` Security::**cipher**( $text, $key )

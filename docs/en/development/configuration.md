@@ -628,7 +628,8 @@ tokens and form tampering tokens, and as the default key for
 `CookieComponent`. Change it to a secret value unique to your application;
 CakePHP shows a notice while the default value from the skeleton is in use.
 The skeleton reads it from the `SECURITY_SALT` environment variable when it
-is set.
+is set. See [Generating the Security Salts](#security-salts) for how to
+generate it and what changing it affects.
 
 ::: pieceofcake2
 CSRF tokens issued by `SecurityComponent`
@@ -642,7 +643,8 @@ strings with `Security::cipher()`. That method is used only by the
 `'cipher'` encryption type of `CookieComponent`, which is weak and kept
 for backwards compatibility. Use the `'aes'` type for cookies instead.
 The skeleton reads it from the `SECURITY_CIPHER_SEED` environment variable
-when it is set.
+when it is set. Use a number from 1 to 4294967295; longer values are not
+stronger. See [Generating the Security Salts](#security-salts).
 
 Security.useOpenSsl  
 When true, `Security::encrypt()` and `Security::decrypt()` (and therefore
@@ -680,6 +682,163 @@ The `Configure` class can be used to read and write core
 configuration settings on the fly. This can be especially handy if
 you want to turn the debug setting on for a limited section of
 logic in your application, for instance.
+
+### Generating the Security Salts {#security-salts}
+
+`Security.salt` and `Security.cipherSeed` must be secret values that are
+unique to each application. Generate them with a cryptographically secure
+random generator; do not type a value yourself or reuse a value from an
+example. The commands below work in any POSIX shell (`sh`, `bash`, `zsh`) on
+Linux and macOS.
+
+`Security.salt` is 32 random bytes, written as 64 hexadecimal characters:
+
+::: code-group
+
+```bash [PHP]
+php -r 'echo bin2hex(random_bytes(32)), PHP_EOL;'
+```
+
+```bash [OpenSSL]
+openssl rand -hex 32
+```
+
+:::
+
+Use a salt of at least 32 characters. It is the default key of
+`CookieComponent`, and the `'aes'` encryption type (`Security::encrypt()`)
+throws an exception for keys shorter than 32 bytes.
+
+`Security.cipherSeed` is a number from 1 to 4294967295 (digits only):
+
+::: code-group
+
+```bash [PHP]
+php -r 'echo random_int(1, 4294967295), PHP_EOL;'
+```
+
+```bash [Shell]
+od -An -N4 -tu4 /dev/urandom | tr -dc 0-9; echo
+```
+
+:::
+
+> [!WARNING]
+> Do not use a longer seed. `Security::cipher()` passes the value to
+> `mt_srand()` as `(int)(float)$seed`, and `mt_srand()` uses only the lower
+> 32 bits of the integer, so a seed holds at most 32 bits and at most 10 digits
+> are meaningful. Longer values do not make it stronger: values with more than
+> 19 digits do not fit in an integer and lose bits, and every value with 27 or
+> more digits (and most values with 26 digits) results in the same seed as `0`.
+> This includes the 29-digit example value of `config/core.php`.
+
+On Windows, run the PHP commands in Command Prompt or PowerShell with double
+quotes instead of single quotes, for example
+`php -r "echo bin2hex(random_bytes(32)), PHP_EOL;"`.
+
+In an application created from the `pieceofcake2/app` skeleton, set the
+values as the `SECURITY_SALT` and `SECURITY_CIPHER_SEED`
+[environment variables](#environment-variables). For development, this
+appends both to `config/.env` (copy `config/.env.example` first; when a
+variable is set twice, the last line wins):
+
+::: code-group
+
+```bash [PHP]
+php -r 'printf("export SECURITY_SALT=\"%s\"\nexport SECURITY_CIPHER_SEED=\"%d\"\n", bin2hex(random_bytes(32)), random_int(1, 4294967295));' >> config/.env
+```
+
+```bash [Shell]
+printf 'export SECURITY_SALT="%s"\nexport SECURITY_CIPHER_SEED="%s"\n' "$(openssl rand -hex 32)" "$(od -An -N4 -tu4 /dev/urandom | tr -dc 0-9)" >> config/.env
+```
+
+:::
+
+Keep the values secret and separate:
+
+- Use different values in each environment (development, staging,
+  production) and in each application.
+- Do not commit them. `config/.env` and `.env` are ignored by Git in the
+  skeleton; in production, set real environment variables instead of using a
+  `.env` file. If you write the values in `config/core.php`, keep that file out
+  of public repositories.
+- If a salt has been exposed (committed, shared, or left at the example
+  value), replace it.
+
+#### What Depends on the Salts
+
+Changing `Security.salt` affects the following:
+
+- **Passwords hashed with the salt.** `SimplePasswordHasher`, the default
+  password hasher of `FormAuthenticate` and `BasicAuthenticate`, and the
+  deprecated `AuthComponent::password()` prepend the salt to the password
+  (`Security::hash()` with `$salt = true`). Stored hashes no longer match, and
+  users cannot log in. Bcrypt hashes (`BlowfishPasswordHasher`,
+  `Security::hash($password, 'blowfish')`) do not use the salt and are not
+  affected.
+- **Encrypted cookies.** `CookieComponent` uses the salt as its key unless you
+  set `$this->Cookie->key`, so cookies written before the change can no longer
+  be read, whatever the encryption type.
+- **Data encrypted with `Security::encrypt()`.** When `$hmacSalt` is not given,
+  the salt is part of the encryption key, and `Security::decrypt()` returns
+  `false` for values encrypted before the change.
+- **Sessions.** When `Session.checkAgent` is not `false` (the default), the
+  session stores a hash of the user agent and the salt, so existing sessions
+  are discarded and users are logged out.
+- **CSRF and form tampering tokens.** Tokens issued by `SecurityComponent` and
+  `FormHelper` are signed with the salt. Forms rendered before the change are
+  rejected once.
+
+`Security.cipherSeed` is used only by `Security::cipher()`. Changing it makes
+values encrypted with `Security::cipher()` unreadable, which in practice
+means the cookies written by the default `'cipher'` type of `CookieComponent`.
+
+#### Rotating the Salts
+
+Sessions, CSRF tokens and form tokens recover by themselves: users log in
+again and resubmit forms, so change the salt at a quiet time. Before you
+change it, move the long-lived values away from it:
+
+1. Move salted password hashes to bcrypt (`'passwordHasher' => 'Blowfish'`).
+   A hash cannot be converted, so check the old hash when a user logs in and
+   save a bcrypt hash of the password. Change the salt only after the salted
+   hashes are gone, or ask the remaining users to reset their passwords.
+2. Re-encrypt stored values that were encrypted with `Security::encrypt()`
+   and the default `$hmacSalt`, passing the old salt to `Security::decrypt()`.
+   Better, pass a dedicated `$hmacSalt` that does not change with
+   `Security.salt`:
+
+   ```php
+   $plain = Security::decrypt($encrypted, $key, $oldSalt);
+   $encrypted = Security::encrypt($plain, $key, $hmacSalt);
+   ```
+
+3. Give `CookieComponent` its own key if its cookies must survive a salt
+   change, and use the `'aes'` type instead of `'cipher'`, so that
+   `Security.cipherSeed` is not used at all:
+
+   ```php
+   // src/Controller/AppController.php
+   public function beforeFilter()
+   {
+       parent::beforeFilter();
+       $this->Cookie->key = env('COOKIE_KEY');
+       $this->Cookie->type('aes');
+   }
+   ```
+
+   Cookies written with the old key or type can no longer be read after this
+   change either, so users have to log in again once.
+
+#### Other Secrets
+
+- Keys that you pass to `Security::encrypt()` and `Security::decrypt()`, or set
+  as the `CookieComponent` key, must be at least 32 bytes long. Generate them
+  like `Security.salt` and read them from environment variables, for example
+  `env('COOKIE_KEY')`.
+- Database and email passwords and API keys belong in environment variables or
+  in ignored files such as `config/database.php` and `config/email.php`, not in
+  committed code.
 
 ### Configuration Constants
 

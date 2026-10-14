@@ -166,24 +166,40 @@ bin/cake server
 セキュリティ用の salt は、ハッシュの生成に用いられます。 `config/core.php` を
 編集し、デフォルトの `Security.salt` の値を変更してください。
 この値は、ランダムで長い文字列にします。そうすることで推測がより困難になります。
+次のコマンドで生成し、
+
+```bash
+php -r 'echo bin2hex(random_bytes(32)), PHP_EOL;'
+```
+
+出力された値を `config/core.php` に貼り付けます。
 
 ``` php
 /**
  * A random string used in security hashing methods.
  */
-Configure::write('Security.salt', 'pl345e-P45s_7h3*S@l7!');
+Configure::write('Security.salt', 'paste-the-generated-salt-here');
 ```
 
 サイファシード(*cipher seed*) は暗号化・復号化のための文字列です。
 `config/core.php` を編集して `Security.cipherSeed` をデフォルト値から
-変更してください。この値は、大きくてランダムな整数でなければなりません:
+変更してください。この値は、1 から 4294967295 までのランダムな数値にします。
+これより長い値にしても強くはなりません。次のコマンドで生成できます。
+
+```bash
+php -r 'echo random_int(1, 4294967295), PHP_EOL;'
+```
 
 ``` php
 /**
  * A random numeric string (digits only) used to encrypt/decrypt strings.
  */
-Configure::write('Security.cipherSeed', '7485712659625147843639846751');
+Configure::write('Security.cipherSeed', 'paste-the-generated-seed-here');
 ```
+
+`config/core.php` を編集する代わりに、環境変数 `SECURITY_SALT` と `SECURITY_CIPHER_SEED`
+で値を設定することもできます。[セキュリティ用のソルトの生成](/ja/development/configuration#security-salts)
+を参照してください。
 
 ## Apache を使う場合
 
