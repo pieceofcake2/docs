@@ -163,6 +163,9 @@ Next, finish the configuration:
 
    See [Generating the Security Salts](development/configuration#security-salts)
    for commands without PHP, and for what changing the values later affects.
+   The cipher seed is used only by the legacy `'cipher'` cookie type, which
+   stays insecure with any seed; use the `'aes'` type for cookies (see
+   [cipherSeed and the 'cipher' Cookie Type](development/configuration#cipher-seed)).
 
 Instead of editing the files, you can set the debug level, the security salts
 and the database settings with environment variables. For development, copy

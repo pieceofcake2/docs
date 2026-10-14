@@ -208,7 +208,10 @@ public $components = [
 ];
 ```
 
-You can also call `$this->Cookie->type('aes');` in `beforeFilter()`.
+You can also call `$this->Cookie->type('aes');` in `beforeFilter()`. See
+[cipherSeed and the 'cipher' Cookie Type](/development/configuration#cipher-seed)
+for why no seed makes `'cipher'` secure, and for how to migrate existing
+cookies to `'aes'` with their own key.
 
 ::: pieceofcake2
 The `'type'` setting in `$components` is honored since v2.12.3. In v2.12.2 and

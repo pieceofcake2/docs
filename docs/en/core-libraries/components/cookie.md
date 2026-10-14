@@ -89,13 +89,21 @@ public function beforeFilter()
     $this->Cookie->path = '/bakers/preferences/';
     $this->Cookie->domain = 'example.com';
     $this->Cookie->secure = true; // i.e. only sent if using secure HTTPS
-    $this->Cookie->key = 'qSI232qs*&sXOw!adre@34SAv!@*(XSL#$%)asGb$@11~_+!@#HKis~#^';
+    $this->Cookie->key = env('COOKIE_KEY'); // 32 random bytes or more
     $this->Cookie->httpOnly = true;
 }
 ```
 
 The encryption type is set with the `'type'` setting in `$components`. You
 can also set it in `beforeFilter()` with `$this->Cookie->type('aes');`.
+
+> [!IMPORTANT]
+> The default type is `'cipher'`, which is insecure whatever
+> `Security.cipherSeed` is set to. Use `'aes'` with its own random key of at
+> least 32 bytes, read from an environment variable as in the example above
+> rather than written in the code. See
+> [cipherSeed and the 'cipher' Cookie Type](/development/configuration#cipher-seed)
+> for how to generate the key and migrate existing cookies.
 
 ::: pieceofcake2
 The `'type'` setting in `$components` is honored since v2.12.3. In v2.12.2 and
@@ -139,4 +147,5 @@ Sets the encryption type used for cookie values. The available types are
 > weak XOR cipher, so always use `'aes'` as shown above, together with
 > `Security.useOpenSsl`. `'rijndael'` requires the
 > `mcrypt` extension, which must be installed from PECL on PHP 7.2 and later. Changing the type
-> invalidates cookies written with the previous type.
+> invalidates cookies written with the previous type. See
+> [Migrating to 'aes'](/development/configuration#migrating-to-aes).

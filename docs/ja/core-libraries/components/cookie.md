@@ -84,13 +84,19 @@ public function beforeFilter()
     $this->Cookie->path = '/bakers/preferences/';
     $this->Cookie->domain = 'example.com';
     $this->Cookie->secure = true; // セキュアな HTTPS で接続している時のみ発行されます
-    $this->Cookie->key = 'qSI232qs*&sXOw!adre@34SAv!@*(XSL#$%)asGb$@11~_+!@#HKis~#^';
+    $this->Cookie->key = env('COOKIE_KEY'); // 32 バイト以上の乱数
     $this->Cookie->httpOnly = true;
 }
 ```
 
 暗号化方式は `$components` の `'type'` で設定します。`beforeFilter()` で
 `$this->Cookie->type('aes');` を呼び出して設定することもできます。
+
+> [!IMPORTANT]
+> デフォルトのタイプは `'cipher'` で、`Security.cipherSeed` をどの値にしても安全ではありません。
+> `'aes'` を使い、32 バイト以上の乱数の専用のキーを設定してください。キーはコードに書かず、
+> 上の例のように環境変数から読み込みます。キーの生成方法と既存の Cookie の移行方法は
+> [cipherSeed と Cookie の 'cipher' タイプ](/ja/development/configuration#cipher-seed) を参照してください。
 
 ::: pieceofcake2
 `$components` の `'type'` は v2.12.3 から反映されます。v2.12.2 以前では無視され、
@@ -130,3 +136,4 @@ Cookie の値の暗号化方式を設定します。指定できるのは `'ciph
 > デフォルトの `'cipher'` は後方互換性のためだけに残されている脆弱な XOR 暗号です。
 > 上の例のように `'aes'` を使い、`Security.useOpenSsl` も有効にしてください。`'rijndael'` には `mcrypt` 拡張が必要で、PHP 7.2 以降では PECL からインストールする必要があります。
 > 暗号化方式を変更すると、変更前の方式で書き込まれた Cookie は読めなくなります。
+> [`'aes'` への移行](/ja/development/configuration#migrating-to-aes) を参照してください。

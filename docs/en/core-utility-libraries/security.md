@@ -52,6 +52,13 @@ $nosecret = Security::cipher($secret, 'my_key');
 > It is only included for backwards compatibility. It is also used by the
 > default `'cipher'` encryption type of `CookieComponent`; use the `'aes'`
 > type instead (see [Security Fixes](/appendices/security-fixes)).
+>
+> `cipher()` seeds `mt_srand()` with `Security.cipherSeed`, and only numbers
+> from 1 to 4294967295 are meaningful. Longer values, including the well-known
+> default value, all end up as seed `0`, and even an in-range seed can be
+> brute-forced. See
+> [cipherSeed and the 'cipher' Cookie Type](/development/configuration#cipher-seed)
+> for the impact and how to migrate to `'aes'`.
 
 `static` Security::**rijndael**($text, $key, $mode)
 

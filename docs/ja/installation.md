@@ -145,6 +145,9 @@ my_app/
 
    PHP を使わないコマンドや、後で値を変更したときの影響は
    [セキュリティ用のソルトの生成](development/configuration#security-salts) を参照してください。
+   サイファシードを使うのは古い Cookie の `'cipher'` タイプだけで、このタイプはどのシードでも安全では
+   ありません。Cookie には `'aes'` タイプを使ってください
+   ([cipherSeed と Cookie の 'cipher' タイプ](development/configuration#cipher-seed) を参照してください)。
 
 ファイルを編集する代わりに、デバッグレベル、セキュリティ用のソルト、データベースの設定を
 環境変数でセットすることもできます。開発環境では、`config/.env.example` を `config/.env`

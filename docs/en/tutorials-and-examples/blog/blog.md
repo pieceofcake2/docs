@@ -200,8 +200,12 @@ Configure::write('Security.salt', 'paste-the-generated-salt-here');
 
 The cipher seed is used for encrypt/decrypt strings. Change the default
 `Security.cipherSeed` value by editing `config/core.php`. The
-replacement value should be a random number from 1 to 4294967295; longer
-values are not stronger. Generate one with:
+replacement value must be a number from 1 to 4294967295, because longer values
+all end up as the same seed. The seed is used only by the legacy `'cipher'`
+cookie type, which this tutorial does not use and which stays insecure with any
+seed (see
+[cipherSeed and the 'cipher' Cookie Type](/development/configuration#cipher-seed)).
+Generate one with:
 
 ```bash
 php -r 'echo random_int(1, 4294967295), PHP_EOL;'

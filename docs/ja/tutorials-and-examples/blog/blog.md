@@ -183,8 +183,11 @@ Configure::write('Security.salt', 'paste-the-generated-salt-here');
 
 サイファシード(*cipher seed*) は暗号化・復号化のための文字列です。
 `config/core.php` を編集して `Security.cipherSeed` をデフォルト値から
-変更してください。この値は、1 から 4294967295 までのランダムな数値にします。
-これより長い値にしても強くはなりません。次のコマンドで生成できます。
+変更してください。この値は 1 から 4294967295 までの数値にする必要があります。これより長い値は
+すべて同じシードになるためです。このシードを使うのは古い Cookie の `'cipher'` タイプだけです。
+このチュートリアルでは使いませんが、このタイプはどのシードでも安全ではありません
+([cipherSeed と Cookie の 'cipher' タイプ](/ja/development/configuration#cipher-seed) を参照してください)。
+次のコマンドで生成できます。
 
 ```bash
 php -r 'echo random_int(1, 4294967295), PHP_EOL;'

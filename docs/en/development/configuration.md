@@ -643,8 +643,11 @@ strings with `Security::cipher()`. That method is used only by the
 `'cipher'` encryption type of `CookieComponent`, which is weak and kept
 for backwards compatibility. Use the `'aes'` type for cookies instead.
 The skeleton reads it from the `SECURITY_CIPHER_SEED` environment variable
-when it is set. Use a number from 1 to 4294967295; longer values are not
-stronger. See [Generating the Security Salts](#security-salts).
+when it is set. Only numbers from 1 to 4294967295 are meaningful; longer
+values, including the 29-digit default of the original `config/core.php`, all
+end up as the same seed `0`. No
+value makes the `'cipher'` type secure. See
+[cipherSeed and the 'cipher' Cookie Type](#cipher-seed).
 
 Security.useOpenSsl  
 When true, `Security::encrypt()` and `Security::decrypt()` (and therefore
@@ -685,11 +688,10 @@ logic in your application, for instance.
 
 ### Generating the Security Salts {#security-salts}
 
-`Security.salt` and `Security.cipherSeed` must be secret values that are
-unique to each application. Generate them with a cryptographically secure
-random generator; do not type a value yourself or reuse a value from an
-example. The commands below work in any POSIX shell (`sh`, `bash`, `zsh`) on
-Linux and macOS.
+`Security.salt` must be a secret value that is unique to each application.
+Generate it with a cryptographically secure random generator; do not type a
+value yourself or reuse a value from an example. The commands below work in any
+POSIX shell (`sh`, `bash`, `zsh`) on Linux and macOS.
 
 `Security.salt` is 32 random bytes, written as 64 hexadecimal characters:
 
@@ -709,28 +711,11 @@ Use a salt of at least 32 characters. It is the default key of
 `CookieComponent`, and the `'aes'` encryption type (`Security::encrypt()`)
 throws an exception for keys shorter than 32 bytes.
 
-`Security.cipherSeed` is a number from 1 to 4294967295 (digits only):
-
-::: code-group
-
-```bash [PHP]
-php -r 'echo random_int(1, 4294967295), PHP_EOL;'
-```
-
-```bash [Shell]
-od -An -N4 -tu4 /dev/urandom | tr -dc 0-9; echo
-```
-
-:::
-
-> [!WARNING]
-> Do not use a longer seed. `Security::cipher()` passes the value to
-> `mt_srand()` as `(int)(float)$seed`, and `mt_srand()` uses only the lower
-> 32 bits of the integer, so a seed holds at most 32 bits and at most 10 digits
-> are meaningful. Longer values do not make it stronger: values with more than
-> 19 digits do not fit in an integer and lose bits, and every value with 27 or
-> more digits (and most values with 26 digits) results in the same seed as `0`.
-> This includes the 29-digit example value of `config/core.php`.
+`Security.cipherSeed` is used only by the legacy `'cipher'` cookie type and
+must be a number from 1 to 4294967295. Longer values, including the 29-digit
+default of the original `config/core.php`, all end up as the same seed, and no
+value makes `'cipher'` secure. Read
+[cipherSeed and the 'cipher' Cookie Type](#cipher-seed) before you set it.
 
 On Windows, run the PHP commands in Command Prompt or PowerShell with double
 quotes instead of single quotes, for example
@@ -739,8 +724,9 @@ quotes instead of single quotes, for example
 In an application created from the `pieceofcake2/app` skeleton, set the
 values as the `SECURITY_SALT` and `SECURITY_CIPHER_SEED`
 [environment variables](#environment-variables). For development, this
-appends both to `config/.env` (copy `config/.env.example` first; when a
-variable is set twice, the last line wins):
+appends a salt and an in-range seed to `config/.env` (copy
+`config/.env.example` first; when a variable is set twice, the last line
+wins):
 
 ::: code-group
 
@@ -777,8 +763,10 @@ Changing `Security.salt` affects the following:
   `Security::hash($password, 'blowfish')`) do not use the salt and are not
   affected.
 - **Encrypted cookies.** `CookieComponent` uses the salt as its key unless you
-  set `$this->Cookie->key`, so cookies written before the change can no longer
-  be read, whatever the encryption type.
+  set `$this->Cookie->key`, and the `'aes'` type also mixes the salt into its
+  key even when you set your own key. Cookies written before the change can no
+  longer be read, except `'cipher'` and `'rijndael'` cookies that use their own
+  key.
 - **Data encrypted with `Security::encrypt()`.** When `$hmacSalt` is not given,
   the salt is part of the encryption key, and `Security::decrypt()` returns
   `false` for values encrypted before the change.
@@ -792,6 +780,7 @@ Changing `Security.salt` affects the following:
 `Security.cipherSeed` is used only by `Security::cipher()`. Changing it makes
 values encrypted with `Security::cipher()` unreadable, which in practice
 means the cookies written by the default `'cipher'` type of `CookieComponent`.
+See [cipherSeed and the 'cipher' Cookie Type](#cipher-seed).
 
 #### Rotating the Salts
 
@@ -813,32 +802,187 @@ change it, move the long-lived values away from it:
    $encrypted = Security::encrypt($plain, $key, $hmacSalt);
    ```
 
-3. Give `CookieComponent` its own key if its cookies must survive a salt
-   change, and use the `'aes'` type instead of `'cipher'`, so that
-   `Security.cipherSeed` is not used at all:
-
-   ```php
-   // src/Controller/AppController.php
-   public function beforeFilter()
-   {
-       parent::beforeFilter();
-       $this->Cookie->key = env('COOKIE_KEY');
-       $this->Cookie->type('aes');
-   }
-   ```
-
-   Cookies written with the old key or type can no longer be read after this
-   change either, so users have to log in again once.
+3. Encrypted cookies cannot be carried over: the `'aes'` type mixes
+   `Security.salt` into its key, so its cookies become unreadable when the
+   salt changes, and users with a remember-me cookie have to log in again
+   once. If you still use the `'cipher'` type, move to `'aes'` with its own
+   key at the same time, so that cookies are lost only once (see
+   [Migrating to 'aes'](#migrating-to-aes)).
 
 #### Other Secrets
 
 - Keys that you pass to `Security::encrypt()` and `Security::decrypt()`, or set
   as the `CookieComponent` key, must be at least 32 bytes long. Generate them
   like `Security.salt` and read them from environment variables, for example
-  `env('COOKIE_KEY')`.
+  `env('COOKIE_KEY')` (see [Migrating to 'aes'](#migrating-to-aes)).
 - Database and email passwords and API keys belong in environment variables or
   in ignored files such as `config/database.php` and `config/email.php`, not in
   committed code.
+
+### cipherSeed and the 'cipher' Cookie Type {#cipher-seed}
+
+`Security.cipherSeed` is used only by `Security::cipher()`. In practice that
+means `CookieComponent`, whose default encryption type is `'cipher'`. The
+`'cipher'` type has always been documented as insecure and kept only for
+backwards compatibility. This section describes a known weakness of the seed,
+what it means for your application, and how to move to the `'aes'` type.
+
+#### How the Seed Is Used
+
+`Security::cipher()` seeds PHP's Mersenne Twister generator with
+`mt_srand((int)(float)$seed)` and XORs the value with numbers drawn from
+`mt_rand()`. The key (`Security.salt`, unless you set the `CookieComponent`
+key) is mixed in as well.
+
+`mt_srand()` takes a 32-bit seed, so only numbers from 1 to 4294967295 are
+meaningful. Longer values do not add anything:
+
+- Values with more than 19 digits do not fit in a PHP integer, and the
+  conversion loses bits.
+- Every value with 27 or more digits, and about 95% of the values with 26
+  digits, ends up as seed `0`.
+
+Well-known values that end up as seed `0` include:
+
+- `76859309657453542496749683645`, the default value in `config/core.php` of
+  the original CakePHP 2 and of this fork, also used as the fallback in
+  applications created from earlier versions of the `pieceofcake2/app`
+  skeleton
+- `7485712659625147843639846751`, the example value of the blog tutorial in
+  the original book
+- the 30-digit values generated by the command that earlier versions of
+  `config/.env.example` in the `pieceofcake2/app` skeleton suggested
+
+#### An In-Range Seed Is Not Enough
+
+A seed from 1 to 4294967295 avoids the collapse to `0`, but it does not make
+`'cipher'` secure:
+
+- There are only about 4.3 billion seeds, so all of them can be tried.
+- The keystream comes from Mersenne Twister, which is not a cryptographic
+  generator, and the value is only XORed with it.
+- `Security.salt` (or the `CookieComponent` key) is still mixed in, but that
+  does not turn the construction into real encryption.
+
+Do not rely on `'cipher'` to keep a value secret, whatever the seed.
+
+#### Impact
+
+- Only values encrypted with `Security::cipher()` are affected: cookies that
+  `CookieComponent` writes with the `'cipher'` type (the default), and your
+  own calls to `Security::cipher()`. The `'aes'` and `'rijndael'` cookie types,
+  `Security::encrypt()`, password hashes, sessions and CSRF tokens do not use
+  the seed.
+- In applications that use one of the values above, or any other value with
+  27 or more digits, the seed adds no secret at all, and every such
+  application uses the same seed.
+- Changing the seed to any other value makes existing `'cipher'` cookies
+  unreadable, in the same way as switching to `'aes'` does.
+
+#### Which Should I Do?
+
+- **New applications:** use the `'aes'` type with its own key, as described in
+  [Migrating to 'aes'](#migrating-to-aes), and never use `'cipher'`.
+- **Existing applications with `'cipher'` cookies:** migrate to `'aes'`.
+  Existing cookie values are lost once: for example, users who logged in with
+  a remember-me cookie have to log in again, and preferences stored in cookies
+  are reset. Follow the steps in [Migrating to 'aes'](#migrating-to-aes).
+- **Applications that must keep reading old cookies for a transition
+  period:** there is no seamless path. Old cookies stay readable only as long
+  as you keep the old seed, which keeps the weakness. Setting an in-range seed
+  changes the keystream as well, so old cookies become unreadable anyway, and
+  `'cipher'` is still not secure afterwards. Plan a date on which the cookies
+  are lost once, and switch to `'aes'` on that date instead of only changing
+  the seed.
+- **Applications that do not use `CookieComponent` or `Security::cipher()`,**
+  or that use only the `'aes'` type: nothing to do beyond setting
+  `Security.cipherSeed` to a valid value from 1 to 4294967295.
+
+#### Migrating to 'aes' {#migrating-to-aes}
+
+1. Generate a cookie key of 32 random bytes. Do not reuse `Security.salt`:
+
+   ::: code-group
+
+   ```bash [PHP]
+   php -r 'echo bin2hex(random_bytes(32)), PHP_EOL;'
+   ```
+
+   ```bash [OpenSSL]
+   openssl rand -hex 32
+   ```
+
+   :::
+
+   Set it as the `COOKIE_KEY` environment variable: in `config/.env` for
+   development, and as a real environment variable in production.
+
+2. Make sure that `config/core.php` enables OpenSSL. The `'aes'` type uses
+   `Security::encrypt()`, and `mcrypt` is not bundled with PHP 7.2 and later:
+
+   ```php
+   Configure::write('Security.useOpenSsl', true);
+   ```
+
+3. Configure `CookieComponent` in `AppController`, or in every controller that
+   lists `Cookie` in `$components`:
+
+   ```php
+   // src/Controller/AppController.php
+   public $components = [
+       'Cookie' => ['type' => 'aes'],
+   ];
+
+   public function beforeFilter()
+   {
+       parent::beforeFilter();
+       $this->Cookie->key = env('COOKIE_KEY');
+   }
+   ```
+
+   PHP does not allow function calls such as `env()` in a property
+   declaration, so set the key in `beforeFilter()`, before any cookie is read.
+   You can also set the type there with `$this->Cookie->type('aes');`.
+
+4. Optionally, give the cookie a new name with `$this->Cookie->name`, so that
+   old `'cipher'` cookies are ignored instead of being decrypted with the new
+   type. They expire by themselves.
+
+5. Deploy. Users with a remember-me cookie log in again once.
+
+The `'aes'` type uses `Security::encrypt()`, which also mixes `Security.salt`
+into the key. Changing the salt later still makes `'aes'` cookies unreadable.
+
+#### Generating a cipherSeed
+
+Only if you still use `'cipher'`, set `Security.cipherSeed` to a number from 1
+to 4294967295. This avoids the collapse to `0`, but `'cipher'` stays insecure,
+and changing the seed makes existing `'cipher'` cookies unreadable:
+
+::: code-group
+
+```bash [PHP]
+php -r 'echo random_int(1, 4294967295), PHP_EOL;'
+```
+
+```bash [Shell]
+od -An -N4 -tu4 /dev/urandom | tr -dc 0-9; echo
+```
+
+:::
+
+#### Planned for the Next Release
+
+The next release of `pieceofcake2/cakephp` is planned to report these
+problems without changing behaviour:
+
+- A deprecation warning is logged once per request when the `'cipher'` type
+  or `Security::cipher()` is used.
+- A `Security.cipherSeed` value outside 1 to 4294967295 is logged, and a
+  warning is shown in debug mode.
+
+Values are encrypted and decrypted exactly as before, so existing cookies stay
+readable.
 
 ### Configuration Constants
 
