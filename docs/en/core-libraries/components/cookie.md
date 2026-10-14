@@ -101,7 +101,8 @@ can also set it in `beforeFilter()` with `$this->Cookie->type('aes');`.
 > The default type is `'cipher'`, which is insecure whatever
 > `Security.cipherSeed` is set to. Use `'aes'` with its own random key of at
 > least 32 bytes, read from an environment variable as in the example above
-> rather than written in the code. See
+> rather than written in the code, and make sure `Security.useOpenSsl` is
+> `true` (the app skeleton sets it; see below). See
 > [cipherSeed and the 'cipher' Cookie Type](/development/configuration#cipher-seed)
 > for how to generate the key and migrate existing cookies.
 

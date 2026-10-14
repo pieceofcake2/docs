@@ -52,13 +52,16 @@ $nosecret = Security::cipher($secret, 'my_key');
 > It is only included for backwards compatibility. It is also used by the
 > default `'cipher'` encryption type of `CookieComponent`; use the `'aes'`
 > type instead (see [Security Fixes](/appendices/security-fixes)).
->
+
+> [!WARNING]
 > `cipher()` seeds `mt_srand()` with `Security.cipherSeed`, and only numbers
 > from 1 to 4294967295 are meaningful. Longer values, including the well-known
 > default value, all end up as seed `0`, and even an in-range seed can be
 > brute-forced. See
 > [cipherSeed and the 'cipher' Cookie Type](/development/configuration#cipher-seed)
-> for the impact and how to migrate to `'aes'`.
+> for the impact and how to migrate to `'aes'`. When you switch to `'aes'`,
+> make sure `Security.useOpenSsl` is `true` (the app skeleton sets it; see
+> [Enable OpenSSL](/appendices/migrating-from-cakephp-2-10#enable-openssl)).
 
 `static` Security::**rijndael**($text, $key, $mode)
 

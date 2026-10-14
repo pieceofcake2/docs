@@ -172,7 +172,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
 - [Cookie](/ja/core-libraries/components/cookie)
   - 例で type('aes') と Security.useOpenSsl を使用。デフォルトの 'cipher' は脆弱で 'rijndael' は mcrypt が必要という警告を追加
   - タイプは `$components` の `'Cookie' => ['type' => 'aes']` で設定 (type() でも設定可能)。v2.12.3 より前はこの設定が無視されていたことを変更点として記載。pieceofcake2/app v2.3.1 のスケルトンでは Security.useOpenSsl が有効
-  - デフォルトのタイプは 'cipher' で、cipherSeed をどの値にしても安全でないことを記載。'aes' と環境変数から読み込む専用のキー (例のキーを `env('COOKIE_KEY')` に変更) を推奨し、'aes' への移行へのリンクを追加
+  - デフォルトのタイプは 'cipher' で、cipherSeed をどの値にしても安全でないことを記載。'aes' と環境変数から読み込む専用のキー、`Security.useOpenSsl` の有効化 (例のキーを `env('COOKIE_KEY')` に変更) を推奨し、'aes' への移行へのリンクを追加
 - [フラッシュ](/ja/core-libraries/components/flash)
   - フラッシュ用エレメントの場所を templates/Elements/Flash に変更
 - [ページ制御](/ja/core-libraries/components/pagination)
@@ -271,7 +271,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - Inflector のパス `src/Cake/Utility/Inflector.php` と `config/bootstrap.php` を本文に反映。古い IE/Chrome Frame や AMF/SOAP の例を更新。ja: `$merge` の説明を修正し `Configure::consume()` を追加
   - 「環境変数」の節を追加: pieceofcake2/app スケルトンが `config/core.php` の先頭で josegonzalez/dotenv により `config/.env` とプロジェクトルートの `.env` を読み込むこと (CakePHP 3〜5 のアプリケーションスケルトンの `.env` サポートのバックポート。変更点: app v2.4.0 で追加)、優先順位 (実際の環境変数 > `config/.env` > ルートの `.env`)、値のクォート、レガシー構成や以前のアプリケーションへの読み込み処理の追加方法、スケルトンが読み込む環境変数 (`DEBUG`、`SECURITY_SALT`、`SECURITY_CIPHER_SEED`、`DB_*`、`DB_TEST_*`)
   - 「セキュリティ用のソルトの生成」の節を追加: 安全な生成コマンド (PHP とシェル)、それぞれの値に依存するもの (Cookie の 'aes' タイプは専用のキーを設定しても `Security.salt` を組み合わせる)、値の変更手順
-  - 「cipherSeed と Cookie の 'cipher' タイプ」の節を追加: `Security::cipher()` でのシードの使われ方、意味があるのは 1〜4294967295 だけで、27 桁以上の値 (本家の `config/core.php` のデフォルト値、ブログチュートリアルのサンプル値、以前の `.env.example` の生成コマンド) はシード 0 になること、範囲内のシードでも安全ではないこと、影響、どうすればよいか、32 バイトの `COOKIE_KEY` を使った 'aes' への移行、次のリリースで予定している警告
+  - 「cipherSeed と Cookie の 'cipher' タイプ」の節を追加: `Security::cipher()` でのシードの使われ方、意味があるのは 1〜4294967295 だけで、27 桁以上の値 (本家の `config/core.php` のデフォルト値、ブログチュートリアルのサンプル値、以前の `.env.example` の生成コマンド) はシード 0 になること、範囲内のシードでも安全ではないこと、影響、どうすればよいか、32 バイトの `COOKIE_KEY` と `Security.useOpenSsl` を使った 'aes' への移行、次のリリースで予定している警告
   - `Security.cipherSeed` の説明: 意味があるのは 1〜4294967295 だけで、どの値でも 'cipher' は安全にならないことを記載し、新しい節へのリンクを追加
 - [ルーティング](/ja/development/routing)
   - ルート設定ファイルのパスを config/routes.php に変更（従来の app/Config/routes.php はフォルダ構造ページへのリンク付きで併記）
@@ -397,7 +397,6 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
 - [脆弱性への対応](/ja/appendices/security-fixes)
   - `'readFile' => false` を指定した `Xml::build()` の SSRF (2.12.3 で修正) を追加。Cookie のタイプを `$components` で設定。Security.useOpenSsl のスケルトンについての注記
   - SmtpTransport/MailTransport のメールヘッダーインジェクション (GHSA-4f9q-3c4x-52cv)、ビュー・レイアウト・エレメント名のパストラバーサル (GHSA-w2mh-x92p-5p95)、AuthComponent のログイン後のオープンリダイレクト (GHSA-x4p9-p4cx-gxwx) を追加 (いずれも 2.12.5 で修正)。表に GHSA の ID を記載。本家の CakePHP 2.x を使うアプリケーションは pieceofcake2/cakephp に切り替えると修正を適用できることを記載
-  - CookieComponent の `cipher` タイプ: どのシードでも 'cipher' が安全にならない理由と、専用のキーを設定した 'aes' への移行方法を説明する cipherSeed の節へのリンクを追加
 - [CakePHP 2.10 からの移行](/ja/appendices/migrating-from-cakephp-2-10)
   - v2.12.3 の節を追加 (Xml::build() の SSRF 修正、Cookie の `'type'` 設定、ServerShell のポート、テストケースの一覧、SQL Server の ERRMODE)。Cookie の例で `$components` を使用
   - v2.12.5 の節を追加 (メールのヘッダー、ビュー・レイアウト・エレメントの名前、ログイン後のリダイレクトのセキュリティ修正。不正な ORDER BY のソート方向の非推奨化)

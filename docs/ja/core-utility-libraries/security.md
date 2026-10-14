@@ -47,11 +47,14 @@ $nosecret = Security::cipher($secret, 'my_key');
 > このメソッドは、後方互換性のためだけに残されています。
 > `CookieComponent` のデフォルトの暗号化タイプ `'cipher'` もこのメソッドを使っているため、
 > 代わりに `'aes'` タイプを使ってください ([脆弱性への対応](/ja/appendices/security-fixes) を参照してください)。
->
+
+> [!WARNING]
 > `cipher()` は `Security.cipherSeed` で `mt_srand()` を初期化しますが、意味があるのは 1 から 4294967295
 > までの数値だけです。よく知られたデフォルト値を含め、これより長い値はすべてシード `0` になり、
 > 範囲内のシードでも総当たりで破れます。影響と `'aes'` への移行方法は
 > [cipherSeed と Cookie の 'cipher' タイプ](/ja/development/configuration#cipher-seed) を参照してください。
+> `'aes'` に切り替えるときは、`Security.useOpenSsl` が `true` になっていることを確認してください
+> (app スケルトンでは設定済みです。[OpenSSL を有効にする](/ja/appendices/migrating-from-cakephp-2-10#enable-openssl) を参照してください)。
 
 `static` Security::**rijndael**($text, $key, $mode)
 

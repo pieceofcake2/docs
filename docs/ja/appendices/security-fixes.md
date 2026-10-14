@@ -174,9 +174,6 @@ public $components = [
 ```
 
 `beforeFilter()` で `$this->Cookie->type('aes');` を呼び出して設定することもできます。
-どのシードでも `'cipher'` が安全にならない理由と、専用のキーを設定した `'aes'` へ既存の Cookie を
-移行する方法は [cipherSeed と Cookie の 'cipher' タイプ](/ja/development/configuration#cipher-seed)
-を参照してください。
 
 ::: pieceofcake2
 `$components` の `'type'` は v2.12.3 から反映されます。v2.12.2 以前では無視され、

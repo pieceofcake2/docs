@@ -177,7 +177,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
 - [Cookie](/core-libraries/components/cookie)
   - Example uses type('aes') with Security.useOpenSsl; warning that the default 'cipher' is insecure and 'rijndael' needs mcrypt
   - Type set with `'Cookie' => ['type' => 'aes']` in `$components` (type() as an alternative); change note that the setting was ignored before v2.12.3; Security.useOpenSsl already enabled in the pieceofcake2/app v2.3.1 skeleton
-  - Note that the default type is 'cipher' and is insecure with any cipherSeed; recommend 'aes' with its own key from an environment variable (`env('COOKIE_KEY')` instead of a key written in the example), with a link to migrating to 'aes'
+  - Note that the default type is 'cipher' and is insecure with any cipherSeed; recommend 'aes' with its own key from an environment variable and `Security.useOpenSsl` (`env('COOKIE_KEY')` instead of a key written in the example), with a link to migrating to 'aes'
 - [Flash](/core-libraries/components/flash)
   - Flash elements in templates/Elements/Flash
 - [Pagination](/core-libraries/components/pagination)
@@ -276,7 +276,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - Inflector path `src/Cake/Utility/Inflector.php` and bootstrap `config/bootstrap.php` folded into text; era-specific examples (old IE/Chrome Frame, AMF/SOAP) modernized; ja: `$merge` description corrected, `Configure::consume()` added
   - New "Environment Variables" section: the pieceofcake2/app skeleton loads `config/.env` and the project-root `.env` with josegonzalez/dotenv at the top of `config/core.php` (backport of the `.env` support of the CakePHP 3+/5 app skeleton; change note: added in app v2.4.0), precedence (real environment > `config/.env` > root `.env`), quoting advice, adding the loader to legacy-layout and older applications, and the variables read by the skeleton (`DEBUG`, `SECURITY_SALT`, `SECURITY_CIPHER_SEED`, `DB_*`, `DB_TEST_*`)
   - New "Generating the Security Salts" section: secure one-liners (PHP and shell), what depends on each value (the 'aes' cookie type mixes in `Security.salt` even with its own key), and how to rotate them
-  - New "cipherSeed and the 'cipher' Cookie Type" section: how `Security::cipher()` uses the seed, only 1-4294967295 meaningful, values with 27 or more digits (the default of the original `config/core.php`, the blog tutorial example and the old `.env.example` generator) end up as seed 0, in-range seeds are still not secure, impact, which action to take, migrating to 'aes' with a 32-byte `COOKIE_KEY`, and the warnings planned for the next release
+  - New "cipherSeed and the 'cipher' Cookie Type" section: how `Security::cipher()` uses the seed, only 1-4294967295 meaningful, values with 27 or more digits (the default of the original `config/core.php`, the blog tutorial example and the old `.env.example` generator) end up as seed 0, in-range seeds are still not secure, impact, which action to take, migrating to 'aes' with a 32-byte `COOKIE_KEY` and `Security.useOpenSsl` set to true, and the warnings planned for the next release
   - `Security.cipherSeed` entry: only 1-4294967295 is meaningful and no value makes 'cipher' secure, with a link to the new section
 - [Routing](/development/routing)
   - Routes file path changed to config/routes.php (legacy app/Config/routes.php noted with link to the folder structure page)
@@ -402,7 +402,6 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
 - [Security Fixes](/appendices/security-fixes)
   - Added the `Xml::build()` SSRF with `'readFile' => false` (fixed in 2.12.3); Cookie type set in `$components`; skeleton note for Security.useOpenSsl
   - Added the email header injection in SmtpTransport/MailTransport (GHSA-4f9q-3c4x-52cv), the path traversal in view, layout and element names (GHSA-w2mh-x92p-5p95) and the open redirect after login in AuthComponent (GHSA-x4p9-p4cx-gxwx), all fixed in 2.12.5; the table lists GHSA IDs; note that applications on the original CakePHP 2.x can switch to pieceofcake2/cakephp to get the fixes
-  - CookieComponent `cipher` type: link to the cipherSeed section explaining why no seed makes 'cipher' secure and how to migrate to 'aes' with its own key
 - [Migrating from CakePHP 2.10](/appendices/migrating-from-cakephp-2-10)
   - Added a v2.12.3 section (Xml::build() SSRF fix, Cookie `'type'` setting, ServerShell port, test case listing, SQL Server ERRMODE); Cookie example uses `$components`
   - Added a v2.12.5 section (security fixes for email headers, view/layout/element names and the login redirect; deprecation of invalid ORDER BY directions)

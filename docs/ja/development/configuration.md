@@ -642,7 +642,8 @@ Security.salt
 Security.cipherSeed  
 `Security::cipher()` で文字列を暗号化／復号化するのに使われるランダムな文字列（数字のみ）。
 このメソッドを使うのは `CookieComponent` の暗号化タイプ `'cipher'` だけです。
-このタイプは脆弱で、後方互換性のためだけに残されています。Cookie には `'aes'` タイプを使ってください。
+このタイプは脆弱で、後方互換性のためだけに残されています。Cookie には `'aes'` タイプを使い、
+`Security.useOpenSsl` が `true` になっていることを確認してください (app スケルトンでは設定済みです)。
 スケルトンは、環境変数 `SECURITY_CIPHER_SEED` が設定されていればその値を使います。
 意味があるのは 1 から 4294967295 までの数値だけです。本家の `config/core.php` にある 29 桁のデフォルト値を含め、これより長い値はすべて同じ
 シード `0` になります。どの値にしても `'cipher'` タイプは安全になりません。
@@ -783,8 +784,9 @@ printf 'export SECURITY_SALT="%s"\nexport SECURITY_CIPHER_SEED="%s"\n' "$(openss
 3. 暗号化した Cookie は引き継げません。`'aes'` タイプはキーに `Security.salt` を組み合わせるため、
    ソルトを変更すると Cookie は読めなくなり、ログイン状態を保持する Cookie を持っていたユーザーは
    一度ログインし直す必要があります。まだ `'cipher'` タイプを使っている場合は、同時に専用のキーを設定した
-   `'aes'` に移行すれば、Cookie が失われるのは一度だけで済みます
-   ([`'aes'` への移行](#migrating-to-aes) を参照してください)。
+   `'aes'` に移行すれば、Cookie が失われるのは一度だけで済みます。その際は `Security.useOpenSsl` が
+   `true` になっていることを確認してください (app スケルトンでは設定済みです。
+   [`'aes'` への移行](#migrating-to-aes) を参照してください)。
 
 #### その他の秘密の値
 
@@ -848,7 +850,8 @@ printf 'export SECURITY_SALT="%s"\nexport SECURITY_CIPHER_SEED="%s"\n' "$(openss
 #### どうすればよいですか
 
 - **新しいアプリケーション:** [`'aes'` への移行](#migrating-to-aes) のとおり、専用のキーを設定した
-  `'aes'` タイプを使い、`'cipher'` は使わないでください。
+  `'aes'` タイプを使い、`'cipher'` は使わないでください。`Security.useOpenSsl` は `true` にします
+  (app スケルトンでは設定済みです)。
 - **`'cipher'` の Cookie を使っている既存のアプリケーション:** `'aes'` に移行してください。
   既存の Cookie の値は一度だけ失われます。たとえば、ログイン状態を保持する Cookie でログインしていた
   ユーザーはログインし直す必要があり、Cookie に保存した設定は元に戻ります。手順は
@@ -881,8 +884,11 @@ printf 'export SECURITY_SALT="%s"\nexport SECURITY_CIPHER_SEED="%s"\n' "$(openss
    生成した値を環境変数 `COOKIE_KEY` に設定します。開発環境では `config/.env` に書き、
    本番環境では実際の環境変数として設定してください。
 
-2. `config/core.php` で OpenSSL が有効になっていることを確認します。`'aes'` タイプは
-   `Security::encrypt()` を使い、`mcrypt` は PHP 7.2 以降同梱されていません。
+2. `Security.useOpenSsl` が `true` になっていることを確認します (app スケルトンでは設定済みです)。
+   `'aes'` タイプが使う `Security::encrypt()` と `Security::decrypt()` は、この設定が `true` のときだけ
+   OpenSSL を使います。そうでない場合は PHP 8 には存在しない `mcrypt` を呼び出すため、`'aes'` の
+   Cookie は失敗します。古いアプリケーションにはこの行がないことがあるので、`config/core.php` に
+   追加してください ([OpenSSL を有効にする](/ja/appendices/migrating-from-cakephp-2-10#enable-openssl) を参照してください)。
 
    ```php
    Configure::write('Security.useOpenSsl', true);

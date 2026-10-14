@@ -641,7 +641,8 @@ Security.cipherSeed
 A random numeric string (digits only) used to encrypt/decrypt
 strings with `Security::cipher()`. That method is used only by the
 `'cipher'` encryption type of `CookieComponent`, which is weak and kept
-for backwards compatibility. Use the `'aes'` type for cookies instead.
+for backwards compatibility. Use the `'aes'` type for cookies instead, and
+make sure `Security.useOpenSsl` is `true` (the app skeleton sets it).
 The skeleton reads it from the `SECURITY_CIPHER_SEED` environment variable
 when it is set. Only numbers from 1 to 4294967295 are meaningful; longer
 values, including the 29-digit default of the original `config/core.php`, all
@@ -806,7 +807,8 @@ change it, move the long-lived values away from it:
    `Security.salt` into its key, so its cookies become unreadable when the
    salt changes, and users with a remember-me cookie have to log in again
    once. If you still use the `'cipher'` type, move to `'aes'` with its own
-   key at the same time, so that cookies are lost only once (see
+   key at the same time, so that cookies are lost only once, and make sure
+   `Security.useOpenSsl` is `true` (the app skeleton sets it; see
    [Migrating to 'aes'](#migrating-to-aes)).
 
 #### Other Secrets
@@ -881,8 +883,9 @@ Do not rely on `'cipher'` to keep a value secret, whatever the seed.
 
 #### Which Should I Do?
 
-- **New applications:** use the `'aes'` type with its own key, as described in
-  [Migrating to 'aes'](#migrating-to-aes), and never use `'cipher'`.
+- **New applications:** use the `'aes'` type with its own key and
+  `Security.useOpenSsl` set to `true` (the app skeleton sets it), as described
+  in [Migrating to 'aes'](#migrating-to-aes), and never use `'cipher'`.
 - **Existing applications with `'cipher'` cookies:** migrate to `'aes'`.
   Existing cookie values are lost once: for example, users who logged in with
   a remember-me cookie have to log in again, and preferences stored in cookies
@@ -917,8 +920,12 @@ Do not rely on `'cipher'` to keep a value secret, whatever the seed.
    Set it as the `COOKIE_KEY` environment variable: in `config/.env` for
    development, and as a real environment variable in production.
 
-2. Make sure that `config/core.php` enables OpenSSL. The `'aes'` type uses
-   `Security::encrypt()`, and `mcrypt` is not bundled with PHP 7.2 and later:
+2. Make sure `Security.useOpenSsl` is `true` (the app skeleton sets it). The
+   `'aes'` type uses `Security::encrypt()` and `Security::decrypt()`, which use
+   OpenSSL only when this setting is `true`; otherwise they call `mcrypt`,
+   which does not exist on PHP 8, and `'aes'` cookies fail. Older applications
+   may not have the line, so add it to `config/core.php` (see
+   [Enable OpenSSL](/appendices/migrating-from-cakephp-2-10#enable-openssl)):
 
    ```php
    Configure::write('Security.useOpenSsl', true);

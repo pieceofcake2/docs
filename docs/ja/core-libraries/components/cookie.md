@@ -95,7 +95,8 @@ public function beforeFilter()
 > [!IMPORTANT]
 > デフォルトのタイプは `'cipher'` で、`Security.cipherSeed` をどの値にしても安全ではありません。
 > `'aes'` を使い、32 バイト以上の乱数の専用のキーを設定してください。キーはコードに書かず、
-> 上の例のように環境変数から読み込みます。キーの生成方法と既存の Cookie の移行方法は
+> 上の例のように環境変数から読み込みます。また、`Security.useOpenSsl` が `true` になっていることを
+> 確認してください (app スケルトンでは設定済みです。下記を参照してください)。キーの生成方法と既存の Cookie の移行方法は
 > [cipherSeed と Cookie の 'cipher' タイプ](/ja/development/configuration#cipher-seed) を参照してください。
 
 ::: pieceofcake2
