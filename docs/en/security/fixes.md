@@ -167,8 +167,7 @@ tamper with their values.
 
 This affects `pieceofcake2/cakephp` 2.12.5 and earlier, and every
 `cakephp/cakephp` 2.x release. See the security advisory
-[GHSA-65v5-h65v-8pgg](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-65v5-h65v-8pgg). A CVE ID has been
-requested and is still pending.
+[GHSA-65v5-h65v-8pgg](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-65v5-h65v-8pgg).
 
 `'cipher'` cannot be made secure without breaking every existing cookie, so
 2.12.6 does not change how values are encrypted. Instead it:

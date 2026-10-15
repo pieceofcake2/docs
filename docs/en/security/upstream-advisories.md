@@ -23,7 +23,7 @@ The SSRF in `Xml::build()` with `'readFile' => false`
 fixed in 2.12.3) was found in the fork and has no upstream advisory.
 
 The weakness of the `'cipher'` encryption and `Security.cipherSeed`
-([GHSA-65v5-h65v-8pgg](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-65v5-h65v-8pgg), CVE pending) was also found in the fork and has
+([GHSA-65v5-h65v-8pgg](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-65v5-h65v-8pgg)) was also found in the fork and has
 no upstream advisory. It affects every `cakephp/cakephp` 2.x release as well,
 and will not be fixed there, because CakePHP 2.x has reached End of Life. In
 the fork, `'cipher'` is deprecated with warnings since 2.12.6, but it remains
