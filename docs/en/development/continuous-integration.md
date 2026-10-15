@@ -16,13 +16,13 @@ A CakePHP 2 application usually runs these jobs:
 | Job | Tool | What it checks | Details |
 | --- | --- | --- | --- |
 | PHPUnit | `vendor/bin/phpunit` | Unit tests and integration tests (the `App` suite), on each supported PHP version | [Testing](/development/testing), [Integration Testing](/development/integration-testing) |
-| Coding standard | `vendor/bin/phpcs` | The CakePHP coding standard | [Coding Standards](/contributing/cakephp-coding-conventions) |
+| Coding standard | `vendor/bin/phpcs` | The CakePHP coding standard, with the `CakePHP2` standard of pieceofcake2/phpcs-cakephp2 | [Coding Standards](/contributing/cakephp-coding-conventions) |
 | PHPStan | `vendor/bin/phpstan` | Bugs found without running the code | [Static Analysis](/development/static-analysis) |
 | End-to-End | `vendor/bin/phpunit --testsuite EndToEnd` | Pages in a real browser | [End-to-End Testing](/development/e2e-testing) |
 
 The `pieceofcake2/app` skeleton already includes the configuration for the
 first three: `phpunit.xml.dist`, `phpcs.xml` and `phpstan.neon`, with PHPUnit,
-the CakePHP codesniffer, PHPStan and
+[pieceofcake2/phpcs-cakephp2](https://pieceofcake2.github.io/phpcs-cakephp2/), PHPStan and
 [pieceofcake2/phpstan-cakephp2](https://pieceofcake2.github.io/phpstan-cakephp2/)
 as development dependencies. Its `phpunit.xml.dist` also has an `EndToEnd` test
 suite next to the default `App` suite. End-to-End tests need
@@ -386,8 +386,8 @@ by `EmailTrait` and are not delivered. See
 ### Coding Standard
 
 The coding standard job runs PHP_CodeSniffer with the skeleton's `phpcs.xml`,
-which is based on the CakePHP 5 coding standard with exclusions for CakePHP 2
-code. `--report-full` shows the violations in the log, and
+which uses the `CakePHP2` standard of [pieceofcake2/phpcs-cakephp2](https://pieceofcake2.github.io/phpcs-cakephp2/): the CakePHP 5
+coding standard with exclusions for CakePHP 2 code. `--report-full` shows the violations in the log, and
 `--report-checkstyle` writes them to a file. When the check fails,
 [cs2pr](https://github.com/staabm/annotate-pull-request-from-checkstyle),
 which setup-php installs with `tools: cs2pr`, turns the file into annotations

@@ -16,12 +16,12 @@ CakePHP 2 のアプリケーションでは、通常、次のジョブを実行�
 | ジョブ | ツール | チェックする内容 | 詳細 |
 | --- | --- | --- | --- |
 | PHPUnit | `vendor/bin/phpunit` | ユニットテストと統合テスト (`App` スイート、サポートする PHP のバージョンごと) | [テスト](/ja/development/testing)、[統合テスト](/ja/development/integration-testing) |
-| コーディング規約 | `vendor/bin/phpcs` | CakePHP のコーディング規約 | [コーディング規約](/ja/contributing/cakephp-coding-conventions) |
+| コーディング規約 | `vendor/bin/phpcs` | CakePHP のコーディング規約 (pieceofcake2/phpcs-cakephp2 の `CakePHP2` 規約) | [コーディング規約](/ja/contributing/cakephp-coding-conventions) |
 | PHPStan | `vendor/bin/phpstan` | コードを実行せずに見つかるバグ | [静的解析](/ja/development/static-analysis) |
 | End-to-End | `vendor/bin/phpunit --testsuite EndToEnd` | 本物のブラウザーでのページの動作 | [End-to-End テスト](/ja/development/e2e-testing) |
 
 `pieceofcake2/app` スケルトンには、最初の 3 つの設定ファイル `phpunit.xml.dist`、`phpcs.xml`、
-`phpstan.neon` が含まれており、PHPUnit、CakePHP のコードスニファー、PHPStan、
+`phpstan.neon` が含まれており、PHPUnit、[pieceofcake2/phpcs-cakephp2](https://pieceofcake2.github.io/phpcs-cakephp2/)、PHPStan、
 [pieceofcake2/phpstan-cakephp2](https://pieceofcake2.github.io/phpstan-cakephp2/) が開発用の
 依存パッケージになっています。`phpunit.xml.dist` には、デフォルトの `App` スイートのほかに
 `EndToEnd` テストスイートもあります。End-to-End テストには
@@ -384,7 +384,8 @@ PHPUnit のジョブは、スケルトンの `phpunit.xml.dist` を使って `te
 ### コーディング規約
 
 コーディング規約のジョブは、スケルトンの `phpcs.xml` を使って PHP_CodeSniffer を実行します。
-この設定は CakePHP 5 のコーディング規約をもとに、CakePHP 2 のコードに合わない規則を除外したものです。
+この設定は [pieceofcake2/phpcs-cakephp2](https://pieceofcake2.github.io/phpcs-cakephp2/) の `CakePHP2` 規約を使います。CakePHP 5 のコーディング規約から、
+CakePHP 2 のコードに合わない規則を除外したものです。
 `--report-full` は違反をログに表示し、`--report-checkstyle` は違反をファイルに書き出します。
 チェックが失敗すると、setup-php の `tools: cs2pr` でインストールされる
 [cs2pr](https://github.com/staabm/annotate-pull-request-from-checkstyle) が、そのファイルを
