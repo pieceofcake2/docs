@@ -245,22 +245,23 @@ always take precedence over the files.
 
 ### .env File Syntax
 
-A `.env` file contains one `NAME="value"` assignment per line. Lines starting
-with `#` are comments, and an `export ` prefix is allowed, so the file can
-also be read by a shell:
+A `.env` file contains one `NAME="value"` assignment per line, the common
+dotenv style also used by Symfony and Laravel. Lines starting with `#` are
+comments. The parser also accepts an `export ` prefix, but it is not needed:
 
-```bash
+```dotenv
 # config/.env
-export DEBUG="2"
-export SECURITY_SALT="a-long-random-string"
-export DB_HOST="127.0.0.1"
+DEBUG="2"
+SECURITY_SALT="a-long-random-string"
+DB_HOST="127.0.0.1"
 ```
 
 Always quote the values. josegonzalez/dotenv converts unquoted values to
 booleans, numbers or `null`: `007` becomes `7`, and a long digit string such
-as a cipher seed overflows to a different number. Quoted values are kept as
-they are. Inside double quotes, `${NAME}` is replaced with the value of a
-variable defined earlier in the file.
+as a cipher seed overflows to a different number, and in an unquoted value a
+`#` after a space starts a comment. Quoted values are kept as they are.
+Inside double quotes, `${NAME}` is replaced with the value of a variable
+defined earlier in the file.
 
 ### Adding .env Support to an Existing Application
 
@@ -332,13 +333,13 @@ copy the `__construct()` and `applyEnv()` methods from
 
 For example, a `config/.env` file for development:
 
-```bash
+```dotenv
 # config/.env
-export DEBUG="2"
-export DB_HOST="127.0.0.1"
-export DB_USERNAME="my_app"
-export DB_PASSWORD="secret"
-export DB_DATABASE="my_app"
+DEBUG="2"
+DB_HOST="127.0.0.1"
+DB_USERNAME="my_app"
+DB_PASSWORD="secret"
+DB_DATABASE="my_app"
 ```
 
 ## Class Loading and Additional Class Paths
