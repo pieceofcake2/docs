@@ -526,7 +526,7 @@ same DynamoDB session handler, SES email transport, DynamoDB cache engine and
 S3 stream wrapper with smaller dependencies: it uses
 [AsyncAws](https://async-aws.com), which installs only the AWS services that
 you use instead of the whole AWS SDK. This keeps the Lambda package small. See
-[Migrating from pieceofcake2/aws](https://pieceofcake2.github.io/async-aws/#migrating-from-pieceofcake2aws).
+[Migrating from pieceofcake2/aws](https://pieceofcake2.github.io/async-aws/migrating-from-aws.html).
 :::
 
 ### Sessions
@@ -563,7 +563,7 @@ if (env('SESSION_TABLE')) {
 The plugin is loaded in `config/bootstrap.php`, after `config/core.php`; this
 works because the session starts later, on the first access to the session. A
 DynamoDB table works without a VPC and is billed per request. See
-[DynamoDB Session Handler](https://pieceofcake2.github.io/aws/#dynamodb-session-handler)
+[DynamoDB Session Handler](https://pieceofcake2.github.io/aws/session.html)
 for the other options, such as session locking.
 
 ### Cache
@@ -601,7 +601,7 @@ encryption inside a private VPC, or check that your PHP Redis client accepts
 the `tls://` prefix in `server` before you rely on it. For a pay-per-request
 alternative without a VPC, store cached data in DynamoDB with the
 `AsyncAws.DynamoDb` engine of
-[pieceofcake2/async-aws](https://pieceofcake2.github.io/async-aws/#dynamodb-cache-engine). See [Caching](/core-libraries/caching) for the cache
+[pieceofcake2/async-aws](https://pieceofcake2.github.io/async-aws/cache.html). See [Caching](/core-libraries/caching) for the cache
 engines.
 
 ### Email
@@ -629,7 +629,7 @@ the sender, as in the `iam` section of the `serverless.yml` example. While the
 account is in the sandbox, SES may also check the permission against the
 verified recipient addresses; add their identity ARNs if sending is denied.
 See
-[Amazon SES Email Transport](https://pieceofcake2.github.io/aws/#amazon-ses-email-transport)
+[Amazon SES Email Transport](https://pieceofcake2.github.io/aws/email.html)
 and [Email](/core-utility-libraries/email).
 
 ### File Uploads and S3
@@ -718,9 +718,9 @@ The [Upload plugin](https://pieceofcake2.github.io/upload/) moves files on the
 local filesystem. To use it on Lambda, its `handleUploadedFileCallback` option
 can name a model method that stores the file elsewhere; check that the paths
 the plugin creates are under `/tmp`. The AWS plugin can also register the
-[S3 stream wrapper](https://pieceofcake2.github.io/aws/#s3-stream-wrapper), so
+[S3 stream wrapper](https://pieceofcake2.github.io/aws/s3.html), so
 that PHP file functions accept `s3://bucket/key` paths; pieceofcake2/async-aws
-has the [same wrapper](https://pieceofcake2.github.io/async-aws/#s3-stream-wrapper).
+has the [same wrapper](https://pieceofcake2.github.io/async-aws/s3.html#s3-stream-wrapper).
 
 ### Static Assets
 

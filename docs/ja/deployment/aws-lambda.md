@@ -522,7 +522,7 @@ Configure::write('Aws', [
 SES のメールトランスポート、DynamoDB のキャッシュエンジン、S3 ストリームラッパーを、
 より小さな依存関係で提供します。AWS SDK 全体ではなく、使う AWS のサービスだけをインストールする
 [AsyncAws](https://async-aws.com) を使うので、Lambda のパッケージを小さくできます。
-[Migrating from pieceofcake2/aws](https://pieceofcake2.github.io/async-aws/#migrating-from-pieceofcake2aws)
+[Migrating from pieceofcake2/aws](https://pieceofcake2.github.io/async-aws/migrating-from-aws.html)
 を参照してください。
 :::
 
@@ -561,7 +561,7 @@ if (env('SESSION_TABLE')) {
 プラグインは `config/core.php` の後の `config/bootstrap.php` で読み込みますが、セッションは
 その後、セッションに最初にアクセスしたときに開始するので問題ありません。DynamoDB のテーブルは
 VPC なしで使え、料金はリクエストごとです。セッションのロックなど、ほかのオプションについては
-[DynamoDB Session Handler](https://pieceofcake2.github.io/aws/#dynamodb-session-handler)
+[DynamoDB Session Handler](https://pieceofcake2.github.io/aws/session.html)
 を参照してください。
 
 <a id="cache"></a>
@@ -598,7 +598,7 @@ ElastiCache は VPC の中で動くので、関数も同じ VPC で実行する�
 かかります。`RedisEngine` には TLS のオプションがないので、プライベートな VPC の中で転送中の
 暗号化を使わないクラスターを使うか、PHP の Redis クライアントが `server` の `tls://`
 プレフィックスを受け付けることを確認してから使ってください。VPC なしでリクエストごとの料金に
-したい場合は、[pieceofcake2/async-aws](https://pieceofcake2.github.io/async-aws/#dynamodb-cache-engine)
+したい場合は、[pieceofcake2/async-aws](https://pieceofcake2.github.io/async-aws/cache.html)
 の `AsyncAws.DynamoDb` エンジンで、キャッシュするデータを DynamoDB に保存できます。
 キャッシュエンジンについては [キャッシュ](/ja/core-libraries/caching)
 を参照してください。
@@ -628,7 +628,7 @@ class EmailConfig
 送信元の ID に対する `ses:SendEmail` の権限が必要です (`serverless.yml` の例の `iam` のセクションを参照)。
 アカウントがサンドボックスにある間は、SES が検証済みの送信先アドレスに対しても権限を確認することがあります。
 送信が拒否された場合は、それらの ID の ARN も追加してください。
-[Amazon SES Email Transport](https://pieceofcake2.github.io/aws/#amazon-ses-email-transport)
+[Amazon SES Email Transport](https://pieceofcake2.github.io/aws/email.html)
 と [メール](/ja/core-utility-libraries/email) を参照してください。
 
 <a id="file-uploads-and-s3"></a>
@@ -716,9 +716,9 @@ public function download($id)
 ファイルを移動します。Lambda で使うには、`handleUploadedFileCallback` オプションでファイルを
 別の場所に保存するモデルのメソッドを指定できます。プラグインが作成するパスが `/tmp` の下に
 なることを確認してください。AWS プラグインは
-[S3 ストリームラッパー](https://pieceofcake2.github.io/aws/#s3-stream-wrapper) を登録することも
+[S3 ストリームラッパー](https://pieceofcake2.github.io/aws/s3.html) を登録することも
 でき、PHP のファイル関数で `s3://bucket/key` のパスを使えるようになります。
-pieceofcake2/async-aws にも[同じラッパー](https://pieceofcake2.github.io/async-aws/#s3-stream-wrapper)があります。
+pieceofcake2/async-aws にも[同じラッパー](https://pieceofcake2.github.io/async-aws/s3.html#s3-stream-wrapper)があります。
 
 <a id="static-assets"></a>
 
