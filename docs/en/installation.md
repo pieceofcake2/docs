@@ -43,6 +43,9 @@ CakePHP also uses the following PHP extensions:
   the deprecated `strftime()` for date formatting and requires `intl`.
 - `openssl` is optional, but required for SSL/TLS connections and for AES
   encryption with [Security](core-utility-libraries/security).
+- `mcrypt` is optional and only needed for the legacy `Security::rijndael()`
+  and the `'rijndael'` cookie type. It is not bundled with PHP 7.2 and later;
+  see [Encryption on PHP 8](/security/fixes#encryption-on-php-8).
 
 ::: pieceofcake2
 PHP 8.0 or newer is required, and
