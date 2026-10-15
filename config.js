@@ -47,6 +47,16 @@ export default ({ bookNav }) => ({
       themeConfig: {
         nav: bookNav({ locale: "ja" }),
         sidebar: toc_ja,
+        editLink: {
+          pattern: "https://github.com/pieceofcake2/docs/edit/2.x/docs/:path",
+          text: "GitHub でこのページを編集",
+        },
+        docFooter: { prev: "前のページ", next: "次のページ" },
+        outline: { label: "このページの内容" },
+        lastUpdated: { text: "最終更新" },
+        returnToTopLabel: "ページの先頭へ",
+        sidebarMenuLabel: "メニュー",
+        darkModeSwitchLabel: "ダークモード",
         versionBanner: {
           message: 'このドキュメントは、CakePHP 2.x の PHP 8 対応フォーク pieceofcake2/cakephp のものです。',
           link: '/docs/ja/getting-started#about-this-fork',
