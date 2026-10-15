@@ -57,7 +57,7 @@ input without checking it (see [Security Fixes](/security/fixes)).
 
 Validate every field from the request on the server with model validation
 rules, and save user data with validation enabled. Use allow lists and length
-limits, limit the saved fields with `fieldList`, and from v2.12.6 reject
+limits, limit the saved fields with `fieldList`, and since v2.12.6 reject
 invalid UTF-8 with the `utf8` rule. See
 [Validate Input](/security/escaping-and-sanitizing-html#validate-input) and
 [Data Validation](/models/data-validation).

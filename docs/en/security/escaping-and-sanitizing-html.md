@@ -45,7 +45,7 @@ and uploaded files) before you save it or use it:
   length of every text field.
 - Reject invalid input instead of repairing it. Do not strip or rewrite values
   silently; show the validation errors to the user.
-- Check the character encoding. From v2.12.6, the `utf8` rule rejects invalid
+- Check the character encoding. Since v2.12.6, the `utf8` rule rejects invalid
   UTF-8 byte sequences (and, by default, characters outside the Basic
   Multilingual Plane for MySQL's 3-byte `utf8`; use `'extended' => true` for
   `utf8mb4`).

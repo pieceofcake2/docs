@@ -67,6 +67,11 @@ the points that changed:
   CakePHP 5 method names, see
   [Integration Testing](development/integration-testing). The application
   skeleton loads `.env` files (pieceofcake2/app 2.4.0), see [Environment Variables](development/configuration#environment-variables).
+  In debug mode, the core error pages use the CakePHP 5 layout with code
+  excerpts and editor links, see
+  [Debug Error Pages](development/debugging#debug-error-pages), and the
+  `utf8` validation rule rejects invalid UTF-8, see
+  [Data Validation](models/data-validation) (both CakePHP 2.12.6).
 - **Bake and plugins.** Bake and the upgrade shell moved out of the core into
   plugins, and the major CakePHP 2 plugins are maintained for PHP 8. See
   [Code Generation with Bake](console-and-shells/code-generation-with-bake) and

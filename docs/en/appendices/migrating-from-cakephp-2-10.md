@@ -26,6 +26,182 @@ Before migrating to this fork, ensure:
 4. **Upgrade PHP**: Update your PHP version to 8.0 or newer
 5. **Test Thoroughly**: Run your application's test suite to ensure compatibility
 
+## v2.12.6
+
+Changes in v2.12.6 that may affect applications already running on the fork.
+
+### Security fix: 'cipher' encryption is deprecated ([PR #62](https://github.com/pieceofcake2/cakephp/pull/62)) {#cipher-deprecated}
+
+`Security::cipher()` and the `'cipher'` type of `CookieComponent` (its default
+type) are not secure with any `Security.cipherSeed`
+([GHSA-65v5-h65v-8pgg](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-65v5-h65v-8pgg)).
+They are now deprecated. Values are encrypted exactly as before, and nothing
+throws, but:
+
+- The first `'cipher'` use in a process (one request or one console run)
+  writes a `warning` to the log, also with debug off. With debug on, the same
+  message is also triggered as `E_USER_DEPRECATED`. The `'aes'` and
+  `'rijndael'` types and unencrypted cookies log nothing.
+- A `Security.cipherSeed` that is not a digits-only number from 1 to
+  4294967295 is reported: the first `Security::cipher()` call logs a
+  `warning` (the seed is never logged), and with debug on
+  `Debugger::checkSecurityKeys()` (called by `AuthComponent`) triggers an
+  `E_USER_NOTICE`. The notice asking you to change the default seed now fires
+  for both the former default `'76859309657453542496749683645'` and the new
+  default `'2659758734'`.
+- The fallback `config/core.php` of the core (used only when the application
+  has no `config/core.php`) sets `Security.cipherSeed` to `'2659758734'` and
+  `Security.useOpenSsl` to `true`.
+
+**Migration:**
+
+- Do not change `Security.cipherSeed` just to silence the warning. A new seed
+  makes existing `'cipher'` cookies unreadable, and `'cipher'` stays insecure.
+  Switch to `'aes'` as described in
+  [Migrating to 'aes'](/development/configuration#migrating-to-aes).
+- If your test suite turns deprecations or notices into exceptions, the first
+  `'cipher'` use in a test run, or `AuthComponent` with debug on and an
+  out-of-range seed, now fails. Pass `'aes'` as the mode of
+  `cookieEncrypted()` / `assertCookieEncrypted()` once the application uses
+  `'aes'`, or set an in-range seed in the test configuration.
+- Replace your own calls to `Security::cipher()` with `Security::encrypt()` /
+  `Security::decrypt()` and a key of at least 32 bytes.
+
+See [Security Fixes](/security/fixes#cipher) and
+[cipherSeed and the 'cipher' Cookie Type](/development/configuration#cipher-seed).
+
+### CookieComponent reads `Cookie.type` and `Cookie.key` ([PR #62](https://github.com/pieceofcake2/cakephp/pull/62)) {#cookie-type-key}
+
+- Without a `'key'` setting, `CookieComponent` uses Configure `Cookie.key`
+  when it is a non-empty string, otherwise `Security.salt` as before.
+- Without a `'type'` setting, it uses Configure `Cookie.type` when it is set,
+  otherwise `'cipher'` as before. An invalid value triggers the usual
+  `E_USER_WARNING` and falls back to `'cipher'`.
+- An explicit `'key'` / `'type'` setting, `$this->Cookie->key = ...` or
+  `$this->Cookie->type(...)` always wins.
+- `cookieEncrypted()` / `assertCookieEncrypted()` of `IntegrationTestTrait`
+  use the same default key.
+
+Nothing changes for applications that set neither value. To switch the whole
+application to `'aes'`, set these in `config/core.php`:
+
+```php
+Configure::write('Security.useOpenSsl', true);
+Configure::write('Cookie.type', 'aes');
+Configure::write('Cookie.key', env('COOKIE_KEY') ?: null);
+```
+
+`'aes'` needs a key of at least 32 bytes. Setting `Cookie.key` while still on
+`'cipher'` changes the key, so existing `'cipher'` cookies become unreadable.
+See [Cookie](/core-libraries/components/cookie).
+
+### Debug error pages in the CakePHP 5 style ([PR #60](https://github.com/pieceofcake2/cakephp/pull/60)) {#dev-error-pages}
+
+- In debug mode, the core error pages use a new `dev_error` layout ported
+  from CakePHP 5, with code excerpts for every stack frame and `(edit)` links
+  that open the file in your editor (PhpStorm by default; set
+  `Debugger.editor` and, in a container, `Debugger.editorBasePath`). See
+  [Debug Error Pages](/development/debugging#debug-error-pages).
+- Production mode (`debug` = 0), AJAX requests and the console are unchanged,
+  and no existing PHP API changed. Error templates provided by your
+  application, plugin or theme keep rendering in your layout, and the
+  `exception_stack_trace` element still works.
+
+**Migration:**
+
+- To keep the old look for the core error pages, provide your own
+  `Layouts/dev_error.ctp` (in `templates/Layouts/`, `app/View/Layouts/` or a
+  theme), which receives the blocks `title`, `subheading`, `file` and
+  `templateName` and the `$error` view variable, or copy the error templates
+  you want to keep from the previous release into your `Errors/` directory:
+
+  ```php
+  <?php $this->extend('/Layouts/default'); ?>
+  <h2><?php echo $this->fetch('title'); ?></h2>
+  <p class="error"><?php echo $this->fetch('subheading'); ?></p>
+  <?php echo $this->fetch('file'); ?>
+  <?php echo $this->element('exception_stack_trace'); ?>
+  ```
+
+### Exceptions instead of `E_USER_ERROR` ([PR #58](https://github.com/pieceofcake2/cakephp/pull/58)) {#user-error-exceptions}
+
+Triggering `E_USER_ERROR` is deprecated as of PHP 8.4, so these errors are now
+exceptions with the same message:
+
+- `Configure::bootstrap()` throws `ConfigureException` when the application
+  `core.php` or `bootstrap.php` cannot be included. The console prints the
+  message as `Error: ...` and exits with code 1.
+- `TranslateBehavior` throws `CakeException` when the model's datasource is
+  not connected, or when `bindTranslation()` is given an association name that
+  is already bound to the model. See [Translate](/core-libraries/behaviors/translate).
+- `bin/cake` prints a missing Composer autoloader to STDERR and exits with
+  code 1.
+
+**Migration:** execution already stopped at these points, so most applications
+need no change. If a custom error handler caught these `E_USER_ERROR` errors
+and continued, catch the exceptions instead. See [Exceptions](/development/exceptions).
+
+### ConsoleLog color detection ([PR #58](https://github.com/pieceofcake2/cakephp/pull/58)) {#consolelog-colors}
+
+- `ConsoleLog` decides between colored and plain output by checking whether
+  its `stream` is a terminal, not STDIN. Logging to a file or pipe from a
+  terminal no longer writes ANSI escape codes, and logging to `php://stderr`
+  on a terminal is colored even when STDIN is redirected.
+- `ConsoleOutput` uses `stream_isatty()`, so streams that cannot be checked
+  (`php://memory`, `php://temp`) get plain output without a warning.
+
+**Migration:** set `'outputAs' => ConsoleOutput::COLOR` (or `PLAIN` / `RAW`)
+in the log configuration to choose the format yourself. See
+[Logging](/core-libraries/logging).
+
+### New validation rule `Validation::utf8()` ([PR #64](https://github.com/pieceofcake2/cakephp/pull/64)) {#validation-utf8}
+
+- A backport of the CakePHP 5 rule. It checks that a value is a valid UTF-8
+  string without characters above the Basic Multilingual Plane, which MySQL's
+  `utf8` (`utf8mb3`) columns cannot store. With `['extended' => true]`, such
+  characters are allowed (for `utf8mb4`). Non-string values and invalid byte
+  sequences are rejected in both modes:
+
+  ```php
+  public $validate = [
+      'title' => ['rule' => 'utf8'],
+      'body' => ['rule' => ['utf8', ['extended' => true]]],
+  ];
+  ```
+
+- No existing rule changes. A model method named `utf8()` keeps precedence
+  over the core rule. See [Data Validation](/models/data-validation).
+
+### Folder recognizes more stream wrapper schemes ([PR #63](https://github.com/pieceofcake2/cakephp/pull/63)) {#folder-stream-wrappers}
+
+- `Folder::isAbsolute()` and `Folder::isRegisteredStreamWrapper()` recognize
+  registered stream wrapper schemes that contain digits, `+`, `-` or `.`, such
+  as `s3://`. `Folder` and `File` no longer treat such paths as relative. See
+  [Folder & File](/core-utility-libraries/file-folder).
+
+### Console without an application `core.php` ([PR #59](https://github.com/pieceofcake2/cakephp/pull/59)) {#console-without-core-php}
+
+- When the application has no `config/core.php`, the console no longer stops
+  with the fatal error "Can't find application core file". It loads the
+  fallback `core.php` of the core, so commands that do not need the
+  application settings can run. Applications with a `config/core.php` are not
+  affected. See [Shells, Tasks & Console Tools](/console-and-shells).
+
+### PHPStan level 5 docblocks ([PR #56](https://github.com/pieceofcake2/cakephp/pull/56)) {#phpstan-docblocks}
+
+- The core (including `TestSuite`) passes PHPStan level 5 with
+  `pieceofcake2/phpstan-cakephp2` ^0.2.4, without a baseline. Only docblocks
+  were corrected; no native parameter, return or property types were added,
+  and no public or protected signature changed, so subclasses in applications
+  and plugins keep working.
+- Some properties that were created dynamically (deprecated as of PHP 8.2) are
+  now declared, for example `Scaffold::$redirect` and
+  `ControllerTestDispatcher::$response`.
+
+**Migration:** none needed. If you run PHPStan on your application, the
+corrected docblocks may report new errors in your code, or make baseline
+entries obsolete. See [Static Analysis](/development/static-analysis).
+
 ## v2.12.5
 
 Changes in v2.12.5 that may affect applications already running on the fork.
@@ -660,6 +836,10 @@ You can also call `$this->Cookie->type('aes');` in `beforeFilter()`.
 ::: pieceofcake2
 The `'type'` setting in `$components` is honored since v2.12.3. In v2.12.2 and
 earlier it was ignored and cookies were encrypted with `'cipher'`.
+
+Since v2.12.6, `'cipher'` is deprecated and logs a warning, and `Cookie.type`
+and `Cookie.key` in `config/core.php` set the default type and key; see
+[v2.12.6](#cipher-deprecated).
 :::
 
 On PHP 8, `'aes'` also needs `Security.useOpenSsl`; see

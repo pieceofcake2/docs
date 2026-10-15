@@ -30,6 +30,8 @@ and lists the pages of this book that were changed from the original.
 | View, layout and element names with `..` | Can resolve to any file on the server (path traversal) | Must resolve inside the view paths; other files are treated as missing | [Security Fixes](/security/fixes#view-path-traversal) |
 | Protocol-relative `Auth.redirect` URL | Redirects to another host after login (open redirect) | Collapsed to a local path | [Security Fixes](/security/fixes#auth-redirect) |
 | Sort direction in `order` | Appended to the SQL as given | `ASC` / `DESC` with optional `NULLS FIRST` / `NULLS LAST`; anything else triggers `E_USER_DEPRECATED` (v2.12.5), an exception in a future version | [Sort Order](/models/retrieving-your-data#sort-order) |
+| `'cipher'` encryption (default `CookieComponent` type) | Default type, insecure, no warning | Deprecated with a logged warning; out-of-range `Security.cipherSeed` reported; `Cookie.type` / `Cookie.key` set the defaults (v2.12.6) | [Security Fixes](/security/fixes#cipher) |
+| Error pages in debug mode | CakePHP 2 layout | CakePHP 5 style `dev_error` layout with code excerpts and editor links (v2.12.6) | [Debugging](/development/debugging#debug-error-pages) |
 | `.env` files | Not supported | Loaded by the `pieceofcake2/app` skeleton (v2.4.0) with josegonzalez/dotenv, not by the framework | [Environment Variables](/development/configuration#environment-variables) |
 
 For the complete list of breaking changes, see
@@ -68,6 +70,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - Removed the introduction and the blog tutorial that was included in the page; the tutorial is under [Tutorials & Examples](/tutorials-and-examples/blog/blog)
   - Moved to the top of the "Getting Started" sidebar group; the other pages follow in the order Installation, Advanced Installation, Web Server Configuration, Folder Structure, Conventions, Structure, A Typical CakePHP Request
   - "What's Different from CakePHP 2.10": the backports item links to [Integration Testing](/development/integration-testing) instead of the upgrade guide on GitHub
+  - "What's Different from CakePHP 2.10": the backports item mentions the debug error pages in the CakePHP 5 style and the `utf8` validation rule (v2.12.6)
 - [Installation](/installation)
   - Requirements: PHP 8.0-8.5, Composer, MySQL 5.6+/PostgreSQL 9.4+/SQLite 3/SQL Server 2022+, mbstring/intl/openssl notes
   - New application via `composer create-project pieceofcake2/app` (modern layout) with `database.php` and salt/cipherSeed setup
@@ -197,7 +200,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
 - [Cookie](/core-libraries/components/cookie)
   - Example uses type('aes') with `Security.useOpenSsl`; warning that the default 'cipher' is insecure and 'rijndael' needs mcrypt
   - Type set with `'Cookie' => ['type' => 'aes']` in `$components` (type() as an alternative); change note that the setting was ignored before v2.12.3; `Security.useOpenSsl` already enabled in the pieceofcake2/app v2.3.1 skeleton
-  - Note that the default type is 'cipher' and is insecure with any cipherSeed; recommend 'aes' with its own key in `Cookie.key` (from the `COOKIE_KEY` environment variable) and `Security.useOpenSsl`; the example no longer writes a key in the code; `Cookie.type` and `Cookie.key` in `config/core.php` become the defaults from v2.12.6; link to migrating to 'aes'
+  - Note that the default type is 'cipher' and is insecure with any cipherSeed; recommend 'aes' with its own key in `Cookie.key` (from the `COOKIE_KEY` environment variable) and `Security.useOpenSsl`; the example no longer writes a key in the code; `Cookie.type` and `Cookie.key` in `config/core.php` are the defaults since v2.12.6; link to migrating to 'aes'
 - [Flash](/core-libraries/components/flash)
   - Flash elements in `templates/Elements/Flash`
 - [Pagination](/core-libraries/components/pagination)
@@ -244,6 +247,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - Noted that the pieceofcake2/app skeleton (v2.3.1 and later) already enables `Security.useOpenSsl`
   - Which methods use `Security.salt` and `Security.cipherSeed`, with a link to generating them
   - Warning on `cipher()`: only seeds from 1 to 4294967295 are meaningful, the well-known default ends up as seed 0, and in-range seeds can still be brute-forced
+  - Change note: `cipher()` is deprecated since v2.12.6 and logs a warning; use `encrypt()` / `decrypt()`
 - [Set](/core-utility-libraries/set)
   - Test file path updated to `tests/TestCase/Utility/SetTest.php`
 - [CakeText](/core-utility-libraries/string)
@@ -298,8 +302,9 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - New "Environment Variables" section: the pieceofcake2/app skeleton loads `config/.env` and the project-root `.env` with josegonzalez/dotenv at the top of `config/core.php` (backport of the `.env` support of the CakePHP 3+/5 app skeleton; change note: added in app v2.4.0), precedence (real environment > `config/.env` > root `.env`), quoting advice, adding the loader to legacy-layout and older applications, and the variables read by the skeleton (`DEBUG`, `SECURITY_SALT`, `SECURITY_CIPHER_SEED`, `DB_*`, `DB_TEST_*`)
   - `App.baseUrl`: keep the document root at `webroot/` when the `.htaccess` files are removed
   - New "Generating the Security Salts" section: secure one-liners (PHP and shell), what depends on each value (the 'aes' cookie type mixes in `Security.salt` even with its own key), and how to rotate them
-  - New "cipherSeed and the 'cipher' Cookie Type" section: how `Security::cipher()` uses the seed, only 1-4294967295 meaningful, values with 27 or more digits (the default of the original `config/core.php`, the blog tutorial example and the old `.env.example` generator) end up as seed 0, in-range seeds are still not secure, impact, which action to take, migrating to 'aes' with a 32-byte key in `Cookie.key` (from `COOKIE_KEY`), `Cookie.type` set to 'aes' and `Security.useOpenSsl` set to true (`Cookie.type` and `Cookie.key` can be set in configuration from v2.12.6; controller form for v2.12.5 and earlier; exception when the fallback key `Security.salt` is shorter than 32 bytes), and the warnings planned for v2.12.6
+  - New "cipherSeed and the 'cipher' Cookie Type" section: how `Security::cipher()` uses the seed, only 1-4294967295 meaningful, values with 27 or more digits (the default of the original `config/core.php`, the blog tutorial example and the old `.env.example` generator) end up as seed 0, in-range seeds are still not secure, impact, which action to take, migrating to 'aes' with a 32-byte key in `Cookie.key` (from `COOKIE_KEY`), `Cookie.type` set to 'aes' and `Security.useOpenSsl` set to true (`Cookie.type` and `Cookie.key` can be set in configuration from v2.12.6; controller form for v2.12.5 and earlier; exception when the fallback key `Security.salt` is shorter than 32 bytes), and the warnings
   - `Security.cipherSeed` entry: only 1-4294967295 is meaningful and no value makes 'cipher' secure, with a link to the new section
+  - "Planned for v2.12.6" replaced by "Warnings Since v2.12.6": the deprecation warning for 'cipher' (once per process, `E_USER_DEPRECATED` in debug mode), the seed range warning and notice, the in-range default seed `'2659758734'` of the core's fallback `config/core.php`, and `Cookie.type` / `Cookie.key`; the former default seed is noted as the default up to v2.12.5
 - [Routing](/development/routing)
   - Routes file path changed to `config/routes.php` (legacy `app/Config/routes.php` noted with link to the folder structure page)
   - Built-in routes located in `vendor/pieceofcake2/cakephp/config/routes.php`; disabling them means removing the require line from `config/routes.php`
@@ -333,6 +338,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - Logs written to `logs/` (`debug.log`/`error.log`); Object replaced with CakeObject; App::uses('CakeLog') removed
   - DebugKit: install pieceofcake2/debug_kit with Composer and load it in `config/bootstrap.php`; links to the DebugKit documentation of the fork
   - DebugKit: describes the current toolbar (CakePHP icon in the bottom right-hand corner, panels, request history)
+  - New "Debug Error Pages" section (v2.12.6): the `dev_error` layout ported from CakePHP 5, `Debugger.editor` and `Debugger.editorBasePath` for the `(edit)` links, and overriding `Layouts/dev_error.ctp`
 - [Testing](/development/testing)
   - PHPUnit 9.6 installed with Composer (require-dev); PHPUnit 3.7/4.x/5.x, .phar and autoloader workaround instructions removed
   - Test cases in `tests/TestCase` and fixtures in `tests/Fixture`; configuration in `config/`; legacy `app/Test` layout mentioned as fallback
@@ -378,8 +384,10 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - Moved from `/appendices/security-fixes` (the old URL redirects to this page); the reporting section moved to Reporting a Vulnerability
   - Added the `Xml::build()` SSRF with `'readFile' => false` (fixed in 2.12.3); Cookie type set in `$components`; skeleton note for `Security.useOpenSsl`
   - Added the email header injection in SmtpTransport/MailTransport (GHSA-4f9q-3c4x-52cv), the path traversal in view, layout and element names (GHSA-w2mh-x92p-5p95) and the open redirect after login in AuthComponent (GHSA-x4p9-p4cx-gxwx), all fixed in 2.12.5; the table lists GHSA IDs; note that applications on the original CakePHP 2.x can switch to pieceofcake2/cakephp to get the fixes
+  - Added the weak 'cipher' encryption and `Security.cipherSeed` (GHSA-65v5-h65v-8pgg, CVE pending): what 2.12.6 changed (deprecation warning, seed range warning, in-range default seed, `Cookie.type` / `Cookie.key`), that 'cipher' remains insecure, and switching to 'aes' with `Security.useOpenSsl`; link to the cipherSeed section of Configuration
 - [Upstream Advisories](/security/upstream-advisories)
   - New page: status of the upstream CakePHP advisories that concern CakePHP 2.x (fixed in the fork, or not applicable), from the fork's CHANGELOG, `UPGRADE.md` and advisories
+  - Note that the 'cipher' weakness (GHSA-65v5-h65v-8pgg) has no upstream advisory and affects the original CakePHP 2.x, where it will not be fixed
 - [Hardening Checklist](/security/hardening)
   - New page: debug 0, unique salt and cipher seed, Composer updates, SecurityComponent/CSRF, cookie and session flags, file permissions, HTTPS, supported PHP versions; links to the pages that describe each setting
 - [Output Escaping and HTML Sanitization](/security/escaping-and-sanitizing-html)
@@ -459,5 +467,6 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
 - [Migrating from CakePHP 2.10](/appendices/migrating-from-cakephp-2-10)
   - Added a v2.12.3 section (Xml::build() SSRF fix, Cookie `'type'` setting, ServerShell port, test case listing, SQL Server ERRMODE); Cookie example uses `$components`
   - Added a v2.12.5 section (security fixes for email headers, view/layout/element names and the login redirect; deprecation of invalid ORDER BY directions)
+  - Added a v2.12.6 section ('cipher' deprecation and seed warnings, `Cookie.type` / `Cookie.key`, debug error pages in the CakePHP 5 style, exceptions instead of `E_USER_ERROR`, ConsoleLog colors, `Validation::utf8()`, Folder stream wrapper schemes, the console without an application `core.php`, PHPStan level 5 docblocks); the 'cipher' breaking-change section links to it
 - [Migrating from SimpleTest to PHPUnit 3.7](/appendices/phpunit-migration-hints)
   - Retitled "Migrating from SimpleTest to PHPUnit 3.7" and linked to the new PHPUnit 9.6 guide

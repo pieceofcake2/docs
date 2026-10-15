@@ -56,6 +56,10 @@ CakePHP 2.10 を知っていれば、その知識のほとんどはそのまま�
   [統合テスト](development/integration-testing) を参照してください。アプリケーションスケルトンは
   `.env` ファイルを読み込みます (pieceofcake2/app 2.4.0)。
   [環境変数](development/configuration#environment-variables) を参照してください。
+  デバッグモードでは、コアのエラーページがコードの抜粋とエディターへのリンクを含む CakePHP 5 の
+  レイアウトで表示されます。[デバッグ用のエラーページ](development/debugging#debug-error-pages)
+  を参照してください。また、`utf8` バリデーションルールで不正な UTF-8 を拒否できます。
+  [データバリデーション](models/data-validation) を参照してください (どちらも CakePHP 2.12.6)。
 - **Bake とプラグイン。** Bake とアップグレード用のシェルはコアからプラグインに移りました。
   また、主要な CakePHP 2 のプラグインも PHP 8 対応版がメンテナンスされています。
   [Bakeでコード生成](console-and-shells/code-generation-with-bake) と

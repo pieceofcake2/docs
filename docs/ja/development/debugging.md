@@ -167,6 +167,35 @@ Debugger のシングルトンを返します。クラス名を渡すと、CakeP
 ::: info Added in version 2.1
 :::
 
+## デバッグ用のエラーページ {#debug-error-pages}
+
+::: pieceofcake2
+v2.12.6 以降では、デバッグモード (`debug` > 0) のときのコアのエラーページ (コントローラー・アクション・
+ビュー・レイアウトが見つからない場合、データベースのエラー、アプリケーションに `error400.ctp` /
+`error500.ctp` がない場合の捕捉されなかった例外) は、CakePHP 5 から移植した `dev_error` レイアウトを
+使います。エラーのタイトルと例外のクラス、実際のファイルパスを使った修正方法の提案、例外と前の例外の
+スタックトレースを表示します。スタックトレースには、すべてのフレームのコードの抜粋と、エディターで
+ファイルを開く `(edit)` リンクがあります。
+
+リンクはデフォルトで PhpStorm を開きます。ほかのエディターを使うには、`Debugger.editor` に `atom`、
+`emacs`、`macvim`、`sublime`、`textmate`、`vscode`、`vscodium` のいずれかを設定します。
+アプリケーションをコンテナーで動かしている場合は、`Debugger.editorBasePath` に手元のマシンでの
+アプリケーションのパスを設定してください。
+
+```php
+// config/core.php
+Configure::write('Debugger.editor', 'vscode');
+Configure::write('Debugger.editorBasePath', '/home/me/projects/my_app');
+```
+
+`Debugger::editorUrl()`、`Debugger::setEditor()`、`Debugger::addEditor()` は CakePHP 5 と同じように
+動作します。本番モード (`debug` = 0)、AJAX リクエスト、コンソールでは何も変わりません。
+アプリケーション、プラグイン、テーマが用意したエラーテンプレートは、これまでどおりアプリケーションの
+レイアウトで表示されます。アプリケーションまたはテーマの `Layouts/dev_error.ctp` はコアのレイアウトより
+優先されます。以前の見た目のままにする方法は
+[CakePHP 2.10 からの移行](/ja/appendices/migrating-from-cakephp-2-10#dev-error-pages) を参照してください。
+:::
+
 ## ログ出力によるデバッグ
 
 アプリケーションをデバッグするもう一つの良い方法はログメッセージです。
