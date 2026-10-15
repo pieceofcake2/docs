@@ -44,7 +44,7 @@ CakePHP のテストフレームワークは、PHPUnit を基礎としていま�
 CakePHP 2 のテストには PHPUnit 9.6 を使います。`composer.json` があるディレクトリで
 次のコマンドを実行し、開発用の依存パッケージとしてインストールしてください。
 
-``` bash
+```bash
 composer require --dev phpunit/phpunit:^9.6
 ```
 
@@ -70,7 +70,7 @@ Piece of Cake 2 フォークでは、PHPUnit 3.7 (または 4.x/5.x) ではな�
 テストを実行する前には、必ず `config/database.php` に `$test` のデータベース設定を
 追加しましょう。この設定は CakePHP のフィクスチャテーブルやデータで使われます。
 
-``` php
+```php
 public $test = [
     'datasource' => 'Database/Mysql',
     'persistent' => false,
@@ -93,7 +93,7 @@ public $test = [
 PHPUnit のインストールと `$test` データベースの設定が済んだら、プロジェクトのルートで
 PHPUnit を実行してみましょう。
 
-``` bash
+```bash
 vendor/bin/phpunit
 ```
 
@@ -128,7 +128,7 @@ CakePHP は `tests/` ディレクトリがあればそれを使い、無けれ�
 
 テストケースを作成したら、コマンドラインから PHPUnit または test シェルで実行できます。
 
-``` bash
+```bash
 vendor/bin/phpunit tests/TestCase/Model/PostTest.php
 bin/cake test app Model/Post
 ```
@@ -141,7 +141,7 @@ bin/cake test app Model/Post
 これからテストのために作成するメソッドは HTML でプログレスバーを作成します。
 おおよそこのような感じです。
 
-``` php
+```php
 // src/View/Helper/ProgressHelper.php
 class ProgressHelper extends AppHelper
 {
@@ -163,7 +163,7 @@ class ProgressHelper extends AppHelper
 ヘルパーを作成し、保存したら、 `tests/TestCase/View/Helper/ProgressHelperTest.php`
 にテストケースのファイルを作成します。このファイルにまず、以下のように書き込みます。
 
-``` php
+```php
 // tests/TestCase/View/Helper/ProgressHelperTest.php
 App::uses('ProgressHelper', 'View/Helper');
 
@@ -190,7 +190,7 @@ class ProgressHelperTest extends CakeTestCase
 初期化や設定を行います。PHPUnit 9 の決まりにより、`setUp()` は戻り値の型 `void` を
 付けて宣言する必要があります。今回のセットアップメソッドには次のように書き加えます。
 
-``` php
+```php
 public function setUp(): void
 {
     parent::setUp();
@@ -207,7 +207,7 @@ public function setUp(): void
 次に、テストメソッドの内容を充実させていきます。あなたの書いたコードが期待した結果を
 出力するかどうか保証するため、アサーションを使います。
 
-``` php
+```php
 public function testBar()
 {
     $result = $this->Progress->bar(90);
@@ -244,7 +244,7 @@ PHPUnit をインストールし、テストケースをいくつか書いたら
 [pieceofcake2/app](https://pieceofcake2.github.io/app/) スケルトンのプロジェクトルートには、
 CakePHP 用に PHPUnit を設定する `phpunit.xml.dist` があります。
 
-``` xml
+```xml
 <phpunit bootstrap="./tests/bootstrap.php"
          backupGlobals="true"
          stderr="true"
@@ -274,7 +274,7 @@ CakePHP を読み込みます。`CakeFixtureInjector` リスナーはテスト�
 プロジェクトのルートで PHPUnit を実行します。引数を付けなければ `tests/TestCase/` の
 すべてのテストを実行します。ディレクトリやファイルを指定することもできます。
 
-``` bash
+```bash
 # すべてのテストを実行する
 vendor/bin/phpunit
 
@@ -290,7 +290,7 @@ CakePHP はテストを実行するための `test` シェルも提供してい�
 使う際に利用できる引数をすべて使うことができます。PHPUnit が `phpunit.xml.dist` を
 見つけられるよう、プロジェクトのルートから実行してください。
 
-``` bash
+```bash
 # アプリのモデルのテストを実行する
 bin/cake test app Model/Article
 
@@ -326,7 +326,7 @@ bin/cake test core Core/Configure
 実行したいときがあると思います。コマンドラインからテストメソッドをフィルタリングするときは
 以下のようにします。
 
-``` bash
+```bash
 vendor/bin/phpunit tests/TestCase/Model/ArticleTest.php --filter testPublished
 bin/cake test core Console/ConsoleOutput --filter testWriteArray
 ```
@@ -343,7 +343,7 @@ bin/cake test core Console/ConsoleOutput --filter testWriteArray
 PHPUnit はカバレッジの結果を含む静的な HTML ファイルをいくつか生成します。
 テストケースのカバレッジを生成するには以下のようにします。
 
-``` bash
+```bash
 vendor/bin/phpunit tests/TestCase/Model/ArticleTest.php --coverage-html tmp/coverage
 bin/cake test app Model/Article --coverage-html tmp/coverage
 ```
@@ -411,7 +411,7 @@ CI でも使われるコマンドラインでの実行をお勧めします。
 PHPUnit 9 ではこれらのメソッドは戻り値の型 `void` 付きで宣言されています。オーバーライドする側も
 同じ型を宣言しないと、PHP の Fatal error になります。
 
-``` php
+```php
 public function setUp(): void
 public function tearDown(): void
 public static function setUpBeforeClass(): void
@@ -449,7 +449,7 @@ CakePHP はフィクスチャに基づいたテストケースを実行するに
 `tests/Fixture` というディレクトリに `ArticleFixture.php` という名前のファイルを作成し、
 以下のとおりに記述してください。
 
-``` php
+```php
 // tests/Fixture/ArticleFixture.php
 class ArticleFixture extends CakeTestFixture
 {
@@ -559,7 +559,7 @@ CakePHP の内部型定義です。現在サポートしているのは以下の
 たとえば、「created」と「updated」のタイムスタンプに今日の日付を反映させたいのであれば、
 以下のようにするとよいでしょう。
 
-``` php
+```php
 class ArticleFixture extends CakeTestFixture
 {
     public $fields = [
@@ -606,7 +606,7 @@ class ArticleFixture extends CakeTestFixture
 例のフィクスチャ (`tests/Fixture/ArticleFixture.php`) を、
 次のように書き換えてください。
 
-``` php
+```php
 class ArticleFixture extends CakeTestFixture
 {
     public $import = 'Article';
@@ -618,7 +618,7 @@ class ArticleFixture extends CakeTestFixture
 上記の構文では「Article」のスキーマを読み込むだけなのでレコードを読み込みません。読み込むためには
 コードを次のように変更してください。
 
-``` php
+```php
 class ArticleFixture extends CakeTestFixture
 {
     public $import = ['model' => 'Article', 'records' => true];
@@ -628,7 +628,7 @@ class ArticleFixture extends CakeTestFixture
 一方、モデルが存在しないテーブルの場合はどうするのでしょうか。その場合、代わりにテーブルの情報を
 読み込むよう定義することができます。例は次の通りです。
 
-``` php
+```php
 class ArticleFixture extends CakeTestFixture
 {
     public $import = ['table' => 'articles'];
@@ -639,7 +639,7 @@ class ArticleFixture extends CakeTestFixture
 「default」という名前のデータベース接続設定を使います。これを変更したい場合は
 次のように書き換えます。
 
-``` php
+```php
 class ArticleFixture extends CakeTestFixture
 {
     public $import = ['table' => 'articles', 'connection' => 'other'];
@@ -650,7 +650,7 @@ CakePHP のデータベース接続においてテーブル名のプレフィッ
 取得するときにそのプレフィックスは自動的に使用されます。また、前述したふたつの例において、
 レコードは読み込まれません。読み込むには、次のようにします。
 
-``` php
+```php
 class ArticleFixture extends CakeTestFixture
 {
     public $import = ['table' => 'articles', 'records' => true];
@@ -660,7 +660,7 @@ class ArticleFixture extends CakeTestFixture
 既存のテーブルやモデルからテーブルの定義をインポートすることができますが、前節で紹介したように
 フィクスチャに対して読み込むレコードを直接定義することができます。方法は例のとおりです。
 
-``` php
+```php
 class ArticleFixture extends CakeTestFixture
 {
     public $import = 'Article';
@@ -699,7 +699,7 @@ class ArticleFixture extends CakeTestFixture
 各テストケースではクエリの実行に際して必要となるモデルのフィクスチャをロードすることができます。
 フィクスチャをロードするには、テストケースに `$fixtures` プロパティを設定します。
 
-``` php
+```php
 class ArticleTest extends CakeTestCase
 {
     public $fixtures = ['app.article', 'app.comment'];
@@ -710,7 +710,7 @@ class ArticleTest extends CakeTestCase
 `tests/Fixture` ディレクトリからロードします。同じように CakePHP のコアや
 プラグインからもロードすることができます。
 
-``` php
+```php
 class ArticleTest extends CakeTestCase
 {
     public $fixtures = ['plugin.debug_kit.article', 'core.comment'];
@@ -724,7 +724,7 @@ class ArticleTest extends CakeTestCase
 `false` に設定したあと、テストメソッドの中で
 `CakeTestCase::loadFixtures()` を使って制御することもできます。
 
-``` php
+```php
 class ArticleTest extends CakeTestCase
 {
     public $fixtures = ['app.article', 'app.comment'];
@@ -741,7 +741,7 @@ class ArticleTest extends CakeTestCase
 大規模なアプリケーションで、フィクスチャを整理しやすくします。サブディレクトリ中のフィクスチャを
 ロードするためには、フィクスチャ名にサブディレクトリを加えてください。
 
-``` php
+```php
 class ArticleTest extends CakeTestCase
 {
     public $fixtures = ['app.blog/article', 'app.blog/comment'];
@@ -758,7 +758,7 @@ class ArticleTest extends CakeTestCase
 
 まず `src/Model/Article.php` に「Article」モデルを定義しましょう。以下のように記述します。
 
-``` php
+```php
 // src/Model/Article.php
 class Article extends AppModel
 {
@@ -785,7 +785,7 @@ class Article extends AppModel
 それでは `ArticleTest.php` というファイルを `tests/TestCase/Model`
 というディレクトリに作成し、以下のように記述しましょう。
 
-``` php
+```php
 // tests/TestCase/Model/ArticleTest.php
 App::uses('Article', 'Model');
 
@@ -808,7 +808,7 @@ class ArticleTest extends CakeTestCase
 それでは「Article」モデルの「published()」メソッドのためのテストメソッドを書き加えます。
 `tests/TestCase/Model/ArticleTest.php` を編集して、以下のようにしてください。
 
-``` php
+```php
 // tests/TestCase/Model/ArticleTest.php
 App::uses('Article', 'Model');
 
@@ -856,7 +856,7 @@ class ArticleTest extends CakeTestCase
 このメソッドは、通常のモックで起こるリフレクションされたプロパティの問題を回避し、
 モックがテスト用のデータベース接続を使うようにしてくれます。
 
-``` php
+```php
 public function testSendingEmails()
 {
     $model = $this->getMockForModel('EmailVerification', ['send']);
@@ -882,7 +882,7 @@ CakeTestCase::getMockForModel() は 2.3 で追加されました。
 置き換えます。`getMockBuilder()` を使うと、置き換えるメソッドやオブジェクトの生成方法を
 指定できます。
 
-``` php
+```php
 public function testNotify()
 {
     $transport = $this->createMock(MailTransport::class);
@@ -909,7 +909,7 @@ public function testNotify()
 コードが例外を投げることをテストするには、例外を投げるコードの前で `expectException()` を
 呼び出します。`@expectedException` アノテーションはサポートされなくなりました。
 
-``` php
+```php
 public function testInvalidKey()
 {
     $this->expectException(ConfigureException::class);
@@ -937,7 +937,7 @@ public function testInvalidKey()
 
 下記のように、「Article」モデルに対応した典型的なコントローラーがあるとします。
 
-``` php
+```php
 // src/Controller/ArticlesController.php
 App::uses('AppController', 'Controller');
 
@@ -969,7 +969,7 @@ class ArticlesController extends AppController
 ディレクトリ `tests/TestCase/Controller` に `ArticlesControllerTest.php`
 というファイルを作成し、次のように記述します。
 
-``` php
+```php
 // tests/TestCase/Controller/ArticlesControllerTest.php
 class ArticlesControllerTest extends ControllerTestCase
 {
@@ -1036,7 +1036,7 @@ risky として報告します。実際のテストでは `debug()` の代わり
 そしてあなたのコードを終了する代わりに、リダイレクトを追跡して実行を継続します。
 例を示します。
 
-``` php
+```php
 App::uses('AppController', 'Controller');
 
 class ArticlesController extends AppController
@@ -1056,7 +1056,7 @@ class ArticlesController extends AppController
 上記のコードをテストすると、リダイレクトに到達したにもかかわらず `// more code` が
 実行されてしまいます。代わりに、このようなコードを書くべきです。
 
-``` php
+```php
 App::uses('AppController', 'Controller');
 
 class ArticlesController extends AppController
@@ -1082,7 +1082,7 @@ GET リクエストのアクションとしても使えます。 `data` キー�
 POST されるであろう値を設定します。規定ではすべてのリクエストはPOSTと扱われます。
 GET リクエストをシミュレートしたい場合は `method` キーを設定します。
 
-``` php
+```php
 public function testAdding()
 {
     $data = [
@@ -1112,7 +1112,7 @@ public function testAdding()
 規定値は `result` です。 戻り値の属性を `result` 以外にしない限り、
 テストケース内で他の種類の戻り値の属性にアクセスすることができます。
 
-``` php
+```php
 public function testIndex()
 {
     $this->testAction('/posts/index');
@@ -1128,7 +1128,7 @@ public function testIndex()
 テストで使われるコントローラーを決定したら、同時にモデルとコンポーネントの
 モックを生成できます。
 
-``` php
+```php
 $Posts = $this->generate('Posts', [
     'methods' => [
         'isAuthorized',
@@ -1167,7 +1167,7 @@ $Posts = $this->generate('Posts', [
 プロパティに格納されます。送信されたヘッダー情報には `headers` から
 アクセスすることができ、リダイレクトを確認することができます。
 
-``` php
+```php
 public function testAdd()
 {
     $Posts = $this->generate('Posts', [
@@ -1218,7 +1218,7 @@ PHPUnit では静的メソッドをモックにできません。`AuthComponent:
 返す値を制御したいときは、そのメソッドが読み取るデータを用意します。たとえば、アクションを
 呼ぶ前にログインユーザーをセッションに書き込みます。
 
-``` php
+```php
 public function testAdd()
 {
     $this->generate('Posts', [
@@ -1239,7 +1239,7 @@ JSON はウェブサービスの構築において、とても馴染み深く、
 CakePHP を用いたウェブサービスのエンドポイントのテストはとてもシンプルです。
 JSON を返すコントローラーの簡単な例を示します。
 
-``` php
+```php
 // src/Controller/MarkersController.php
 class MarkersController extends AppController
 {
@@ -1257,7 +1257,7 @@ class MarkersController extends AppController
 `tests/TestCase/Controller/MarkersControllerTest.php`
 というファイルを以下のように作成します。
 
-``` php
+```php
 // tests/TestCase/Controller/MarkersControllerTest.php
 class MarkersControllerTest extends ControllerTestCase
 {
@@ -1289,7 +1289,7 @@ class MarkersControllerTest extends ControllerTestCase
 ページネーションの limit 値を設定する手助けをします。例としてコンポーネントが、
 `src/Controller/Component/PagematronComponent.php` にあったとします。
 
-``` php
+```php
 // src/Controller/Component/PagematronComponent.php
 class PagematronComponent extends Component
 {
@@ -1327,7 +1327,7 @@ class PagematronComponent extends Component
 `tests/TestCase/Controller/Component/PagematronComponentTest.php`
 というファイルを作成します。
 
-``` php
+```php
 // tests/TestCase/Controller/Component/PagematronComponentTest.php
 App::uses('PagematronComponent', 'Controller/Component');
 
@@ -1385,7 +1385,7 @@ class PagematronComponentTest extends CakeTestCase
 はじめに、テストのための例として、ヘルパーを作成します。 `CurrencyRendererHelper` は、
 ビューで通貨の表示を補助するための、 `usd()` という唯一の単純なメソッドを持っています。
 
-``` php
+```php
 // src/View/Helper/CurrencyRendererHelper.php
 class CurrencyRendererHelper extends AppHelper
 {
@@ -1401,7 +1401,7 @@ class CurrencyRendererHelper extends AppHelper
 
 それではテストを作成します。
 
-``` php
+```php
 // tests/TestCase/View/Helper/CurrencyRendererHelperTest.php
 App::uses('CurrencyRendererHelper', 'View/Helper');
 
@@ -1450,7 +1450,7 @@ class CurrencyRendererHelperTest extends CakeTestCase
 簡単にテストスイートを作成するためのメソッドを提供します。すべてのモデルに対してのテストスイートを
 作成したいときは、 `tests/TestCase/AllModelTest.php` を作成します。内容は以下のとおりです。
 
-``` php
+```php
 // tests/TestCase/AllModelTest.php
 class AllModelTest extends CakeTestSuite
 {
@@ -1470,14 +1470,14 @@ class AllModelTest extends CakeTestSuite
 個別にファイルを追加するときは `$suite->addTestFile($filename);` を使います。
 あるディレクトリから再帰的にすべてのテストをグループ化する場合は以下のようにします。
 
-``` php
+```php
 $suite->addTestDirectoryRecursive(TESTS . 'TestCase/Model');
 ```
 
 この例では、 `tests/TestCase/Model` のディレクトリ以下のすべてのテストをグループ化します。
 アプリケーションのテストをすべて実行するスイートを構築するためにテストスイートを使用することができます。
 
-``` php
+```php
 // tests/TestCase/AllTestsTest.php
 class AllTestsTest extends CakeTestSuite
 {
@@ -1493,7 +1493,7 @@ class AllTestsTest extends CakeTestSuite
 
 そして、コマンドライン上でこのテストを実行することができます。
 
-``` bash
+```bash
 bin/cake test app AllTests
 ```
 
@@ -1506,7 +1506,7 @@ PHPUnit を直接実行する場合は、`phpunit.xml.dist` の `<testsuites>` �
 
 プラグインのテストは、プラグインのフォルダ内の指定されたディレクトリに作成します。
 
-``` text
+```text
 plugins/
     Blog/
         tests/
@@ -1525,7 +1525,7 @@ CakePHP はプラグイン内に `tests/TestCase` と `tests/Fixture` があれ�
 インポートしているところです。またプラグインのフィクスチャも `plugin.blog.blog_post`
 というプレフィックスをつける必要があります。
 
-``` php
+```php
 // plugins/Blog/tests/TestCase/Model/BlogPostTest.php
 App::uses('BlogPost', 'Blog.Model');
 

@@ -43,7 +43,7 @@ If you need to do any formatting or manipulation of your view variables before
 generating the response, you should use view files. The value of `_serialize`
 can be either a string or an array of view variables to serialize:
 
-``` php
+```php
 class PostsController extends AppController
 {
     public $components = ['RequestHandler'];
@@ -58,7 +58,7 @@ class PostsController extends AppController
 
 You can also define `_serialize` as an array of view variables to combine:
 
-``` php
+```php
 class PostsController extends AppController
 {
     public $components = ['RequestHandler'];
@@ -85,7 +85,7 @@ content before creating the final output. For example if we had posts, that had
 a field containing generated HTML, we would probably want to omit that from a
 JSON response. This is a situation where a view file would be useful:
 
-``` php
+```php
 // Controller code
 class PostsController extends AppController
 {

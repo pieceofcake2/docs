@@ -21,7 +21,9 @@ For the first step commands outputs the available Shell Commands, including
 plugin name when applicable. (All returned possibilities, for this and the other
 sub commands, are separated by a space.) For example:
 
-    bin/cake Completion commands
+```bash
+bin/cake Completion commands
+```
 
 Returns:
 
@@ -39,7 +41,9 @@ Once the preferred command has been chosen subCommands comes in as the second
 step and outputs the possible sub command for the given shell command. For
 example:
 
-    bin/cake Completion subcommands Bake.bake
+```bash
+bin/cake Completion subcommands Bake.bake
+```
 
 Returns:
 
@@ -51,7 +55,9 @@ As the third and final options outputs options for the given (sub) command as
 set in getOptionParser. (Including the default options inherited from Shell.)
 For example:
 
-    bin/cake Completion options Bake.bake
+```bash
+bin/cake Completion options Bake.bake
+```
 
 Returns:
 
@@ -61,7 +67,7 @@ Returns:
 
 The following bash example comes from the original author:
 
-``` bash
+```bash
 # bash completion for CakePHP console
 
 _cake()

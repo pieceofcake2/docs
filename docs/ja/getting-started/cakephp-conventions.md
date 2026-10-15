@@ -26,7 +26,7 @@ CakePHP の規約は長年のウェブ開発経験とベストプラクティス
 隠蔽することが可能です。アンダースコアが付けられたコントローラメソッドはウェブ上では見えないように
 設定され、内部での利用のみ可能になります。例えば:
 
-``` php
+```php
 class NewsController extends AppController
 {
     public function latest()
@@ -75,21 +75,21 @@ CakePHP の URL とパラメータの取り扱いに関するより詳細な情�
 
 通常、ファイル名はクラス名にマッチしたものになり、キャメルケースとなります。
 従って、CakePHP で **MyNiftyClass** というクラスがあれば、ファイルは
-**MyNiftyClass.php** と命名されるでしょう。以下に CakePHP のアプリケーションで
+`MyNiftyClass.php` と命名されるでしょう。以下に CakePHP のアプリケーションで
 典型的に使うであろう種々のクラス毎のファイルにどう命名するかの例を挙げます。
 
 - **KissesAndHugsController** というコントローラのクラスは、
-  **KissesAndHugsController.php** という名前にします。
+  `KissesAndHugsController.php` という名前にします。
 - **MyHandyComponent** というコンポーネントのクラスは、
-  **MyHandyComponent.php** というファイル名にします。
+  `MyHandyComponent.php` というファイル名にします。
 - **OptionValue** というモデルのクラスは、
-  **OptionValue.php** というファイル名にします。
+  `OptionValue.php` というファイル名にします。
 - **EspeciallyFunkableBehavior** というビヘイビアのクラスは、
-  **EspeciallyFunkableBehavior.php** というファイル名にします。
+  `EspeciallyFunkableBehavior.php` というファイル名にします。
 - **SuperSimpleView** というビューのクラスは、
-  **SuperSimpleView.php** というファイル名にします。
+  `SuperSimpleView.php` というファイル名にします。
 - **BestEverHelper** というヘルパーのクラスは、
-  **BestEverHelper.php** というファイル名にします。
+  `BestEverHelper.php` というファイル名にします。
 
 各ファイルは、 `src/` フォルダ内のそれぞれ適切なフォルダの中に配置します。
 たとえば `src/Controller/`、`src/Controller/Component/`、`src/Model/`、`src/Model/Behavior/`、
@@ -132,7 +132,7 @@ CakePHP は複合主キーをサポートしません。join テーブルのデ�
 [query](../models/retrieving-your-data#model-query) を呼び出すか、通常のモデルのように振舞えるよう主キーを追加してください。
 例は次のようになります:
 
-``` sql
+```sql
 CREATE TABLE posts_tags (
     id INT(10) NOT NULL AUTO_INCREMENT,
     post_id INT(10) NOT NULL,

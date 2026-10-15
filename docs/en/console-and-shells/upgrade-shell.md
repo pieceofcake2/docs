@@ -16,7 +16,7 @@ The shell works on applications in the legacy `app/` layout, so the examples bel
 through `vendor/bin/cake`. Install the plugin as a development dependency and load it in
 `app/Config/bootstrap.php`:
 
-``` bash
+```bash
 composer require --dev pieceofcake2/upgrade
 ```
 
@@ -24,7 +24,7 @@ Composer installs it into `plugins/Upgrade/` when your `composer.json` has the
 `installer-paths` setting described in
 [Installing a plugin with Composer](/plugins/how-to-install-plugins#composer).
 
-``` php
+```php
 // app/Config/bootstrap.php
 CakePlugin::load('Upgrade');
 ```
@@ -32,23 +32,31 @@ CakePlugin::load('Upgrade');
 Make a backup of your application (or commit it to version control) before you
 start. To run all upgrade steps:
 
-    vendor/bin/cake upgrade all
+```bash
+vendor/bin/cake upgrade all
+```
 
 If you would like to see what the shell will do without modifying files perform
 a dry run first with `--dry-run`:
 
-    vendor/bin/cake upgrade all --dry-run
+```bash
+vendor/bin/cake upgrade all --dry-run
+```
 
 To upgrade your plugin run the command:
 
-    vendor/bin/cake upgrade all --plugin YourPluginName
+```bash
+vendor/bin/cake upgrade all --plugin YourPluginName
+```
 
 You are able to run each upgrade step individually (`tests`, `locations`,
 `i18n`, `helpers`, `basics`, `request`, `configure`, `constants`,
 `controller_redirects`, `components` and `exceptions`). To see all the steps
 and options available run the command:
 
-    vendor/bin/cake upgrade --help
+```bash
+vendor/bin/cake upgrade --help
+```
 
 The upgrade shell only covers the 1.3 to 2.0 changes. An application converted
 this way must then be brought up to CakePHP 2.10.24 before it can run on the

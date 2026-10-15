@@ -13,7 +13,7 @@ Creating virtual fields is easy. In each model you can define a
 expressions. An example of a virtual field definition using MySQL
 would be:
 
-``` php
+```php
 public $virtualFields = [
     'name' => 'CONCAT(User.first_name, " ", User.last_name)',
 ];
@@ -21,7 +21,7 @@ public $virtualFields = [
 
 And with PostgreSQL:
 
-``` php
+```php
 public $virtualFields = [
     'name' => "User.first_name || \' \' || User.last_name",
 ];
@@ -50,7 +50,7 @@ the first parameter. By setting the second parameter of `hasField()` to true,
 virtualFields will also be checked when checking if a model has a field.
 Using the example field above:
 
-``` php
+```php
 // Will return false, as there is no concrete field called name
 $this->User->hasField('name');
 // Will return true as there is a virtual field called name
@@ -63,7 +63,7 @@ This method can be used to check if a field/column is a virtual
 field or a concrete field. Will return true if the column is
 virtual:
 
-``` php
+```php
 $this->User->isVirtualField('name'); //true
 $this->User->isVirtualField('first_name'); //false
 ```
@@ -74,7 +74,7 @@ This method can be used to access the SQL expression that comprises
 a virtual field. If no argument is supplied it will return all
 virtual fields in a Model:
 
-``` php
+```php
 //returns 'CONCAT(User.first_name, ' ', User.last_name)'
 $this->User->getVirtualField('name');
 ```
@@ -85,7 +85,7 @@ As stated earlier `Model::find()` will treat virtual fields much
 like any other field in a model. The value of a virtual field will
 be placed under the model's key in the resultset:
 
-``` php
+```php
 $results = $this->User->find('first');
 
 // results contains the following
@@ -112,7 +112,7 @@ virtualFields do not update to reflect the bound alias. If you are
 using virtualFields in models that have more than one alias it is
 best to define the virtualFields in your model's constructor:
 
-``` php
+```php
 public function __construct($id = false, $table = null, $ds = null)
 {
     parent::__construct($id, $table, $ds);
@@ -133,14 +133,14 @@ The following example allows you to have a counter of a hasMany association and
 enables you to use virtual fields. For example if you had the following sort
 link in your template:
 
-``` php
+```php
 // Create a sort link for a virtual field
 $this->Paginator->sort('ProductsItems.Total', 'Items Total');
 ```
 
 You could then use the following pagination setup in your controller:
 
-``` php
+```php
 $this->Products->recursive = -1;
 
 // Products hasMany associations ProductsItems
@@ -174,7 +174,7 @@ $data = $this->Paginator->paginate();
 
 would return something like this:
 
-``` text
+```text
 
 [
     [0] => 
@@ -209,7 +209,7 @@ would return something like this:
 Using functions in direct SQL queries will prevent data from being returned in the same array as your model's data.
 For example this:
 
-``` php
+```php
 $this->Timelog->query(
     "SELECT
         project_id, SUM(id) as TotalHours
@@ -224,7 +224,7 @@ $this->Timelog->query(
 
 would return something like this:
 
-``` text
+```text
 
 [
     [0] => 
@@ -247,14 +247,14 @@ the fly rather than permanently declaring it in the model. We will provide a
 default value of `0` in case another query attempts to use this virtual field.
 If that were to occur, `0` would be returned in the TotalHours column:
 
-``` php
+```php
 $this->Timelog->virtualFields['TotalHours'] = 0;
 ```
 
 In addition to adding the virtual field we also need to alias our column using
 the form of `MyModel__MyField` like this:
 
-``` php
+```php
 $this->Timelog->query(
     "SELECT
         project_id, SUM(id) as Timelog__TotalHours
@@ -270,7 +270,7 @@ $this->Timelog->query(
 Running the query again after specifying the virtual field should result in a
 cleaner grouping of values:
 
-``` text
+```text
 
 [
     [0] => 
@@ -297,12 +297,12 @@ A common workaround for this implementation issue is to copy
 `virtualFields` from one model to another at runtime when you
 need to access them:
 
-``` php
+```php
 $this->virtualFields['name'] = $this->Author->virtualFields['name'];
 ```
 
 or:
 
-``` php
+```php
 $this->virtualFields += $this->Author->virtualFields;
 ```

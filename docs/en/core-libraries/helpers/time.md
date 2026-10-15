@@ -27,7 +27,7 @@ modifications to allow your users to set their time zone. Now that we know
 the time zone of the logged in user we can correct the date and time on our
 posts using the Time Helper:
 
-``` php
+```php
 echo $this->Time->format(
     'F jS, Y h:i A',
     $post['Post']['created'],

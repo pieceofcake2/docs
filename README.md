@@ -20,6 +20,29 @@ The theme lives in [pieceofcake2/docs-skeleton](https://github.com/pieceofcake2/
 
 For AI coding tools, install the Markdown docs of the CakePHP 2 book as a dev dependency: `composer require --dev pieceofcake2/docs` (files in `vendor/pieceofcake2/docs/docs/en/`).
 
+## Using the Docs with AI Tools
+
+The Markdown pages can be installed with Composer, so that AI coding tools and
+agents can read them locally. Install them as a development dependency:
+
+```bash
+composer require --dev pieceofcake2/docs
+```
+
+The pages are then in `vendor/pieceofcake2/docs/`:
+
+- `docs/en/`: the English pages, for example
+  `vendor/pieceofcake2/docs/docs/en/getting-started.md`
+- `docs/ja/`: the Japanese pages, with the same structure
+- `toc_en.json` and `toc_ja.json`: the table of contents of each language
+
+Point your AI tool to that directory, for example with a line in your agent
+instructions (`CLAUDE.md`, `AGENTS.md` or `.cursorrules`):
+
+```md
+The CakePHP 2 documentation is in vendor/pieceofcake2/docs/docs/en/.
+```
+
 ## Contributing
 
 The general contribution guide of the organization is

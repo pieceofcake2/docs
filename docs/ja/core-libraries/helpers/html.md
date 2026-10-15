@@ -13,7 +13,7 @@ HtmlHelper にある多くのメソッドは `$options` という
 付け加えることができます。これは `$options` を使う
 方法についての簡単な例です。
 
-``` html
+```html
 付けられる属性: <tag class="someClass" />
 配列での指定: array('class' => 'someClass')
 

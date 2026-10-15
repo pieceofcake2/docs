@@ -427,14 +427,14 @@ CakePlugin::load('Upgrade');
 
 - データベースドライバーに新しいメソッドを追加しました（独自のドライバー実装がある場合は問題になる可能性があります）
 
-**MySQL ドライバー（Mysql.php）:**
+**MySQL ドライバー（`Mysql.php`）:**
 
 - `getVersion(): string` - MySQL / MariaDB / Aurora MySQL のバージョンを返す
 - `getServerType(): string` - 'MySQL'、'MariaDB'、'Aurora MySQL' のいずれかを返す
 - `utf8mb4Supported(): bool` - utf8mb4 文字セットに対応しているかを調べる
 - `integerDisplayWidthDeprecated(): bool` - 整数型の表示幅が非推奨か（MySQL 8.0.17 以降）を調べる
 
-**PostgreSQL ドライバー（Postgres.php）:**
+**PostgreSQL ドライバー（`Postgres.php`）:**
 
 - `getVersion(): string` - PostgreSQL のバージョンを返す
 
@@ -629,7 +629,7 @@ PHP 8 では `'aes'` を使う場合も `Security.useOpenSsl` の設定が必要
 
 ## PHP 8 移行時の補足
 
-以下は UPGRADE.md には書かれていませんが、PHP 8 へ移行するアプリケーションでよく問題になる点です。
+以下は `UPGRADE.md` には書かれていませんが、PHP 8 へ移行するアプリケーションでよく問題になる点です。
 
 ### `Security::encrypt()` と AES クッキーで OpenSSL を有効にする {#enable-openssl}
 

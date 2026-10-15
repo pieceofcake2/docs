@@ -29,7 +29,7 @@ associated with another.
 
 Here is a simple example of a model definition in CakePHP:
 
-``` php
+```php
 // src/Model/Ingredient.php
 class Ingredient extends AppModel
 {
@@ -70,8 +70,8 @@ should have the same name as the class, which for this example will be
 > [!NOTE]
 > CakePHP will dynamically create a model object for you if it cannot find a
 > corresponding file in `src/Model/`. This also means that if your model file
-> isn't named correctly (for instance, if it is named ingredient.php or
-> Ingredients.php rather than Ingredient.php), CakePHP will use an instance of
+> isn't named correctly (for instance, if it is named `ingredient.php` or
+> `Ingredients.php` rather than `Ingredient.php`), CakePHP will use an instance of
 > AppModel rather than your model file (which CakePHP assumes is missing). If
 > you're trying to use a method you've defined in your model, or a behavior
 > attached to your model, and you're getting SQL errors that are the name of
@@ -88,7 +88,7 @@ available for access when its name matches that of the controller. For example,
 a controller named IngredientsController will automatically initialize the
 Ingredient model and attach it to the controller at `$this->Ingredient`:
 
-``` php
+```php
 class IngredientsController extends AppController
 {
     public function index()
@@ -103,7 +103,7 @@ class IngredientsController extends AppController
 Associated models are available through the main model. In the following
 example, Recipe has an association with the Ingredient model:
 
-``` php
+```php
 class Recipe extends AppModel
 {
     public function steakRecipes()

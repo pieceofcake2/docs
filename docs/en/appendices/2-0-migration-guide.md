@@ -100,7 +100,7 @@ In your `app/webroot/.htaccess` replace line `RewriteRule ^(.*)$ index.php?url=$
 The `app/app_controller.php`, `app/app_model.php`, `app/app_helper.php` are now located and
 named as `app/Controller/AppController.php`, `app/Model/AppModel.php` and `app/View/Helper/AppHelper.php` respectively.
 
-Also all shell/task now extend AppShell. You can have your custom AppShell.php at `app/Console/Command/AppShell.php`
+Also all shell/task now extend AppShell. You can have your custom `AppShell.php` at `app/Console/Command/AppShell.php`
 
 ## Internationalization / Localization
 
@@ -109,13 +109,13 @@ Also all shell/task now extend AppShell. You can have your custom AppShell.php a
 
 If you want to echo the result of the translation, use:
 
-``` text
+```text
 echo __('My Message');
 ```
 
 This change includes all shortcut translation methods:
 
-``` text
+```text
 __()
 __n()
 __d()
@@ -129,7 +129,7 @@ Alongside this, if you pass additional parameters, the translation will call
 [sprintf](https://www.php.net/manual/en/function.sprintf.php) with these
 parameters before returning. For example:
 
-``` text
+```text
 // Will return something like "Called: MyClass:myMethod"
 echo __('Called: %s:%s', $className, $methodName);
 ```
@@ -200,7 +200,7 @@ change. See the CakeRequest new features for more information.
 CakePHP no longer uses `$_GET['url']` for handling application request paths.
 Instead it uses `$_SERVER['PATH_INFO']`. This provides a more uniform way of
 handling requests between servers with URL rewriting and those without. Because
-of these changes, you'll need to update your .htaccess files and
+of these changes, you'll need to update your `.htaccess` files and
 `app/webroot/index.php`, as these files were changed to accommodate the
 changes. Additionally `$this->params['url']['url']` no longer exists. Instead
 you should be using \$this-\>request-\>url to access the same value.
@@ -209,7 +209,7 @@ This attribute now contains the url without the leading slash `/` prepended.
 Note: For the homepage itself (`http://domain/`) \$this-\>request-\>url now returns
 boolean `false` instead of `/`. Make sure you check on that accordingly:
 
-``` php
+```php
 if (!$this->request->url) {} // instead of $this->request->url === '/'
 ```
 
@@ -218,7 +218,7 @@ if (!$this->request->url) {} // instead of $this->request->url === '/'
 Component is now the required base class for all components. You should update
 your components and their constructors, as both have changed:
 
-``` php
+```php
 class PrgComponent extends Component
 {
     public function __construct(ComponentCollection $collection,
@@ -239,7 +239,7 @@ Since settings have been moved to the component constructor, the
 `initialize()` callback no longer receives `$settings` as its 2nd parameter.
 You should update your components to use the following method signature:
 
-``` php
+```php
 public function initialize(Controller $controller)
 {
 }
@@ -255,7 +255,7 @@ All the deprecated callbacks in Component have not been transferred to
 ComponentCollection. Instead you should use the `trigger()` method to interact
 with callbacks. If you need to trigger a callback you could do so by calling:
 
-``` php
+```php
 $this->Components->trigger('someCallback', [&$this]);
 ```
 
@@ -423,7 +423,7 @@ Although there has been a huge refactoring in how the classes are loaded, in ver
 few occasions you will need to change your application code to respect the way you were
 used to doing it. The biggest change is the introduction of a new method:
 
-``` php
+```php
 App::uses('AuthComponent', 'Controller/Component');
 ```
 
@@ -438,7 +438,7 @@ is used for the first time it will be located.
 Some examples on using `App::uses()` when migrating from
 `App::import()`:
 
-``` php
+```php
 App::import('Controller', 'Pages');
 // becomes
 App::uses('PagesController', 'Controller');
@@ -464,7 +464,7 @@ All classes that were loaded in the past using `App::import('Core', $class);`
 will need to be loaded using `App::uses()` referring to the correct package.
 See the API to locate the classes in their new folders. Some examples:
 
-``` php
+```php
 App::import('Core', 'CakeRoute');
 // becomes
 App::uses('CakeRoute', 'Routing/Route');
@@ -490,7 +490,7 @@ fetch the class in the exact package in which you told it to find it.
 
 Examples:
 
-``` php
+```php
 App::build(['controllers' => ['/full/path/to/controllers']]);
 //becomes
 App::build(['Controller' => ['/full/path/to/Controller']]);
@@ -519,7 +519,7 @@ App::build(['View/Helper' => ['/full/path/to/View/Helper']]);
   \$config parameter equal to the config name you want the operation to occur
   on.
 
-``` php
+```php
 Cache::config('something');
 Cache::write('key', $value);
 
@@ -541,7 +541,7 @@ Cache::write('key', $value, 'something');
   `Router::DAY`, `Router::ID`, and `Router::UUID` instead.
 
 - `Router::defaults()` has been removed. Delete the core routes file
-  inclusion from your applications routes.php file to disable default routing.
+  inclusion from your applications `routes.php` file to disable default routing.
   Conversely if you want default routing, you will have to add an include to
   `Cake/Config/routes.php` in your routes file.
 
@@ -555,7 +555,7 @@ Cache::write('key', $value, 'something');
   `index` action is given a short route. If you wish to continue using short
   routes, you can add a route like:
 
-  ``` php
+  ```php
   Router::connect(
     '/users/:action',
     ['controller' => 'users', 'plugin' => 'users']
@@ -564,9 +564,9 @@ Cache::write('key', $value, 'something');
 
   To your routes file for each plugin you need short routes on.
 
-Your app/Config/routes.php file needs to be updated adding this line at the bottom of the file:
+Your `app/Config/routes.php` file needs to be updated adding this line at the bottom of the file:
 
-``` text
+```text
 require CAKE . 'Config' . DS . 'routes.php';
 ```
 
@@ -654,7 +654,7 @@ In order to accommodate View being removed from the ClassRegistry, the signature
 of Helper::\_\_construct() was changed. You should update any subclasses to use
 the following:
 
-``` php
+```php
 public function __construct(View $View, $settings = [])
 ```
 
@@ -784,14 +784,14 @@ this, just change `$_minimizedAttributeFormat` in your AppHelper to `%s`.
 
 To use with Html/Form helpers and others, you can write:
 
-``` php
+```php
 $this->Form->checkbox('field', ['checked' => true, 'value' => 'some_value']);
 ```
 
 Other facility is that minimized attributes can be passed as item and not as
 key. For example:
 
-``` php
+```php
 $this->Form->checkbox('field', ['checked', 'value' => 'some_value']);
 ```
 
@@ -909,7 +909,7 @@ afterRender it is the view file being rendered. For beforeLayout and afterLayout
 it is the layout file being rendered. Your helpers function signatures should
 look like:
 
-``` php
+```php
 public function beforeRender($viewFile)
 {
 
@@ -948,7 +948,7 @@ markers for output that should not be part of the full page cache. These tags
 were not part of any XML schema, and were not possible to validate in HTML or
 XML documents. For 2.0, these tags have been replaced with HTML/XML comments:
 
-``` html
+```html
 <cake:nocache> becomes <!--nocache-->
 </cake:nocache> becomes <!--/nocache-->
 ```
@@ -1002,7 +1002,7 @@ supports all the command line options supported by PHPUnit.
 Model relationships are now lazy loaded. You can run into a situation where
 assigning a value to a nonexistent model property will throw errors:
 
-``` text
+```text
 $Post->inexistentProperty[] = 'value';
 ```
 
@@ -1010,14 +1010,14 @@ will throw the error "Notice: Indirect modification of overloaded property
 \$inexistentProperty has no effect". Assigning an initial value to the property
 solves the issue:
 
-``` text
+```text
 $Post->nonexistentProperty = [];
 $Post->nonexistentProperty[] = 'value';
 ```
 
 Or just declare the property in the model class:
 
-``` php
+```php
 class Post
 {
     public $nonexistentProperty = [];
@@ -1060,13 +1060,13 @@ statements with query placeholders using the native driver if available.
 - API for DboSource::execute has changed, it will now take an array of query
   values as second parameter:
 
-  ``` php
+  ```php
   public function execute($sql, $params = [], $options = [])
   ```
 
   became:
 
-  ``` php
+  ```php
   public function execute($sql, $options = [], $params = [])
   ```
 
@@ -1078,7 +1078,7 @@ statements with query placeholders using the native driver if available.
 - DboSource::fetchAll() now accepts an array as second parameter, to pass values
   to be bound to the query, third parameter was dropped. Example:
 
-  ``` php
+  ```php
   $db->fetchAll(
     'SELECT
       * from users
@@ -1138,7 +1138,7 @@ The PDO driver will automatically escape those values for you.
 
 - No longer supports strings as configuration. Example:
 
-  ``` php
+  ```php
   public $actsAs = [
       'Acl' => 'Controlled',
       'Tree' => 'nested'
@@ -1147,7 +1147,7 @@ The PDO driver will automatically escape those values for you.
 
   became:
 
-  ``` php
+  ```php
   public $actsAs = [
       'Acl' => ['type' => 'Controlled'],
       'Tree' => ['type' => 'nested']
@@ -1160,15 +1160,15 @@ Plugins no longer magically append their plugin prefix to components, helpers
 and models used within them. You must be explicit with the components, models,
 and helpers you wish to use. In the past:
 
-``` php
+```php
 public $components = ['Session', 'Comments'];
 ```
 
-Would look in the controller's plugin before checking app/core components. It
-will now only look in the app/core components. If you wish to use objects from a
+Would look in the controller's plugin before checking `app/core` components. It
+will now only look in the `app/core` components. If you wish to use objects from a
 plugin you must put the plugin name:
 
-``` php
+```php
 public $components = ['Session', 'Comment.Comments'];
 ```
 
@@ -1260,7 +1260,7 @@ the key "driver" is not accepted anymore, only "datasource", in order to make it
 more consistent. Also, as the datasources have been moved to packages you will
 need to pass the package they are located in. Example:
 
-``` php
+```php
 public $default = [
     'datasource' => 'Database/Mysql',
     'persistent' => false,

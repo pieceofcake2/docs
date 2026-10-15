@@ -21,8 +21,8 @@ AI ツールから直接読み込めます。
 - [PHPStan CakePHP](https://pieceofcake2.github.io/phpstan-cakephp2/) ([Markdown](https://github.com/pieceofcake2/phpstan-cakephp2/blob/main/docs/README.md)) - 静的解析用の PHPStan 拡張
   ([静的解析](/ja/development/static-analysis) を参照してください)
 - [E2E Test](https://pieceofcake2.github.io/e2e-test/) ([Markdown](https://github.com/pieceofcake2/e2e-test/blob/1.x/docs/README.md)) - PHPUnit と Symfony Panther による
-  ブラウザでのエンドツーエンドテスト (Chrome、PC とスマートフォン)
-  ([エンドツーエンドテスト](/ja/development/e2e-testing) を参照してください)
+  ブラウザでの End-to-End テスト (Chrome、PC とスマートフォン)
+  ([End-to-End テスト](/ja/development/e2e-testing) を参照してください)
 
 ## メンテナンスしているプラグイン
 

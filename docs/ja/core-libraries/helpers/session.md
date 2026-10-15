@@ -11,7 +11,7 @@ Session ヘルパーと Session コンポーネントの大きな違いはヘル
 Session コンポーネントと同じく、データは
 `ドット記法` の配列構造で読み込みます:
 
-``` text
+```text
 ['User' => [
     'username' => 'super@example.com'
 ]];

@@ -72,7 +72,7 @@ also lets you incrementally change the storage as needed.
 
 Example:
 
-``` php
+```php
 // Cache configuration for data that can be cached for a short time only.
 Cache::config('short', [
     'engine' => 'File',
@@ -114,7 +114,7 @@ as an application library or in `$plugin/Lib/Cache/Engine/MyCustomCacheEngine.ph
 part of a plugin. Cache configs from plugins need to use the plugin
 dot syntax.
 
-``` php
+```php
 Cache::config('custom', [
     'engine' => 'CachePack.MyCustomCache',
     // ...
@@ -123,7 +123,7 @@ Cache::config('custom', [
 
 > [!NOTE]
 > App and Plugin cache engines should be configured in
-> `config/bootstrap.php`. If you try to configure them in core.php
+> `config/bootstrap.php`. If you try to configure them in `core.php`
 > they will not work correctly.
 
 Custom Cache engines must extend `CacheEngine` which defines
@@ -159,7 +159,7 @@ results that infrequently change, or that are subject to heavy reads into the
 cache. A perfect example of this are the results from `Model::find()`.
 A method that uses Cache to store results could look like:
 
-``` php
+```php
 class Post extends AppModel
 {
     public function newest()
@@ -182,7 +182,7 @@ That is an exercise you can do though.
 As of 2.5 you can accomplish the above much more simple by using
 `Cache::remember()`. Using the `remember()` method would look like:
 
-``` php
+```php
 class Post extends AppModel
 {
     public function newest()
@@ -211,7 +211,7 @@ resulting in an incorrect value.
 After setting an integer value, you can manipulate it using
 `Cache::increment()` and `Cache::decrement()`:
 
-``` php
+```php
 Cache::write('initial_count', 10);
 
 // Later on
@@ -235,7 +235,7 @@ group or namespace. This is a common requirement for mass-invalidating keys
 whenever some information changes that is shared among all entries in the same
 group. This is possible by declaring the groups in cache configuration:
 
-``` php
+```php
 Cache::config('site_home', [
     'engine' => 'Redis',
     'duration' => '+999 days',
@@ -252,7 +252,7 @@ both group names.
 For instance, whenever a new post is added, we could tell the Cache engine to
 remove all entries associated to the `post` group:
 
-``` php
+```php
 // src/Model/Post.php
 
 public function afterSave($created, $options = [])
@@ -269,7 +269,7 @@ public function afterSave($created, $options = [])
 `Cache::groupConfigs()` can be used to retrieve mapping between
 group and configurations, i.e.: having the same group:
 
-``` php
+```php
 // src/Model/Post.php
 
 /**
@@ -314,7 +314,7 @@ make sure you use the strict comparison operators: `===` or
 
 For example:
 
-``` php
+```php
 $cloud = Cache::read('cloud');
 
 if ($cloud !== false) {
@@ -339,7 +339,7 @@ no `$config` is specified, default will be used. `Cache::write()`
 can store any type of object and is ideal for storing results of
 model finds:
 
-``` php
+```php
 if (($posts = Cache::read('posts')) === false) {
     $posts = $this->Post->find('all');
     Cache::write('posts', $posts);
@@ -363,7 +363,7 @@ also use `Cache::set()` before reading the data back in. If you
 fail to do so, the default settings will be used when the cache key
 is read.
 
-``` php
+```php
 Cache::set(['duration' => '+30 days']);
 Cache::write('results', $data);
 
@@ -427,7 +427,7 @@ and the results stored in the cache at the provided key.
 For example, you often want to cache query results. You could use
 `remember()` to make this simple:
 
-``` php
+```php
 class Articles extends AppModel
 {
     public function all()

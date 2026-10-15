@@ -218,7 +218,7 @@ CakePHP は、幾つかの操作のために `tmp/` ディレクトリを使用�
 一般的な課題として、これらのディレクトリは、ウェブサーバとコマンドラインユーザの両方で書き込み権限が必要なことがあります。
 UNIXシステム上で ウェブサーバユーザとコマンドラインユーザが異なる場合、パーミッションのプロパティ設定を確保するために、あなたのプロジェクト内で一度だけ以下のコマンドを実行してください。
 
-``` text
+```bash
 HTTPDUSER=`ps aux | grep -E '[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx' | grep -v root | head -1 | cut -d\  -f1`
 setfacl -R -m u:${HTTPDUSER}:rwx tmp logs
 setfacl -R -d -m u:${HTTPDUSER}:rwx tmp logs
@@ -254,7 +254,7 @@ v2.12.3 からデフォルトのポートは 8765 です。それより前のバ
 
 アプリケーションを `/var/www/my_app` にインストールした場合、Apache のバーチャルホストは次のようになります。
 
-``` text
+```text
 <VirtualHost *:80>
     ServerName www.example.com
     DocumentRoot /var/www/my_app/webroot
@@ -298,7 +298,7 @@ CakePHP 2 を初めて使う場合は、続けて [ブログチュートリア�
 もし PHP のタイムゾーンに関連するエラーが出るなら、 `config/core.php` の中のとある一行のコメントを外し、
 サーバのタイムゾーンを設定してください。
 
-``` php
+```php
 /**
  * Uncomment this line and correct your server timezone to fix
  * any date & time related errors.

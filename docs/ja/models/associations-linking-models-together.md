@@ -41,7 +41,7 @@ belongsTo, そして hasAndBelongsToMany (HABTM) です。
 クラス変数の内容は単純な文字列でもいいですし、アソシエーションを具体的に定義するために
 多次元の配列を使うこともできます。
 
-``` php
+```php
 class User extends AppModel
 {
     public $hasOne = 'Profile';
@@ -61,7 +61,7 @@ class User extends AppModel
 **各モデルのエイリアスはアプリケーション全体でユニークでなければなりません。**
 たとえば次の例を見てください。これは正しい書き方です。
 
-``` php
+```php
 class User extends AppModel
 {
     public $hasMany = [
@@ -93,7 +93,7 @@ class Group extends AppModel
 
 しかし、以下の例はうまく動きません。
 
-``` php
+```php
 class User extends AppModel
 {
     public $hasMany = [
@@ -132,13 +132,13 @@ CakePHP はアソシエーションを定義したモデルオブジェクト同
 たとえば、 `User` モデルの中では、以下のようにして `Recipe` モデルに
 アクセスできます。
 
-``` php
+```php
 $this->Recipe->someFunction();
 ```
 
 同じようにコントローラーでも、関連モデルに簡単にアクセスできます。
 
-``` php
+```php
 $this->User->Recipe->someFunction();
 ```
 
@@ -178,7 +178,7 @@ User モデルは `src/Model/User.php` にあります。
 \$hasOne プロパティを追加します。ただし、Profile モデルが `src/Model/Profile.php` に
 ないと正常に動作しません。
 
-``` php
+```php
 class User extends AppModel
 {
     public $hasOne = 'Profile';
@@ -193,7 +193,7 @@ class User extends AppModel
 できます。たとえば、ある特定のレコードのみに絞ってアソシエーションを
 定義したい場合は次のようにします。
 
-``` php
+```php
 class User extends AppModel
 {
     public $hasOne = [
@@ -230,7 +230,7 @@ hasOne アソシエーションの配列に指定できるキーは以下の通�
 このアソシエーションを定義すれば、User モデルで find した時に、
 関連する Profile が存在すればそのレコードも一緒に取得してくるようになります。
 
-``` php
+```php
 //$this->User->find() を呼び出した時の戻り値
 
 
@@ -277,7 +277,7 @@ belongsTo 用のテーブルは、以下の規約に従います。
 Profile モデル (`src/Model/Profile.php`) に文字列で belongsTo アソシエーションを
 定義してみましょう。
 
-``` php
+```php
 class Profile extends AppModel
 {
     public $belongsTo = 'User';
@@ -286,7 +286,7 @@ class Profile extends AppModel
 
 配列を使ってより詳しく設定することもできます。
 
-``` php
+```php
 class Profile extends AppModel
 {
     public $belongsTo = [
@@ -330,7 +330,7 @@ belongsTo アソシエーションの配列に指定できるキーは以下の�
 このアソシエーションを定義すれば、Profile モデルで find した時に、
 関連する User が存在すればそのレコードも一緒に取得してくるようになります。
 
-``` php
+```php
 //$this->Profile->find() を呼び出した時の戻り値
 
 
@@ -378,7 +378,7 @@ belongsTo アソシエーションの配列に指定できるキーは以下の�
 カウンターキャッシュ機能を有効にするためにアソシエーションの設定に
 `counterCache` キーに `true` をセットしましょう。
 
-``` php
+```php
 class ImageComment extends AppModel
 {
     public $belongsTo = [
@@ -400,7 +400,7 @@ class ImageComment extends AppModel
 
 Image モデルのサンプルでは、次のようになるでしょう。
 
-``` php
+```php
 class ImageComment extends AppModel
 {
     public $belongsTo = [
@@ -430,7 +430,7 @@ CakePHP は、 2.0 の時から単一のモデルのリレーション中に、�
 
 この構成での `belongsTo` は、以下のようになります:
 
-``` php
+```php
 class Message extends AppModel
 {
     public $belongsTo = [
@@ -463,7 +463,7 @@ hasMany 用のテーブルは、以下の規約に従います。
 User モデル (`src/Model/User.php`) に文字列で hasMany アソシエーションを
 定義してみましょう。
 
-``` php
+```php
 class User extends AppModel
 {
     public $hasMany = 'Comment';
@@ -472,7 +472,7 @@ class User extends AppModel
 
 配列を使ってより詳しく設定することもできます。
 
-``` php
+```php
 class User extends AppModel
 {
     public $hasMany = [
@@ -516,7 +516,7 @@ hasMany アソシエーションの配列に指定できるキーは以下の通
 このアソシエーションを定義すれば、User モデルで find した時に、
 関連する Comment が存在すればそのレコードも一緒に取得してくるようになります。
 
-``` php
+```php
 //$this->User->find() を呼び出した時の戻り値
 
 
@@ -601,7 +601,7 @@ hasMany アソシエーション間のリンクは排他的です。
 
 新しいテーブルを作れば、モデルに HABTM アソシエーションを定義できます。
 
-``` php
+```php
 class Recipe extends AppModel
 {
     public $hasAndBelongsToMany = [
@@ -682,7 +682,7 @@ HABTM アソシエーションは次のキーを含ませることができま�
 このアソシエーションを定義すれば、Recipe モデルで find した時に、
 関連する Ingredient が存在すればそのレコードも一緒に取得してくるようになります。
 
-``` php
+```php
 //$this->Recipe->find() を呼び出した時の戻り値
 
 
@@ -761,7 +761,7 @@ Course (授業) は Student (生徒) に取られています。これは単純�
 使えば解決できます。このアソシエーションはモデルそれ自身、
 CourseMembership モデルを作ります。以下のモデルを見てください。
 
-``` php
+```php
 // Student.php
 class Student extends AppModel
 {
@@ -807,7 +807,7 @@ CourseMembership モデルは Student (生徒) の Course (授業) への参加�
 より詳しくはビルトインビヘイビアについてのマニュアルを参照してください。)
 以下の2つのモデルを使って、bindModel() と unbindModel() の使い方を見てみましょう。
 
-``` php
+```php
 class Leader extends AppModel
 {
     public $hasMany = [
@@ -830,7 +830,7 @@ Follower を取得できます。上記のコードでは、Leader モデルの�
 コントローラーのアクションで、アソシエーションを削除するために unbindModel() を
 使ってみましょう。
 
-``` php
+```php
 public function some_action()
 {
     // Leader とそれに関連する Follower を取得します。
@@ -861,7 +861,7 @@ public function some_action()
 
 これは unbindModel() の基本的な使い方です。
 
-``` php
+```php
 $this->Model->unbindModel(
     ['associationType' => ['associatedModelClassName']],
 );
@@ -873,7 +873,7 @@ Principle モデルは \$name プロパティを除いては空っぽの状態�
 それでは、直接 Principle を Leader に関連付けてみましょう。
 LeadersController で次のようにします。
 
-``` php
+```php
 public function another_action()
 {
     // leader.php モデルファイルでは、hasMany アソシエーションは定義されていません。
@@ -911,7 +911,7 @@ public function another_action()
 bindModel() は基本的には、生成したいアソシエーションの名前がつけられた
 配列の中に、モデルに指定するのと同じアソシエーション配列をセットします。
 
-``` php
+```php
 $this->Model->bindModel(
     ['associationName' => [
             'associatedModelClassName' => [
@@ -935,7 +935,7 @@ $this->Model->bindModel(
 この場合、messages テーブルは user_id と recipient_id というフィールドを
 持っています。さて、ここでは Message モデルに次のように定義します。
 
-``` php
+```php
 class Message extends AppModel
 {
     public $belongsTo = [
@@ -954,7 +954,7 @@ class Message extends AppModel
 Recipient は User モデルに対するエイリアスです。User モデルの方は
 このようになっています。
 
-``` php
+```php
 class User extends AppModel
 {
     public $hasMany = [
@@ -972,7 +972,7 @@ class User extends AppModel
 
 自分自身に対するアソシエーションも以下のようにして定義できます。
 
-``` php
+```php
 class Post extends AppModel
 {
     public $belongsTo = [
@@ -1012,7 +1012,7 @@ CakePHP の belongsTo と hasOne では、関連データを取得するため�
 テーブルを結合するには、Model::find() の "モダン" な構文を使います。
 \$options 配列の 'joins' というキーを追加します。以下の例を見てください。
 
-``` php
+```php
 $options['joins'] = [
     ['table' => 'channels',
         'alias' => 'Channel',
@@ -1043,7 +1043,7 @@ $Item->find('all', $options);
 
 joinsと共に、joinsで指定した関連モデルに関する条件をconditionsに指定できます。
 
-``` php
+```php
 $options['joins'] = [
     ['table' => 'channels',
         'alias' => 'Channel',
@@ -1067,7 +1067,7 @@ $privateItems = $Item->find('all', $options);
 books テーブルと tags テーブルを繋げるために、中間テーブルとして
 books_tags テーブルを使うように定義してみます。
 
-``` php
+```php
 $options['joins'] = [
     ['table' => 'books_tags',
         'alias' => 'BooksTag',

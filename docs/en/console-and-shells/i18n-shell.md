@@ -16,7 +16,9 @@ command. This command will scan your entire application for `__()` style
 function calls, and extract the message string. Each unique string in your
 application will be combined into a single POT file:
 
-    bin/cake i18n extract
+```bash
+bin/cake i18n extract
+```
 
 The above will run the extraction shell. It asks which directories to scan
 (the application directory `src/` by default) and where to write the result
@@ -26,7 +28,9 @@ methods, validation messages in models will be extracted as well.
 Because view templates live in `templates/` and translation files in
 `resources/locales/`, you will usually pass both locations explicitly:
 
-    bin/cake i18n extract --paths src,templates --output resources/locales
+```bash
+bin/cake i18n extract --paths src,templates --output resources/locales
+```
 
 The result of this command will be the file `resources/locales/default.pot`.
 You use the pot file as a template for creating po files. If you are manually
@@ -42,7 +46,7 @@ header line.
 
 You can generate a POT file for a specific plugin using:
 
-``` text
+```bash
 bin/cake i18n extract --plugin <Plugin>
 ```
 
@@ -54,18 +58,24 @@ You can set the domain to be used for extracted validation messages in your mode
 If the model already has a `$validationDomain` property, the given validation
 domain will be ignored:
 
-    bin/cake i18n extract --validation-domain validation_errors
+```bash
+bin/cake i18n extract --validation-domain validation_errors
+```
 
 You can also prevent the shell from extracting validation messages:
 
-    bin/cake i18n extract --ignore-model-validation
+```bash
+bin/cake i18n extract --ignore-model-validation
+```
 
 ### Excluding folders
 
 You can pass a comma separated list of folders that you wish to be excluded.
 Any path containing a path segment with the provided values will be ignored:
 
-    bin/cake i18n extract --exclude Test,Vendor
+```bash
+bin/cake i18n extract --exclude Test,Vendor
+```
 
 ### Skipping overwrite warnings for existing POT files
 
@@ -75,7 +85,9 @@ Any path containing a path segment with the provided values will be ignored:
 By adding `--overwrite`, the shell script will no longer warn you if a POT file
 already exists and will overwrite by default:
 
-    bin/cake i18n extract --overwrite
+```bash
+bin/cake i18n extract --overwrite
+```
 
 ### Extracting messages from the CakePHP core libraries
 
@@ -86,17 +98,23 @@ By default, the extract shell script will ask you if you like to extract
 the messages used in the CakePHP core libraries. Set `--extract-core` to `yes` or
 `no` to set the default behavior.
 
-    bin/cake i18n extract --extract-core yes
+```bash
+bin/cake i18n extract --extract-core yes
+```
 
-    or
+or
 
-    bin/cake i18n extract --extract-core no
+```bash
+bin/cake i18n extract --extract-core no
+```
 
 ## Create the tables used by TranslateBehavior
 
 The i18n shell can also be used to initialize the default tables used by the
 `TranslateBehavior`:
 
-    bin/cake i18n initdb
+```bash
+bin/cake i18n initdb
+```
 
 This will create the `i18n` table used by translate behavior.

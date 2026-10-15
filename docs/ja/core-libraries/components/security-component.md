@@ -113,7 +113,7 @@ Security コンポーネントは、一般的にコントローラの `beforeFil
 あなたが望むセキュリティ制限をここで指定すると SecurityComponent は起動時に
 それらの制限を有効にします。
 
-``` php
+```php
 class WidgetController extends AppController
 {
     public $components = ['Security'];
@@ -128,7 +128,7 @@ class WidgetController extends AppController
 上記の例では、delete アクションは POST リクエストを受け取った場合にのみ
 正しく実行されます。
 
-``` php
+```php
 class WidgetController extends AppController
 {
     public $components = ['Security'];
@@ -144,7 +144,7 @@ class WidgetController extends AppController
 
 上記の例では、 管理者用ルーティングの全てのアクションは、セキュアな SSL 通信のみを許可します。
 
-``` php
+```php
 class WidgetController extends AppController
 {
     public $components = ['Security'];
@@ -194,7 +194,7 @@ Piece of Cake 2 フォークでは、CSRF トークンが HMAC で署名され�
 CSRF 防御の恩恵を受けられます。デフォルトでは CSRF トークンは、30分間有効です。
 コンポーネントの csfrExpires を設定することで有効期限を指定することができます。
 
-``` php
+```php
 public $components = [
     'Security' => [
         'csrfExpires' => '+1 hour',
@@ -204,7 +204,7 @@ public $components = [
 
 コントローラの `beforeFilter` 中でこのプロパティをセットすることもできます。
 
-``` php
+```php
 public function beforeFilter()
 {
     $this->Security->csrfExpires = '+1 hour';
@@ -231,7 +231,7 @@ csrfExpires プロパティは、
 `csrfUseOnce` を `false` にすることで、長期間、複数回使用できるトークンに切り替える
 ことができます。この設定は、コントローラの components 配列や `beforeFilter` で行います。
 
-``` php
+```php
 public $components = [
     'Security' => [
         'csrfUseOnce' => false,

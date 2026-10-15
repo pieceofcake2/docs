@@ -33,7 +33,7 @@ CakePHP の動作に関してさらに学びたいと思っているからだと
 [pieceofcake2/app](https://pieceofcake2.github.io/app/) アプリケーションスケルトンが
 CakePHP もインストールしてくれます。
 
-``` bash
+```bash
 composer create-project pieceofcake2/app blog
 cd blog
 ```
@@ -67,7 +67,7 @@ CakePHP のディレクトリ構造について少し学んでおきましょう
 動作させているユーザーを調べ、そのユーザーにディレクトリの所有権を変更します。
 実行するコマンドは (\*nixで) このようになります:
 
-``` bash
+```bash
 $ chown -R www-data tmp logs
 ```
 
@@ -81,7 +81,7 @@ $ chown -R www-data tmp logs
 作成しておいてください。このページでは、投稿記事を保存するためのテーブルをひとつ作成します。
 次の SQL をデータベースで実行してください。
 
-``` text
+```text
 /* まず、posts テーブルを作成します: */
 CREATE TABLE posts (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -120,14 +120,14 @@ CakePHP のデータベース設定ファイルの元は、 `config/database.php
 あります。同一ディレクトリ上にこのファイルのコピーを作り、 `database.php`
 という名前にしてください。
 
-``` bash
+```bash
 cp config/database.php.default config/database.php
 ```
 
 この設定ファイルの中身は一目瞭然です。 `$default` 配列の値を自分のセットアップに合わせて
 変更するだけです。完全な設定の配列の例は次のようなものになるでしょう:
 
-``` php
+```php
 // config/database.php
 public $default = [
     'datasource' => 'Database/Mysql',
@@ -145,7 +145,7 @@ public $default = [
 
 新しくできた `database.php` ファイルを保存したら、プロジェクトルートで開発用サーバを起動します。
 
-``` bash
+```bash
 bin/cake server
 ```
 
@@ -154,7 +154,7 @@ bin/cake server
 表示されるはずです。
 
 > [!NOTE]
-> PDO と pdo_mysql が php.ini で有効になっている必要があることを覚えておいてください。
+> PDO と pdo_mysql が `php.ini` で有効になっている必要があることを覚えておいてください。
 
 ## 追加の設定
 
@@ -167,7 +167,7 @@ bin/cake server
 編集し、デフォルトの `Security.salt` の値を変更してください。
 この値は、ランダムで長い文字列にします。そうすることで推測がより困難になります。
 
-``` php
+```php
 /**
  * A random string used in security hashing methods.
  */
@@ -178,7 +178,7 @@ Configure::write('Security.salt', 'pl345e-P45s_7h3*S@l7!');
 `config/core.php` を編集して `Security.cipherSeed` をデフォルト値から
 変更してください。この値は、大きくてランダムな整数でなければなりません:
 
-``` php
+```php
 /**
  * A random numeric string (digits only) used to encrypt/decrypt strings.
  */

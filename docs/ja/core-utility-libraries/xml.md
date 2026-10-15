@@ -15,7 +15,7 @@ Xml クラスは配列から SimpleXMLElement や DOMDocument
 オブジェクトを返します。以下のサンプルは URL から
 データをインポートする方法を示しています。
 
-``` php
+```php
 // SimpleXML を使う
 $xml = Xml::build('https://example.com/articles.rss');
 // このとき、 $xml は SimpleXMLElement のインスタンスです。
@@ -32,7 +32,7 @@ $xml = Xml::build('https://example.com/articles.rss', ['return' => 'domdocument'
 `Xml::build()` を使うことで、多様なソースから XML オブジェクトを
 作成することができます。たとえば、文字列から XML オブジェクトを作成することができます。
 
-``` php
+```php
 $text = '<?xml version="1.0" encoding="utf-8"?>
 <post>
     <id>1</id>
@@ -45,7 +45,7 @@ $xml = Xml::build($text);
 ローカルやリモートにあるファイルからも XML オブジェクトを作成することができます。
 リモートのファイルは `HttpSocket` を使って取得します。
 
-``` php
+```php
 // ローカルにあるファイル
 $xml = Xml::build('/home/awesome/unicorns.xml');
 
@@ -64,7 +64,7 @@ $xml = Xml::build('https://example.com/articles.rss');
 
 配列を使っても Xml オブジェクトを作成できます。
 
-``` php
+```php
 $data = [
     'post' => [
         'id' => 1,
@@ -77,7 +77,7 @@ $xml = Xml::build($data);
 
 入力が正しくない場合、 Xml クラスは例外をスローします。
 
-``` php
+```php
 $xmlString = 'What is XML?';
 try {
     $xmlObject = Xml::build($xmlString); // ここで例外をスローする
@@ -95,7 +95,7 @@ try {
 
 XML から配列への変換も Xml クラスを使えば簡単です。
 
-``` php
+```php
 $xmlString = '<?xml version="1.0"?><root><child>value</child></root>';
 $xmlArray = Xml::toArray(Xml::build($xmlString));
 ```
@@ -104,7 +104,7 @@ XML が正しくなければ例外がスローされます。
 
 ## 配列から XML 文字列への変換
 
-``` php
+```php
 $xmlArray = ['root' => ['child' => 'value']];
 $xmlObject = Xml::fromArray($xmlArray, ['format' => 'tags']); // Xml::build() を使うこともできます
 $xmlString = $xmlObject->asXML();
@@ -114,7 +114,7 @@ $xmlString = $xmlObject->asXML();
 持つものでなければなりません。この条件を満たさない場合、
 Xml クラスは例外をスローします。以下は正しくない例です。
 
-``` text
+```text
 // 数値のキーを用いたトップレベル要素
 [
     ['key' => 'value']
@@ -132,7 +132,7 @@ Xml クラスは例外をスローします。以下は正しくない例です�
 `@` をキーの先頭につけると属性が生成されます。テキストノードを表すときは
 `@` をキーとして用います。
 
-``` php
+```php
 $xmlArray = [
     'project' => [
         '@id' => 1,
@@ -146,7 +146,7 @@ $xmlString = $xmlObject->asXML();
 
 この例では、 `$xmlString` には:
 
-``` xml
+```xml
 <?xml version="1.0"?>
 <project id="1">Value of project<name>Name of project, as tag</name></project>
 ```
@@ -157,7 +157,7 @@ $xmlString = $xmlObject->asXML();
 `Inflector` によって変更されることはありません。繰り返す要素は数値添字の配列で表します。
 以下の例を見てください。
 
-``` php
+```php
 $data = [
     'projects' => [
         'project' => [
@@ -176,7 +176,7 @@ $data = [
 
 この配列は、以下のような XML になります。
 
-``` xml
+```xml
 <?xml version="1.0"?>
 <projects>
     <project>
@@ -205,7 +205,7 @@ $data = [
 `xmlns:` をつけた名前のキーを作成する必要があります。
 以下の例を見てください。
 
-``` php
+```php
 $xmlArray = [
     'root' => [
         'xmlns:' => 'https://cakephp.org',
@@ -230,7 +230,7 @@ $xml2 = Xml::fromArray($xmlArray);
 
 `$xml1` と `$xml2` の値は、それぞれ次のようになるでしょう。
 
-``` xml
+```xml
 <?xml version="1.0"?>
 <root xmlns="https://cakephp.org"><child>value</child></root>
 
@@ -245,7 +245,7 @@ Xml クラスはコンテンツの操作をするメソッドを提供しませ�
 これらの操作は SimpleXMLElement または DOMDocument を使って行います。
 以下は子要素を作成する例です。
 
-``` php
+```php
 // SimpleXML を使用
 $myXmlOriginal = '<?xml version="1.0"?><root><child>value</child></root>';
 $xml = Xml::build($myXmlOriginal);
@@ -293,31 +293,31 @@ v2.12.3 から、`'readFile' => false` で URL も読み込まなくなりまし
 
 文字列から XML を作成する:
 
-``` php
+```php
 $xml = Xml::build('<example>text</example>');
 ```
 
 文字列から XML を作成し、 DOMDocument クラスのオブジェクトとして出力する:
 
-``` php
+```php
 $xml = Xml::build('<example>text</example>', ['return' => 'domdocument']);
 ```
 
 ローカルのファイルパスから XML を作成する:
 
-``` php
+```php
 $xml = Xml::build('/path/to/an/xml/file.xml');
 ```
 
 リモート URL から作成する:
 
-``` php
+```php
 $xml = Xml::build('https://example.com/example.xml');
 ```
 
 配列から作成する:
 
-``` php
+```php
 $value = [
     'tags' => [
         'tag' => [

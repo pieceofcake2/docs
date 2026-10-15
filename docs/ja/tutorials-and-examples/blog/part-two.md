@@ -11,7 +11,7 @@ CakePHP のモデルクラスのファイルは、 `src/Model` の中にあり�
 `src/Model/Post.php` というファイルを作って保存します。
 ファイルの中身全体は次のようになります:
 
-``` php
+```php
 // src/Model/Post.php
 class Post extends AppModel
 {
@@ -25,7 +25,7 @@ CakePHP は自動的に、このモデルは PostsController で使用される�
 > [!NOTE]
 > もし一致するファイルが `src/Model` に見つけられなければ、CakePHP は動的に
 > モデルオブジェクトを生成します。これはまた、不意に間違ったファイル名 (例えば、
-> post.php や posts.php) をつけると、CakePHP はどんな設定も認識できず、
+> `post.php` や `posts.php`) をつけると、CakePHP はどんな設定も認識できず、
 > 代わりにデフォルトのものを使うことになるということも意味します。
 
 テーブルの接頭辞 (*prefix*) や、コールバック、バリデーションといったモデルの詳細については、
@@ -39,7 +39,7 @@ CakePHP は自動的に、このモデルは PostsController で使用される�
 この新しいコントローラは、 `PostsController.php` という名前で、 `src/Controller`
 ディレクトリの中に配置します。基本的なコントローラは次のようになります:
 
-``` php
+```php
 // src/Controller/PostsController.php
 class PostsController extends AppController
 {
@@ -53,7 +53,7 @@ class PostsController extends AppController
 をリクエストした場合、投稿記事の一覧が表示されると期待するでしょう。
 このアクションのコードは次のようになります:
 
-``` php
+```php
 class PostsController extends AppController
 {
     public $helpers = ['Html', 'Form'];
@@ -101,7 +101,7 @@ CakePHP のビュー (*view*) は、アプリケーションのレイアウト (
 一つ前のセクションの `set()` メソッドによって、ビューから「posts」変数が使えるように
 割り当てたのを覚えていますか。ビューに渡されたデータは次のようなものになっています:
 
-``` text
+```text
 // print_r($posts) の出力:
 
 
@@ -146,7 +146,7 @@ CakePHP のビューファイルは、 `templates/` の中の、コントロー�
 保存されています (この場合は、「Posts」というフォルダを作成します)。
 この投稿記事データをテーブル表示するには、ビューのコードは次のようなものにできます
 
-``` php
+```php
 <!-- File: templates/Posts/index.ctp -->
 
 <h1>Blog posts</h1>
@@ -198,7 +198,7 @@ CakePHP のリバースルーティング機能を活用することができま
 その定義作業をしてしまったから（仕事がハヤイ！）か、のどちらかです。
 そうでないなら、これから PostsController の中に作ってみましょう:
 
-``` php
+```php
 // File: src/Controller/PostsController.php
 class PostsController extends AppController
 {
@@ -241,7 +241,7 @@ CakePHP の ErrorHandler に処理が引き継がれます。また、ユーザ�
 では、新しい「view」アクション用のビューを作って、 `templates/Posts/view.ctp`
 というファイルで保存しましょう。
 
-``` php
+```php
 <!-- File: templates/Posts/view.ctp -->
 
 <h1><?php echo h($post['Post']['title']); ?></h1>
@@ -261,7 +261,7 @@ CakePHP の ErrorHandler に処理が引き継がれます。また、ユーザ�
 
 まず、PostsController の中に、 `add()` アクションを作ります:
 
-``` php
+```php
 class PostsController extends AppController
 {
     public $helpers = ['Html', 'Form', 'Flash'];
@@ -355,7 +355,7 @@ CakePHP を使うと、その作業を簡単、高速に片付けることがで
 
 add のビューは次のようなものになります:
 
-``` php
+```php
 <!-- File: templates/Posts/add.ctp -->
 
 <h1>Add Post</h1>
@@ -370,7 +370,7 @@ echo $this->Form->end('Save Post');
 ここで、FormHelper を使って、HTML フォームの開始タグを生成しています。
 `$this->Form->create()` が生成した HTML は次のようになります:
 
-``` html
+```html
 <form id="PostAddForm" method="post" action="/posts/add">
 ```
 
@@ -393,7 +393,7 @@ POST で送るフォームを構築している、と解釈されます。
 さて少し戻って、 `templates/Posts/index.ctp` のビューで「Add Post」というリンクを
 新しく表示するように編集しましょう。 `<table>` の前に、以下の行を追加してください:
 
-``` php
+```php
 <?php echo $this->Html->link(
     'Add Post',
     ['controller' => 'posts', 'action' => 'add'],
@@ -404,7 +404,7 @@ POST で送るフォームを構築している、と解釈されます。
 バリデーションのルールは、モデルの中で定義することができます。
 Post モデルを見直して、幾つか修正してみましょう:
 
-``` php
+```php
 class Post extends AppModel
 {
     public $validate = [
@@ -436,7 +436,7 @@ class Post extends AppModel
 アクションをつくり、それからビューを作る、というパターンです。
 PostsController の `edit()` アクションはこんな形になります:
 
-``` php
+```php
 public function edit($id = null)
 {
     if (!$id) {
@@ -476,7 +476,7 @@ POST データでレコードを更新したり、バリデーションエラー
 
 edit ビューは以下のようになるでしょう:
 
-``` php
+```php
 <!-- File: templates/Posts/edit.ctp -->
 
 <h1>Edit Post</h1>
@@ -498,7 +498,7 @@ echo $this->Form->end('Save Post');
 
 これで、特定の記事をアップデートするためのリンクを index ビューに付けることができます:
 
-``` php
+```php
 <!-- File: templates/Posts/index.ctp  (編集リンクを追加済み) -->
 
 <h1>Blog posts</h1>
@@ -546,7 +546,7 @@ echo $this->Form->end('Save Post');
 次に、ユーザが投稿記事を削除できるようにする機能を作りましょう。
 PostsController の `delete()` アクションを作るところから始めます:
 
-``` php
+```php
 public function delete($id = null)
 {
     if ($this->request->is('get')) {
@@ -577,7 +577,7 @@ public function delete($id = null)
 ロジックを実行してリダイレクトするので、このアクションにはビューがありません。
 しかし、index ビューにリンクを付けて、投稿を削除するようにできるでしょう:
 
-``` php
+```php
 <!-- File: templates/Posts/index.ctp -->
 
 <h1>Blog posts</h1>
@@ -653,7 +653,7 @@ CakePHP のルーティングは、 `config/routes.php` の中にあります。
 デフォルトのトップページのルートをコメントアウトするか、削除します。
 この行です:
 
-``` php
+```php
 Router::connect(
     '/',
     ['controller' => 'pages', 'action' => 'display', 'home'],
@@ -663,7 +663,7 @@ Router::connect(
 この行は、「/」という URL をデフォルトの CakePHP のホームページに接続します。
 これを、自分のコントローラに接続させるために、次のような行を追加してください:
 
-``` php
+```php
 Router::connect('/', ['controller' => 'posts', 'action' => 'index']);
 ```
 

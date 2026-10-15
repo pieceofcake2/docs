@@ -7,7 +7,7 @@ controllers.
 Most acl shell subcommands involve referencing aco/aro nodes. As there are two
 'forms' of these nodes, there is two notations in the shell:
 
-``` text
+```bash
 # A Model + foreign_key reference
 bin/cake acl view aro Model.1
 
@@ -23,19 +23,25 @@ while using a `/` indicates an alias path.
 Before using the database ACL you'll need to setup the tables. You can do that
 using:
 
-    bin/cake acl initdb
+```bash
+bin/cake acl initdb
+```
 
 ## Create and delete nodes
 
 You can use the create and delete subcommands to create and delete nodes:
 
-    bin/cake acl create aco controllers Posts
-    bin/cake acl create aco Posts index
+```bash
+bin/cake acl create aco controllers Posts
+bin/cake acl create aco Posts index
+```
 
 Would create an aco record using an alias path. You could do the following as
 well:
 
-    bin/cake acl create aro Group.1
+```bash
+bin/cake acl create aro Group.1
+```
 
 To create an aro node for the Group id = 1.
 
@@ -45,12 +51,16 @@ Use the grant command to grant ACL permissions. Once executed, the ARO
 specified (and its children, if any) will have ALLOW access to the
 specified ACO action (and the ACO's children, if any):
 
-    bin/cake acl grant Group.1 controllers/Posts
+```bash
+bin/cake acl grant Group.1 controllers/Posts
+```
 
 The above would grant all privileges. You could grant only the read privilege
 using the following:
 
-    bin/cake acl grant Group.1 controllers/Posts read
+```bash
+bin/cake acl grant Group.1 controllers/Posts read
+```
 
 Denying permission works in the exact same way. The only difference is you
 switch 'deny' in for 'grant'.
@@ -59,7 +69,9 @@ switch 'deny' in for 'grant'.
 
 Use this command to check ACL permissions.
 
-    bin/cake acl check Group.1 controllers/Posts read
+```bash
+bin/cake acl check Group.1 controllers/Posts read
+```
 
 The output will either be `allowed` or `not allowed`.
 
@@ -68,4 +80,6 @@ The output will either be `allowed` or `not allowed`.
 The view command will return the ARO or ACO tree. The optional node parameter
 allows you to return only a portion of the requested tree:
 
-    bin/cake acl view
+```bash
+bin/cake acl view
+```

@@ -37,7 +37,7 @@ CakePHP 2.0 では新しくリクエストとレスポンスのオブジェク�
 提供しています。一つ目の方法は、添字付き配列です。二つ目の方法は `$this->request->params`
 を経由する方法です。三つ目はオブジェクトのプロパティとしてアクセスする方法です。
 
-``` php
+```php
 $this->request->controller;
 $this->request['controller'];
 $this->request->params['controller'];
@@ -50,7 +50,7 @@ $this->request->params['controller'];
 [Route Elements](../development/routing#route-elements) に加えて [Passed Arguments](../development/routing#passed-arguments) や [Named Parameters](../development/routing#named-parameters)
 へのアクセスがしばしば必要になります。これらは両方ともリクエストオブジェクトと同様に利用可能です。
 
-``` php
+```php
 // 渡された引数
 $this->request->pass;
 $this->request['pass'];
@@ -79,7 +79,7 @@ CakePHP の内部で使っている重要で役に立つパラメータが存在
 
 クエリ文字列パラメータは `CakeRequest::$query` を使って読み出すことができます。
 
-``` php
+```php
 // url は /posts/index?page=1&sort=title
 $this->request->query['page'];
 
@@ -92,7 +92,7 @@ $this->request['url']['page'];
 URL クエリ配列を読むために `CakeRequest::query()` を使うことができます。
 キーが存在しない場合、 `null` が返ります。
 
-``` php
+```php
 $foo = $this->request->query('value_that_does_not_exist');
 // $foo === null
 ```
@@ -102,7 +102,7 @@ $foo = $this->request->query('value_that_does_not_exist');
 すべての POST データは `CakeRequest::$data` を使ってアクセスされます。
 フォームデータが `data` 接頭辞を含んでいる場合、接頭辞は取り除かれるでしょう。例えば:
 
-``` php
+```php
 // name 属性が 'data[Post][title]' だった入力は次のようにアクセスします。
 $this->request->data['Post']['title'];
 ```
@@ -111,7 +111,7 @@ $this->request->data['Post']['title'];
 data 配列を読むために `CakeRequest::data()` を使うことができます。
 キーが存在しない場合、 `null` が返ります。
 
-``` php
+```php
 $foo = $this->request->data('Value.that.does.not.exist');
 // $foo == null
 ```
@@ -134,7 +134,7 @@ post 形式でデータを交換することがしばしばあります。 `Cake
 を使用すると、任意の形式の入力データを読み込むことができます。
 デコード関数が提供されることでデシリアライズされたコンテンツを受け取ることができます。
 
-``` php
+```php
 // PUT/POST アクションで投稿されたデータを JSON 形式にエンコードで取得する
 $data = $this->request->input('json_decode');
 ```
@@ -143,7 +143,7 @@ $data = $this->request->input('json_decode');
 デシリアライズメソッドの中には呼び出し時に追加パラメータが必要なものがあるので
 `CakeRequest::input()` は追加パラメータを渡せるようになっています。
 
-``` php
+```php
 // PUT/POST アクションで投稿されたデータを Xml エンコードで取得する
 $data = $this->request->input('Xml::build', ['return' => 'domdocument']);
 ```
@@ -160,7 +160,7 @@ $data = $this->request->input('Xml::build', ['return' => 'domdocument']);
 使う必要がありました。これらのメソッドは `CakeRequest` に移動され後方互換を保ちつつ
 新しいインターフェイスが提供されています。使い方は以下の通りです。
 
-``` php
+```php
 $this->request->is('post');
 $this->request->isPost(); // 非推奨
 ```
@@ -180,7 +180,7 @@ $this->request->isPost(); // 非推奨
 
 いくつかの例を示します。
 
-``` php
+```php
 // environment detector を追加する
 $this->request->addDetector(
     'post',
@@ -285,13 +285,13 @@ $this->request->addDetector(
 
 受付ける言語のリストを取得:
 
-``` css
+```css
 CakeRequest::acceptLanguage();
 ```
 
 特定の言語が受付られるかどうかの確認:
 
-``` css
+```css
 CakeRequest::acceptLanguage('es-es');
 ```
 
@@ -340,7 +340,7 @@ CakePHP はデフォルトで `CakeResponse` を使います。
 コンテンツタイプを扱う必要がある場合、以下のように `CakeResponse::type()` を使って
 設定することができます。
 
-``` php
+```php
 // vCard タイプを追加
 $this->response->type(['vcf' => 'text/v-card']);
 
@@ -361,7 +361,7 @@ $this->response->type('vcf');
 2.3 以降から `MediaView` は非推奨になり `CakeResponse::file()` を使って
 ファイルを送信します。
 
-``` php
+```php
 public function sendFile($id)
 {
     $file = $this->Attachment->getFile($id);
@@ -379,7 +379,7 @@ CakePHP は、`CakeResponse::$_mimeTypes` に登録された、よく知られ�
 もし、あなたが望むなら、 オプションを明記することによって、ブラウザ上に表示する代わりに
 ファイルをダウンロードさせることができます。
 
-``` php
+```php
 $this->response->file(
     $file['path'],
     ['download' => true, 'name' => 'foo'],
@@ -390,7 +390,7 @@ $this->response->file(
 
 動的に生成された pdf や ics のようにディスクに存在しないファイルを返すことができます。
 
-``` php
+```php
 public function sendIcs()
 {
     $icsString = $this->Calendar->generateIcs();
@@ -410,7 +410,7 @@ public function sendIcs()
 ヘッダの設定は `CakeResponse::header()` メソッドで行われます。
 このメソッドは少し違ったパラメータ設定と一緒に呼ばれます。
 
-``` php
+```php
 // ヘッダを一つ設定する
 $this->response->header('Location', 'https://example.com');
 
@@ -440,7 +440,7 @@ $this->response->header([
 時々、コントローラアクションの結果をキャッシュしないようにブラウザに強制する必要がでてきます。
 `CakeResponse::disableCache()` はそういった目的で使われます。
 
-``` php
+```php
 public function index()
 {
     // 何か行う
@@ -455,7 +455,7 @@ public function index()
 また、`CakeResponse::cache()` を使ってクライアントにレスポンスを
 キャッシュして欲しいことを伝えられます。
 
-``` php
+```php
 public function index()
 {
     //do something
@@ -507,7 +507,7 @@ private としてレスポンスを設定することは、レスポンスのす
 このメソッドの二番目のパラメータはキャッシュの `max-age` を指定するために使われます。
 このパラメータはレスポンスが古いと見なされる秒数を表しています。
 
-``` php
+```php
 public function view()
 {
     ...
@@ -534,7 +534,7 @@ public function my_data()
 `Expires` ヘッダに、レスポンスが古いと見なされる日時を設定できます。
 このヘッダは `CakeResponse::expires()` メソッドを使って設定されます。
 
-``` php
+```php
 public function view()
 {
     $this->response->expires('+5 days');
@@ -563,7 +563,7 @@ HTTP におけるキャッシュの検証はコンテンツが定期的に変化
 メソッドを呼び出すかコントローラに `RequestHandlerComponent`
 を読み込まなければなりません。
 
-``` php
+```php
 public function index()
 {
     $articles = $this->Article->find('all');
@@ -587,7 +587,7 @@ HTTP キャッシュの検証モデルのもとでは、リソースが最後に
 実際にこのヘッダを使うメリットを得るためには、 `CakeResponse::checkNotModified()`
 メソッドを呼び出すかコントローラに `RequestHandlerComponent` を読み込まなければなりません。
 
-``` php
+```php
 public function view()
 {
     $article = $this->Article->find('first');
@@ -605,7 +605,7 @@ public function view()
 これは多国語対応ページがある場合やブラウザごとに異なる HTML を返すようなケースでしばしばおこります。
 そのような状況では `Vary` ヘッダを使えます。
 
-``` php
+```php
 $this->response->vary('User-Agent');
 $this->response->vary('Accept-Encoding', 'User-Agent');
 $this->response->vary('Accept-Language');
@@ -621,7 +621,7 @@ $this->response->vary('Accept-Language');
 `CakeResponse` に委譲しているのをまねる(mock)オブジェクトを準備するだけでよくなります。
 このことで'単体'テストを作りやすくなり、コントローラのテスト実施が簡単になります。
 
-``` php
+```php
 public function testSomething()
 {
     $this->controller->response = $this->getMockBuilder('CakeResponse')

@@ -5,9 +5,9 @@
 
 **（重要）Appファイルの置き換え**
 
-- webroot/index.php: 起動方式(bootstrapping process)の変更によるものを置き換える必要があります。
-- config/core.php: PHP5.3に必要な設定が追加されました。
-- webroot/test.php: 単体テストを実行する場合、置き換えてください。
+- `webroot/index.php`: 起動方式(bootstrapping process)の変更によるものを置き換える必要があります。
+- `config/core.php`: PHP5.3に必要な設定が追加されました。
+- `webroot/test.php`: 単体テストを実行する場合、置き換えてください。
 
 ## 削除された定数
 
@@ -26,11 +26,11 @@
 
 **ブートストラップ時のパスの追加**
 
-app/config/bootstrap.php に、 `$pluginPaths` や `$controllerPaths` のような変数が置かれているかもしれません。
+`app/config/bootstrap.php` に、 `$pluginPaths` や `$controllerPaths` のような変数が置かれているかもしれません。
 以下はパスを追加する新しい方法です。1.3 RC1 では `$pluginPaths` 変数はもはや働かないでしょう。
 パスを更新するには `App::build()` を使う必要があります。
 
-``` php
+```php
 App::build([
     'plugins' => [
       '/full/path/to/plugins/',
@@ -86,14 +86,14 @@ App::build([
 またブートストラップするときの順序が変更されました。
 以前は、 `app/config/bootstrap.php` の **後に** `app/config/core.php` が読み込まれていました。
 これはアプリケーションのブートストラップ時の `App::import()` がキャッシュせず、キャッシュがヒットしたときよりかなりかなり遅くなっていました。
-1.3では、core.php の読み込みと設定のキャッシュは bootstrap.php の読み込みの **前に** されます。
+1.3では、`core.php` の読み込みと設定のキャッシュは `bootstrap.php` の読み込みの **前に** されます。
 
 **カスタム inflections の読み込み**
 
 不必要なファイルの読み込みをしていた `inflections.php` は削除され、関連した機能は柔軟性を増強するため、メソッドに書き直されています。
 今やカスタム *inflections* を読み込むためには、 `Inflector::rules()` を使います。
 
-``` php
+```php
 Inflector::rules('singular', [
     'rules' => [
       '/^(bil)er$/i' => '\1',
@@ -110,18 +110,18 @@ Inflector::rules('singular', [
 
 **ライブラリ名の変更**
 
-ファイル名と含まれるメインクラスのマッピングのため、「libs/session.php」、「libs/socket.php」、「libs/model/schema.php」、「libs/model/behavior.php」のコアライブラリは名前が変更されています。:
+ファイル名と含まれるメインクラスのマッピングのため、`libs/session.php`、`libs/socket.php`、`libs/model/schema.php`、`libs/model/behavior.php` のコアライブラリは名前が変更されています。:
 
-- session.php -\> cake_session.php
+- `session.php` -\> `cake_session.php`
   - App::import('Core', 'Session') -\> App::import('Core',
     'CakeSession')
-- socket.php -\> cake_socket.php
+- `socket.php` -\> `cake_socket.php`
   - App::import('Core', 'Socket') -\> App::import('Core',
     'CakeSocket')
-- schema.php -\> cake_schema.php
+- `schema.php` -\> `cake_schema.php`
   - App::import('Model', 'Schema') -\> App::import('Model',
     'CakeSchema')
-- behavior.php -\> model_behavior.php
+- `behavior.php` -\> `model_behavior.php`
   - App::import('Core', 'Behavior') -\> App::import('Core',
     'ModelBehavior')
 
@@ -187,7 +187,7 @@ Inflector::rules('singular', [
 これはエレメントを使うことに修正されました。
 アプリケーションでセッションflashレイアウトをカスタムしたものを指定しているならば、下記のような変更を加える必要があります。
 
-1.  必要なレイアウトファイルを app/views/elements に移動する
+1.  必要なレイアウトファイルを `app/views/elements` に移動する
 2.  \$content_for_layout 変数を \$message 変数に書き換える
 3.  レイアウトに `echo $session->flash();` があるかどうか確かめる
 
@@ -195,7 +195,7 @@ Inflector::rules('singular', [
 SessionHelper と SessionComponent は他のコンポーネントと同じように振る舞い、他のヘルパ・コンポーネントと同じように宣言されなければなりません。
 既存の振る舞いを保持するなら、 `AppController::$components` と `AppController::$helpers` にこれらのクラスを読み込むように書き換えてください。
 
-``` php
+```php
 var $components = ['Session', 'Auth', ...];
 var $helpers = ['Session', 'Html', 'Form' ...];
 ```
@@ -215,7 +215,7 @@ var $helpers = ['Session', 'Html', 'Form' ...];
 **SessionComponent**
 
 - `SessionComponent::setFlash()` は 2番目の引数として *layout* の代わりに *element* を使うようになりました。
-  必ずflashのためのレイアウトをapp/views/layoutsからapp/views/elementsに移し、\$content_for_layout を \$messageに変更するようにしてください。
+  必ずflashのためのレイアウトを `app/views/layouts` から `app/views/elements` に移し、\$content_for_layout を \$messageに変更するようにしてください。
 
 **Folder**
 
@@ -239,9 +239,9 @@ var $helpers = ['Session', 'Html', 'Form' ...];
 これはprefixが異なるルーティングの方式では、矛盾した振る舞いを提供していました。
 代わりに `Routing.prefixes` を使用する必要があります。
 1.3のprefixルートは手動でルート定義を追加する必要がありません。
-全ての prefix ルートは自動で生成されます。シンプルに変更するには、core.php を変更してください。
+全ての prefix ルートは自動で生成されます。シンプルに変更するには、`core.php` を変更してください。
 
-``` php
+```php
 // このような書き方から:
 Configure::write('Routing.admin', 'admin');
 
@@ -253,7 +253,7 @@ prefixルートの更なる情報に関しては、新機能ガイドを見て�
 また、ルーティングパラメータに小さな変更があります。
 ルーティングパラメータは今や英数字と「-」、「\_」または `/[A-Z0-9-_+]+/` から成る必要があります。
 
-``` php
+```php
 Router::connect('/:$%@#param/:action/*', [...]); // ダメ
 Router::connect('/:can/:anybody/:see/:m-3/*', [...]); // 許容可能
 ```
@@ -263,7 +263,7 @@ Router::connect('/:can/:anybody/:see/:m-3/*', [...]); // 許容可能
 バグを引き起こしやすかった二つのまれにしか使われない機能が削除されました。 まず、
 フル正規表現を使うパスセグメントが削除されました。もう次のようなルートは作れません。
 
-``` php
+```php
 Router::connect(
   '/([0-9]+)-p-(.*)/',
   ['controller' => 'products', 'action' => 'show']
@@ -275,7 +275,7 @@ Router::connect(
 推奨されます。次に、ルートの中間でのワイルドカードのサポートが削除されました。
 以前はワイルドカードがルートの中間で使えました。
 
-``` php
+```php
 Router::connect(
     '/pages/*/:event',
     ['controller' => 'pages', 'action' => 'display'],
@@ -289,7 +289,7 @@ Router::connect(
 また、配列形式のURLに「id」キーを用いている人は、Router::url()がこれを名前付き(*named*)パラメータとして扱うことに気づくでしょう。
 もし過去にこのようなアプローチでIDパラメータをアクションに渡していたなら、この変更を反映するために、全ての \$html-\>link() と \$this-\>redirect() を書き換える必要あります。
 
-``` php
+```php
 // 古いフォーマット:
 $url = ['controller' => 'posts', 'action' => 'view', 'id' => $id];
 // ユースケース:
@@ -401,7 +401,7 @@ Cacheはエンジン毎のシングルトンの使用をやめ、代わりに `C
 `DboSource` はもはや自動でSQLログを吐き出しません。
 もし1.3でSQLログを吐き出したいなら、下記のようにしてください。
 
-``` php
+```php
 echo $this->element('sql_dump');
 ```
 
@@ -510,7 +510,7 @@ CacheHelperの `Controller::$cacheAction` との相互作用は少し変更さ�
 
 TimeHelperは i18n をよりフレンドリーに扱えるように書き直されました。
 内部で date() をコールしていたところは strftime() に置き換えられました。
-新しいメソッド TimeHelper::i18nFormat() が追加され、app/locale にあるPOSIX標準の LC_TIME 定義ファイルからローカライゼーションのためのデータを取得します。
+新しいメソッド TimeHelper::i18nFormat() が追加され、`app/locale` にあるPOSIX標準の LC_TIME 定義ファイルからローカライゼーションのためのデータを取得します。
 これらは以下の TimeHelper のAPIの変更によるものです。
 
 - TimeHelper::format() は第一引数に時間文字列をとり、フォーマット文字列を第二引数、フォーマットはstrftime() の書式、とすることができるようになりました。
@@ -549,7 +549,7 @@ JavascriptHelper と AjaxHelperは両方とも非推奨となり、JsHelper + Ht
 `Shell::error()` はエラーメッセージを出力した後に、ステータスコード 1 で exit します。
 また、メッセージのフォーマットに多少の変更があります。
 
-``` php
+```php
 $this->error('Invalid Foo', 'Please provide bar.');
 // 出力:
 Error: Invalid Foo
@@ -568,7 +568,7 @@ Please provide bar.
 
 ## Vendors, Test Suite & schema
 
-**vendors/cssとvendors/jsとvendors/img**
+**`vendors/css` と `vendors/js` と `vendors/img`**
 
 これら３つのディレクトリは、 `app/vendors` と `plugin/vendors` の両方から削除されています。
 これらはpluginとthemeのwebrootに置き換えられました。

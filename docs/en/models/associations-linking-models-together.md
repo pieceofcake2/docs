@@ -42,7 +42,7 @@ the association you are defining. The class variable can sometimes
 be as simple as a string, but can be as complex as a
 multidimensional array used to define association specifics.
 
-``` php
+```php
 class User extends AppModel
 {
     public $hasOne = 'Profile';
@@ -63,7 +63,7 @@ choose the same name as the class that it references. However,
 **aliases for each model must be unique across the app**. For example, it is
 appropriate to have:
 
-``` php
+```php
 class User extends AppModel
 {
     public $hasMany = [
@@ -95,7 +95,7 @@ class Group extends AppModel
 
 but the following will not work well in all circumstances:
 
-``` php
+```php
 class User extends AppModel
 {
     public $hasMany = [
@@ -134,14 +134,14 @@ CakePHP will automatically create links between associated model
 objects. So for example in your `User` model you can access the
 `Recipe` model as:
 
-``` php
+```php
 $this->Recipe->someFunction();
 ```
 
 Similarly in your controller you can access an associated model
 simply by following your model associations:
 
-``` php
+```php
 $this->User->Recipe->someFunction();
 ```
 
@@ -179,7 +179,7 @@ define the 'User hasOne Profile' association, add the \$hasOne
 property to the model class. Remember to have a Profile model in
 `src/Model/Profile.php`, or the association won't work:
 
-``` php
+```php
 class User extends AppModel
 {
     public $hasOne = 'Profile';
@@ -195,7 +195,7 @@ If you need more control, you can define your associations using
 array syntax. For example, you might want to limit the association
 to include only certain records.
 
-``` php
+```php
 class User extends AppModel
 {
     public $hasOne = [
@@ -237,7 +237,7 @@ Possible keys for hasOne association arrays include:
 Once this association has been defined, find operations on the User
 model will also fetch a related Profile record if it exists:
 
-``` php
+```php
 //Sample results from a $this->User->find() call.
 
 
@@ -284,7 +284,7 @@ follow this convention:
 We can define the belongsTo association in our Profile model at
 `src/Model/Profile.php` using the string syntax as follows:
 
-``` php
+```php
 class Profile extends AppModel
 {
     public $belongsTo = 'User';
@@ -294,7 +294,7 @@ class Profile extends AppModel
 We can also define a more specific relationship using array
 syntax:
 
-``` php
+```php
 class Profile extends AppModel
 {
     public $belongsTo = [
@@ -339,7 +339,7 @@ Possible keys for belongsTo association arrays include:
 Once this association has been defined, find operations on the
 Profile model will also fetch a related User record if it exists:
 
-``` php
+```php
 //Sample results from a $this->Profile->find() call.
 
 
@@ -389,7 +389,7 @@ Once you have added the counter field, you are good to go. Activate
 counter-cache in your association by adding a `counterCache` key
 and set the value to `true`:
 
-``` php
+```php
 class ImageComment extends AppModel
 {
     public $belongsTo = [
@@ -412,7 +412,7 @@ to, depending on how you look at it) the counter value.
 
 Using our Image model example, we can specify it like so:
 
-``` php
+```php
 class ImageComment extends AppModel
 {
     public $belongsTo = [
@@ -444,7 +444,7 @@ to count the amount of read and unread messages for each user.
 
 With this setup, your `belongsTo` would look like this:
 
-``` php
+```php
 class Message extends AppModel
 {
     public $belongsTo = [
@@ -478,7 +478,7 @@ this convention:
 We can define the hasMany association in our User model at
 `src/Model/User.php` using the string syntax as follows:
 
-``` php
+```php
 class User extends AppModel
 {
     public $hasMany = 'Comment';
@@ -488,7 +488,7 @@ class User extends AppModel
 We can also define a more specific relationship using array
 syntax:
 
-``` php
+```php
 class User extends AppModel
 {
     public $hasMany = [
@@ -541,7 +541,7 @@ Possible keys for hasMany association arrays include:
 Once this association has been defined, find operations on the User
 model will also fetch related Comment records if they exist:
 
-``` php
+```php
 //Sample results from a $this->User->find() call.
 
 array
@@ -635,7 +635,7 @@ Once this new table has been created, we can define the HABTM
 association in the model files. We're going to skip straight to the
 array syntax this time:
 
-``` php
+```php
 class Recipe extends AppModel
 {
     public $hasAndBelongsToMany = [
@@ -729,7 +729,7 @@ Possible keys for HABTM association arrays include:
 Once this association has been defined, find operations on the
 Recipe model will also fetch related Ingredient records if they exist:
 
-``` php
+```php
 // Sample results from a $this->Recipe->find() call.
 
 
@@ -811,7 +811,7 @@ otherwise known as a **hasMany through** association.
 That is, the association is a model itself. So, we can create a new
 model CourseMembership. Take a look at the following models.
 
-``` php
+```php
 // Student.php
 class Student extends AppModel
 {
@@ -866,7 +866,7 @@ section about Built-in behaviors for more information.) Let's set
 up a few models so we can see how bindModel() and unbindModel()
 work. We'll start with two models:
 
-``` php
+```php
 class Leader extends AppModel
 {
     public $hasMany = [
@@ -890,7 +890,7 @@ can see above, the association array in the Leader model defines a
 purposes, let's use unbindModel() to remove that association in a
 controller action:
 
-``` php
+```php
 public function some_action()
 {
     // This fetches Leaders, and their associated Followers
@@ -925,7 +925,7 @@ public function some_action()
 
 Here's the basic usage pattern for unbindModel():
 
-``` php
+```php
 $this->Model->unbindModel(
     ['associationType' => ['associatedModelClassName']],
 );
@@ -939,7 +939,7 @@ Principles to our Leader on the fly (but remember, only for the
 following find operation). This function appears in the
 LeadersController:
 
-``` php
+```php
 public function another_action()
 {
     // There is no Leader hasMany Principles in
@@ -982,7 +982,7 @@ encapsulation of a normal association array inside an array whose
 key is named after the type of association you are trying to
 create:
 
-``` php
+```php
 $this->Model->bindModel(
     ['associationName' => [
             'associatedModelClassName' => [
@@ -1006,7 +1006,7 @@ message, and a second to the user who receives the message. The
 messages table will have a field user_id, but also a field
 recipient_id. Now your Message model can look something like:
 
-``` php
+```php
 class Message extends AppModel
 {
     public $belongsTo = [
@@ -1025,7 +1025,7 @@ class Message extends AppModel
 Recipient is an alias for the User model. Now let's see what the
 User model would look like:
 
-``` php
+```php
 class User extends AppModel
 {
     public $hasMany = [
@@ -1043,7 +1043,7 @@ class User extends AppModel
 
 It is also possible to create self associations as shown below:
 
-``` php
+```php
 class Post extends AppModel
 {
     public $belongsTo = [
@@ -1093,7 +1093,7 @@ To force a join between tables, you need to use the "modern" syntax
 for Model::find(), adding a 'joins' key to the \$options array. For
 example:
 
-``` php
+```php
 $options['joins'] = [
     ['table' => 'channels',
         'alias' => 'Channel',
@@ -1125,7 +1125,7 @@ The keys that define the join are the following:
 With joins, you could add conditions based on Related model
 fields:
 
-``` php
+```php
 $options['joins'] = [
     ['table' => 'channels',
         'alias' => 'Channel',
@@ -1150,7 +1150,7 @@ uses a books_tags table as a join table, so you need to join the
 books table to the books_tags table, and this with the tags
 table:
 
-``` php
+```php
 $options['joins'] = [
     ['table' => 'books_tags',
         'alias' => 'BooksTag',

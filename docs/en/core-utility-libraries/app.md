@@ -35,7 +35,7 @@ Composer's classmap autoloader, so you never need to declare them. The same
 applies to your application classes when your `composer.json` has a classmap
 for them, as in the application skeleton:
 
-``` json
+```json
 "autoload": {
     "classmap": ["src/"]
 }
@@ -104,7 +104,7 @@ Loading classes in plugins works much the same as loading app and
 core classes except you must specify the plugin you are loading
 from:
 
-``` php
+```php
 // Load the class Comment in plugins/PluginName/Model/Comment.php
 App::uses('Comment', 'PluginName.Model');
 
@@ -121,7 +121,7 @@ Return type: `array`
 
 Used to read information stored path:
 
-``` php
+```php
 // return the model paths in your application
 App::path('Model');
 ```
@@ -129,7 +129,7 @@ App::path('Model');
 This can be done for all packages that are apart of your application. You
 can also fetch paths for a plugin:
 
-``` php
+```php
 // return the component paths in DebugKit
 App::path('Component', 'DebugKit');
 ```
@@ -148,7 +148,7 @@ Return type: `array`
 
 Used for finding the path to a package inside CakePHP:
 
-``` php
+```php
 // Get the path to Cache engines.
 App::core('Cache/Engine');
 ```
@@ -176,7 +176,7 @@ the filesystem.
 
 Usage:
 
-``` php
+```php
 //will setup a new search path for the Model package
 App::build(['Model' => ['/a/full/path/to/models/']]);
 
@@ -202,7 +202,7 @@ core paths.
 when you want to add new top level packages or, sub-packages to your
 application:
 
-``` php
+```php
 App::build([
     'Service' => ['%s' . 'Service' . DS],
 ], App::REGISTER);
@@ -229,7 +229,7 @@ App knows about.
 
 Example usage:
 
-``` php
+```php
 //returns ['DebugKit', 'Blog', 'User'];
 App::objects('plugin');
 
@@ -239,7 +239,7 @@ App::objects('Controller');
 
 You can also search only within a plugin's objects by using the plugin dot syntax.
 
-``` php
+```php
 // returns ['MyPluginPost', 'MyPluginComment'];
 App::objects('MyPlugin.Model');
 ```
@@ -257,7 +257,7 @@ Return type: `string`
 Plugins can be located with App as well. Using `App::pluginPath('DebugKit');`
 for example, will give you the full path to the DebugKit plugin:
 
-``` php
+```php
 $path = App::pluginPath('DebugKit');
 ```
 
@@ -285,7 +285,7 @@ cases only 2 arguments are required.
 > This method is equivalent to `require`'ing the file.
 > It is important to realize that the class subsequently needs to be initialized.
 
-``` php
+```php
 // The same as require('Controller/UsersController.php');
 App::import('Controller', 'Users');
 
@@ -348,7 +348,7 @@ which Composer does not manage.
 You can use `App::uses()` to load classes in vendors directories. It follows
 the same conventions as loading other files:
 
-``` php
+```php
 // Load the class Geshi in vendors/Geshi.php
 App::uses('Geshi', 'Vendor');
 ```
@@ -356,7 +356,7 @@ App::uses('Geshi', 'Vendor');
 To load classes in subdirectories, you'll need to add those paths
 with `App::build()`:
 
-``` php
+```php
 // Load the class ClassInSomePackage in
 // vendors/SomePackage/ClassInSomePackage.php
 App::build(['Vendor' => [ROOT . DS . 'vendors' . DS . 'SomePackage' . DS]]);
@@ -369,9 +369,9 @@ the file name or does not contain classes. You can load those files using
 files from a number of path structures. These vendor files could be located in
 any of the vendor folders.
 
-To load **vendors/geshi.php**:
+To load `vendors/geshi.php`:
 
-``` php
+```php
 App::import('Vendor', 'geshi');
 ```
 
@@ -379,21 +379,21 @@ App::import('Vendor', 'geshi');
 > The geshi file must be a lower-case file name as CakePHP will not
 > find it otherwise.
 
-To load **vendors/flickr/flickr.php**:
+To load `vendors/flickr/flickr.php`:
 
-``` php
+```php
 App::import('Vendor', 'flickr', ['file' => 'flickr/flickr.php']);
 ```
 
-To load **vendors/some.name.php**:
+To load `vendors/some.name.php`:
 
-``` php
+```php
 App::import('Vendor', 'SomeName', ['file' => 'some.name.php']);
 ```
 
-To load **vendors/services/well.named.php**:
+To load `vendors/services/well.named.php`:
 
-``` php
+```php
 App::import(
     'Vendor',
     'WellNamed',
@@ -401,9 +401,9 @@ App::import(
 );
 ```
 
-To load **plugins/Awesome/Vendor/services/well.named.php**:
+To load `plugins/Awesome/Vendor/services/well.named.php`:
 
-``` php
+```php
 App::import(
     'Vendor',
     'Awesome.WellNamed',
@@ -411,9 +411,9 @@ App::import(
 );
 ```
 
-To load **plugins/Awesome/Vendor/Folder/Foo.php**:
+To load `plugins/Awesome/Vendor/Folder/Foo.php`:
 
-``` php
+```php
 App::import(
     'Vendor',
     'Awesome.Foo',
@@ -423,9 +423,9 @@ App::import(
 
 Vendor files in `src/Vendor/` are found as well.
 
-To load **vendors/vendorName/libFile.php**:
+To load `vendors/vendorName/libFile.php`:
 
-``` php
+```php
 App::import(
     'Vendor',
     'aUniqueIdentifier',

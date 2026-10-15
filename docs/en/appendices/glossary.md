@@ -6,13 +6,13 @@ routing array
 An array of attributes that are passed to `Router::url()`.
 They typically look like:
 
-``` text
+```text
 ['controller' => 'posts', 'action' => 'view', 5]
 ```
 
 Or a more complex example:
 
-``` text
+```text
 [
     'subdomain' => 'dev',
     'plugin' => 'account',
@@ -31,7 +31,7 @@ Or a more complex example:
 HTML attributes  
 An array of key =\> values that are composed into HTML attributes. For example:
 
-``` text
+```text
 // Given
 ['class' => 'my-class', 'target' => '_blank']
 
@@ -42,7 +42,7 @@ class="my-class" target="_blank"
 If an option can be minimized or accepts it's name as the value, then `true`
 can be used:
 
-``` text
+```text
 // Given
 ['checked' => true]
 
@@ -63,7 +63,7 @@ For example:
 
 Would point to the following value:
 
-``` text
+```text
 [
     'Asset' => [
         'filter' => [

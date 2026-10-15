@@ -6,7 +6,7 @@
 
 `Model::saveAll()` とその仲間は、複数のモデルにわたって `fieldList` をサポートします。例:
 
-``` php
+```php
 $this->SomeModel->saveAll($data, [
     'fieldList' => [
         'SomeModel' => ['field_1'],
@@ -17,7 +17,7 @@ $this->SomeModel->saveAll($data, [
 
 `Model::saveAll()` とその仲間は、深さが無制限に保存できます。例:
 
-``` php
+```php
 $data = [
     'Article' => ['title' => 'My first article'],
     'Comment' => [
@@ -41,7 +41,7 @@ $this->SomeModel->saveAll($data, ['deep' => true]);
 ブロックは、 `View` の `fetch` メソッドから呼ばれることで出力されます。
 例えば、以下のように `View/Layouts/default.ctp` ファイル内に配置されます:
 
-``` php
+```php
 <?php echo $this->fetch('my_block'); ?>
 ```
 
@@ -50,13 +50,13 @@ $this->SomeModel->saveAll($data, ['deep' => true]);
 ブロックの内容を設定する方法は、いくつかあります。一番シンプルなデータ設定方法は、
 `assign` を使用することです:
 
-``` php
+```php
 <?php $this->assign('my_block', 'Hello Block'); ?>
 ```
 
 また、より複雑な内容は、以下のように取り込むことができます:
 
-``` php
+```php
 <?php $this->start('my_block'); ?>
     <h1>Hello Block!</h1>
     <p>This is a block of content</p>
@@ -66,7 +66,7 @@ $this->SomeModel->saveAll($data, ['deep' => true]);
 
 ブロックの取り込みはネストもできます:
 
-``` php
+```php
 <?php $this->start('my_block'); ?>
     <h1>Hello Block!</h1>
     <p>This is a block of content</p>
@@ -83,7 +83,7 @@ $this->SomeModel->saveAll($data, ['deep' => true]);
 
 全てのテーマ固有のコードは `View` クラスに移動しました。つまり、 `View` クラスを継承したクラスは自動的にテーマをサポートするということです。以前はコントローラの `$viewClass` プロパティに `Theme` を設定していましたが、 今は、単に `$theme` プロパティを設定することでテーマが有効になります。例:
 
-``` php
+```php
 App::uses('Controller', 'Controller');
 
 class AppController extends Controller
@@ -102,7 +102,7 @@ JSON コンテンツを簡単に出力する新しいビュークラス。
 
 `JsonView` は、他のビュークラスと同様に、コントローラ上で定義することで使えます。例:
 
-``` php
+```php
 App::uses('Controller', 'Controller');
 
 class AppController extends Controller
@@ -113,14 +113,14 @@ class AppController extends Controller
 
 コントローラに設定するならば、 `_serialize` ビュー変数を設定することにより、JSON としてシリアライズする内容を指定する必要があります。例:
 
-``` php
+```php
 $this->set(compact('users', 'posts', 'tags'));
 $this->set('_serialize', ['users', 'posts']);
 ```
 
 上記の例では、 以下のように `users` と `posts` 変数のみが JSON 出力としてシリアライズされます:
 
-``` json
+```json
 {"users": [...], "posts": [...]}
 ```
 
@@ -131,7 +131,7 @@ JSON データを表示するためのビューの `ctp` ファイルを作成�
 
 下記の例では、結果が `{results: ... }` で囲まれます:
 
-``` php
+```php
 App::uses('JsonView', 'View');
 class ResultsJsonView extends JsonView
 {
@@ -151,14 +151,14 @@ class ResultsJsonView extends JsonView
 `JsonView` と似ています。 `XmlView` は、 出力する XML 中に
 どの情報をシリアライズするかを示すために `_serialize` ビュー変数を設定する必要があります:
 
-``` php
+```php
 $this->set(compact('users', 'posts', 'tags'));
 $this->set('_serialize', ['users', 'posts']);
 ```
 
 上記の例では、以下のように `users` と `posts` 変数のみが XML 出力としてシリアライズされます:
 
-``` html
+```html
 <response><users>...</users><posts>...</posts></response>
 ```
 
@@ -177,7 +177,7 @@ XmlView は、 全てのシリアライズされた内容を囲むために　`r
 自動的に判断し、ビューを描画する前に `304 Not Modified` ステータスコードを送信します。
 ビューの描画処理をスキップすることは、CPU サイクルやメモリを節約します。
 
-``` php
+```php
 class ArticlesController extends AppController
 {
     public $components = ['RequestHandler'];
@@ -203,7 +203,7 @@ class ArticlesController extends AppController
 
 新しいユーティリティクラスを使う場合:
 
-``` php
+```php
 class AppController extends Controller
 {
 
@@ -217,7 +217,7 @@ class AppController extends Controller
 
 例えば、 `Utility/MyAwasomeStringClass.php` のように `APP/Utility` フォルダに新たなクラスを作成して、 `engine` キー内に指定することで、デフォルトクラスを上書きすることができます:
 
-``` php
+```php
 // Utility/MyAwesomeStringClass.php
 class MyAwesomeStringClass extends String
 {

@@ -11,7 +11,7 @@ When upgrading to CakePHP 2.2 its important to add a few new configuration
 values to `app/Config/bootstrap.php`. Adding these will ensure consistent
 behavior with 2.1.x:
 
-``` php
+```php
 // Enable the Dispatcher filters for plugin assets, and
 // CacheHelper.
 Configure::write('Dispatcher.filters', [
@@ -35,7 +35,7 @@ CakeLog::config('error', [
 You will also need to modify `app/Config/core.php`. Change the value of
 `LOG_ERROR` to `LOG_ERR`:
 
-``` text
+```text
 define('LOG_ERROR', LOG_ERR);
 ```
 
@@ -50,7 +50,9 @@ You might need to update your test cases to reflect this change.
 
 - An option was added to overwrite existing POT files by default:
 
-      ./Console/cake i18n extract --overwrite
+  ```bash
+  ./Console/cake i18n extract --overwrite
+  ```
 
 ## Models
 
@@ -232,7 +234,7 @@ It is now possible to tag or label cache keys under groups. This makes it
 simpler to mass-delete cache entries associated to the same label. Groups are
 declared at configuration time when creating the cache engine:
 
-``` php
+```php
 Cache::config([
     'engine' => 'Redis',
     ...

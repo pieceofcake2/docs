@@ -24,7 +24,7 @@ efficient to rely on that feature than CakePHP's cascading. The one benefit to
 using the cascade feature of `Model::delete()` is that it allows you to
 leverage behaviors and model callbacks:
 
-``` php
+```php
 $this->Comment->delete($this->request->data('Comment.id'));
 ```
 
@@ -56,7 +56,7 @@ Return boolean True on success, false on failure.
 
 Example:
 
-``` php
+```php
 // Delete with array conditions similar to find()
 $this->Comment->deleteAll(['Comment.spam' => true], false);
 ```

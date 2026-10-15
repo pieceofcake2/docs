@@ -40,7 +40,7 @@ CakePHP 2.1 には新しい二つのビュークラスがあります。 `XmlVie
 もしレスポンスを生成する前にビュー変数の操作や整形が必要であればビューファイルを使うべきです。
 そのとき、 `_serialize` の値は文字列かシリアライズされるビュー変数の配列になります。:
 
-``` php
+```php
 class PostsController extends AppController
 {
     public $components = ['RequestHandler'];
@@ -55,7 +55,7 @@ class PostsController extends AppController
 
 連結されたビュー変数の配列として `_serialize` を定義することも出来ます。
 
-``` php
+```php
 class PostsController extends AppController
 {
     public $components = ['RequestHandler'];
@@ -82,7 +82,7 @@ class PostsController extends AppController
 おそらく JSON レスポンスから除外したいと思うでしょう。
 このような状況でビューファイルは役立ちます。
 
-``` php
+```php
 // コントローラ コード
 class PostsController extends AppController
 {
