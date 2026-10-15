@@ -135,7 +135,6 @@ CakePHP 2 についての本家のアドバイザリはありません。`cakeph
 
 影響を受けるのは `pieceofcake2/cakephp` 2.12.5 以前と、`cakephp/cakephp` 2.x のすべてのリリースです。
 セキュリティアドバイザリ [GHSA-65v5-h65v-8pgg](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-65v5-h65v-8pgg) を参照してください。
-CVE ID は申請中で、まだ割り当てられていません。
 
 既存の Cookie をすべて読めなくせずに `'cipher'` を安全にすることはできないため、2.12.6 でも値の暗号化の
 方法は変えていません。その代わりに、次の変更を行いました。
