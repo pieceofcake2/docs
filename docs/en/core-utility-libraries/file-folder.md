@@ -13,7 +13,7 @@ directly. To set up a new folder instance:
 $dir = new Folder('/path/to/folder');
 ```
 
-and search for all *.ctp* files within that folder using regex:
+and search for all `*.ctp` files within that folder using regex:
 
 ``` php
 $files = $dir->find('.*\.ctp');

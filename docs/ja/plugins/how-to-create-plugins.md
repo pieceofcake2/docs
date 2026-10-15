@@ -235,11 +235,11 @@ ln -s ../../plugins/YourPlugin/webroot/css/yourplugin.css webroot/css/yourplugin
 プラグイン内のアセットへのリクエストの始めは、単に /plugin_name/
 を頭に付けるだけで、アプリケーションの webroot として動作します。
 
-例えば、’/contact_manager/js/some_file.js’ へのリンクは、
+例えば、`/contact_manager/js/some_file.js` へのリンクは、
 `plugins/ContactManager/webroot/js/some_file.js` で受け取れます。
 
 > [!NOTE]
-> アセットのパスの前に **/your_plugin/** に付けるのが重要です。
+> アセットのパスの前に `/your_plugin/` に付けるのが重要です。
 > 魔法のようなことが起きます！
 
 ::: info Changed in version 2.1

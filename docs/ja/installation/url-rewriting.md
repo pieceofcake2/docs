@@ -86,7 +86,7 @@ Web サーバーのドキュメントルートはアプリケーションの `we
 
     変更をした後、設定が有効であることを確かめるため Apache を再起動してください。
 
-3.  .htaccess ファイルが実際に `webroot/` にあるかを確かめてください。
+3.  `.htaccess` ファイルが実際に `webroot/` にあるかを確かめてください。
     いくつかのオペレーティングシステムやツールでは「.」で始まるファイルを
     隠しファイルとして扱うため、コピーされないことがあります。
     アプリケーションスケルトンの `.htaccess` ファイルは次のとおりです。
@@ -122,7 +122,7 @@ Web サーバーのドキュメントルートはアプリケーションの `we
     活用している URL 構成に CakePHP をインストールする場合は、`webroot/` の `.htaccess` ファイルに
     `RewriteBase` ステートメントを追加する必要があります。
     RewriteEngine ディレクティブと同じセクションに追加できるので、
-    たとえば webroot の .htaccess ファイルは次のようになります。
+    たとえば webroot の `.htaccess` ファイルは次のようになります。
 
     ```apache
     <IfModule mod_rewrite.c>
@@ -147,7 +147,7 @@ Web サーバーのドキュメントルートはアプリケーションの `we
     ```
 
 4.  (オプション) プロダクション環境の設定では、CakePHP で処理するのが不適切なアセットは、
-    CakePHP を通さないようにしましょう。webroot の .htaccess ファイルを次のように
+    CakePHP を通さないようにしましょう。webroot の `.htaccess` ファイルを次のように
     修正してください。
 
     ```apache
@@ -161,7 +161,7 @@ Web サーバーのドキュメントルートはアプリケーションの `we
     </IfModule>
     ```
 
-    上の例は、正しくないアセットを index.php へ送信せず、ウェブサーバの 404 ページを表示します。
+    上の例は、正しくないアセットを `index.php` へ送信せず、ウェブサーバの 404 ページを表示します。
 
     また、HTML で 404 ページを作成することもできますし、 `ErrorDocument` ディレクティブへ
     追記することで、CakePHP のビルトインの 404 ページを使うこともできます。
@@ -252,7 +252,7 @@ Apache 2.4 では、`Order`、`Allow`、`Deny` は mod_access_compat がある�
 
 ## nginx でのきれいな URL {#pretty-urls-on-nginx}
 
-nginx は Apache のように .htaccess ファイルを使わないため、
+nginx は Apache のように `.htaccess` ファイルを使わないため、
 サイトの設定ファイルで URL の書き換えを設定する必要があります。
 セットアップによりますが、以下を書き換える必要があるでしょう。
 少なくとも、PHP を PHP-FPM で動かす必要があります。
@@ -339,7 +339,7 @@ PHP アプリケーションには nginx か Apache をお勧めします。IIS 
 サイトは `webroot/` だけを指すようにして、アップロード用のディレクトリにある PHP ファイルを IIS が実行しないようにしてください。
 :::
 
-IIS は .htaccess ファイルをネイティブではサポートしていません。
+IIS は `.htaccess` ファイルをネイティブではサポートしていません。
 代わりに [URL Rewrite モジュール](https://www.iis.net/downloads/microsoft/url-rewrite) を使って
 同じ書き換えを設定できます。次の手順に従ってください。
 
@@ -379,7 +379,7 @@ CSS、JavaScript、再ルーティング (*rerouting*) は正しく動作する�
 PHP アプリケーションには nginx か Apache をお勧めします。
 :::
 
-lighttpd は .htaccess の機能をサポートしていないので、.htaccess ファイルはすべて削除してかまいません。
+lighttpd は `.htaccess` の機能をサポートしていないので、`.htaccess` ファイルはすべて削除してかまいません。
 lighttpd の設定で `server.document-root` を `webroot/` ディレクトリに設定し、mod_access、mod_rewrite、
 mod_fastcgi を有効にして、PHP には `index.php` だけを渡します。lighttpd 1.4.50 以降では次のようになります。
 

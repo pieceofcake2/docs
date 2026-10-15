@@ -37,7 +37,7 @@ echo $this->Html->script('jquery'); // Include jQuery library
 ```
 
 `jquery` を、あなたのライブラリファイルの名前で置き換えてください。
-(.js が名前に追加されます。)
+(`.js` が名前に追加されます。)
 
 デフォルトでは、スクリプトはキャッシュされ、あなたは、明示的にキャッシュを
 出力しなければなりません。各ページの最後でこれを行うためには、 `</body>`
@@ -375,8 +375,8 @@ echo $this->Js->writeBuffer();
 </html>
 ```
 
-indicator.gif ファイルを webroot/img フォルダ内におくことを忘れないでください。
-indicator.gif がページロード中に直ちに表示される場面が考えられます。
+`indicator.gif` ファイルを `webroot/img` フォルダ内におくことを忘れないでください。
+`indicator.gif` がページロード中に直ちに表示される場面が考えられます。
 メインの CSS ファイル内に `#busy-indicator { display:none; }`
 を設定しておく必要があります。
 

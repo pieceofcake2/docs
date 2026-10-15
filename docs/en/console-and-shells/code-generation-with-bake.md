@@ -169,7 +169,9 @@ In the legacy layout, themes go into `app/Console/Templates/[themename]/`.
 
 <!-- -->
 
-    bin/cake bake project --skel src/Console/Templates/skel
+```bash
+bin/cake bake project --skel src/Console/Templates/skel
+```
 
 > [!NOTE]
 > - You must run the specific project task `bin/cake bake project` so

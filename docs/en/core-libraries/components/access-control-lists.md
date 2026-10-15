@@ -214,7 +214,7 @@ for some reason might not be using a database.
 
 By default, CakePHP's ACL is database-driven. To enable INI-based
 ACL, you'll need to tell CakePHP what system you're using by
-updating the following lines in config/core.php:
+updating the following lines in `config/core.php`:
 
 ``` php
 // Change these lines:
@@ -226,7 +226,7 @@ Configure::write('Acl.classname', 'IniAcl');
 //Configure::write('Acl.database', 'default');
 ```
 
-ARO/ACO permissions are specified in **config/acl.ini.php**.
+ARO/ACO permissions are specified in `config/acl.ini.php`.
 The basic idea is that AROs are specified in an INI section that
 has three properties: groups, allow, and deny.
 

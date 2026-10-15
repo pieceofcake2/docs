@@ -86,7 +86,7 @@ PHP 5.3が名前空間のサポートをしていることから、このPHPバ�
 `app/Controller/AppController.php` 、 `app/Model/AppModel.php` 、 `app/View/Helper/AppHelper.php` に配置・名称変更されました。
 
 また、全てのシェル・タスクはAppShellを継承するようになりました。
-独自のAppShell.phpを `app/Console/Command/AppShell.php` にもつことができます。
+独自の `AppShell.php` を `app/Console/Command/AppShell.php` にもつことができます。
 
 ## 多言語化・地域化
 
@@ -190,7 +190,7 @@ CakePHPの前バージョンでは、これらの値が環境によって変わ�
 CakePHPは `$_GET['url']` をアプリケーションのリクエストパスの処理に使わなくなりました。
 代わりに `$_SERVER['PATH_INFO']` を使います。
 これはURL書き換えを伴ったサーバーと伴わないものとでより一貫性をもつURLリクエスト処理の方法となります。
-これらの変更により、.htaccessファイルと `app/webroot/index.php` を、この変更を適用するために変更されたファイルに書き換える必要があります。
+これらの変更により、`.htaccess` ファイルと `app/webroot/index.php` を、この変更を適用するために変更されたファイルに書き換える必要があります。
 また、 `$this->params['url']['url']` はもう存在しません。
 同等の値を得るには、代わりに\$this-\>request-\>urlを使用する必要があります。
 この属性には、URLから先頭のスラッシュ `/` の直前までを除いた値が格納されています。
@@ -507,7 +507,7 @@ Cache::write('key', $value, 'something');
   代わりに新しいルーターの定数である、`Router::ACTION` 、 `Router::YEAR` 、 `Router::MONTH` 、 `Router::DAY` 、 `Router::ID` 、 `Router::UUID` を使用してください。
 
 - `Router::defaults()` が削除されました。
-  デフォルトのルーティングを無効にするにはアプリケーションのroutes.phpからコアのルートファイルのインクルードを削除してください。
+  デフォルトのルーティングを無効にするにはアプリケーションの `routes.php` からコアのルートファイルのインクルードを削除してください。
   逆に、デフォルトのルーティングが欲しい場合、routesファイルに `Cake/Config/routes.php` へのインクルードを追加する必要があるでしょう。
 
 - Router::parseExtensions()を利用している時、拡張子のパラメータは `$this->params['url']['ext']` 以下ではなくなりました。
@@ -528,7 +528,7 @@ Cache::write('key', $value, 'something');
 
   ショートカットルートを有効にしたいプラグイン毎にroutesファイルにこれを追加してください。
 
-app/Config/routes.phpファイルは以下の行をファイルの後方に追加するように更新する必要があります:
+`app/Config/routes.php` ファイルは以下の行をファイルの後方に追加するように更新する必要があります:
 
 ``` text
 require CAKE . 'Config' . DS . 'routes.php';

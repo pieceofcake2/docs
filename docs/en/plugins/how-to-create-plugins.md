@@ -256,12 +256,12 @@ Simply prepend /plugin_name/ to the beginning of a request for an
 asset within that plugin, and it will work as if the asset were
 in your application's webroot.
 
-For example, linking to '/contact_manager/js/some_file.js'
+For example, linking to `/contact_manager/js/some_file.js`
 would serve the asset
 `plugins/ContactManager/webroot/js/some_file.js`.
 
 > [!NOTE]
-> It is important to note the **/your_plugin/** prefix before the
+> It is important to note the `/your_plugin/` prefix before the
 > asset path. That makes the magic happen!
 
 ::: info Changed in version 2.1

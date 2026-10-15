@@ -215,7 +215,7 @@ CakePHP は、幾つかの操作のために `tmp/` ディレクトリを使用�
 一般的な課題として、これらのディレクトリは、ウェブサーバとコマンドラインユーザの両方で書き込み権限が必要なことがあります。
 UNIXシステム上で ウェブサーバユーザとコマンドラインユーザが異なる場合、パーミッションのプロパティ設定を確保するために、あなたのプロジェクト内で一度だけ以下のコマンドを実行してください。
 
-``` text
+```bash
 HTTPDUSER=`ps aux | grep -E '[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx' | grep -v root | head -1 | cut -d\  -f1`
 setfacl -R -m u:${HTTPDUSER}:rwx tmp logs
 setfacl -R -d -m u:${HTTPDUSER}:rwx tmp logs

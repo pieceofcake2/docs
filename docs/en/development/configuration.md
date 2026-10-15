@@ -459,7 +459,7 @@ App::build([
 
 > [!NOTE]
 > All additional path configuration should be done at the top of your application's
-> bootstrap.php. This will ensure that the paths are available for the rest of your
+> `bootstrap.php`. This will ensure that the paths are available for the rest of your
 > application.
 
 <div class="index">
@@ -531,7 +531,7 @@ Configure::write('App.baseUrl', env('SCRIPT_NAME'));
 ```
 
 Also remove the `webroot/.htaccess` file. In the legacy layout, remove
-these .htaccess files:
+these `.htaccess` files:
 
     /.htaccess
     /app/.htaccess
@@ -614,7 +614,7 @@ Sub-keys
 
 The built-in defaults are:
 
-- 'php' - Uses settings defined in your php.ini.
+- 'php' - Uses settings defined in your `php.ini`.
 - 'cake' - Saves session files in CakePHP's `tmp/sessions` directory.
 - 'database' - Uses CakePHP's database sessions.
 - 'cache' - Use the Cache class to save sessions.
@@ -679,7 +679,7 @@ the Access Control Lists chapter for more information.
 </div>
 
 > [!NOTE]
-> Cache configuration is also found in core.php — We'll be covering
+> Cache configuration is also found in `core.php` — We'll be covering
 > that later on, so stay tuned.
 
 The `Configure` class can be used to read and write core

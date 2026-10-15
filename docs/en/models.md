@@ -70,8 +70,8 @@ should have the same name as the class, which for this example will be
 > [!NOTE]
 > CakePHP will dynamically create a model object for you if it cannot find a
 > corresponding file in `src/Model/`. This also means that if your model file
-> isn't named correctly (for instance, if it is named ingredient.php or
-> Ingredients.php rather than Ingredient.php), CakePHP will use an instance of
+> isn't named correctly (for instance, if it is named `ingredient.php` or
+> `Ingredients.php` rather than `Ingredient.php`), CakePHP will use an instance of
 > AppModel rather than your model file (which CakePHP assumes is missing). If
 > you're trying to use a method you've defined in your model, or a behavior
 > attached to your model, and you're getting SQL errors that are the name of

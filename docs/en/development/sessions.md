@@ -110,7 +110,7 @@ Configure::write('Session', [
 The above overrides the timeout and cookie name for the 'php' session
 configuration. The built-in configurations are:
 
-- `php` - Saves sessions with the standard settings in your php.ini file.
+- `php` - Saves sessions with the standard settings in your `php.ini` file.
 - `cake` - Saves sessions as files inside `tmp/sessions` (`app/tmp/sessions`
   in the legacy layout). This is a good option when you want session files kept
   with the application instead of in PHP's global session directory.

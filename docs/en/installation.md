@@ -242,7 +242,7 @@ server and the command line user. On a UNIX system, if your web server user is
 different from your command line user, you can run the following commands just
 once in your project to ensure that permissions will be setup properly:
 
-``` text
+```bash
 HTTPDUSER=`ps aux | grep -E '[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx' | grep -v root | head -1 | cut -d\  -f1`
 setfacl -R -m u:${HTTPDUSER}:rwx tmp logs
 setfacl -R -d -m u:${HTTPDUSER}:rwx tmp logs

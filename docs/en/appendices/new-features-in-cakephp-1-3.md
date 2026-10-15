@@ -121,7 +121,7 @@ plugins using `$plugin/libs`. App/plugin cache engines can also
 override the core engines. Cache adapters must be in a cache
 directory. If you had a cache engine named `MyCustomCacheEngine`
 it would be placed in either `app/libs/cache/my_custom_cache.php`
-as an app/libs. Or in `$plugin/libs/cache/my_custom_cache.php` as
+as an `app/libs`. Or in `$plugin/libs/cache/my_custom_cache.php` as
 part of a plugin. Cache configs from plugins need to use the plugin
 dot syntax:
 
@@ -133,7 +133,7 @@ Cache::config('custom', [
 ```
 
 App and Plugin cache engines should be configured in
-`app/bootstrap.php`. If you try to configure them in core.php
+`app/bootstrap.php`. If you try to configure them in `core.php`
 they will not work correctly.
 
 **New Cache methods**
@@ -160,12 +160,12 @@ put it in `my_plugin/models/datasources/your_datasource.php`. To
 import a Datasource from a plugin use
 `App::import('Datasource', 'MyPlugin.YourDatasource');`
 
-**Using plugin datasources in your database.php**
+**Using plugin datasources in your `database.php`**
 
 You can use plugin datasources by setting the datasource key with
 the plugin name. For example if you had a WebservicePack plugin
 with a LastFm datasource
-(plugin/webservice_pack/models/datasources/last_fm.php), you
+(`plugin/webservice_pack/models/datasources/last_fm.php`), you
 could do:
 
 ``` php
@@ -305,7 +305,7 @@ Generating URLs with new style prefixes works exactly the same as
 admin routing did in 1.2. They use the same syntax and
 persist/behave in the same way. Assuming you have
 `Configure::write('Routing.prefixes', ['admin', 'member']);`
-in your core.php you will be able to do the following from a
+in your `core.php` you will be able to do the following from a
 non-prefixed URL:
 
 ``` php
@@ -439,13 +439,13 @@ know how to import libs files with unique names.
 Now you can use locale definition files for the LC_TIME category
 to retrieve date and time preferences for a specific language. Just
 use any POSIX compliant locale definition file and store it at
-app/locale/\*language\*/ (do not create a folder for the category
+`app/locale/*language*/` (do not create a folder for the category
 LC_TIME, just put the file in there).
 
 For example, if you have access to a machine running debian or
 ubuntu you can find a french locale file at:
 /usr/share/i18n/locales/fr_FR. Copy the part corresponding to
-LC_TIME into app/locale/fr_fr/LC_TIME file. You can then access
+LC_TIME into `app/locale/fr_fr/LC_TIME` file. You can then access
 the time preferences for French language this way:
 
 ``` php

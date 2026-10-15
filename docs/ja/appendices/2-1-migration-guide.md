@@ -38,7 +38,7 @@ class AppShell extends Shell
 もし、あなたのアプリケーションが既にこれらのファイルやクラスを利用して
 いた場合には、特に何もする必要はありません。
 その他、コアの PagesController を利用していた場合には、このファイルを
-app/Controller ディレクトリへコピーする必要があります。
+`app/Controller` ディレクトリへコピーする必要があります。
 
 ## .htaccess ファイル
 
@@ -125,9 +125,11 @@ CakeSession は P3P ヘッダをセットしなくなりました。このこと
 新しい TestShell が追加されました。ユニットテストを実行するために必要な
 タイプ数を軽減したり、ファイルパスベースの UI を提供します。
 
-    ./Console/cake test app Model/Post
-    ./Console/cake test app Controller/PostsController
-    ./Console/cake test Plugin View/Helper/MyHelper
+```bash
+./Console/cake test app Model/Post
+./Console/cake test app Controller/PostsController
+./Console/cake test Plugin View/Helper/MyHelper
+```
 
 古いテストスイートのシェルとその記法もまだ存在しています。
 

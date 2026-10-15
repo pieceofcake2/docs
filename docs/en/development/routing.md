@@ -404,7 +404,7 @@ Many applications require an administration section where
 privileged users can make changes. This is often done through a
 special URL such as `/admin/users/edit/5`. In CakePHP, prefix routing
 can be enabled from within the core configuration file by setting
-the prefixes with Routing.prefixes. Note that prefixes, although
+the prefixes with `Routing.prefixes`. Note that prefixes, although
 related to the router, are to be configured in
 `config/core.php`:
 
@@ -1155,7 +1155,7 @@ the [REST](../development/rest) section for more information.
 
 `static` Router::**parseExtensions**($types)
 
-Used in routes.php to declare which [File Extensions](#file-extensions) your application
+Used in `routes.php` to declare which [File Extensions](#file-extensions) your application
 supports. By providing no arguments, all file extensions will be supported.
 
 `static` Router::**setExtensions**($extensions, $merge = true)

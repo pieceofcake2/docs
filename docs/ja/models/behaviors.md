@@ -164,7 +164,7 @@ if (!$this->Category->Behaviors->loaded('Translate')) {
 
 作成したビヘイビアは `src/Model/Behavior` に置く必要があります。
 名前はキャメルケース (*CamelCase*) で接尾語として `Behavior` がつきます。
-例えば、NameBehavior.php となります。
+例えば、`NameBehavior.php` となります。
 独自のビヘイビアを作成する時には、コアのビヘイビアをテンプレートとして用いると便利なときがあります。
 コアのビヘイビアは `vendor/pieceofcake2/cakephp/src/Cake/Model/Behavior/` にあります。
 

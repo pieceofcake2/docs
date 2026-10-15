@@ -216,7 +216,7 @@ ACO と ARO をその場で作れるからです。INI ベースの ACL につ�
 いただければと思います。
 
 デフォルトでは、CakePHP の ACL はデータベース駆動型です。
-INI ベースの ACL を有効にする場合は、config/core.php にある
+INI ベースの ACL を有効にする場合は、`config/core.php` にある
 以下の行を更新することで、CakePHP にどのシステムを使っている
 のかを知らせてやる必要があります。
 
@@ -230,7 +230,7 @@ Configure::write('Acl.classname', 'IniAcl');
 //Configure::write('Acl.database', 'default');
 ```
 
-ARO/ACO のパーミッションは **config/acl.ini.php** の中で
+ARO/ACO のパーミッションは `config/acl.ini.php` の中で
 指定されています。基本的な考え方として、ARO は INI セクション
 の中で指定され、groups, allow, deny という３つのプロパティ
 を持ちます。

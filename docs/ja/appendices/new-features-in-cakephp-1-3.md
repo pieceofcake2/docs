@@ -121,7 +121,7 @@ Cache::config('custom', [
 ```
 
 アプリケーションまたはプラグインのキャッシュエンジンは `app/bootstrap.php` で設定する
-必要があります。 core.php でこれらを設定しようとすると、正しく動作しないでしょう。
+必要があります。 `core.php` でこれらを設定しようとすると、正しく動作しないでしょう。
 
 **新しいキャッシュメソッド**
 
@@ -147,11 +147,11 @@ Cache::config('custom', [
 `App::import('Datasouce', 'MyPlugin.YourDatasource');`
 を用いてください。
 
-**database.php でプラグインのデータソースを使うには**
+**`database.php` でプラグインのデータソースを使うには**
 
 プラグイン名を用いた「datesource」キーを設定することによって、プラグインのデータソースを使うことが
 出来ます。例えば、LastFm データソースを含む WebservicePack プラグイン
-(plugin/webservice_pack/models/datasources/last_fm.php) があるとすると、
+(`plugin/webservice_pack/models/datasources/last_fm.php`) があるとすると、
 このようにできます。
 
 ``` php
@@ -280,7 +280,7 @@ Schema シェルはプラグインのスキーマファイルと SQL ダンプ�
 **Router**
 
 新しいスタイルの prefix を用いたURL生成は、まさしく 1.2 での admin ルーティングと同じく振舞います。
-同じ文法を使い、同じ方法で持続的になり、同じ方法で振る舞います。core.php に
+同じ文法を使い、同じ方法で持続的になり、同じ方法で振る舞います。`core.php` に
 `Configure::write('Routing.prefixes', ['admin', 'member']);` となっていると
 仮定すると、prefix 無しの URL から次のようにすることができます:
 
@@ -398,19 +398,19 @@ App::import('Lib', 'Geocoding.Geocode'); // app/plugins/geocoding/libs/geocode.p
 **設定**
 
 - `Security.level` のデフォルトは 1.3 では **high** の代わりに **medium** になりました。
-- 新しい設定値 Security.cipherSeed があります。
+- 新しい設定値 `Security.cipherSeed` があります。
   この値はクッキーをよりセキュアに符号化するのを確実にするために独自のものに変更するべきでしょう。
   開発モードでは、この値がデフォルト値から変更されていない場合に警告が生成されます。
 
 **i18n**
 
 特定の言語の日時設定を検索するために、LC_TIME カテゴリのロケール定義ファイルを使うことが
-できるようになりました。POSIX に従ったロケール定義ファイルを使い、app/locale/\*language\*/
+できるようになりました。POSIX に従ったロケール定義ファイルを使い、`app/locale/*language*/`
 に保存してください（LC_TIME カテゴリのフォルダを作るのではなく、ファイルを作成してください）。
 
 例えば、debian か ubuntu が走ってるマシーンにアクセスすることができるなら、フランスの
 ロケールファイルを /usr/share/i18n/locales/fr_FR に見つけることができます。
-LC_TIME に該当する部分を app/locale/fr_fr/LC_TIME（ファイル）にコピーしてください。
+LC_TIME に該当する部分を `app/locale/fr_fr/LC_TIME`（ファイル）にコピーしてください。
 そうすると、このようにフランス語の時間設定にアクセスすることがきでます：
 
 ``` php

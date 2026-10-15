@@ -78,7 +78,7 @@ Instead you should use the one way hashing methods provided by
 
 - `string $plain`: The value to encrypt.
 - `string $key`: The 256 bit/32 byte key to use as a cipher key.
-- `string $hmacSalt`: The salt to use for the HMAC process. Leave null to use Security.salt.
+- `string $hmacSalt`: The salt to use for the HMAC process. Leave null to use `Security.salt`.
 
 Encrypt `$text` using AES-256. The `$key` should be a value with a
 lots of variance in the data, much like a good password. The returned result
@@ -108,7 +108,7 @@ Set `Security.useOpenSsl` to use OpenSSL instead of the `mcrypt` extension.
 
 - `string $cipher`: The ciphertext to decrypt.
 - `string $key`: The 256 bit/32 byte key to use as a cipher key.
-- `string $hmacSalt`: The salt to use for the HMAC process. Leave null to use Security.salt.
+- `string $hmacSalt`: The salt to use for the HMAC process. Leave null to use `Security.salt`.
 
 Decrypt a previously encrypted value. The `$key` and `$hmacSalt`
 parameters must match the values used to encrypt or decryption will fail. An

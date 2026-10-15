@@ -70,36 +70,36 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - "What's Different from CakePHP 2.10": the backports item links to [Integration Testing](/development/integration-testing) instead of the upgrade guide on GitHub
 - [Installation](/installation)
   - Requirements: PHP 8.0-8.5, Composer, MySQL 5.6+/PostgreSQL 9.4+/SQLite 3/SQL Server 2022+, mbstring/intl/openssl notes
-  - New application via `composer create-project pieceofcake2/app` (modern layout) with database.php and salt/cipherSeed setup
+  - New application via `composer create-project pieceofcake2/app` (modern layout) with `database.php` and salt/cipherSeed setup
   - Existing applications: replace cakephp/cakephp with pieceofcake2/cakephp and update the dispatcher files
   - Removed archive/git downloads, include_path core sharing and the subdirectory "Development" setup
-  - Permissions now cover tmp/ and logs/; added the built-in server (`bin/cake server`) and an Apache virtual host for webroot/
+  - Permissions now cover `tmp/` and `logs/`; added the built-in server (`bin/cake server`) and an Apache virtual host for `webroot/`
   - Built-in server: default port 8765 (change note: 80 before v2.12.3)
-  - Added "Configuring composer.json": minimal composer.json; config.allow-plugins for composer/installers and extra.installer-paths to plugins/{$name}/ are required for cakephp-plugin packages
+  - Added "Configuring composer.json": minimal `composer.json`; config.allow-plugins for composer/installers and extra.installer-paths to `plugins/{$name}/` are required for cakephp-plugin packages
   - New application: debug level, salts and database settings can also be set with environment variables (`config/.env` or `.env` in the project root)
   - "Adding CakePHP to an Existing Application" comes before "Creating a New Application"; the closing link points to the blog tutorial instead of Getting Started
   - Apache virtual host: `Options -Indexes -MultiViews +FollowSymLinks`, a warning against a project-root document root and a link to the Apache 2.2 syntax
 - [Advanced Installation](/installation/advanced-installation)
   - Removed PEAR installation, the old Composer/bake project setup and CAKE_CORE_INCLUDE_PATH core sharing
   - Added Composer setup details: replace directive, plugin installer-paths, classmap autoloading, exclude-from-classmap
-  - Custom paths are now configured in config/define.php (ROOT, APP_DIR, WEBROOT_DIR, WWW_ROOT, VENDORS) with a moved-webroot example
+  - Custom paths are now configured in `config/define.php` (ROOT, APP_DIR, WEBROOT_DIR, WWW_ROOT, VENDORS) with a moved-webroot example
 - [Web Server Configuration](/installation/url-rewriting)
-  - Examples assume the document root is webroot/; .htaccess updated to the skeleton version; legacy root/app .htaccess explained briefly
-  - nginx example updated for PHP-FPM sockets; IIS web.config placed in webroot/; removed dead links (Web Platform Installer, virtualhostx, Apache wiki)
+  - Examples assume the document root is `webroot/`; `.htaccess` updated to the skeleton version; legacy root/app `.htaccess` explained briefly
+  - nginx example updated for PHP-FPM sockets; IIS `web.config` placed in `webroot/`; removed dead links (Web Platform Installer, virtualhostx, Apache wiki)
   - Renamed from "URL Rewriting" to "Web Server Configuration" (the URL is unchanged), with a new "Document Root" section that warns against exposing the project directory
-  - Apache: HTTPS virtual host with an HTTP redirect, `Options -Indexes -MultiViews +FollowSymLinks`, notes on `AllowOverride` (default `None` since 2.3.9), `SymLinksIfOwnerMatch` and mixed `+`/`-` options, hidden files denied except .well-known, step 5 to deny PHP in upload directories, and an HTTPS redirect for .htaccess
-  - .htaccess updated to the current skeleton: Authorization header passed only when present (or `CGIPassAuth On`), no `!-d` condition, so that directories are never listed
+  - Apache: HTTPS virtual host with an HTTP redirect, `Options -Indexes -MultiViews +FollowSymLinks`, notes on `AllowOverride` (default `None` since 2.3.9), `SymLinksIfOwnerMatch` and mixed `+`/`-` options, hidden files denied except `.well-known`, step 5 to deny PHP in upload directories, and an HTTPS redirect for `.htaccess`
+  - `.htaccess` updated to the current skeleton: Authorization header passed only when present (or `CGIPassAuth On`), no `!-d` condition, so that directories are never listed
   - New "The Legacy Root .htaccess Files" section listing the files that become reachable when mod_rewrite is off
   - Apache 2.2 syntax (`Order`/`Allow`/`Deny`) in a separate legacy/EOL section, with a combined `<IfModule mod_authz_core.c>` example
-  - nginx: HTTPS server with HTTP redirect, only index.php passed to PHP-FPM (with PATH_INFO), hidden files denied except .well-known
-  - IIS and lighttpd sections kept for reference with a warning box (not tested by this project); lighttpd example rewritten without the `url=` query parameter, passing only index.php to PHP
+  - nginx: HTTPS server with HTTP redirect, only `index.php` passed to PHP-FPM (with PATH_INFO), hidden files denied except `.well-known`
+  - IIS and lighttpd sections kept for reference with a warning box (not tested by this project); lighttpd example rewritten without the `url=` query parameter, passing only `index.php` to PHP
   - Removed the Hiawatha section
 - [CakePHP Folder Structure](/getting-started/cakephp-folder-structure)
-  - Describes the modern layout (bin, config, logs, plugins, resources/locales, src, templates, tests, tmp, vendor, webroot) with a legacy app/ mapping table
-  - Added steps for moving a legacy app/ application to the modern layout
-  - webroot/ is the only document root, in development and production
+  - Describes the modern layout (`bin`, `config`, `logs`, `plugins`, `resources/locales`, `src`, `templates`, `tests`, `tmp`, `vendor`, `webroot`) with a legacy `app/` mapping table
+  - Added steps for moving a legacy `app/` application to the modern layout
+  - `webroot/` is the only document root, in development and production
 - [CakePHP Conventions](/getting-started/cakephp-conventions)
-  - File locations use src/ and templates/; String::uuid replaced by CakeText::uuid()
+  - File locations use `src/` and `templates/`; String::uuid replaced by CakeText::uuid()
 - [CakePHP Structure](/getting-started/cakephp-structure)
   - AppController/AppHelper/AppModel, routes, layouts and elements paths use the modern layout
   - Examples use AuthComponent and FormHelper instead of the deprecated EmailComponent and JsHelper
@@ -114,31 +114,31 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
 ### Controllers
 
 - [Controllers](/controllers)
-  - Paths use the modern layout (src/Controller, templates/, plugins/); legacy app/ layout mentioned once
+  - Paths use the modern layout (`src/Controller`, `templates/`, `plugins/`); legacy `app/` layout mentioned once
   - New "Loading classes" section: Composer classmap autoloading replaces App::uses(); when App::uses() is still needed
 - [Request and Response objects](/controllers/request-response)
-  - Dispatcher path is webroot/index.php; response mock example uses getMockBuilder() for PHPUnit 9
+  - Dispatcher path is `webroot/index.php`; response mock example uses getMockBuilder() for PHPUnit 9
 - [The Pages Controller](/controllers/pages-controller)
-  - Paths updated to src/Controller and templates/Pages; skel source is the app skeleton or the Bake plugin instead of lib/Cake
+  - Paths updated to `src/Controller` and `templates/Pages`; skel source is the app skeleton or the Bake plugin instead of `lib/Cake`
 - [Scaffolding](/controllers/scaffolding)
-  - Paths updated to src/Model, config/core.php and templates/; Bake referred to as a plugin
+  - Paths updated to `src/Model`, `config/core.php` and `templates/`; Bake referred to as a plugin
 - [Components](/controllers/components)
-  - Component paths moved to src/Controller/Component; App::uses() removed from examples; code style fixed
+  - Component paths moved to `src/Controller/Component`; App::uses() removed from examples; code style fixed
 
 ### Views
 
 - [Views](/views)
-  - Template, layout and element paths use templates/; view classes in src/View; legacy app/View mapping table
+  - Template, layout and element paths use `templates/`; view classes in `src/View`; legacy `app/View` mapping table
   - Removed Flash/AMF and SOAP examples from the intro; linked the TwigView plugin
   - Fixed syntax errors in the element caching example; removed App::uses() from the custom view class example
 - [Media Views](/views/media-view)
   - Example paths use ROOT and WWW_ROOT; corrected that relative paths resolve against APP (not webroot)
 - [JSON and XML views](/views/json-and-xml-views)
-  - View file path in example changed to templates/Posts/json/index.ctp
+  - View file path in example changed to `templates/Posts/json/index.ctp`
 - [Themes](/views/themes)
-  - Theme paths use templates/Themed and webroot/; plugin asset example uses plugins/
+  - Theme paths use `templates/Themed` and `webroot/`; plugin asset example uses `plugins/`
 - [Helpers](/views/helpers)
-  - Helper paths use src/View/Helper; App::uses() removed from examples with a note on classmap autoloading; Bakery reference replaced by plugin list
+  - Helper paths use `src/View/Helper`; App::uses() removed from examples with a note on classmap autoloading; Bakery reference replaced by plugin list
 
 ### Models
 
@@ -147,101 +147,101 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
 - [Retrieving Your Data](/models/retrieving-your-data)
   - New "Sort Order" section: `order` formats, allowed sort directions, change note on the direction validation (v2.12.5), fixing code that triggers the deprecation, and a whitelist example for user-selected sorting
 - [Associations: Linking Models Together](/models/associations-linking-models-together)
-  - Model file paths use src/Model/
+  - Model file paths use `src/Model/`
 - [Saving Your Data](/models/saving-your-data)
-  - Example file comments use src/Controller/ and templates/
+  - Example file comments use `src/Controller/` and `templates/`
 - [Data Validation](/models/data-validation)
   - Added the `utf8` rule (v2.12.6, backport from CakePHP 5)
-  - Localized validation classes in src/Validation (autoloaded via classmap or App::uses()); Localized plugin link points to pieceofcake2/localized; removed Windows/mod_php note
+  - Localized validation classes in `src/Validation` (autoloaded via classmap or App::uses()); Localized plugin link points to pieceofcake2/localized; removed Windows/mod_php note
 - [Callback Methods](/models/callback-methods)
-  - Example path uses src/Model/
+  - Example path uses `src/Model/`
 - [Behaviors](/models/behaviors)
-  - Behaviors go in src/Model/Behavior; core behaviors in vendor/pieceofcake2/cakephp/src/Cake/Model/Behavior
+  - Behaviors go in `src/Model/Behavior`; core behaviors in `vendor/pieceofcake2/cakephp/src/Cake/Model/Behavior`
   - Community behaviors: link to maintained plugins instead of the CakePHP Bakery
 - [DataSources](/models/datasources)
-  - Supported databases, versions and PDO extensions table; new "Connection Settings" section (config/database.php, encoding in DSN, PostgreSQL sslmode, PHP 8.1 native int/float and ATTR_STRINGIFY_FETCHES)
+  - Supported databases, versions and PDO extensions table; new "Connection Settings" section (`config/database.php`, encoding in DSN, PostgreSQL sslmode, PHP 8.1 native int/float and ATTR_STRINGIFY_FETCHES)
   - SQL Server: ODBC driver on any OS instead of Windows-only Native Client; port, schema (default dbo), options, persistent settings
-  - Datasource example and plugin paths moved to src/Model/Datasource and plugins/
+  - Datasource example and plugin paths moved to `src/Model/Datasource` and `plugins/`
   - Link to the pieceofcake2/datasources plugin instead of the old cakephp/datasources repository
 - [Model Attributes](/models/model-attributes)
-  - Database configuration file path is config/database.php
+  - Database configuration file path is `config/database.php`
   - `order`: allowed sort directions, link to Sort Order
 
 ### Core Libraries
 
 - [Caching](/core-libraries/caching)
   - Xcache and Wincache engines removed from the engine list (change note); Apc engine documented as APCu
-  - Configuration paths changed to config/bootstrap.php, config/core.php and src/Lib/Cache/Engine; PHP 5.3 remarks removed
+  - Configuration paths changed to `config/bootstrap.php`, `config/core.php` and `src/Lib/Cache/Engine`; PHP 5.3 remarks removed
 - [Events System](/core-libraries/events)
-  - Examples use src/Lib/Event, config/bootstrap.php and config/events.php; App::uses and PHP 5.3 remarks removed; Composer classmap autoloading noted
+  - Examples use `src/Lib/Event`, `config/bootstrap.php` and `config/events.php`; App::uses and PHP 5.3 remarks removed; Composer classmap autoloading noted
 - [Global Constants and Functions](/core-libraries/global-constants-and-functions)
-  - Path constants documented with modern-layout values (APP=src/, CONFIG=config/, TESTS=tests/, TMP=tmp/, LOGS=logs/, WWW_ROOT=webroot/); legacy app/ values mentioned once
-  - CAKE, CAKE_CORE_INCLUDE_PATH and CORE_PATH point into vendor/pieceofcake2/cakephp/src; new CORE_ROOT constant documented
+  - Path constants documented with modern-layout values (APP=`src/`, CONFIG=`config/`, TESTS=`tests/`, TMP=`tmp/`, LOGS=`logs/`, WWW_ROOT=`webroot/`); legacy `app/` values mentioned once
+  - CAKE, CAKE_CORE_INCLUDE_PATH and CORE_PATH point into `vendor/pieceofcake2/cakephp/src`; new CORE_ROOT constant documented
 - [Internationalization & Localization](/core-libraries/internationalization-and-localization)
-  - Locale files in resources/locales (legacy app/Locale also searched); plugin translations in plugins/&lt;Plugin>/Locale
-  - i18n extract example for the modern layout: bin/cake i18n extract --paths src,templates --output resources/locales
+  - Locale files in `resources/locales` (legacy `app/Locale` also searched); plugin translations in `plugins/<Plugin>/Locale`
+  - i18n extract example for the modern layout: `bin/cake i18n extract --paths src,templates --output resources/locales`
 - [Logging](/core-libraries/logging)
-  - Default log directory is logs/ (LOGS constant); custom log engines in src/Lib and plugins/; App::uses removed from examples
+  - Default log directory is `logs/` (LOGS constant); custom log engines in `src/Lib` and `plugins/`; App::uses removed from examples
 - [Welcome](/index)
   - Unsupported-version warning reworded for the fork (CakePHP 2 EOL upstream, use CakePHP 5 for new projects)
   - Removed the PDF/EPUB download block; added the book source link and an Installation entry
 - [Translate](/core-libraries/behaviors/translate)
-  - i18n table initialization command is bin/cake i18n
+  - i18n table initialization command is `bin/cake i18n`
 - [Tree](/core-libraries/behaviors/tree)
-  - Example path src/Model/Category.php
+  - Example path `src/Model/Category.php`
 - [Access Control Lists](/core-libraries/components/access-control-lists)
-  - Paths changed to config/ (core.php, acl.ini.php, database.php, Schema/db_acl.sql); commands use bin/cake; core model path in vendor/pieceofcake2/cakephp/src/Cake/Model
+  - Paths changed to `config/` (`core.php`, `acl.ini.php`, `database.php`, `Schema/db_acl.sql`); commands use `bin/cake`; core model path in `vendor/pieceofcake2/cakephp/src/Cake/Model`
 - [Authentication](/core-libraries/components/authentication)
-  - Custom auth/authorize/hasher classes in src/Controller/Component/Auth; layout in templates/Layouts; App::uses removed
+  - Custom auth/authorize/hasher classes in `src/Controller/Component/Auth`; layout in `templates/Layouts`; App::uses removed
 - [Cookie](/core-libraries/components/cookie)
-  - Example uses type('aes') with Security.useOpenSsl; warning that the default 'cipher' is insecure and 'rijndael' needs mcrypt
-  - Type set with `'Cookie' => ['type' => 'aes']` in `$components` (type() as an alternative); change note that the setting was ignored before v2.12.3; Security.useOpenSsl already enabled in the pieceofcake2/app v2.3.1 skeleton
+  - Example uses type('aes') with `Security.useOpenSsl`; warning that the default 'cipher' is insecure and 'rijndael' needs mcrypt
+  - Type set with `'Cookie' => ['type' => 'aes']` in `$components` (type() as an alternative); change note that the setting was ignored before v2.12.3; `Security.useOpenSsl` already enabled in the pieceofcake2/app v2.3.1 skeleton
 - [Flash](/core-libraries/components/flash)
-  - Flash elements in templates/Elements/Flash
+  - Flash elements in `templates/Elements/Flash`
 - [Pagination](/core-libraries/components/pagination)
   - Which sort fields and directions PaginatorComponent accepts, with a link to Sort Order
 - [Security](/core-libraries/components/security-component)
   - Change note: HMAC-signed CSRF tokens (CVE-2020-15400) and validation of _method-overridden requests (CVE-2015-8379)
 - [CacheHelper](/core-libraries/helpers/cache)
-  - Cache.check setting in config/core.php
+  - `Cache.check` setting in `config/core.php`
 - [FlashHelper](/core-libraries/helpers/flash)
-  - Flash elements in templates/Elements/Flash; core ships default/success/error elements that the app can override
+  - Flash elements in `templates/Elements/Flash`; core ships default/success/error elements that the app can override
 - [JsHelper](/core-libraries/helpers/js)
-  - Paths changed to webroot/js and templates/Layouts; PHP4/PHP5 method chaining remarks removed
+  - Paths changed to `webroot/js` and `templates/Layouts`; PHP4/PHP5 method chaining remarks removed
 - [PaginatorHelper](/core-libraries/helpers/paginator)
-  - Example path templates/Posts/index.ctp
+  - Example path `templates/Posts/index.ctp`
 - [RssHelper](/core-libraries/helpers/rss)
-  - Paths changed to config/routes.php, templates/Layouts/rss and templates/Posts/rss
+  - Paths changed to `config/routes.php`, `templates/Layouts/rss` and `templates/Posts/rss`
 - [TextHelper](/core-libraries/helpers/text)
   - String class reference replaced with CakeText
 - [TimeHelper](/core-libraries/helpers/time)
-  - Timezone setting in config/core.php
+  - Timezone setting in `config/core.php`
 
 ### Core Utility Libraries
 
 - [App Class](/core-utility-libraries/app)
   - Loading classes rewritten around Composer classmap autoloading; App::uses() only for classes Composer does not know (app classes without classmap, non-Composer plugins)
-  - Overriding core classes: src/Lib plus an explicit App::uses() call, exclude-from-classmap note
-  - Vendor files: Composer libraries need no loading; hand-copied files in vendors/; plugin paths in plugins/; removed CakePHP 1.3 to 2.0 migration notes
+  - Overriding core classes: `src/Lib` plus an explicit App::uses() call, exclude-from-classmap note
+  - Vendor files: Composer libraries need no loading; hand-copied files in `vendors/`; plugin paths in `plugins/`; removed CakePHP 1.3 to 2.0 migration notes
 - [CakeEmail](/core-utility-libraries/email)
-  - Config in config/email.php, templates in templates/Emails and templates/Layouts/Emails, custom transports in src/Lib/Network/Email; removed EmailComponent comparisons and App::uses()
+  - Config in `config/email.php`, templates in `templates/Emails` and `templates/Layouts/Emails`, custom transports in `src/Lib/Network/Email`; removed EmailComponent comparisons and App::uses()
   - Gmail: app password instead of the defunct "less secure apps" setting; STARTTLS example uses port 587; change note for the typed MailTransport::_mail() signature
 - [Folder & File](/core-utility-libraries/file-folder)
   - Folder and File are autoloaded; removed App::uses()
 - [Hash](/core-utility-libraries/hash)
   - Removed the PHP 5.4 requirement note for natural sorting
 - [HttpSocket](/core-utility-libraries/httpsocket)
-  - CA certificates: system CA bundle with composer/ca-bundle fallback explained in the text; custom response/auth classes in src/Lib/Network/Http and extending HttpSocketResponse; removed App::uses() and Bakery URLs
+  - CA certificates: system CA bundle with composer/ca-bundle fallback explained in the text; custom response/auth classes in `src/Lib/Network/Http` and extending HttpSocketResponse; removed App::uses() and Bakery URLs
 - [CakeNumber](/core-utility-libraries/number)
   - Removed unneeded App::uses() from the example
 - [Data Sanitization](/core-utility-libraries/sanitize)
   - Sanitize is not present in CakePHP 3.0 and later (instead of "will be removed")
   - Accepting user submitted HTML: points to the new Output Escaping and HTML Sanitization page instead of recommending HTML Purifier only
 - [Security](/core-utility-libraries/security)
-  - Explain that mcrypt is not bundled since PHP 7.2 and Security.useOpenSsl should be enabled in config/core.php (compatible format); rijndael() needs PECL mcrypt; Cookie 'cipher' type warning
-  - Noted that the pieceofcake2/app skeleton (v2.3.1 and later) already enables Security.useOpenSsl
+  - Explain that mcrypt is not bundled since PHP 7.2 and `Security.useOpenSsl` should be enabled in `config/core.php` (compatible format); rijndael() needs PECL mcrypt; Cookie 'cipher' type warning
+  - Noted that the pieceofcake2/app skeleton (v2.3.1 and later) already enables `Security.useOpenSsl`
 - [Set](/core-utility-libraries/set)
-  - Test file path updated to tests/TestCase/Utility/SetTest.php
+  - Test file path updated to `tests/TestCase/Utility/SetTest.php`
 - [CakeText](/core-utility-libraries/string)
   - Removed String class deprecation note and App::uses() from the example; one change note about the removed String class
 - [CakeTime](/core-utility-libraries/time)
@@ -259,7 +259,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - Task loading example uses an application task instead of the removed core ProjectTask
 - [Code Generation with Bake](/console-and-shells/code-generation-with-bake)
   - Rewritten for the pieceofcake2/bake plugin: Composer install, `CakePlugin::load('Bake')`, `bin/cake bake` commands
-  - Documented where Bake writes models, controllers, views, tests and fixtures in the modern and legacy layouts (templates/, tests/TestCase/, tests/Fixture/ with pieceofcake2/bake 1.0.3 or later)
+  - Documented where Bake writes models, controllers, views, tests and fixtures in the modern and legacy layouts (`templates/`, `tests/TestCase/`, `tests/Fixture/` with pieceofcake2/bake 1.0.3 or later)
   - Bake theme locations updated (`plugins/Bake/Console/Templates/default`, `src/Console/Templates/[theme]`); `lib/Cake/Console/Templates` removed
 - [Schema management and migrations](/console-and-shells/schema-management-and-migrations)
   - Commands use `bin/cake schema`; schema files live in `config/Schema`
@@ -286,18 +286,18 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - Database: built-in PDO drivers listed; `encoding` passed in the DSN; added `flags` (PHP 8.1 `ATTR_STRINGIFY_FETCHES`), `schema` (PostgreSQL/SQL Server), `sslmode`, `options`; removed PHP 5.3.7 notes
   - Change note: SQL Server driver targets SQL Server 2022+, `port`/`schema`/`options` handling
   - Class loading rewritten around Composer classmap (`composer dump-autoload`, `App::uses()` only for non-autoloaded plugins); change note on the framework's move to classmap
-  - Core settings: Session sub-key `name` corrected to `cookie`, added `cacheLimiter`, modern handler/schema paths and `bin/cake`; `.htaccess` removal for App.baseUrl per layout
+  - Core settings: Session sub-key `name` corrected to `cookie`, added `cacheLimiter`, modern handler/schema paths and `bin/cake`; `.htaccess` removal for `App.baseUrl` per layout
   - Security: `Security.salt` usage documented; change note on HMAC-signed CSRF tokens; `cipherSeed` only for weak Cookie 'cipher'; new `Security.useOpenSsl` entry (required on PHP 8 for encrypt()/Cookie 'aes'; already enabled in the pieceofcake2/app v2.3.1 skeleton)
   - Cache: available engines listed (File, Apc/APCu, Memcached, Memcache, Redis); change note on removed Xcache/Wincache
   - Config readers: readers default to `CONFIG`; custom reader example moved to `src/Lib/Configure`, declares its property (PHP 8.2), no `App::uses()`; ja example renamed from `XmlReader` (clashes with PHP's XMLReader) to `MyXmlReader`; ConfigReaderInterface/ConfigureException reference fixed
   - Inflector path `src/Cake/Utility/Inflector.php` and bootstrap `config/bootstrap.php` folded into text; era-specific examples (old IE/Chrome Frame, AMF/SOAP) modernized; ja: `$merge` description corrected, `Configure::consume()` added
   - New "Environment Variables" section: the pieceofcake2/app skeleton loads `config/.env` and the project-root `.env` with josegonzalez/dotenv at the top of `config/core.php` (backport of the `.env` support of the CakePHP 3+/5 app skeleton; change note: added in app v2.4.0), precedence (real environment > `config/.env` > root `.env`), quoting advice, adding the loader to legacy-layout and older applications, and the variables read by the skeleton (`DEBUG`, `SECURITY_SALT`, `SECURITY_CIPHER_SEED`, `DB_*`, `DB_TEST_*`)
-  - App.baseUrl: keep the document root at webroot/ when the .htaccess files are removed
+  - `App.baseUrl`: keep the document root at `webroot/` when the `.htaccess` files are removed
 - [Routing](/development/routing)
-  - Routes file path changed to config/routes.php (legacy app/Config/routes.php noted with link to the folder structure page)
-  - Built-in routes located in vendor/pieceofcake2/cakephp/config/routes.php; disabling them means removing the require line from config/routes.php
-  - Prefix routing: Routing.prefixes in config/core.php, prefix view in templates/Users/admin_edit.ctp
-  - Custom route classes go in src/Routing/Route and are autoloaded via Composer classmap (composer dump-autoload) instead of App::uses()
+  - Routes file path changed to `config/routes.php` (legacy `app/Config/routes.php` noted with link to the folder structure page)
+  - Built-in routes located in `vendor/pieceofcake2/cakephp/config/routes.php`; disabling them means removing the require line from `config/routes.php`
+  - Prefix routing: `Routing.prefixes` in `config/core.php`, prefix view in `templates/Users/admin_edit.ctp`
+  - Custom route classes go in `src/Routing/Route` and are autoloaded via Composer classmap (`composer dump-autoload`) instead of App::uses()
   - Code samples: modern path comments, valid PHP class in passed-arguments example
   - ja: added explicit anchors (routes-configuration, connecting-routes, route-elements, prefix-routing, route-conditions, passed-arguments, named-parameters) so links from other pages work
 - [Sessions](/development/sessions)
@@ -306,51 +306,51 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - Change note: handlers support `session.use_strict_mode` (PHP 8.6 default) via `SessionHandlerAdapter`; requirements for custom `read()`/`destroy()`
   - Xcache removed from cache session text (APCu, Memcached, Redis); ComboSession example uses APCu, drops `App::uses()`, modern path; code blocks marked as PHP
 - [Dispatcher Filters](/development/dispatch-filters)
-  - Filters configured in config/bootstrap.php; app filter classes in src/Routing/Filter, plugin filters in plugins/MyPlugin/Routing/Filter
-  - Removed App::uses() for framework classes and PHP 5.3 closure caveats; noted composer dump-autoload and class_exists() requirement for settings form
+  - Filters configured in `config/bootstrap.php`; app filter classes in `src/Routing/Filter`, plugin filters in `plugins/MyPlugin/Routing/Filter`
+  - Removed App::uses() for framework classes and PHP 5.3 closure caveats; noted `composer dump-autoload` and class_exists() requirement for settings form
   - Fixed invalid closure placeholders in examples and broken markup
   - (ja) Corrected mistranslation about filter priority and plugin notation
 - [Exceptions](/development/exceptions)
   - Restored the missing exception class names in the built-in exception lists (as tables)
-  - Paths use the modern layout (templates/Errors, templates/Layouts, src/Lib/Error, config/core.php); documented Exception.skipLog
+  - Paths use the modern layout (`templates/Errors`, `templates/Layouts`, `src/Lib/Error`, `config/core.php`); documented `Exception.skipLog`
   - Exception handlers receive any Throwable; examples typed with Throwable, PHP 5.3 caveat removed, no App::uses() for framework classes
   - Change note: overriding CakeErrorController in the app is unreliable with Composer classmap autoloading; use _getController()
 - [Error Handling](/development/errors)
-  - Paths and examples use the modern layout (config/core.php, config/bootstrap.php, src/Lib/AppError.php)
-  - Documented Error.extraFatalErrorMemory and where errors are logged (logs/error.log, logs/debug.log)
+  - Paths and examples use the modern layout (`config/core.php`, `config/bootstrap.php`, `src/Lib/AppError.php`)
+  - Documented `Error.extraFatalErrorMemory` and where errors are logged (`logs/error.log`, `logs/debug.log`)
   - Change note: default handler checks error_reporting() & $code so @-suppressed errors are ignored on PHP 8
   - Explained that PHP 7/8 Error objects (TypeError etc.) go to the exception handler, and that PHP 8 no longer passes $context
   - Removed PHP 5.3 caveat; handler examples updated for PHP 8
 - [Debugging](/development/debugging)
   - debug() signature updated; trace/excerpt examples use fork paths (APP/CORE/ROOT); invoke() replaced with getInstance()
-  - Logs written to logs/ (debug.log/error.log); Object replaced with CakeObject; App::uses('CakeLog') removed
-  - DebugKit: install pieceofcake2/debug_kit with Composer and load it in config/bootstrap.php; links to the DebugKit documentation of the fork
+  - Logs written to `logs/` (`debug.log`/`error.log`); Object replaced with CakeObject; App::uses('CakeLog') removed
+  - DebugKit: install pieceofcake2/debug_kit with Composer and load it in `config/bootstrap.php`; links to the DebugKit documentation of the fork
   - DebugKit: describes the current toolbar (CakePHP icon in the bottom right-hand corner, panels, request history)
 - [Testing](/development/testing)
   - PHPUnit 9.6 installed with Composer (require-dev); PHPUnit 3.7/4.x/5.x, .phar and autoloader workaround instructions removed
-  - Test cases in tests/TestCase and fixtures in tests/Fixture; configuration in config/; legacy app/Test layout mentioned as fallback
-  - Running tests: vendor/bin/phpunit with phpunit.xml.dist (bootstrap tests/bootstrap.php, CakeFixtureInjector listener, stderr) and bin/cake test; lib/Cake/Console/cake and --app examples removed
-  - Test case listing (bin/cake test app without a case, web runner list) searches tests/TestCase, falling back to Test/Case
-  - Web runner: webroot/test.php from the skeleton, run a case via ?case=; command line recommended
+  - Test cases in `tests/TestCase` and fixtures in `tests/Fixture`; configuration in `config/`; legacy `app/Test` layout mentioned as fallback
+  - Running tests: `vendor/bin/phpunit` with `phpunit.xml.dist` (bootstrap `tests/bootstrap.php`, CakeFixtureInjector listener, stderr) and `bin/cake test`; `lib/Cake/Console/cake` and `--app` examples removed
+  - Test case listing (`bin/cake test app` without a case, web runner list) searches `tests/TestCase`, falling back to `Test/Case`
+  - Web runner: `webroot/test.php` from the skeleton, run a case via ?case=; command line recommended
   - Code samples updated for PHPUnit 9: setUp()/tearDown(): void, assertStringContainsString, assertIsArray, assertMatchesRegularExpression, willReturn(), PHPUnit\Framework\TestCase
   - New section on createMock()/getMockBuilder(), deprecated CakeTestCase::getMock(), getMockForModel() signature and expectException()
   - staticExpects() example replaced with writing Auth.User to the session
-  - Coverage requires Xdebug or PCOV; output to tmp/coverage
-  - Test suites use TESTS . 'TestCase'; note that phpunit.xml.dist makes AllTests optional
-  - Plugin tests in plugins/&lt;Name>/tests/TestCase (Test/Case fallback)
-  - Jenkins: moved to the end of the new Continuous Integration page (after the GitHub Actions workflow), with composer install step, config/database.php, vendor/bin/phpunit and jenkins.io links; ja: explicit test-database-setup and generating-code-coverage anchors
+  - Coverage requires Xdebug or PCOV; output to `tmp/coverage`
+  - Test suites use TESTS . 'TestCase'; note that `phpunit.xml.dist` makes AllTests optional
+  - Plugin tests in `plugins/<Name>/tests/TestCase` (`Test/Case` fallback)
+  - Jenkins: moved to the end of the new Continuous Integration page (after the GitHub Actions workflow), with `composer install` step, `config/database.php`, `vendor/bin/phpunit` and jenkins.io links; ja: explicit test-database-setup and generating-code-coverage anchors
   - New "Types of Tests" section: unit tests with fixtures, controller tests with testAction() and browser end-to-end (E2E) tests (links to End-to-End Testing); ja: explicit testing-controllers anchor
   - "Types of Tests" also lists integration tests with `IntegrationTestTrait` (links to Integration Testing) and notes that `ControllerTestCase` remains supported; tip linking to Integration Testing in "Testing Controllers"
 - [REST](/development/rest)
-  - Paths updated to config/routes.php, src/Controller and templates/Recipes/xml
+  - Paths updated to `config/routes.php`, `src/Controller` and `templates/Recipes/xml`
   - Corrected HTTP method override precedence (X-HTTP-Method-Override header before _method)
   - ja: added explicit custom-rest-routing anchor
 
 ### Deployment
 
 - [Deployment](/deployment)
-  - Document root, core.php and plugin symlink paths use the modern layout
-  - Added "composer install --no-dev --optimize-autoloader" and conditional loading of development-only plugins
+  - Document root, `core.php` and plugin symlink paths use the modern layout
+  - Added `composer install --no-dev --optimize-autoloader` and conditional loading of development-only plugins
   - Debug level read from the `DEBUG` environment variable of the skeleton instead of a custom `CAKEPHP_DEBUG` variable; other settings link to the environment variables section
   - Added a "Deploying to AWS Lambda" section linking to the new page
   - "Check your security" rewritten as a short checklist linking to the Security section (debug, salts and cookie cipher, document root, HTTPS, SecurityComponent, validation, escaping and sanitizing HTML, dependencies, permissions, secrets); removed the Data Sanitization link
@@ -364,15 +364,15 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
 ### Security
 
 - [Security](/security/)
-  - New section and overview page: supported versions from the organization's SECURITY.md (security fixes for the latest release; so far released as patch releases), how fixes are announced (GitHub Security Advisories, CHANGELOG/UPGRADE.md, this book)
+  - New section and overview page: supported versions from the organization's `SECURITY.md` (security fixes for the latest release; so far released as patch releases), how fixes are announced (GitHub Security Advisories, CHANGELOG/UPGRADE.md, this book)
 - [Reporting a Vulnerability](/security/reporting)
-  - New page: private vulnerability reporting (Security tab, Report a vulnerability), what to include and the disclosure process from SECURITY.md; moved from the "Reporting a Vulnerability" section of Security Fixes
+  - New page: private vulnerability reporting (Security tab, Report a vulnerability), what to include and the disclosure process from `SECURITY.md`; moved from the "Reporting a Vulnerability" section of Security Fixes
 - [Security Fixes](/security/fixes)
   - Moved from `/appendices/security-fixes` (the old URL redirects to this page); the reporting section moved to Reporting a Vulnerability
-  - Added the `Xml::build()` SSRF with `'readFile' => false` (fixed in 2.12.3); Cookie type set in `$components`; skeleton note for Security.useOpenSsl
+  - Added the `Xml::build()` SSRF with `'readFile' => false` (fixed in 2.12.3); Cookie type set in `$components`; skeleton note for `Security.useOpenSsl`
   - Added the email header injection in SmtpTransport/MailTransport (GHSA-4f9q-3c4x-52cv), the path traversal in view, layout and element names (GHSA-w2mh-x92p-5p95) and the open redirect after login in AuthComponent (GHSA-x4p9-p4cx-gxwx), all fixed in 2.12.5; the table lists GHSA IDs; note that applications on the original CakePHP 2.x can switch to pieceofcake2/cakephp to get the fixes
 - [Upstream Advisories](/security/upstream-advisories)
-  - New page: status of the upstream CakePHP advisories that concern CakePHP 2.x (fixed in the fork, or not applicable), from the fork's CHANGELOG, UPGRADE.md and advisories
+  - New page: status of the upstream CakePHP advisories that concern CakePHP 2.x (fixed in the fork, or not applicable), from the fork's CHANGELOG, `UPGRADE.md` and advisories
 - [Hardening Checklist](/security/hardening)
   - New page: debug 0, unique salt and cipher seed, Composer updates, SecurityComponent/CSRF, cookie and session flags, file permissions, HTTPS, supported PHP versions; links to the pages that describe each setting
 - [Output Escaping and HTML Sanitization](/security/escaping-and-sanitizing-html)
@@ -407,15 +407,15 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
 - [Plugins](/plugins)
   - Intro explains PHP 8 compatibility of CakePHP 2 plugins and links to the maintained Piece of Cake 2 forks
 - [How To Create Plugins](/plugins/how-to-create-plugins)
-  - Plugin paths use plugins/ and templates/Plugin overrides; internal plugin structure and test directories explained; App::uses() kept in plugin code with the reason
-  - Bake commands use bin/cake with the Bake plugin; added the missing asset plugin-syntax example; removed flash/ asset folder
-  - Publishing: removed plugins.cakephp.org/awesome-cakephp; added a composer.json example (type cakephp-plugin, composer/installers, installer-name)
+  - Plugin paths use `plugins/` and `templates/Plugin` overrides; internal plugin structure and test directories explained; App::uses() kept in plugin code with the reason
+  - Bake commands use `bin/cake` with the Bake plugin; added the missing asset plugin-syntax example; removed `flash/` asset folder
+  - Publishing: removed plugins.cakephp.org/awesome-cakephp; added a `composer.json` example (type cakephp-plugin, composer/installers, installer-name)
 - [How To Install Plugins](/plugins/how-to-install-plugins)
-  - Composer is the primary method (pieceofcake2/debug_kit example, composer/installers and installer-paths for plugins/); manual and Git installs use plugins/ and https URLs
-  - Plugins are loaded in config/bootstrap.php; when App::uses() is still needed for plugin classes
-  - composer.json installer-paths and allow-plugins (composer/installers, Composer 2.2+) documented as required so plugins land in plugins/&lt;Name>/
+  - Composer is the primary method (pieceofcake2/debug_kit example, composer/installers and installer-paths for `plugins/`); manual and Git installs use `plugins/` and https URLs
+  - Plugins are loaded in `config/bootstrap.php`; when App::uses() is still needed for plugin classes
+  - `composer.json` installer-paths and allow-plugins (composer/installers, Composer 2.2+) documented as required so plugins land in `plugins/<Name>/`
 - [How To Use Plugins](/plugins/how-to-use-plugins)
-  - Plugin loading shown in config/bootstrap.php with plugin Config/ file locations; schema command uses bin/cake
+  - Plugin loading shown in `config/bootstrap.php` with plugin `Config/` file locations; schema command uses `bin/cake`
 - [Maintained Plugins](/plugins/maintained-plugins)
   - The AsyncAws plugin is described as a lighter alternative to the Aws plugin
 
@@ -423,26 +423,26 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
 
 - [Contributing](/contributing)
   - Contributions go to the pieceofcake2/* repositories on GitHub (framework, app skeleton, plugins, docs)
-  - The contribution process is described in the organization's CONTRIBUTING.md; the pages of this chapter give an overview and link to its sections
+  - The contribution process is described in the organization's `CONTRIBUTING.md`; the pages of this chapter give an overview and link to its sections
 - [Documentation](/contributing/documentation)
-  - Docs hosted at pieceofcake2/docs (2.x), Markdown + VitePress, deployed by GitHub Actions, local preview with bin/dev-server.sh; only en/ja maintained; Jenkins, IRC and docs mailing list removed
+  - Docs hosted at pieceofcake2/docs (2.x), Markdown + VitePress, deployed by GitHub Actions, local preview with `bin/dev-server.sh`; only en/ja maintained; Jenkins, IRC and docs mailing list removed
   - reStructuredText/Sphinx formatting guide replaced by a Markdown/VitePress guide (headings and anchors, links, code blocks, alerts, info/pieceofcake2 containers, includes), kept in the README of pieceofcake2/docs
 - [Tickets](/contributing/tickets)
   - Issues go to pieceofcake2/* repositories; check CHANGELOG/upgrade guide before reporting; Stack Overflow for questions (IRC and Google Group removed)
-  - Security issues reported via GitHub private vulnerability reporting (Security tab, Report a vulnerability) per SECURITY.md; security@cakephp.org removed
-  - Reporting details link to CONTRIBUTING.md and SECURITY.md
+  - Security issues reported via GitHub private vulnerability reporting (Security tab, Report a vulnerability) per `SECURITY.md`; security@cakephp.org removed
+  - Reporting details link to `CONTRIBUTING.md` and `SECURITY.md`
 - [Code](/contributing/code)
   - Setup: PHP 8.0+, Composer; PHPUnit 9.6, PHP_CodeSniffer and PHPStan installed as dev dependencies; removed PHP 5.3, mcrypt and PHPUnit 3.7 requirements
-  - New "Running the Tests" section: copy tests/config/database.php into vendor/pieceofcake2/app/config, select the database with DB, run vendor/bin/phpunit and vendor/bin/phpcs
+  - New "Running the Tests" section: copy `tests/config/database.php` into `vendor/pieceofcake2/app/config`, select the database with `DB`, run `vendor/bin/phpunit` and `vendor/bin/phpcs`
   - Single maintained branch 2.x; branch from and target upstream/2.x; removed 2.next/4.0 targets and Cake Software Foundation ownership note
-  - Setup, running the tests and the pull request steps link to CONTRIBUTING.md
+  - Setup, running the tests and the pull request steps link to `CONTRIBUTING.md`
 - [Coding Standards](/contributing/cakephp-coding-conventions)
   - Rewritten as the CakePHP 5 based standard (cakephp/cakephp-codesniffer ^5.0, PSR-12): 4 spaces, short arrays, trailing commas, braces on own line for classes/methods, elseif, no Yoda, ?? and ?:, visibility on constants, DocBlock rules
-  - Added how to install and run phpcs/phpcbf, the CakePHP 2 exclusions of the framework phpcs.xml, the application phpcs.xml from pieceofcake2/app (with legacy layout paths), and a table of differences from the original CakePHP 2 standard
+  - Added how to install and run phpcs/phpcbf, the CakePHP 2 exclusions of the framework `phpcs.xml`, the application `phpcs.xml` from pieceofcake2/app (with legacy layout paths), and a table of differences from the original CakePHP 2 standard
 - [Backwards Compatibility Guide](/contributing/backwards-compatibility)
-  - Rewritten: what to expect from fork releases (some included breaking changes, e.g. cache engines, directory layout, autoloading), migration guides; the guidelines for contributors link to CONTRIBUTING.md; upstream semver tables removed
+  - Rewritten: what to expect from fork releases (some included breaking changes, e.g. cache engines, directory layout, autoloading), migration guides; the guidelines for contributors link to `CONTRIBUTING.md`; upstream semver tables removed
 - [CakePHP Development Process](/contributing/cakephp-development-process)
-  - Rewritten for the fork's maintenance-only process: version numbers (2.10.24.x, 2.11.0, 2.12.x); goals, branches and releases link to CONTRIBUTING.md; IRC and upstream branch model removed
+  - Rewritten for the fork's maintenance-only process: version numbers (2.10.24.x, 2.11.0, 2.12.x); goals, branches and releases link to `CONTRIBUTING.md`; IRC and upstream branch model removed
 
 ### Appendices
 

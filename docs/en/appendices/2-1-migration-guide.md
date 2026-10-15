@@ -38,7 +38,7 @@ class AppShell extends Shell
 If your application already has these files/classes you don't need to do
 anything.
 Additionally if you were using the core PagesController, you would need to copy
-this to your app/Controller directory as well.
+this to your `app/Controller` directory as well.
 
 ## .htaccess files
 
@@ -126,9 +126,11 @@ with Debugger, and takes advantage of improvements made there.
 A new TestShell has been added. It reduces the typing required to run unit
 tests, and offers a file path based UI:
 
-    ./Console/cake test app Model/Post
-    ./Console/cake test app Controller/PostsController
-    ./Console/cake test Plugin View/Helper/MyHelper
+```bash
+./Console/cake test app Model/Post
+./Console/cake test app Controller/PostsController
+./Console/cake test Plugin View/Helper/MyHelper
+```
 
 The old testsuite shell and its syntax are still available.
 

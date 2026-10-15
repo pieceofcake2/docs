@@ -38,7 +38,7 @@ all pages, add this line to the \<head\> section of
 echo $this->Html->script('jquery'); // Include jQuery library
 ```
 
-Replace `jquery` with the name of your library file (.js will be
+Replace `jquery` with the name of your library file (`.js` will be
 added to the name).
 
 By default scripts are cached, and you must explicitly print out
@@ -391,8 +391,8 @@ indicator effects yourself:
 </html>
 ```
 
-Remember to place the indicator.gif file inside webroot/img
-folder. You may see a situation where the indicator.gif displays
+Remember to place the `indicator.gif` file inside `webroot/img`
+folder. You may see a situation where the `indicator.gif` displays
 immediately upon the page load. You need to put in this CSS
 `#busy-indicator { display:none; }` in your main CSS file.
 

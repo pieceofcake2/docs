@@ -108,7 +108,7 @@ As of 2.4 `FileLog` engine takes a few new options:
 
 > [!NOTE]
 > Always configure loggers in `config/bootstrap.php`
-> Trying to use Application or plugin loggers in core.php
+> Trying to use Application or plugin loggers in `core.php`
 > will cause issues, as application paths are not yet configured.
 >
 > Also new in 2.4: In debug mode missing directories will now be automatically created to avoid unnecessary
@@ -117,7 +117,7 @@ As of 2.4 `FileLog` engine takes a few new options:
 ## Error and Exception logging
 
 Errors and Exceptions can also be logged by configuring the
-corresponding values in your core.php file. Errors will be
+corresponding values in your `core.php` file. Errors will be
 displayed when debug \> 0 and logged when debug == 0. Set `Exception.log`
 to true to log uncaught exceptions. See [Configuration](../development/configuration)
 for more information.

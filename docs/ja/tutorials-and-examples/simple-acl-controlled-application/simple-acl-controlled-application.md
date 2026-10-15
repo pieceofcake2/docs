@@ -248,7 +248,9 @@ public function beforeFilter()
 「Error: Database table acos for model Aco was not found.」)が表示されます。
 このエラーを解消するには、スキーマファイルを実行します。シェルで次のコマンドを実行してください:
 
-    bin/cake schema create DbAcl
+```bash
+bin/cake schema create DbAcl
+```
 
 テーブルのドロップと作成についてプロンプトが表示されます。
 テーブルの破棄および作成を行うには、「yes」を入力してください。
@@ -399,7 +401,9 @@ public $actsAs = ['Acl' => ['type' => 'requester', 'enabled' => false]];
 ACO オブジェクトを作成するには、ACL シェルを用いるか、 `AclComponent` を使用します。
 シェルで ACO を作成するには、次のようにします:
 
-    bin/cake acl create aco root controllers
+```bash
+bin/cake acl create aco root controllers
+```
 
 AclComponent を使う方法は次のようになります:
 

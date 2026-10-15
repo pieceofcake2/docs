@@ -15,7 +15,9 @@ i18n シェルは、素早く容易に po テンプレートファイルを生�
 抽出するためにアプリケーション全体をスキャンします。アプリケーション中のユニークな文字列は
 それぞれ一つの POT ファイルの中に混合されます。
 
-    bin/cake i18n extract
+```bash
+bin/cake i18n extract
+```
 
 上記は、抽出シェルを実行します。シェルは、スキャンするディレクトリ (デフォルトは
 アプリケーションディレクトリの `src/`) と出力先 (デフォルトは `src/Locale`) を尋ねます。
@@ -25,7 +27,9 @@ i18n シェルは、素早く容易に po テンプレートファイルを生�
 ビューテンプレートは `templates/` に、翻訳ファイルは `resources/locales/` に置くので、
 通常はこの 2 つの場所を明示的に指定します。
 
-    bin/cake i18n extract --paths src,templates --output resources/locales
+```bash
+bin/cake i18n extract --paths src,templates --output resources/locales
+```
 
 このコマンドの結果は、 `resources/locales/default.pot` ファイルになります。
 pot ファイルは、 po ファイルを作成するためのテンプレートとして使用します。もし、手動で
@@ -40,7 +44,7 @@ pot ファイルから po ファイルを作成するなら、 `Plural-Forms` �
 
 特定のプラグインで使用される POT ファイルを生成することができます。
 
-``` text
+```bash
 bin/cake i18n extract --plugin <Plugin>
 ```
 
@@ -52,17 +56,23 @@ bin/cake i18n extract --plugin <Plugin>
 もし、モデルがすでに `$validationDomain` プロパティを持っているなら、
 与えられたバリデーションドメインは無視されます。
 
-    bin/cake i18n extract --validation-domain validation_errors
+```bash
+bin/cake i18n extract --validation-domain validation_errors
+```
 
 また、バリデーションメッセージの抽出を止められます。
 
-    bin/cake i18n extract --ignore-model-validation
+```bash
+bin/cake i18n extract --ignore-model-validation
+```
 
 ### フォルダーの除外
 
 除外したいフォルダをカンマ区切りで指定します。指定された値に含まれるパスは無視されます。
 
-    bin/cake i18n extract --exclude Test,Vendor
+```bash
+bin/cake i18n extract --exclude Test,Vendor
+```
 
 ### 既存の POT ファイル上書きの警告をスキップする
 
@@ -72,7 +82,9 @@ bin/cake i18n extract --plugin <Plugin>
 `--overwrite` を追加することで、 POT ファイルが存在しても警告されず、
 デフォルトで上書きされます。
 
-    bin/cake i18n extract --overwrite
+```bash
+bin/cake i18n extract --overwrite
+```
 
 ### CakePHP コアライブラリからのメッセージ抽出
 
@@ -83,17 +95,23 @@ bin/cake i18n extract --plugin <Plugin>
 抽出するかどうか訊ねます。 `--extract-core` に `yes` か `no` を設定することで、
 デフォルトの動作を指定できます。
 
-    bin/cake i18n extract --extract-core yes
+```bash
+bin/cake i18n extract --extract-core yes
+```
 
-    または
+または
 
-    bin/cake i18n extract --extract-core no
+```bash
+bin/cake i18n extract --extract-core no
+```
 
 ## TranslateBehavior で使用されるテーブルを作る
 
 i18n シェルは、 `TranslateBehavior` で使用されるデフォルトのテーブルを
 初期化することができます。
 
-    bin/cake i18n initdb
+```bash
+bin/cake i18n initdb
+```
 
 これで翻訳ビヘイビアで使用される `i18n` デーブルが作成されます。

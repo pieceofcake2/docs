@@ -28,12 +28,16 @@ CakePlugin::load('AclExtras');
 
 最後に CakePHP のコンソールで以下のコマンドを実行してください:
 
-    bin/cake AclExtras.AclExtras aco_sync
+```bash
+bin/cake AclExtras.AclExtras aco_sync
+```
 
 全ての利用可能なコマンドについての完全な説明を次のようにして得ることができます:
 
-    bin/cake AclExtras.AclExtras -h
-    bin/cake AclExtras.AclExtras aco_sync -h
+```bash
+bin/cake AclExtras.AclExtras -h
+bin/cake AclExtras.AclExtras aco_sync -h
+```
 
 `acos` テーブルが埋め尽くされたら、アプリケーションのパーミッションを作成する作業に移りましょう。
 
@@ -43,7 +47,9 @@ CakePlugin::load('AclExtras');
 ARO に対して ACO へのアクセスをシェルインターフェースを用いて許可するには、AclShell を使用してください。
 使用方法の詳しい情報は、次を実行して見ることができる AclShell のヘルプを参照してください:
 
-    bin/cake acl --help
+```bash
+bin/cake acl --help
+```
 
 注意: アスタリスクは「'\*'」というように、シングルクォーテーションで囲ってください
 

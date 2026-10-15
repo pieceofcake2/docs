@@ -30,12 +30,16 @@ CakePlugin::load('AclExtras');
 
 Finally execute the following command in the CakePHP console:
 
-    bin/cake AclExtras.AclExtras aco_sync
+```bash
+bin/cake AclExtras.AclExtras aco_sync
+```
 
 You can get a complete guide for all available commands like this:
 
-    bin/cake AclExtras.AclExtras -h
-    bin/cake AclExtras.AclExtras aco_sync -h
+```bash
+bin/cake AclExtras.AclExtras -h
+bin/cake AclExtras.AclExtras aco_sync -h
+```
 
 Once populated your `acos` table proceed to create your application permissions.
 
@@ -46,7 +50,9 @@ be providing one. To allow ARO's access to ACO's from the shell interface use
 the AclShell. For more information on how to use it consult the AclShell help
 which can be accessed by running:
 
-    bin/cake acl --help
+```bash
+bin/cake acl --help
+```
 
 Note: \* needs to be quoted ('\*')
 

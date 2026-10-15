@@ -31,21 +31,29 @@ CakePlugin::load('Upgrade');
 始める前に、アプリケーションのバックアップを取るか、バージョン管理システムにコミットしておいてください。
 すべてのアップグレード手順を実行するには、次のようにします。
 
-    vendor/bin/cake upgrade all
+```bash
+vendor/bin/cake upgrade all
+```
 
 ファイルを変更せずにシェルが何をするのか確認したい場合は、まず `--dry-run` を付けて実行してください。
 
-    vendor/bin/cake upgrade all --dry-run
+```bash
+vendor/bin/cake upgrade all --dry-run
+```
 
 プラグインをアップグレードするには、次のコマンドを実行します。
 
-    vendor/bin/cake upgrade all --plugin YourPluginName
+```bash
+vendor/bin/cake upgrade all --plugin YourPluginName
+```
 
 各アップグレード手順 (`tests`, `locations`, `i18n`, `helpers`, `basics`, `request`,
 `configure`, `constants`, `controller_redirects`, `components`, `exceptions`) は
 個別に実行することもできます。利用できる手順とオプションの一覧は、次のコマンドで確認できます。
 
-    vendor/bin/cake upgrade --help
+```bash
+vendor/bin/cake upgrade --help
+```
 
 アップグレードシェルが扱うのは 1.3 から 2.0 への変更だけです。こうして変換したアプリケーションを
 Piece of Cake 2 フォークで動かすには、さらに CakePHP 2.10.24 まで更新する必要があります。

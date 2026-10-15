@@ -73,7 +73,7 @@ Composer の classmap を使っている場合は、新しいクラスファイ�
 > CakePHP は対応するファイルが `src/Model/` に見つからない場合、
 > 動的にモデルオブジェクトを生成します。
 > モデルのファイルに正しい名前をつけなければ
-> (つまり ingredient.php や Ingredients.php などとしたら)
+> (つまり `ingredient.php` や `Ingredients.php` などとしたら)
 > CakePHP にとって見当たらないそのファイルではなく、
 > AppModel のインスタンスが使われることになります。
 > モデル内に自身で定義したメソッドやモデルに追加したビヘイビアを使おうとして、

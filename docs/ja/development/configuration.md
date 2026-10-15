@@ -449,7 +449,7 @@ App::build([
 ```
 
 > [!NOTE]
-> 追加パスの設定は、すべて bootstrap.php の先頭で行ってください。
+> 追加パスの設定は、すべて `bootstrap.php` の先頭で行ってください。
 > こうすることで、アプリケーションのそれ以降の処理でこれらのパスが
 > 有効になります。
 
@@ -521,7 +521,7 @@ Configure::write('App.baseUrl', env('SCRIPT_NAME'));
 ```
 
 さらに、`webroot/.htaccess` ファイルを削除します。レガシー構成の場合は、
-以下の .htaccess ファイルを削除します。
+以下の `.htaccess` ファイルを削除します。
 
     /.htaccess
     /app/.htaccess
@@ -613,7 +613,7 @@ Session
 
 ビルトインのデフォルトは以下の通りです。
 
-- 'php' - あなたの php.ini で定義されている設定を使う
+- 'php' - あなたの `php.ini` で定義されている設定を使う
 - 'cake' - セッションファイルを CakePHP の `tmp/sessions` ディレクトリに保存する
 - 'database' - CakePHP のデータベースセッションを使う
 - 'cache' - セッションの保存に Cache クラスを使う
@@ -678,7 +678,7 @@ CakePHP のアクセス制御リスト(ACL)機能で使われる定数。
 </div>
 
 > [!NOTE]
-> キャッシュの設定も core.php にあります。これについては後述します。
+> キャッシュの設定も `core.php` にあります。これについては後述します。
 
 `Configure` クラスは、コアの設定をその場で読み書き
 するのに使われます。これは、たとえばあなたのアプリケーションの
