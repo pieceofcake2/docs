@@ -103,6 +103,73 @@ parameter for `Cache::write()` and `Cache::read()`, e.g. `Cache::read('my_data',
 In debug mode missing directories will now be automatically created to avoid unnecessary errors thrown when using the FileEngine.
 :::
 
+### Configuring Cache Engines with a DSN
+
+A cache configuration can also set its engine with a DSN in the `'dsn'` key, as
+in CakePHP 3.x and later. The scheme selects the engine, so the cache service
+of each environment can come from one environment variable:
+
+```php
+// config/bootstrap.php
+Cache::config('default', [
+    'engine' => 'File',
+    'duration' => '+1 hours',
+    'prefix' => 'myapp_',
+    'dsn' => env('CACHE_DEFAULT_URL'),
+]);
+```
+
+```dotenv
+# config/.env
+CACHE_DEFAULT_URL="redis://:secret@localhost:6379/0"
+```
+
+The [pieceofcake2/app](https://pieceofcake2.github.io/app/) skeleton reads
+`CACHE_DEFAULT_URL` for the `default` cache in `config/bootstrap.php`, and
+`CACHE_CAKECORE_URL` and `CACHE_CAKEMODEL_URL` for the `_cake_core_` and
+`_cake_model_` caches in `config/core.php` (the names of the CakePHP 5
+application skeleton; see
+[Environment Variables of the Application Skeleton](/development/configuration#environment-variables-of-the-application-skeleton)).
+
+::: pieceofcake2
+The `'dsn'` key is added in the release of `pieceofcake2/cakephp` that follows
+v2.12.6.
+:::
+
+| DSN | Configuration |
+|-----|---------------|
+| `file:///path/to/cache/` | `File` engine with `path` |
+| `apcu://`, `apc://` | `Apc` engine (APCu) |
+| `memcached://user:pass@localhost:11211` | `Memcached` engine with `servers` (`['localhost:11211']`), `login` and `password` |
+| `memcached:///path/to/memcached.sock` | `Memcached` engine with a Unix socket in `servers` |
+| `memcache://localhost:11211` | `Memcache` engine with `servers` |
+| `redis://:pass@localhost:6379/1` | `Redis` engine with `server`, `port`, `password` and `database` (the path, or `?database=1`) |
+| `redis:///path/to/redis.sock` | `Redis` engine with `unix_socket` |
+
+- The keys parsed from the DSN replace the same keys of the configuration, and
+  the other keys (`duration`, `prefix`, `groups`, ...) are kept. An empty
+  `'dsn'` (`null`, `''` or `false`) is ignored, so the configuration above uses
+  the `File` engine when `CACHE_DEFAULT_URL` is not set.
+- Query parameters become configuration keys as they are:
+  `redis://localhost:6379?prefix=app_&duration=3600&groups[]=posts`. `true`,
+  `false` and `null` are converted to the PHP values. Encode a `+` in a
+  duration (`duration=%2B1%20hours`) or give the duration in seconds.
+- The user, password, host and path are URL-decoded, so encode reserved
+  characters of a password (`%40` for `@`).
+- For Redis, a DSN with a user name (`redis://user:pass@localhost`) sets
+  `password` to `['user', 'pass']`, which phpredis 5.3 and later send to
+  `AUTH` as an ACL user. Without a user name, `password` is the plain password.
+- An `engine` query parameter overrides the engine of the scheme and allows a
+  scheme that is not registered.
+- A DSN that cannot be parsed or has an unknown scheme throws a
+  `CacheException`. The message names the configuration and never contains
+  the user name or the password.
+
+`Cache::config()` builds the engine at once, so a DSN of a scheme that a plugin
+registers (see [Registering DSN Schemes](/plugins/how-to-create-plugins#registering-dsn-schemes))
+works only after the plugin is loaded with `CakePlugin::load()`. The built-in
+schemes work anywhere, including the core caches in `config/core.php`.
+
 ## Creating a storage engine for Cache
 
 You can provide custom `Cache` adapters in `src/Lib` as well

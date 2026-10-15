@@ -141,6 +141,9 @@ variable `APP_ENV=test`; in the constructor of `DATABASE_CONFIG` in
 ```php
 public function __construct()
 {
+    $this->default['dsn'] = env('DATABASE_URL');
+    $this->test['dsn'] = env('DATABASE_TEST_URL');
+
     if (env('APP_ENV') === 'test') {
         $this->default = $this->test;
     }
@@ -149,8 +152,11 @@ public function __construct()
 
 `config/database.php.default` of pieceofcake2/app has these lines; copy them
 into your `config/database.php` if it is older. The web server inherits the
-environment variables of the test process, so it gets the same `DB_TEST_*`
-values.
+environment variables of the test process, so it gets the same
+`DATABASE_TEST_URL` (for example
+`DATABASE_TEST_URL="mysql://root:root@127.0.0.1:3306/test_app"`). Switch the
+connections after the `'dsn'` keys are set, so that `default` also gets the DSN
+of the `test` connection.
 
 - Never point the tests to your development database.
 - List every table that the visited pages use in `$fixtures`.

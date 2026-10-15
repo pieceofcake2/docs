@@ -311,6 +311,95 @@ The same technique applies to Helpers and Behaviors.
 > App::uses('AppHelper', 'View/Helper');
 > ```
 
+## Registering DSN Schemes
+
+Datasources, email transports, cache engines and log engines can be configured
+with a DSN in the `'dsn'` key (see [Database DSNs](/development/configuration#database-url),
+[Mailer DSN](/core-utility-libraries/email#mailer-dsn),
+[Caching](/core-libraries/caching#configuring-cache-engines-with-a-dsn) and
+[Logging](/core-libraries/logging#configuring-log-streams-with-a-dsn)). The
+scheme of the DSN is looked up in a DSN class map, which a plugin can extend
+with its own schemes, as with `setDsnClassMap()` in CakePHP 3.x and later.
+`ConnectionManager`, `CakeEmail`, `Cache` and `CakeLog` each have one:
+
+| Method | |
+|--------|---|
+| `setDsnClassMap($map)` | Adds schemes or replaces built-in ones. `null` removes a scheme. Schemes are case-insensitive |
+| `getDsnClassMap()` | Returns the map, including the built-in schemes |
+| `parseDsn($dsn, $config = [])` | Returns the configuration keys of a DSN |
+
+::: pieceofcake2
+The DSN class maps are added in the release of `pieceofcake2/cakephp` that
+follows v2.12.6.
+:::
+
+Register the schemes in the plugin's `Config/bootstrap.php`, which the
+application loads with `CakePlugin::load('MyPlugin', ['bootstrap' => true])`:
+
+```php
+// plugins/MyPlugin/Config/bootstrap.php
+
+// mydb://user:pass@host:1234/name uses the MyPlugin.Database/MyDb datasource
+// with login, password, host, port and database
+ConnectionManager::setDsnClassMap([
+    'mydb' => 'MyPlugin.Database/MyDb',
+]);
+
+// Keep working with releases that have no DSN class maps
+if (method_exists('CakeEmail', 'setDsnClassMap')) {
+    CakeEmail::setDsnClassMap([
+        // myapi+api://KEY@default?region=eu uses the MyPlugin.MyApi transport
+        'myapi+api' => function (array $parts, array $config) {
+            return [
+                'transport' => 'MyPlugin.MyApi',
+                'apiKey' => $parts['username'] ?? null,
+                'region' => $parts['query']['region'] ?? 'eu',
+            ];
+        },
+    ]);
+}
+```
+
+A value of the map is either a class name or a callable:
+
+- A **class name** in plugin dot syntax is set as the `datasource`,
+  `transport` or `engine`, and the parts of the DSN become the usual keys of
+  that kind, followed by the query parameters, which win:
+
+  | Map | Keys |
+  |-----|------|
+  | `ConnectionManager` | `login`, `password`, `host` (without the brackets of an IPv6 address), `port`, `database` (the path without the leading `/`) |
+  | `CakeEmail` | `username`, `password`, `host` (the host `default` is left out, so the transport uses its default), `port` |
+  | `Cache`, `CakeLog` | `username`, `password`, `host`, `port`, `path` |
+
+- A **callable** that is not a string, such as a closure or
+  `[$class, 'method']`, is called with the parts of the DSN and the
+  configuration without the `'dsn'` key, and returns the configuration keys,
+  including the class. The parts are `scheme`, `username`, `password`, `host`,
+  `port`, `path` (only those present, URL-decoded) and `query` (always an
+  array). The callable decides which query parameters to use. A string is
+  always a class name, never a function name.
+
+The built-in schemes are entries of the same maps (class names for the
+databases, callables for email, cache and log), so a plugin can replace them,
+for example to point `mysql` to a datasource of its own. A `datasource`,
+`transport` or `engine` query parameter in the DSN still overrides a class
+name, and allows a scheme that is not registered at all.
+
+Guard the calls with `method_exists()` when the plugin also supports releases
+of `pieceofcake2/cakephp` without DSN class maps.
+
+### When to Register the Schemes
+
+- `ConnectionManager` reads the map when a connection is created (the first
+  `getDataSource()` call, usually the first query), and `CakeEmail` when a
+  configuration is applied. A plugin bootstrap is early enough for
+  `config/database.php` and `config/email.php`.
+- `Cache::config()` and `CakeLog::config()` build the engine at once. A cache
+  or log configuration that uses a scheme of a plugin must come after
+  `CakePlugin::load()` in `config/bootstrap.php`; it cannot be in
+  `config/core.php`. The built-in schemes work anywhere.
+
 ## Expand Your Plugin
 
 This example created a good start for a plugin, but there is a lot

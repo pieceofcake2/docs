@@ -81,6 +81,48 @@ methods such as `getVersion()`, which custom drivers extending them may need
 to implement. See the [migration guide](/appendices/migrating-from-cakephp-2-10).
 :::
 
+### Connection DSN
+
+A connection can be set with one DSN (a URL) in the `'dsn'` key, as with the
+`url` key of CakePHP 3.x and later. The scheme selects the datasource, and the
+DSN's user,
+password, host, port, path and query parameters become `login`, `password`,
+`host`, `port`, `database` and keys of the same name:
+
+```php
+public $default = [
+    'datasource' => 'Database/Mysql',
+    'persistent' => false,
+    'encoding' => 'utf8mb4',
+];
+
+public function __construct()
+{
+    // DATABASE_URL="postgres://app:secret@db.example.com:5432/app?schema=public"
+    $this->default['dsn'] = env('DATABASE_URL');
+}
+```
+
+| Scheme | Datasource |
+|--------|------------|
+| `mysql` | `Database/Mysql` |
+| `postgres`, `postgresql`, `pgsql` | `Database/Postgres` |
+| `sqlite` | `Database/Sqlite` (`sqlite:///:memory:`, `sqlite:///relative/path.sqlite`, `sqlite:////absolute/path.sqlite`) |
+| `sqlserver`, `mssql`, `sqlsrv` | `Database/Sqlserver` |
+
+The keys of the DSN replace the same keys of the array and the other keys are
+kept. An empty `'dsn'` is ignored, so the array applies when `DATABASE_URL` is
+not set. See [Database DSNs](../development/configuration#database-url)
+for all the rules, and `ConnectionManager::parseDsn()` to parse a DSN
+yourself. A plugin can register more schemes with
+`ConnectionManager::setDsnClassMap()` (see
+[Registering DSN Schemes](../plugins/how-to-create-plugins#registering-dsn-schemes)).
+
+::: pieceofcake2
+The `'dsn'` key is added in the release of `pieceofcake2/cakephp` that follows
+v2.12.6.
+:::
+
 All of the above sources derive from a base `DboSource` class, which
 aggregates some logic that is common to most relational databases. If you decide
 to write a RDBMS datasource, working from one of these (e.g. MySQL, or SQLite)
@@ -378,6 +420,10 @@ public $faraway = [
 ];
 ```
 
+To let applications configure the datasource with a DSN, register a scheme for
+it in the plugin's `Config/bootstrap.php`; see
+[Registering DSN Schemes](../plugins/how-to-create-plugins#registering-dsn-schemes).
+
 ## Connecting to SQL Server
 
 The Sqlserver datasource depends on
@@ -422,6 +468,14 @@ public $default = [
 - `encoding` set to `utf8` makes the driver use UTF-8 for strings.
 - `persistent` must be `false`; the `pdo_sqlsrv` driver does not support
   persistent connections.
+
+The same connection as a DSN, with the `options` as query
+parameters. Write a named instance as `localhost%5CSQLEXPRESS`:
+
+```php
+$this->default['dsn'] = 'sqlserver://sa:secret@localhost:1433/cakephp?schema=dbo&encoding=utf8'
+    . '&options[TrustServerCertificate]=yes&options[Encrypt]=no';
+```
 
 ::: pieceofcake2
 The SQL Server datasource gained the

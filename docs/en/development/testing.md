@@ -83,6 +83,17 @@ public $test = [
 ];
 ```
 
+The connection can also be a DSN in the `'dsn'` key. The `config/database.php.default`
+file of the application skeleton reads it from the `DATABASE_TEST_URL`
+environment variable:
+
+```dotenv
+# config/.env
+DATABASE_TEST_URL="mysql://dblogin:dbpassword@dbhost/test_database"
+```
+
+See [Database DSNs](configuration#database-url).
+
 In the legacy `app/` layout these files are `app/Config/core.php` and
 `app/Config/database.php`.
 

@@ -81,12 +81,7 @@ jobs:
           --health-retries=5
 
     env:
-      DB_TEST_DATASOURCE: Database/Mysql
-      DB_TEST_HOST: 127.0.0.1
-      DB_TEST_PORT: 3306
-      DB_TEST_USERNAME: root
-      DB_TEST_PASSWORD: root
-      DB_TEST_DATABASE: cakephp_test
+      DATABASE_TEST_URL: mysql://root:root@127.0.0.1:3306/cakephp_test?encoding=utf8mb4
 
     steps:
       - uses: actions/checkout@v7
@@ -223,12 +218,7 @@ jobs:
           --health-retries=5
 
     env:
-      DB_TEST_DATASOURCE: Database/Mysql
-      DB_TEST_HOST: 127.0.0.1
-      DB_TEST_PORT: 3306
-      DB_TEST_USERNAME: root
-      DB_TEST_PASSWORD: root
-      DB_TEST_DATABASE: cakephp_test
+      DATABASE_TEST_URL: mysql://root:root@127.0.0.1:3306/cakephp_test?encoding=utf8mb4
 
     steps:
       - uses: actions/checkout@v7
@@ -299,9 +289,12 @@ jobs:
 - **データベース**: データベースを使うジョブは、MySQL を
   [サービスコンテナー](https://docs.github.com/ja/actions/tutorials/use-containerized-services/use-docker-service-containers)
   として起動します。スケルトンでは `config/database.php` をコミットしないので、ジョブは
-  `config/database.php.default` をコピーします。このファイルは `test` 接続の設定を環境変数
-  `DB_TEST_*` から読み込みます ([環境変数](/ja/development/configuration#environment-variables)
-  を参照)。フィクスチャはこのデータベースに作られるので、事前にテーブルを用意する必要はありません。
+  `config/database.php.default` をコピーします。このファイルは `test` 接続を環境変数
+  `DATABASE_TEST_URL` から読み込みます ([データベースの DSN](/ja/development/configuration#database-url)
+  を参照。`'dsn'` キーには v2.12.6 の次の pieceofcake2/cakephp のリリースが必要です)。以前のスケルトンでは、
+  代わりに `DB_TEST_DATASOURCE`、`DB_TEST_HOST`、`DB_TEST_PORT`、`DB_TEST_USERNAME`、
+  `DB_TEST_PASSWORD`、`DB_TEST_DATABASE` を読み込みます。フィクスチャはこのデータベースに
+  作られるので、事前にテーブルを用意する必要はありません。
 - **ソルト**: スケルトンは `Security.salt` と `Security.cipherSeed` を `SECURITY_SALT` と
   `SECURITY_CIPHER_SEED` から読み込みます。ワークフローではテスト用の値をセットしています。
   本番環境の値をワークフローに書いてはいけません。
@@ -324,12 +317,7 @@ PostgreSQL でテストする場合は、サービスと環境変数を次のよ
           --health-retries=5
 
     env:
-      DB_TEST_DATASOURCE: Database/Postgres
-      DB_TEST_HOST: 127.0.0.1
-      DB_TEST_PORT: 5432
-      DB_TEST_USERNAME: postgres
-      DB_TEST_PASSWORD: postgres
-      DB_TEST_DATABASE: cakephp_test
+      DATABASE_TEST_URL: postgres://postgres:postgres@127.0.0.1:5432/cakephp_test
 ```
 
 さらに、`pdo_mysql` の代わりに `pdo_pgsql` をインストールします。両方のデータベースでテストするには、
@@ -416,7 +404,7 @@ PHPStan のジョブは、
 ブラウザーは不要です。`defaultTestSuite` を削除した場合は、PHPUnit のジョブを `--testsuite App` で
 実行してください。`end-to-end` ジョブには PHPUnit のジョブと同じくデータベースが必要です。
 `phpunit.xml.dist` の `PANTHER_APP_ENV=test` によって Web サーバーはテスト用データソースを使い、
-Web サーバーは `DB_TEST_*` の値を引き継ぎます。`ubuntu-latest` のランナーには Chrome があり、
+Web サーバーは `DATABASE_TEST_URL` を引き継ぎます。`ubuntu-latest` のランナーには Chrome があり、
 `vendor/bin/bdi detect drivers` (開発用の依存パッケージの [bdi](https://github.com/dbrekelmans/bdi))
 が対応する chromedriver をインストールします。GitHub のランナーでは `PANTHER_NO_SANDBOX=1` が
 必要です。ほかのジョブより時間がかかるので、1 つの PHP のバージョンで実行してください。

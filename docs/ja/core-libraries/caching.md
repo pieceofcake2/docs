@@ -98,6 +98,72 @@ Cache::config('long', [
 デバッグモードで FileEngine 使用時には、不必要なエラーの発生を避けるため、 存在しないディレクトリは自動作成されるようになりました。
 :::
 
+<a id="configuring-cache-engines-with-a-dsn"></a>
+
+### DSN によるキャッシュエンジンの設定
+
+CakePHP 3.x 以降と同じく、キャッシュの設定は `'dsn'` キーに書いた DSN でエンジンを設定する
+こともできます。スキームでエンジンが決まるので、環境ごとのキャッシュサービスを 1 つの環境変数で
+指定できます。
+
+```php
+// config/bootstrap.php
+Cache::config('default', [
+    'engine' => 'File',
+    'duration' => '+1 hours',
+    'prefix' => 'myapp_',
+    'dsn' => env('CACHE_DEFAULT_URL'),
+]);
+```
+
+```dotenv
+# config/.env
+CACHE_DEFAULT_URL="redis://:secret@localhost:6379/0"
+```
+
+[pieceofcake2/app](https://pieceofcake2.github.io/app/) スケルトンは、`config/bootstrap.php`
+の `default` キャッシュに `CACHE_DEFAULT_URL` を、`config/core.php` の `_cake_core_` と
+`_cake_model_` キャッシュに `CACHE_CAKECORE_URL` と `CACHE_CAKEMODEL_URL` を読み込みます
+(CakePHP 5 のアプリケーションスケルトンと同じ名前です。
+[アプリケーションスケルトンの環境変数](/ja/development/configuration#environment-variables-of-the-application-skeleton)
+を参照してください)。
+
+::: pieceofcake2
+`'dsn'` キーは v2.12.6 の次の `pieceofcake2/cakephp` のリリースで追加されます。
+:::
+
+| DSN | 設定 |
+|-----|------|
+| `file:///path/to/cache/` | `File` エンジン。`path` を設定します |
+| `apcu://`、`apc://` | `Apc` エンジン (APCu) |
+| `memcached://user:pass@localhost:11211` | `Memcached` エンジン。`servers` (`['localhost:11211']`)、`login`、`password` を設定します |
+| `memcached:///path/to/memcached.sock` | `Memcached` エンジン。`servers` に Unix ソケットを設定します |
+| `memcache://localhost:11211` | `Memcache` エンジン。`servers` を設定します |
+| `redis://:pass@localhost:6379/1` | `Redis` エンジン。`server`、`port`、`password`、`database` (パス、または `?database=1`) を設定します |
+| `redis:///path/to/redis.sock` | `Redis` エンジン。`unix_socket` を設定します |
+
+- DSN から取り出したキーは設定の同じキーを置き換え、それ以外のキー (`duration`、`prefix`、
+  `groups` など) はそのまま残ります。`'dsn'` が空 (`null`、`''`、`false`) の場合は無視される
+  ので、上の設定は `CACHE_DEFAULT_URL` がセットされていなければ `File` エンジンを使います。
+- クエリパラメーターはそのままの名前で設定のキーになります。例:
+  `redis://localhost:6379?prefix=app_&duration=3600&groups[]=posts`。`true`、`false`、`null`
+  は PHP の値になります。`duration` の `+` はエンコードする (`duration=%2B1%20hours`) か、
+  秒数で指定してください。
+- ユーザー、パスワード、ホスト、パスは URL デコードされるので、パスワードの予約文字は
+  エンコードしてください (`@` は `%40`)。
+- Redis で DSN にユーザー名がある場合 (`redis://user:pass@localhost`)、`password` は
+  `['user', 'pass']` になり、phpredis 5.3 以降は ACL のユーザーとして `AUTH` に渡します。
+  ユーザー名が無い場合、`password` はパスワードそのものです。
+- クエリパラメーターの `engine` はスキームのエンジンを上書きし、登録されていないスキームも
+  使えるようにします。
+- 解析できない DSN や未知のスキームでは `CacheException` がスローされます。メッセージには
+  設定名が含まれ、ユーザー名とパスワードは含まれません。
+
+`Cache::config()` はその場でエンジンを作成します。そのため、プラグインが登録するスキーム
+([DSN スキームの登録](/ja/plugins/how-to-create-plugins#registering-dsn-schemes) を参照) の DSN は、
+`CakePlugin::load()` でプラグインをロードした後でなければ使えません。組み込みのスキームは
+`config/core.php` のコアのキャッシュを含め、どこでも使えます。
+
 ## Cache のためのストレージエンジンの作成
 
 `src/Lib` 内や、プラグインの `$plugin/Lib` 内に独自の `Cache` アダプターを

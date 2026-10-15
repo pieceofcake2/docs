@@ -144,6 +144,9 @@ Web サーバーは別の PHP プロセスで、ブラウザーに見えるの�
 ```php
 public function __construct()
 {
+    $this->default['dsn'] = env('DATABASE_URL');
+    $this->test['dsn'] = env('DATABASE_TEST_URL');
+
     if (env('APP_ENV') === 'test') {
         $this->default = $this->test;
     }
@@ -152,7 +155,9 @@ public function __construct()
 
 pieceofcake2/app の `config/database.php.default` にはこの行があります。`config/database.php` が
 古い場合はコピーしてください。Web サーバーはテストのプロセスの環境変数を引き継ぐので、同じ
-`DB_TEST_*` の値を使います。
+`DATABASE_TEST_URL` を使います (たとえば
+`DATABASE_TEST_URL="mysql://root:root@127.0.0.1:3306/test_app"`)。`default` にも `test`
+接続の DSN が渡るように、接続の切り替えは `'dsn'` キーをセットした後に行ってください。
 
 - テストに開発用のデータベースを使わないでください。
 - 表示するページが使うテーブルは、すべて `$fixtures` に指定してください。

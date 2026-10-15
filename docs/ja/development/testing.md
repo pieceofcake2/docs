@@ -82,6 +82,16 @@ public $test = [
 ];
 ```
 
+接続は `'dsn'` キーに DSN で書くこともできます。アプリケーションスケルトンの
+`config/database.php.default` は、環境変数 `DATABASE_TEST_URL` からこれを読み込みます。
+
+```dotenv
+# config/.env
+DATABASE_TEST_URL="mysql://dblogin:dbpassword@dbhost/test_database"
+```
+
+[データベースの DSN](configuration#database-url) を参照してください。
+
 レガシーな `app/` 構成では、これらのファイルは `app/Config/core.php` と
 `app/Config/database.php` です。
 
