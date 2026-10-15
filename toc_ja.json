@@ -517,6 +517,10 @@
           "link": "/ja/security/"
         },
         {
+          "text": "セキュリティチェックリスト",
+          "link": "/ja/security/hardening"
+        },
+        {
           "text": "脆弱性の報告",
           "link": "/ja/security/reporting"
         },
@@ -527,10 +531,6 @@
         {
           "text": "本家のアドバイザリ",
           "link": "/ja/security/upstream-advisories"
-        },
-        {
-          "text": "セキュリティチェックリスト",
-          "link": "/ja/security/hardening"
         },
         {
           "text": "出力時のエスケープと HTML の無害化",
