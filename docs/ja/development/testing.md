@@ -24,7 +24,7 @@ CakePHP アプリケーションのテストは、通常次のレベルで行い
   セッション、Cookie、フラッシュメッセージ、送信されたメールを確認します。こちらも HTTP サーバーを
   使わずに PHPUnit のプロセス内で実行します。[統合テスト](/ja/development/integration-testing) を
   参照してください。
-- **ブラウザーによる End-to-End (E2E) テスト** は、Web サーバーでアプリケーションを起動し、
+- **ブラウザーによる End-to-End テスト** は、Web サーバーでアプリケーションを起動し、
   本物のブラウザーで操作します。JavaScript、Cookie、セッション、`SecurityComponent` の
   トークンも含めて確認できます。実行に時間がかかるため、主要な操作の流れに絞って使います。
   `tests/TestCase/EndToEnd/` に置き、`EndToEnd` テストスイートとして実行します。
@@ -252,9 +252,9 @@ CakePHP 用に PHPUnit を設定する `phpunit.xml.dist` があります。
          stderr="true"
          colors="true">
     <php>
-        <!-- End-to-End テストの設定 -->
-        <env name="E2E_SERVER_DATASOURCE" value="test"/>
-        <env name="E2E_SERVER_ENV_DEBUG" value="0"/>
+        <!-- End-to-End テストの設定 (pieceofcake2/panther) -->
+        <server name="PANTHER_APP_ENV" value="test"/>
+        <server name="PANTHER_ERROR_SCREENSHOT_DIR" value="./tmp/error-screenshots"/>
     </php>
     <listeners>
         <listener class="CakeFixtureInjector" file="./vendor/pieceofcake2/cakephp/src/Cake/TestSuite/Fixture/CakeFixtureInjector.php"/>
@@ -289,7 +289,7 @@ vendor/bin/phpunit --testsuite App,EndToEnd
 ```
 
 `defaultTestSuite` 属性を削除すると、`vendor/bin/phpunit` はすべてのスイートを実行します。
-Symfony のアプリケーションと同じ動作です。`<env>` は End-to-End テストの設定で、ほかのテストには
+Symfony のアプリケーションと同じ動作です。`PANTHER_*` は End-to-End テストの設定で、ほかのテストには
 影響しません。
 
 <a id="run-tests-from-command-line"></a>
