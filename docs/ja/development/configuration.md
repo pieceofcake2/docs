@@ -238,20 +238,22 @@ cp config/.env.example config/.env
 
 ### .env ファイルの書式
 
-`.env` ファイルには、1 行に 1 つずつ `NAME="value"` の形式で値を書きます。`#` で始まる行は
-コメントです。`export ` を前に付けることもできるので、シェルからも読み込めます。
+`.env` ファイルには、1 行に 1 つずつ `NAME="value"` の形式で値を書きます。Symfony や Laravel
+でも使われている一般的な dotenv の書式です。`#` で始まる行はコメントです。パーサーは前に付けた
+`export ` も受け付けますが、付ける必要はありません。
 
-```bash
+```dotenv
 # config/.env
-export DEBUG="2"
-export SECURITY_SALT="a-long-random-string"
-export DB_HOST="127.0.0.1"
+DEBUG="2"
+SECURITY_SALT="a-long-random-string"
+DB_HOST="127.0.0.1"
 ```
 
 値は必ずクォートしてください。josegonzalez/dotenv は、クォートしない値を真偽値、数値、`null`
 に変換します。`007` は `7` になり、暗号化シードのような長い数字の列はオーバーフローして別の数値に
-なります。クォートした値はそのまま使われます。ダブルクォートの中の `${NAME}` は、ファイル内で
-それより前に定義された変数の値に置き換えられます。
+なります。クォートしない値では、空白の後の `#` 以降がコメントになります。クォートした値はそのまま
+使われます。ダブルクォートの中の `${NAME}` は、ファイル内でそれより前に定義された変数の値に置き換え
+られます。
 
 <a id="adding-env-support-to-an-existing-application"></a>
 
@@ -323,13 +325,13 @@ unset($dotenvFile);
 
 たとえば、開発用の `config/.env` は次のようになります。
 
-```bash
+```dotenv
 # config/.env
-export DEBUG="2"
-export DB_HOST="127.0.0.1"
-export DB_USERNAME="my_app"
-export DB_PASSWORD="secret"
-export DB_DATABASE="my_app"
+DEBUG="2"
+DB_HOST="127.0.0.1"
+DB_USERNAME="my_app"
+DB_PASSWORD="secret"
+DB_DATABASE="my_app"
 ```
 
 ## クラスの読み込みと追加のクラスパス
