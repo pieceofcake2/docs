@@ -850,7 +850,7 @@ CakePHP 2 のための除外はすべて `CakePHP2` 規約にあるので、こ�
 自分のファイルについて除外を追加するときは、`<rule ref="CakePHP2"/>` の後にルールを書きます
 ([Adding Exceptions](https://pieceofcake2.github.io/phpcs-cakephp2/#adding-exceptions) (英語) を参照)。
 `phpcs.xml` が `<rule ref="CakePHP">` の後に除外を並べている場合は、
-[Migrating from a CakePHP-Based phpcs.xml](https://pieceofcake2.github.io/phpcs-cakephp2/#migrating-from-a-cakephp-based-phpcs-xml) (英語)
+[Migrating from a CakePHP-Based phpcs.xml](https://pieceofcake2.github.io/phpcs-cakephp2/#migrating-from-a-cakephp-based-phpcsxml) (英語)
 を参照してください。
 
 既存のアプリケーションにこの規約を導入するときは、まず `phpcbf` を一度実行し、
