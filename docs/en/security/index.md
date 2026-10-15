@@ -6,14 +6,14 @@ vulnerabilities that affect CakePHP 2.x. This section describes which versions
 receive security fixes, how to report a vulnerability, which vulnerabilities
 have been fixed, and how to run a CakePHP 2 application safely.
 
+- [Hardening Checklist](/security/hardening): settings to check before you
+  run an application in production.
 - [Reporting a Vulnerability](/security/reporting): how to report a
   security issue privately and what happens after you report it.
 - [Security Fixes](/security/fixes): the vulnerabilities fixed in the fork
   and what you need to do in your application.
 - [Upstream Advisories](/security/upstream-advisories): the status of the
   CakePHP advisories that concern CakePHP 2.x.
-- [Hardening Checklist](/security/hardening): settings to check before you
-  run an application in production.
 - [Output Escaping and HTML Sanitization](/security/escaping-and-sanitizing-html):
   how to output user data safely and accept HTML from users.
 

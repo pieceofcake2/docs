@@ -517,6 +517,10 @@
           "link": "/security/"
         },
         {
+          "text": "Hardening Checklist",
+          "link": "/security/hardening"
+        },
+        {
           "text": "Reporting a Vulnerability",
           "link": "/security/reporting"
         },
@@ -527,10 +531,6 @@
         {
           "text": "Upstream Advisories",
           "link": "/security/upstream-advisories"
-        },
-        {
-          "text": "Hardening Checklist",
-          "link": "/security/hardening"
         },
         {
           "text": "Output Escaping and HTML Sanitization",
