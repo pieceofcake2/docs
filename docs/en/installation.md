@@ -43,6 +43,9 @@ CakePHP also uses the following PHP extensions:
   the deprecated `strftime()` for date formatting and requires `intl`.
 - `openssl` is optional, but required for SSL/TLS connections and for AES
   encryption with [Security](core-utility-libraries/security).
+- `mcrypt` is optional and only needed for the legacy `Security::rijndael()`
+  and the `'rijndael'` cookie type. It is not bundled with PHP 7.2 and later;
+  see [Encryption on PHP 8](/security/fixes#encryption-on-php-8).
 
 ::: pieceofcake2
 PHP 8.0 or newer is required, and
@@ -242,7 +245,7 @@ server and the command line user. On a UNIX system, if your web server user is
 different from your command line user, you can run the following commands just
 once in your project to ensure that permissions will be setup properly:
 
-``` text
+```bash
 HTTPDUSER=`ps aux | grep -E '[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx' | grep -v root | head -1 | cut -d\  -f1`
 setfacl -R -m u:${HTTPDUSER}:rwx tmp logs
 setfacl -R -d -m u:${HTTPDUSER}:rwx tmp logs
@@ -281,7 +284,7 @@ are then reachable from the web, while your configuration, source code and
 Assuming you installed the application into `/var/www/my_app`, an Apache
 virtual host looks like this:
 
-``` text
+```text
 <VirtualHost *:80>
     ServerName www.example.com
     DocumentRoot /var/www/my_app/webroot
@@ -329,7 +332,7 @@ CakePHP 2, continue with the [Blog Tutorial](tutorials-and-examples/blog/blog).
 Not working? If you're getting timezone related errors from PHP uncomment one
 line in `config/core.php` and set your server's timezone:
 
-``` php
+```php
 /**
  * Uncomment this line and correct your server timezone to fix
  * any date & time related errors.

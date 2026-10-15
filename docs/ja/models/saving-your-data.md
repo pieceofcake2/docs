@@ -3,7 +3,7 @@
 CakePHP はモデルのデータを簡単に保存できます。保存するデータは、
 モデルの `save()` メソッドに、以下の形式の配列で渡されます。
 
-``` text
+```text
 
 [
     [ModelName] => 
@@ -22,7 +22,7 @@ CakePHP の `FormHelper` やモデルの find メソッドは
 データベースのテーブルにデータを保存するために CakePHP のモデルを使った
 簡単なサンプルを以下に示します。
 
-``` php
+```php
 public function edit($id)
 {
     // フォームからポストされたデータがあるかどうか
@@ -48,7 +48,7 @@ save が呼び出されると、最初に引数に渡されたデータは、Cak
 確認してみてください。 `Model::$validationErrors` を出力することで、
 現在どういう状況なのかデバッグできます。
 
-``` php
+```php
 if ($this->Recipe->save($this->request->data)) {
     // 保存に成功した時の処理
 }
@@ -62,7 +62,7 @@ debug($this->Recipe->validationErrors);
 `Model::set()` は、モデルに1つまたは複数のフィールドのデータをセットするのに使われます。
 これは、モデルの ActiveRecord 機能を使う時に便利です。
 
-``` php
+```php
 $this->Post->read(null, 1);
 $this->Post->set('title', 'New title for the article');
 $this->Post->save();
@@ -71,7 +71,7 @@ $this->Post->save();
 この例は、 ActiveRecord　で `set()` を使って単一のフィールドを更新して保存する方法です。
 複数のフィールドの値をセットするのにも `set()` が使えます。
 
-``` php
+```php
 $this->Post->read(null, 1);
 $this->Post->set([
     'title' => 'New title',
@@ -105,7 +105,7 @@ $this->Post->save();
 
 以下のような引数を受け取るsaveメソッドもあります。
 
-``` php
+```php
 save(array $data = null, array $params = [])
 ```
 
@@ -128,7 +128,7 @@ save(array $data = null, array $params = [])
 save が完了すると、モデルオブジェクトの `$id` に保存されたデータの ID がセットされます。
 このプロパティは、特に新しくオブジェクトを生成した時に使われます。
 
-``` php
+```php
 $this->Ingredient->save($newData);
 $newIngredientId = $this->Ingredient->id;
 ```
@@ -137,7 +137,7 @@ $newIngredientId = $this->Ingredient->id;
 `$Model->id` がセットされていれば、この ID をプライマリーキーにもつレコードが更新されます。
 それ以外は新しくレコードが作られます。
 
-``` php
+```php
 // Create: id がセットされていない
 $this->Recipe->create();
 $this->Recipe->save($this->request->data);
@@ -153,7 +153,7 @@ $this->Recipe->save($this->request->data);
 新しくデータを作るのではなく、データを更新したい場合は、
 data 配列にプライマリーキーのフィールドを渡してください。
 
-``` php
+```php
 $data = ['id' => 10, 'title' => 'My new title'];
 // id が 10 のレシピを更新
 $this->Recipe->save($data);
@@ -190,7 +190,7 @@ Model::\$data には空の配列がセットされます。
 たとえば、ブログ投稿のタイトルを更新する場合は、コントローラーからの
 `saveField` の呼び出しは以下のようになります。
 
-``` php
+```php
 $this->Post->saveField('title', 'A New Title for a New Day');
 ```
 
@@ -200,7 +200,7 @@ $this->Post->saveField('title', 'A New Title for a New Day');
 
 saveField メソッドは、別の構文を持っています:
 
-``` php
+```php
 saveField(string $fieldName, string $fieldValue, array $params = [])
 ```
 
@@ -222,7 +222,7 @@ saveField(string $fieldName, string $fieldValue, array $params = [])
 たとえば、1年以上前にメンバーになった baker を承認するには、
 以下のようにメソッドを呼び出します。
 
-``` php
+```php
 $thisYear = date('Y-m-d H:i:s', strtotime('-1 year'));
 
 $this->Baker->updateAll(
@@ -235,7 +235,7 @@ $this->Baker->updateAll(
 を使用して、自分でクォートしなければなりません。例えば、モデルのメソッドの中で
 `updateAll()` が呼び出された場合、以下のようにします。
 
-``` php
+```php
 $db = $this->getDataSource();
 $value = $db->value($value, 'string');
 $this->updateAll(
@@ -251,7 +251,7 @@ $this->updateAll(
 
 これは、特定の顧客に紐付くチケットを全て閉じる例です。
 
-``` php
+```php
 $this->Ticket->updateAll(
     ['Ticket.status' => "'closed'"],
     ['Ticket.customer_id' => 453],
@@ -281,7 +281,7 @@ $this->Ticket->updateAll(
 単一モデルで複数レコードを保存するためには、\$data 配列は以下のように
 数値をインデックスとしてもつ配列である必要があります。
 
-``` php
+```php
 $data = [
     ['title' => 'title 1'],
     ['title' => 'title 2'],
@@ -296,7 +296,7 @@ $data = [
 
 以下のような形式のデータでも受け取る事ができます。
 
-``` php
+```php
 $data = [
     ['Article' => ['title' => 'title 1']],
     ['Article' => ['title' => 'title 2']],
@@ -306,7 +306,7 @@ $data = [
 2.1 以降、 `$options['deep'] = true` と指定することで、アソシエーションデータも
 保存できます。 以下の例を見てください。
 
-``` php
+```php
 $data = [
     ['title' => 'title 1', 'Assoc' => ['field' => 'value']],
     ['title' => 'title 2'],
@@ -324,7 +324,7 @@ $Model->saveMany($data, ['deep' => true]);
 新しくレコードを作るのではなく、既存レコードの更新をしたい場合は、
 データ配列にプライマリーキーを追加してください。
 
-``` php
+```php
 $data = [
     [
         // これは新しくレコードを作ります
@@ -355,7 +355,7 @@ $data = [
 hasOne または belongsTo アソシエーションの関連レコードと一緒にレコードを保存する場合は、
 データ配列は以下のようになります。
 
-``` php
+```php
 $data = [
     'User' => ['username' => 'billy'],
     'Profile' => ['sex' => 'Male', 'occupation' => 'Programmer'],
@@ -365,7 +365,7 @@ $data = [
 hasMany アソシエーションの関連レコードを保存するには、
 以下のようなデータ配列を準備してください。
 
-``` php
+```php
 $data = [
     'Article' => ['title' => 'My first article'],
     'Comment' => [
@@ -379,7 +379,7 @@ $data = [
 2階層以上の hasMany アソシエーションの関連レコードを保存するには、
 以下のようなデータを準備してください。
 
-``` php
+```php
 $data = [
     'User' => ['email' => 'john-doe@cakephp.org'],
     'Cart' => [
@@ -410,7 +410,7 @@ $data = [
 hasMany アソシエーションの関連レコードを保存して、同時に Comment belongsTo User という
 アソシエーションのデータも保存するには、以下のようなデータ配列を準備します。
 
-``` php
+```php
 $data = [
     'Article' => ['title' => 'My first article'],
     'Comment' => [
@@ -425,7 +425,7 @@ $data = [
 
 そしてこのようにして保存してください。
 
-``` php
+```php
 $Article->saveAssociated($data, ['deep' => true]);
 ```
 
@@ -435,7 +435,7 @@ $Article->saveAssociated($data, ['deep' => true]);
 
 このようにして、複数モデルに対応する `fieldList` を渡すことができます。
 
-``` php
+```php
 $this->SomeModel->saveAll($data, [
     'fieldList' => [
         'SomeModel' => ['field_1'],
@@ -476,7 +476,7 @@ Post と Comment の両方のモデルを使うことになります。
 以下に示すサンプルは、ひとつのユーザーとひとつのプロフィールを生成するためのデータを
 FormHelper を使って POST したときの処理です。
 
-``` php
+```php
 public function add()
 {
     if (!empty($this->request->data)) {
@@ -520,7 +520,7 @@ POST された hidden フォームからの ID かもしれません
 まず、Company モデルと Account モデルのフォームを作ります。
 (ここでは Company hasMany Account の関係があるとします):
 
-``` php
+```php
 echo $this->Form->create('Company', ['action' => 'add']);
 echo $this->Form->input('Company.name', ['label' => 'Company name']);
 echo $this->Form->input('Company.description');
@@ -543,7 +543,7 @@ Company モデルがメインの場合、 `saveAssociated()` は、関連する�
 
 そして、CompaniesController に `add()` アクションを作ります。
 
-``` php
+```php
 public function add()
 {
     if (!empty($this->request->data)) {
@@ -566,7 +566,7 @@ public function add()
 記録するアプリケーションをサンプルとして書いてみたいと思います。
 以下のコードを見て下さい。
 
-``` php
+```php
 // src/Controller/CourseMembershipController.php
 class CourseMembershipsController extends AppController
 {
@@ -604,7 +604,7 @@ class CourseMembershipsController extends AppController
 
 このコードで、データをサブミットした時、以下のような配列が渡ってきます。
 
-``` text
+```text
 
 [
     [Student] => 
@@ -632,7 +632,7 @@ CourseMembership モデルに対して Student と Course を外部キーとし�
 CourseMembershipsController の index アクションが実行されると、そこの find('all') で
 以下のような構造のデータが取得できます。
 
-``` text
+```text
 
 [
     [0] => 
@@ -670,7 +670,7 @@ Student と Course をそれぞれ別々に作りたい場合もあるでしょ�
 登録するフォームがあれば、たとえば CourseMembership に対する
 フィールドを次のように作ります。
 
-``` php
+```php
 // templates/CourseMemberships/add.ctp
 
 <?php echo $this->Form->create('CourseMembership'); ?>
@@ -702,7 +702,7 @@ Student と Course をそれぞれ別々に作りたい場合もあるでしょ�
 
 POST されると以下のようなデータが渡ってきます。
 
-``` text
+```text
 
 [
     [Student] => 
@@ -736,7 +736,7 @@ hasOne, belongsTo, hasMany のアソシエーションがあるモデルの保�
 あとは勝手にアソシエーションモデルと繋げてくれます。
 Tag モデルの `save()` に対しては、以下のような形式のデータを渡します。
 
-``` text
+```text
 
 [
     [Recipe] => 
@@ -753,7 +753,7 @@ Tag モデルの `save()` に対しては、以下のような形式のデータ
 以下のような配列を使えば、 `saveAll()` で HABTM アソシエーションに対して
 複数のレコードを保存するのにも使えます。
 
-``` text
+```text
 
 [
     [0] => 
@@ -811,7 +811,7 @@ Tag を含むデータが生成されます。
 唯一の関連する HABTM モデルの id を設定する必要があることに注意してください。
 しかし、再びネストする必要があります。
 
-``` text
+```text
 
 [
     [0] => 
@@ -870,7 +870,7 @@ Tag を新しく作って、いくつかのレシピに関連付けるための
 このフォームを簡単に実装すると以下のようになります
 (`$recipe_id` は何かしらの値がセットされているものとします):
 
-``` php
+```php
 <?php echo $this->Form->create('Tag'); ?>
     <?php echo $this->Form->input(
         'Recipe.id',
@@ -886,7 +886,7 @@ Tag を新しく作って、いくつかのレシピに関連付けるための
 `save()` メソッドがコントローラーから呼ばれれば、自動的に
 HABTM データをデータベースに保存します。
 
-``` php
+```php
 public function add()
 {
     // アソシエーションデータを保存
@@ -904,7 +904,7 @@ public function add()
 モデルの名前のビュー変数に割り当てます。input の引数に変数の名前と同じ値を指定すれば
 `<select>` の中に自動的にデータを引っ張ってきてくれます。
 
-``` php
+```php
 // コントローラーのコード
 $this->set('tags', $this->Recipe->Tag->find('list'));
 
@@ -918,7 +918,7 @@ HABTM を使ったもうひとつのシナリオとしては、 複数選択で�
 フォームの作り方が少し違います。タグ名のフォームは `ModelName` (モデル名) を
 渡すことで生成されます。
 
-``` php
+```php
 // コントローラーのコード
 $this->set('tags', $this->Recipe->Tag->find('list'));
 
@@ -938,7 +938,7 @@ $this->Form->input('Tag');
 リレーションを追加することは、データ保存に課題を引き起こします。それらの課題を避ける鍵として
 `className` をモデル名として設定し、エイリアスを使用してください。
 
-``` php
+```php
 class Project extends AppModel
 {
     public $hasAndBelongsToMany = [
@@ -954,14 +954,14 @@ class Project extends AppModel
 フォーム要素を作成することとデータを保存することは、以前と同様に動作しますが、
 代わりにエイリアスを使用します。 これが:
 
-``` php
+```php
 $this->set('projects', $this->Project->find('list'));
 $this->Form->input('Project');
 ```
 
 こうなります:
 
-``` php
+```php
 $this->set('relatedProjects', $this->Project->find('list'));
 $this->Form->input('RelatedProject');
 ```
@@ -1032,7 +1032,7 @@ Model::save() を呼び出す前に、 `created` や `modified` のキーが \$t
 `unset($this->data['Model']['modified']` などとします。または、Model::save() を
 オーバーライドして、常に unset の動作をするようにも出来ます。
 
-``` php
+```php
 class AppModel extends Model
 {
     public function save($data = null, $validate = true, $fieldList = [])

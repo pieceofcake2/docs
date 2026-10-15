@@ -42,7 +42,7 @@ A CakePHP application has a `bin/cake` executable in its project root.
 The shells and tasks of your application live in `src/Console/Command/` and
 `src/Console/Command/Task/`:
 
-``` bash
+```bash
 $ cd /path/to/my_app
 $ bin/cake
 ```
@@ -96,7 +96,7 @@ paths allows you to see where the console will be making changes.
 To change the app folder you wish to work with, you can supply its
 path with the `-app` option:
 
-``` bash
+```bash
 $ vendor/bin/cake -app /path/to/my_app/src
 ```
 
@@ -113,7 +113,7 @@ root. If you would like to type `cake` instead, add the project's `bin`
 directory to your `PATH` while you work on the project, for example on
 \*nix systems (Linux, macOS):
 
-``` bash
+```bash
 export PATH="$PATH:/path/to/my_app/bin"
 ```
 
@@ -130,7 +130,7 @@ we'll create a simple Hello world shell. In your application's
 `src/Console/Command` directory create `HelloShell.php`. Put the following
 code inside it:
 
-``` php
+```php
 // src/Console/Command/HelloShell.php
 class HelloShell extends AppShell
 {
@@ -147,7 +147,9 @@ This method is called when a shell is called with no additional commands. We'll 
 some more commands in a bit, but for now let's just run our shell. From your project
 root directory, run:
 
-    bin/cake hello
+```bash
+bin/cake hello
+```
 
 You should see the following output:
 
@@ -166,7 +168,7 @@ by creating `src/Console/Command/AppShell.php`. If you don't have one, CakePHP w
 built-in one. Since our main method wasn't very interesting let's add another command
 that does something:
 
-``` php
+```php
 class HelloShell extends AppShell
 {
     public function main()
@@ -201,7 +203,7 @@ array of models you want to have access to in your shell. The defined models
 are loaded in as properties attached to your shell, just like a controller gets
 models attached to it:
 
-``` php
+```php
 class UserShell extends AppShell
 {
     public $uses = ['User'];
@@ -224,7 +226,7 @@ to compose functionality into re-usable classes that can be shared across many s
 Tasks allow you to extract commands into classes. For example the `bake` shell of the
 Bake plugin is made almost entirely of tasks. You define a shell's tasks by using the `$tasks` property:
 
-``` php
+```php
 class UserShell extends AppShell
 {
     public $tasks = ['Template'];
@@ -239,7 +241,7 @@ their classes. So if we were to create a new 'FileGenerator' task, you would cre
 Each task must at least implement an `execute()` method. The ShellDispatcher,
 will call this method when the task is invoked. A task class looks like:
 
-``` php
+```php
 class FileGeneratorTask extends Shell
 {
     public $uses = ['User'];
@@ -252,7 +254,7 @@ class FileGeneratorTask extends Shell
 A shell can also access its tasks as properties, which makes tasks great for
 making re-usable chunks of functionality similar to [Components](controllers/components):
 
-``` php
+```php
 // src/Console/Command/SeaShell.php
 class SeaShell extends AppShell
 {
@@ -266,7 +268,7 @@ class SeaShell extends AppShell
 
 You can also access tasks directly from the command line:
 
-``` bash
+```bash
 $ bin/cake sea sound
 ```
 
@@ -282,13 +284,13 @@ $ bin/cake sea sound
 You can load tasks on the fly using the Task collection object. You can load tasks that
 were not declared in \$tasks this way:
 
-``` php
+```php
 $FileGenerator = $this->Tasks->load('FileGenerator');
 ```
 
 Would load and return a FileGeneratorTask instance. You can load tasks from plugins using:
 
-``` php
+```php
 $ProgressBar = $this->Tasks->load('ProgressBar.ProgressBar');
 ```
 
@@ -302,7 +304,7 @@ There are still many cases where you will want to invoke one shell from another 
 `argv` for the sub shell. You can provide arguments and options either
 as var args or as a string:
 
-``` php
+```php
 // As a string
 $this->dispatchShell('schema create Blog --plugin Blog');
 
@@ -331,7 +333,7 @@ they are interested in by setting the correct flag when calling the shell.
 
 You can mark output as follows:
 
-``` php
+```php
 // would appear at all levels.
 $this->out('Quiet message', 1, Shell::QUIET);
 
@@ -363,7 +365,7 @@ are several built-in styles, and you can create more. The built-in ones are
 You can create additional styles using `$this->stdout->styles()`. To declare a
 new output style you could do:
 
-``` php
+```php
 $this->stdout->styles('flashy', ['text' => 'magenta', 'blink' => true]);
 ```
 
@@ -397,7 +399,7 @@ so you don't have to redeclare styles for both stdout and stderr objects.
 Although colouring is pretty awesome, there may be times when you want to turn it off,
 or force it on:
 
-``` php
+```php
 $this->stdout->outputAs(ConsoleOutput::RAW);
 ```
 
@@ -436,7 +438,7 @@ have different option parsers for subcommands and tasks.
 The ConsoleOptionParser implements a fluent interface and includes
 methods for easily setting multiple options/arguments at once.
 
-``` php
+```php
 public function getOptionParser()
 {
     $parser = parent::getOptionParser();
@@ -450,7 +452,7 @@ public function getOptionParser()
 All of the methods that configure an option parser can be chained,
 allowing you to define an entire option parser in one series of method calls:
 
-``` php
+```php
 public function getOptionParser()
 {
     $parser = parent::getOptionParser();
@@ -486,7 +488,7 @@ displays above the argument and option information. By passing in
 either an array or a string, you can set the value of the description.
 Calling with no arguments will return the current value:
 
-``` php
+```php
 // Set multiple lines at once
 $parser->description(['line one', 'line two']);
 
@@ -501,7 +503,7 @@ is displayed after the argument and option information. By passing in
 either an array or a string, you can set the value of the epilog.
 Calling with no arguments will return the current value:
 
-``` php
+```php
 // Set multiple lines at once
 $parser->epilog(['line one', 'line two']);
 
@@ -519,7 +521,7 @@ arguments as well as make them required. You can add arguments
 one at a time with `$parser->addArgument();` or multiple at once
 with `$parser->addArguments();`:
 
-``` php
+```php
 $parser->addArgument('model', ['help' => 'The model to bake']);
 ```
 
@@ -546,7 +548,7 @@ handle that in your shell.
 If you have an array with multiple arguments you can use `$parser->addArguments()`
 to add multiple arguments at once.
 
-``` php
+```php
 $parser->addArguments([
     'node' => ['help' => 'The node to create', 'required' => true],
     'parent' => ['help' => 'The parent node', 'required' => true],
@@ -563,7 +565,7 @@ indicate that an argument must be present when a shell is called.
 Additionally you can use `choices` to force an argument to
 be from a list of valid choices:
 
-``` php
+```php
 $parser->addArgument('type', [
     'help' => 'The type of node to interact with.',
     'required' => true,
@@ -585,7 +587,7 @@ with both verbose and short aliases, supplying defaults
 and creating boolean switches. Options are created with either
 `$parser->addOption()` or `$parser->addOptions()`.
 
-``` php
+```php
 $parser->addOption('connection', [
     'short' => 'c',
     'help' => 'connection',
@@ -599,7 +601,7 @@ when invoking the shell. You can also create boolean switches, these switches do
 consume values, and their presence just enables them in the
 parsed parameters.
 
-``` php
+```php
 $parser->addOption('no-commit', ['boolean' => true]);
 ```
 
@@ -625,7 +627,7 @@ define the behavior of the option:
 If you have an array with multiple options you can use `$parser->addOptions()`
 to add multiple options at once.
 
-``` php
+```php
 $parser->addOptions([
     'node' => ['short' => 'n', 'help' => 'The node to create'],
     'parent' => ['short' => 'p', 'help' => 'The parent node'],
@@ -641,7 +643,7 @@ Options can be provided with a set of choices much like positional arguments
 can be. When an option has defined choices, those are the only valid choices
 for an option. All other values will raise an `InvalidArgumentException`:
 
-``` php
+```php
 $parser->addOption('accept', [
     'help' => 'What version to accept.',
     'choices' => ['working', 'theirs', 'mine'],
@@ -655,7 +657,7 @@ some flag options. Like options with defaults, boolean options always include
 themselves into the parsed parameters. When the flags are present they are set
 to true, when they are absent false:
 
-``` php
+```php
 $parser->addOption('verbose', [
     'help' => 'Enable verbose output.',
     'boolean' => true,
@@ -666,7 +668,7 @@ The following option would result in `$this->params['verbose']` always
 being available. This lets you omit `empty()` or `isset()`
 checks for boolean flags:
 
-``` php
+```php
 if ($this->params['verbose']) {
     // do something
 }
@@ -691,7 +693,7 @@ have their own help and options. `ConsoleOptionParser` allows you to
 define subcommands and provide command specific option parsers so the
 shell knows how to parse commands for its tasks:
 
-``` php
+```php
 $parser->addSubcommand('model', [
     'help' => 'Bake a model',
     'parser' => $this->Model->getOptionParser(),
@@ -728,7 +730,7 @@ As previously mentioned, when creating subcommand option parsers,
 you can define the parser spec as an array for that method. This can help
 make building subcommand parsers easier, as everything is an array:
 
-``` php
+```php
 $parser->addSubcommand('check', [
     'help' => __('Check the permissions between an ACO and ARO.'),
     'parser' => [
@@ -753,7 +755,7 @@ format that `ConsoleOptionParser::addArguments()` and
 `ConsoleOptionParser::addOptions()` use. You can also use
 buildFromArray on its own, to build an option parser:
 
-``` php
+```php
 public function getOptionParser()
 {
     return ConsoleOptionParser::buildFromArray([
@@ -777,15 +779,19 @@ With the addition of ConsoleOptionParser getting help from shells is done
 in a consistent and uniform way. By using the `--help` or -`h` option you
 can view the help for any core shell, and any shell that implements a ConsoleOptionParser:
 
-    bin/cake bake --help
-    bin/cake bake -h
+```bash
+bin/cake bake --help
+bin/cake bake -h
+```
 
 Would both generate the help for the `bake` shell of the
 [Bake plugin](console-and-shells/code-generation-with-bake). If the shell supports subcommands
 you can get help for those in a similar fashion:
 
-    bin/cake bake model --help
-    bin/cake bake model -h
+```bash
+bin/cake bake model --help
+bin/cake bake model -h
+```
 
 This would get you the help specific to bake's model task.
 
@@ -796,14 +802,16 @@ with CakePHP shells, it's nice to have help available in a machine parse-able
 format. The ConsoleOptionParser can provide help in xml by setting an
 additional argument:
 
-    bin/cake bake --help xml
-    bin/cake bake -h xml
+```bash
+bin/cake bake --help xml
+bin/cake bake -h xml
+```
 
 The above would return an XML document with the generated help, options,
 arguments and subcommands for the selected shell. A sample XML document
 would look like:
 
-``` xml
+```xml
 <?xml version="1.0"?>
 <shell>
     <command>bake fixture</command>
@@ -865,7 +873,7 @@ You can do that using the Configure value `App.fullBaseUrl` from your bootstrap 
 
 For sending emails, you should provide CakeEmail class with the host you want to send the email with:
 
-``` php
+```php
 $Email = new CakeEmail();
 $Email->domain('www.example.org');
 ```

@@ -26,7 +26,7 @@ CakePHP の開発者は以下のコーディング規約を使います。これ
 CodeSniffer を開発用の依存パッケージとしてインストールします。
 既存のアプリケーションに追加するには次のコマンドを実行します。
 
-``` bash
+```bash
 composer require --dev cakephp/cakephp-codesniffer:^5.0
 ```
 
@@ -34,7 +34,7 @@ Composer は `dealerdirect/phpcodesniffer-composer-installer` プラグインを
 確認してきます。このプラグインが CakePHP ルールセットを PHP_CodeSniffer に登録するので、
 許可してください。`composer.json` に直接書いてもかまいません。
 
-``` json
+```json
 {
     "config": {
         "allow-plugins": {
@@ -48,7 +48,7 @@ Composer は `dealerdirect/phpcodesniffer-composer-installer` プラグインを
 ([アプリケーション用の phpcs.xml](#a-phpcs-xml-for-your-application) を参照)。
 PHP_CodeSniffer はこのファイルを自動的に読み込むので、引数なしでチェックを実行できます。
 
-``` bash
+```bash
 # 違反を表示する
 vendor/bin/phpcs
 
@@ -80,7 +80,7 @@ vendor/bin/phpcs src/Controller
 
 インデントには 4 つのスペースを使います。タブは使えません。
 
-``` php
+```php
 $booleanVariable = true;
 $stringVariable = '大鹿';
 if ($booleanVariable) {
@@ -113,7 +113,7 @@ if ($booleanVariable) {
 配列は短縮構文で書きます。複数行の配列は 1 行に 1 要素とし、最後の要素の後にもカンマを付けます。
 1 行の配列では末尾のカンマは付けません。
 
-``` php
+```php
 $users = ['John', 'Hans', 'Arne'];
 
 $options = [
@@ -130,14 +130,14 @@ $options = [
 関数を呼び出す際、関数名と開き括弧の間に空白を入れてはいけません。
 カンマの後には空白を 1 つ入れ、代入の等号 (=) の両側にも空白を 1 つずつ入れます。
 
-``` php
+```php
 $var = foo($bar, $bar2, $bar3);
 ```
 
 呼び出しが 1 行に収まらない場合は、引数を 1 行に 1 つずつ書きます。
 開き括弧を最初の行の最後に置き、閉じ括弧は単独の行に置き、最後の引数の後にもカンマを付けます。
 
-``` php
+```php
 $matches = array_intersect_key(
     $this->_listeners,
     array_flip(
@@ -148,7 +148,7 @@ $matches = array_intersect_key(
 
 次のようには書きません。
 
-``` php
+```php
 $matches = array_intersect_key($this->_listeners,
                 array_flip(preg_grep($matchPattern,
                     array_keys($this->_listeners), 0)));
@@ -156,7 +156,7 @@ $matches = array_intersect_key($this->_listeners,
 
 オブジェクトを生成するときは、引数がなくても必ず括弧を付けます。
 
-``` php
+```php
 $dispatcher = new Dispatcher();
 ```
 
@@ -165,7 +165,7 @@ $dispatcher = new Dispatcher();
 制御構造は例えば `if`、`for`、`foreach`、`while`、`switch` などです。
 下記に、`if` の例を示します。
 
-``` php
+```php
 if ($expr1 || $expr2) {
     // 処理 1
 } elseif (!$expr3 && $expr4) {
@@ -186,7 +186,7 @@ if ($expr1 || $expr2) {
 - `for` ループの条件式の中で `count()` などの関数を呼び出さないでください。
   結果をあらかじめ変数に代入しておきます。
 
-``` php
+```php
 // 間違い＝中括弧が無い、ステートメントの場所が悪い
 if ($expr) statement();
 
@@ -211,7 +211,7 @@ for ($i = 0; $i < $count; $i++) {
 
 条件式の中での代入は認められており、CakePHP 2 のコードでもよく使われています。
 
-``` php
+```php
 while ($row = $result->fetch()) {
     // ...
 }
@@ -229,7 +229,7 @@ while ($row = $result->fetch()) {
 値がセットされているかを確認するときは null 合体演算子を、別の値で代替するときは
 短縮形の三項演算子を使います。長い形は CodeSniffer がエラーとして報告します。
 
-``` php
+```php
 // よろしい
 $variable = $options['variable'] ?? true;
 $title = $title ?: 'Untitled';
@@ -244,11 +244,11 @@ $variable = isset($options['variable']) ? isset($options['othervar']) ? true : f
 
 ### テンプレートファイル
 
-テンプレートファイル (`templates/` 内の拡張子が .ctp のファイル) では、
+テンプレートファイル (`templates/` 内の拡張子が `.ctp` のファイル) では、
 制御構造に代替構文を使ってください。PHP と HTML が混在するテンプレートが読みやすくなります。
 制御構造は、大きい PHP ブロック内、または別々の PHP タグに含めることができます。
 
-``` php
+```php
 <?php
 if ($isAdmin):
     echo '<p>You are the admin user.</p>';
@@ -260,7 +260,7 @@ endif;
 <?php endif; ?>
 ```
 
-.ctp ファイルの最後に PHP の閉じタグ (`?>`) を置くことは認められています。
+`.ctp` ファイルの最後に PHP の閉じタグ (`?>`) を置くことは認められています。
 アプリケーションスケルトンの `phpcs.xml` は `templates/` をチェックしないので、
 テンプレートではこれらのルールは強制されません。
 
@@ -271,7 +271,7 @@ endif;
 
 変数が null かどうかを調べるには、厳密な比較を使います。
 
-``` php
+```php
 if ($value === null) {
     // ...
 }
@@ -279,7 +279,7 @@ if ($value === null) {
 
 比較の対象となる値は右側に置きます。いわゆる「ヨーダ記法」の比較は CodeSniffer が報告します。
 
-``` php
+```php
 // 認められない
 if (null === $this->foo()) {
     // ...
@@ -296,7 +296,7 @@ if ($this->foo() === null) {
 クラスとメソッドの開き中括弧は次の行に置きます。すべてのプロパティ、メソッド、
 クラス定数でアクセス権を宣言し、`var` キーワードは使いません。
 
-``` php
+```php
 class Article extends AppModel
 {
     /**
@@ -343,7 +343,7 @@ class Article extends AppModel
 
 クロージャーとアロー関数も同じルールに従います。アロー関数は `fn` の後に空白を入れずに書きます。
 
-``` php
+```php
 $callback = function ($item) use ($prefix) {
     return $prefix . $item;
 };
@@ -364,7 +364,7 @@ CakePHP 2 の API は引数、プロパティ、戻り値のネイティブな�
 
 オブジェクトや配列を受け取る引数には、これまでどおりタイプヒントを付けられます。
 
-``` php
+```php
 /**
  * Some method description.
  *
@@ -383,7 +383,7 @@ public function foo(Model $Model, array $array, $boolean)
 `$array` に `ArrayObject` のインスタンスも受け付けるようにしたい場合は、
 `array` は配列型しか受け付けないので、タイプヒントを付けないでください。
 
-``` php
+```php
 /**
  * Some method description.
  *
@@ -403,7 +403,7 @@ public function foo($array)
 
 メソッドチェーンは複数の行にまたがるように書き、4 スペースでインデントします。
 
-``` php
+```php
 $email->from('foo@example.com')
     ->to('bar@example.com')
     ->subject('A great message')
@@ -423,7 +423,7 @@ $email->from('foo@example.com')
 
 フレームワークのファイルは、次のようなファイルヘッダーのドキュメントブロックで始まります。
 
-``` php
+```php
 <?php
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
@@ -451,7 +451,7 @@ $email->from('foo@example.com')
 
 クラスのドキュメントブロックは次のようになります。
 
-``` php
+```php
 /**
  * Short description of the class.
  *
@@ -487,7 +487,7 @@ CakePHP 2 では、実行時にクラスに読み込まれるモデル、コン�
 
 プロパティのドキュメントブロックは次のようになります。
 
-``` php
+```php
 /**
  * Description of property.
  *
@@ -513,7 +513,7 @@ protected $_bar = null;
 
 メソッドや関数のドキュメントブロックは次のようになります。
 
-``` php
+```php
 /**
  * Short description of the method.
  *
@@ -579,7 +579,7 @@ public function bar($param1, $param2 = null)
 
 メソッドチェーンなどのためにオブジェクト自身を返す場合は、`$this` を使います。
 
-``` php
+```php
 /**
  * Foo function.
  *
@@ -596,7 +596,7 @@ public function foo()
 変数やエスケープシーケンスを含まない文字列にはシングルクォートを使います。
 ダブルクォートは、変数の展開やエスケープシーケンスが必要な場合にだけ使います。
 
-``` php
+```php
 $name = 'Article';
 $message = "Saved {$count} articles\n";
 ```
@@ -605,7 +605,7 @@ $message = "Saved {$count} articles\n";
 
 `include`、`require`、`include_once`、`require_once` には丸括弧を付けません。
 
-``` php
+```php
 // 間違い＝丸括弧あり
 require_once('ClassFileName.php');
 require_once ($class);
@@ -636,7 +636,7 @@ require_once $class;
 
 すべての関数はキャメルバックで書きます。
 
-``` php
+```php
 function longFunctionName()
 {
 }
@@ -646,7 +646,7 @@ function longFunctionName()
 
 クラス名はキャメルケースで書きます。例:
 
-``` php
+```php
 class ExampleClass
 {
 }
@@ -660,7 +660,7 @@ class ExampleClass
 CakePHP 2 では、モデルのインスタンスを `$Model` とするように、クラス名と同じ名前の変数も使います。
 CodeSniffer はこのような変数名を認めています。
 
-``` php
+```php
 $user = 'John';
 $users = ['John', 'Hans', 'Arne'];
 
@@ -674,7 +674,7 @@ $Model = ClassRegistry::init('Article');
 加えて、protected なメソッドまたは変数の名前は単一のアンダースコア (`_`) から始まります。
 public なメソッドの名前をアンダースコアで始めてはいけません。例:
 
-``` php
+```php
 class A
 {
     protected $_iAmAProtectedVariable;
@@ -688,7 +688,7 @@ class A
 
 private なメソッドまたは変数の名前は二つのアンダースコア (`__`) から始まります。例:
 
-``` php
+```php
 class A
 {
     private $__iAmAPrivateVariable;
@@ -748,20 +748,20 @@ private は、テストもずっと難しくします。
 
 定数は大文字で定義する必要があります。
 
-``` php
+```php
 define('CONSTANT', 1);
 ```
 
 もし定数の名前が複数の単語でできている場合は、アンダースコア文字によって分割する必要があります。
 例:
 
-``` php
+```php
 define('LONG_NAMED_CONSTANT', 2);
 ```
 
 クラス定数にはアクセス権を宣言する必要があります。
 
-``` php
+```php
 class Article extends AppModel
 {
     public const STATUS_PUBLISHED = 1;
@@ -817,7 +817,7 @@ CakePHP 5 の規約は、名前空間とネイティブの型宣言を使うコ�
 フレームワークと同じ除外ルールを使いますが、型宣言については引数とプロパティのルールだけを除外し、
 `tests/TestCase/` ではネイティブの戻り値の型を必須にしています。
 
-``` xml
+```xml
 <?xml version="1.0"?>
 <ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">

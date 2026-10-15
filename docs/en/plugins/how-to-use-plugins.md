@@ -12,7 +12,7 @@ certain plugins.
 
 No problem. In `config/bootstrap.php`:
 
-``` php
+```php
 CakePlugin::loadAll([
     'Blog' => ['routes' => true],
     'ContactManager' => ['bootstrap' => true],
@@ -33,7 +33,7 @@ every plugin that doesn't have a more specific configuration.
 
 Load the bootstrap file from all plugins, and additionally the routes from the Blog plugin:
 
-``` php
+```php
 CakePlugin::loadAll([
     ['bootstrap' => true],
     'Blog' => ['routes' => true],
@@ -48,7 +48,7 @@ CakePHP 2.3.0 added an `ignoreMissing` option, that allows you to ignore any
 missing routes and bootstrap files when loading plugins. You can shorten the
 code needed to load all plugins using this:
 
-``` php
+```php
 // Loads all plugins including any possible routes and bootstrap files
 CakePlugin::loadAll([
     ['routes' => true, 'bootstrap' => true, 'ignoreMissing' => true],
@@ -59,7 +59,7 @@ Some plugins additionally need to create one or more tables in your database. In
 those cases, they will often include a schema file which you can
 call from the cake shell like this:
 
-``` bash
+```bash
 bin/cake schema create --plugin ContactManager
 ```
 
@@ -72,7 +72,7 @@ plugins will require more setup than others.
 If you like to load more than one bootstrap file for a plugin. You can specify
 an array of files for the bootstrap configuration key:
 
-``` php
+```php
 CakePlugin::loadAll([
     'Blog' => [
         'bootstrap' => [
@@ -86,7 +86,7 @@ CakePlugin::loadAll([
 You can also specify a callable function that needs to be called when the plugin
 has been loaded:
 
-``` php
+```php
 function aCallableFunction($pluginName, $config)
 {
 }
@@ -109,13 +109,13 @@ ContactInfoHelper to output some pretty contact information in
 one of your views. In your controller, your \$helpers array
 could look like this:
 
-``` php
+```php
 public $helpers = ['ContactManager.ContactInfo'];
 ```
 
 You would then be able to access the ContactInfoHelper just like
 any other helper in your view, such as:
 
-``` php
+```php
 echo $this->ContactInfo->address($contact);
 ```

@@ -8,33 +8,33 @@
 作成したスキーマファイルを使うと、データベースに依存することなく簡単に別の環境へ移植できます。
 また、既存のデータベースを使用してスキーマファイルを生成することもできます。
 
-``` bash
+```bash
 $ bin/cake schema generate
 ```
 
-上のコマンドで schema.php ファイルが `config/Schema` ディレクトリ (レガシーレイアウトでは `app/Config/Schema`) に生成されるはずです。
+上のコマンドで `schema.php` ファイルが `config/Schema` ディレクトリ (レガシーレイアウトでは `app/Config/Schema`) に生成されるはずです。
 
 > [!NOTE]
 > スキーマシェルはモデルが定義されたテーブルのみを対象として処理します。
 > 強制的に全てのテーブルを対象にするためには、 `-f` オプションを加える必要があります。
 
-前もって作成した schema.php からデータベースを再構築するためには、次のコマンドを実行してください。
+前もって作成した `schema.php` からデータベースを再構築するためには、次のコマンドを実行してください。
 
-``` bash
+```bash
 $ bin/cake schema create
 ```
 
-schema.php の中身に沿ってテーブルが再構成されるはずです。
+`schema.php` の中身に沿ってテーブルが再構成されるはずです。
 
 スキーマファイルは SQL ダンプファイルの作成に使用することもできます。
 `CREATE TABLE` 文を含む SQL ファイルを生成するには次のコマンドを実行してください。
 
-``` bash
+```bash
 $ bin/cake schema dump --write filename.sql
 ```
 
-ここで filename.sql には SQL ファイルとして出力したいファイル名を指定します。
-filename.sql を省略すると、SQL のダンプはコンソールへ出力されますが、
+ここで `filename.sql` には SQL ファイルとして出力したいファイル名を指定します。
+`filename.sql` を省略すると、SQL のダンプはコンソールへ出力されますが、
 ファイルへ出力されることはありません。
 
 ## CakeSchema のコールバック
@@ -47,14 +47,14 @@ filename.sql を省略すると、SQL のダンプはコンソールへ出力さ
 `$event` パラメータは2つのキーを持つ配列です。１つはテーブルを削除するのか
 作成するのかを示すパラメータで、もう１つはエラーに関するパラメータです。例を示します。
 
-``` text
+```text
 ['drop' => 'posts', 'errors' => null]
 ['create' => 'posts', 'errors' => null]
 ```
 
 データを posts テーブルへ加える例は以下のようになります。
 
-``` php
+```php
 App::uses('Post', 'Model');
 public function after($event = [])
 {
@@ -81,7 +81,7 @@ public function after($event = [])
 before アクション内で `$db->cacheSources = false` を設定することにより、
 キャッシュを無効にできます。
 
-``` php
+```php
 public $connection = 'default';
 
 public function before($event = [])
@@ -96,7 +96,7 @@ public function before($event = [])
 コールバック中に正しいデータソースで初期化したモデルを使用したい場合、
 デフォルトのデータソースを使わないようにします。
 
-``` php
+```php
 public function before($event = [])
 {
     $articles = ClassRegistry::init('Articles', [
@@ -125,7 +125,7 @@ CakeSchema はまた、 `tableParameters` をサポートします。
 
 以下は acl クラスの例全部です。
 
-``` php
+```php
 /**
  * ACO - Access Control Object - Something that is wanted
  */
@@ -174,7 +174,7 @@ public $acos = [
 
 カラムの例:
 
-``` text
+```text
 'id' => [
     'type' => 'integer',
     'null' => false,
@@ -229,7 +229,7 @@ column
 
 単一の場合:
 
-``` text
+```text
 'indexes' => [
     'PRIMARY' => [
         'column' => 'id',
@@ -240,7 +240,7 @@ column
 
 複数の場合:
 
-``` text
+```text
 'indexes' => [
     'AB_KEY' => [
         'column' => [
@@ -279,7 +279,7 @@ MySQL の dbo は、 tableParameters に加えて `fieldParameters` を実装し
 スキーマファイル中の他のキーと同じように `tableParameters` が使えます。
 例えば `indexes` のように:
 
-``` php
+```php
 public $comments = [
     'id' => [
         'type' => 'integer',
@@ -314,13 +314,13 @@ public $comments = [
 スキーマシェルを使ったスキーマファイルのバージョン管理はとても簡単です。
 もし既に作成済みのスキーマファイルがあるのであれば、次のコマンドを実行してください。
 
-``` bash
+```bash
 $ bin/cake schema generate
 ```
 
 実行すると、次の選択肢が表示されるはずです。
 
-``` text
+```text
 Generating Schema...
 Schema file exists.
  [O]verwrite
@@ -329,11 +329,11 @@ Schema file exists.
 Would you like to do? (o/s/q)
 ```
 
-\[s\] (snapshot) を選択すると、変更分を反映した schema.php が生成されるでしょう。
-もし schema.php があれば、schema_2.php あるいは同様のファイルが生成されるはずです。
+\[s\] (snapshot) を選択すると、変更分を反映した `schema.php` が生成されるでしょう。
+もし `schema.php` があれば、`schema_2.php` あるいは同様のファイルが生成されるはずです。
 いつでも以下のコマンドでスキーマファイルへの保存ができます。
 
-``` bash
+```bash
 $ bin/cake schema update -s 2
 ```
 
@@ -351,15 +351,15 @@ $ bin/cake schema update -s 2
 
 ### スキーマの生成とコミット
 
-バージョン管理を適用しているプロジェクトでは、cake schema を以下のように使うことになるでしょう。
+バージョン管理を適用しているプロジェクトでは、`cake schema` を以下のように使うことになるでしょう。
 
 1.  データベース内のテーブルを生成あるいは変更
 
-2.  cake schema を実行し、データベースの内容を全てエクスポート
+2.  `cake schema` を実行し、データベースの内容を全てエクスポート
 
-3.  生成または更新された schema.php のコミット:
+3.  生成または更新された `schema.php` のコミット:
 
-    ``` bash
+    ```bash
     $ # 一度データベースを更新した後で
     $ bin/cake schema generate
     $ git commit -a
@@ -376,9 +376,9 @@ $ bin/cake schema update -s 2
 リポジトリの最新の変更を取り入れ、データベース構造の変更点を見つけるには
 以下のようにします。
 
-1.  cake schema を実行し、データベースを更新してください:
+1.  `cake schema` を実行し、データベースを更新してください:
 
-    ``` bash
+    ```bash
     $ git pull
     $ bin/cake schema create
     $ bin/cake schema update
@@ -388,20 +388,20 @@ $ bin/cake schema update -s 2
 
 ### ロールバック
 
-現在のところ、cake schema はデータベースの更新の取り消しや復元が必要な操作をサポートしていません。
+現在のところ、`cake schema` はデータベースの更新の取り消しや復元が必要な操作をサポートしていません。
 
 より具体的には、一度生成したテーブルを自動的に削除することができないようになっています。
 
 対照的に `update` を使用した場合は、スキーマファイルとの差分からフィールドが削除されます。
 
-``` bash
+```bash
 $ git revert HEAD
 $ bin/cake schema update
 ```
 
 上のコマンドを実行すると、以下の選択肢が表示されるはずです。
 
-``` text
+```text
 The following statements will run.
 ALTER TABLE `roles`
 DROP `position`;

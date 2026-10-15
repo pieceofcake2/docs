@@ -21,7 +21,7 @@ parsed into an array which is assigned to `$this->request->data`,
 and can then be saved as model data. In order to make use of
 RequestHandler it must be included in your \$components array:
 
-``` php
+```php
 class WidgetController extends AppController
 {
     public $components = ['RequestHandler'];
@@ -56,7 +56,7 @@ want to disable browser caching, and change the debug level.
 However, you want to allow caching for non-AJAX requests. The
 following would accomplish that:
 
-``` php
+```php
 if ($this->request->is('ajax')) {
     $this->disableCache();
 }
@@ -110,7 +110,7 @@ the client. The response status code is then set to `304 Not Modified`.
 You can opt-out this automatic checking by setting the `checkHttpCache`
 setting to false:
 
-``` php
+```php
 public $components = [
     'RequestHandler' => [
         'checkHttpCache' => false,
@@ -132,7 +132,7 @@ You can map existing and new types to your custom classes.
 
 You can also set this automatically by using the `viewClassMap` setting:
 
-``` php
+```php
 public $components = [
     'RequestHandler' => [
         'viewClassMap' => [

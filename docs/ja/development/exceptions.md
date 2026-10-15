@@ -12,7 +12,7 @@ CakePHP はまた、HTTP エラーで使うことのできる数多くの例外�
 
 例外の設定として使えるキーがいくつかあります:
 
-``` php
+```php
 // config/core.php
 Configure::write('Exception', [
     'handler' => 'ErrorHandler::handleException',
@@ -76,7 +76,7 @@ HTTP 方式の例外がいくつか存在します。これらはフレームワ
 あなたのコントローラが失敗のステータスや HTTP エラーを示すために、これらの例外を投げることができます。
 下記は、見つからなかったものがある場合の、 404 ページをレンダリングする HTTP 例外の使用例です:
 
-``` php
+```php
 public function view($id)
 {
     $post = $this->Post->findById($id);
@@ -112,7 +112,7 @@ HTTP 例外と CakePHP 例外はすべて、CakeBaseException クラスを継承
 「レスポンスは、要求されたリソースへの正しいメソッドのリストを含む Allow ヘッダーを含有していなければ【なりません】。」
 設定したヘッダーは、`ExceptionRenderer` によってエラーレスポンスに追加されます。
 
-``` php
+```php
 $exception = new MethodNotAllowedException();
 $exception->responseHeader('Allow', 'GET, POST');
 throw $exception;
@@ -141,7 +141,7 @@ throw $exception;
 
 コントローラのアクションから失敗を示すために、 HTTP 関連のどの例外でも投げることができます。例:
 
-``` php
+```php
 public function view($id)
 {
     $post = $this->Post->findById($id);
@@ -194,7 +194,7 @@ application exceptions
 `CakeException` のオブジェクトは単純にクラス名と一致する新しいテンプレートを必要とし、
 これにて有益な情報を提供します。独自のアプリケーション次の例外が含まれていたなら:
 
-``` php
+```php
 class MissingWidgetException extends CakeException
 {
 }
@@ -208,7 +208,7 @@ view の中にも、付け加えられます。これにより、あなたのエ
 提供することで、豊富なデータを持つ例外を作ることができるのです。また、ネイティブな `__toString()`
 メソッドで通常で使われることになるメッセージテンプレートを提供することができます:
 
-``` php
+```php
 class MissingWidgetException extends CakeException
 {
     protected $_messageTemplate = '%s が見つかりません。';
@@ -227,7 +227,7 @@ throw new MissingWidgetException(['widget' => 'Pointy']);
 
 例外を生成する際にコードを変えることで、独自の HTTP ステータスコードを作成することができます:
 
-``` php
+```php
 throw new MissingWidgetHelperException('それはここではありません', 501);
 ```
 
@@ -257,7 +257,7 @@ throw new MissingWidgetHelperException('それはここではありません', 5
 `Exception.handler` をセットすることにより、CakePHP は他のすべての例外設定を無視します。
 独自の例外ハンドリングをセットアップする場合は次のようになります:
 
-``` php
+```php
 // config/core.php
 Configure::write('Exception.handler', 'AppExceptionHandler::handle');
 
@@ -283,7 +283,7 @@ class AppExceptionHandler
 引数の型は `Exception` ではなく `Throwable` にする（または型を指定しない）ようにしてください。
 例外ハンドラはどのようなコールバックタイプでも、無名関数でも定義することができます:
 
-``` php
+```php
 Configure::write('Exception.handler', function (Throwable $error) {
     echo 'Ruh roh ' . $error->getMessage();
 });
@@ -292,7 +292,7 @@ Configure::write('Exception.handler', function (Throwable $error) {
 独自の例外ハンドラを作成することで、アプリケーション例外についての独自のエラーハンドリングを
 提供することができます。例外ハンドラとして提供されるメソッド内で、下記のようにすることができます:
 
-``` php
+```php
 // src/Lib/AppErrorHandler.php
 class AppErrorHandler
 {
@@ -320,7 +320,7 @@ appError
 唯一の引数には投げられた例外が渡されます。
 このメソッドの中で独自のエラーハンドリングを実装します:
 
-``` php
+```php
 // src/Controller/AppController.php
 class AppController extends Controller
 {
@@ -344,7 +344,7 @@ bootstrap にて指定された Lib のパスの中にある、 `Error` ディ�
 独自の例外レンダリングクラスの中であなたはアプリケーション固有のエラーに特化したハンドリングを
 提供することができます:
 
-``` php
+```php
 // src/Lib/Error/AppExceptionRenderer.php
 class AppExceptionRenderer extends ExceptionRenderer
 {
@@ -377,7 +377,7 @@ class AppExceptionRenderer extends ExceptionRenderer
 あなたの `AppExceptionRenderer` クラス内で `_getController` を実装することにより、
 好きなコントローラを使うことができます:
 
-``` php
+```php
 // src/Lib/Error/AppExceptionRenderer.php
 class AppExceptionRenderer extends ExceptionRenderer
 {

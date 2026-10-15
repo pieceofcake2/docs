@@ -35,7 +35,7 @@ controller method has been prefixed with an underscore, the method
 will not be accessible directly from the web but is available for
 internal use. For example:
 
-``` php
+```php
 class NewsController extends AppController
 {
     public function latest()
@@ -88,22 +88,22 @@ directed to the file/directory and, not to your controller.
 
 In general, filenames match the class names, which are
 CamelCased. So if you have a class **MyNiftyClass**, then in CakePHP,
-the file should be named **MyNiftyClass.php**. Below are
+the file should be named `MyNiftyClass.php`. Below are
 examples of how to name the file for each of the different types of
 classes you would typically use in a CakePHP application:
 
 - The Controller class **KissesAndHugsController** would be found
-  in a file named **KissesAndHugsController.php**
+  in a file named `KissesAndHugsController.php`
 - The Component class **MyHandyComponent** would be found in a
-  file named **MyHandyComponent.php**
+  file named `MyHandyComponent.php`
 - The Model class **OptionValue** would be found in a file named
-  **OptionValue.php**
+  `OptionValue.php`
 - The Behavior class **EspeciallyFunkableBehavior** would be found
-  in a file named **EspeciallyFunkableBehavior.php**
+  in a file named `EspeciallyFunkableBehavior.php`
 - The View class **SuperSimpleView** would be found in a file
-  named **SuperSimpleView.php**
+  named `SuperSimpleView.php`
 - The Helper class **BestEverHelper** would be found in a file
-  named **BestEverHelper.php**
+  named `BestEverHelper.php`
 
 Each file would be located in the appropriate folder in your `src/` folder, for
 example `src/Controller/`, `src/Controller/Component/`, `src/Model/`,
@@ -157,7 +157,7 @@ directly manipulate your join table data, use direct
 [query](../models/retrieving-your-data#model-query) calls or add a primary key to act on it
 as a normal model. For example:
 
-``` sql
+```sql
 CREATE TABLE posts_tags (
     id INT(10) NOT NULL AUTO_INCREMENT,
     post_id INT(10) NOT NULL,

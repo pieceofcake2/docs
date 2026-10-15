@@ -42,7 +42,7 @@ CakePHP では、データベースの詳細設定は `config/database.php`
 `config/database.php.default` ファイルにデータベースの設定例が
 記載されています。設定後の内容は、たとえば以下のようになります。
 
-``` php
+```php
 // config/database.php
 class DATABASE_CONFIG
 {
@@ -238,20 +238,22 @@ cp config/.env.example config/.env
 
 ### .env ファイルの書式
 
-`.env` ファイルには、1 行に 1 つずつ `NAME="value"` の形式で値を書きます。`#` で始まる行は
-コメントです。`export ` を前に付けることもできるので、シェルからも読み込めます。
+`.env` ファイルには、1 行に 1 つずつ `NAME="value"` の形式で値を書きます。Symfony や Laravel
+でも使われている一般的な dotenv の書式です。`#` で始まる行はコメントです。パーサーは前に付けた
+`export ` も受け付けますが、付ける必要はありません。
 
-```bash
+```dotenv
 # config/.env
-export DEBUG="2"
-export SECURITY_SALT="a-long-random-string"
-export DB_HOST="127.0.0.1"
+DEBUG="2"
+SECURITY_SALT="a-long-random-string"
+DB_HOST="127.0.0.1"
 ```
 
 値は必ずクォートしてください。josegonzalez/dotenv は、クォートしない値を真偽値、数値、`null`
 に変換します。`007` は `7` になり、暗号化シードのような長い数字の列はオーバーフローして別の数値に
-なります。クォートした値はそのまま使われます。ダブルクォートの中の `${NAME}` は、ファイル内で
-それより前に定義された変数の値に置き換えられます。
+なります。クォートしない値では、空白の後の `#` 以降がコメントになります。クォートした値はそのまま
+使われます。ダブルクォートの中の `${NAME}` は、ファイル内でそれより前に定義された変数の値に置き換え
+られます。
 
 <a id="adding-env-support-to-an-existing-application"></a>
 
@@ -323,13 +325,13 @@ unset($dotenvFile);
 
 たとえば、開発用の `config/.env` は次のようになります。
 
-```bash
+```dotenv
 # config/.env
-export DEBUG="2"
-export DB_HOST="127.0.0.1"
-export DB_USERNAME="my_app"
-export DB_PASSWORD="secret"
-export DB_DATABASE="my_app"
+DEBUG="2"
+DB_HOST="127.0.0.1"
+DB_USERNAME="my_app"
+DB_PASSWORD="secret"
+DB_DATABASE="my_app"
 ```
 
 ## クラスの読み込みと追加のクラスパス
@@ -339,7 +341,7 @@ CakePHP フレームワークのクラスは Composer のオートローダー�
 [pieceofcake2/app](https://pieceofcake2.github.io/app/) スケルトンのように
 `composer.json` に classmap を追加すれば同じようにオートロードできます。
 
-``` json
+```json
 "autoload": {
     "classmap": ["src/"]
 }
@@ -369,7 +371,7 @@ CakePHP はアプリケーションディレクトリ (`src/`、レガシー構�
 `config/bootstrap.php` の中で `App::build()` を使うと、CakePHP
 がクラスを検索する際の追加パスを定義できます。
 
-``` php
+```php
 App::build([
     'Model' => [
         '/path/to/models',
@@ -447,7 +449,7 @@ App::build([
 ```
 
 > [!NOTE]
-> 追加パスの設定は、すべて bootstrap.php の先頭で行ってください。
+> 追加パスの設定は、すべて `bootstrap.php` の先頭で行ってください。
 > こうすることで、アプリケーションのそれ以降の処理でこれらのパスが
 > 有効になります。
 
@@ -514,12 +516,12 @@ App.baseUrl
 URL のしくみを使うことになります。 `config/core.php`
 で以下のような行のコメントを外して有効にしてください。
 
-``` php
+```php
 Configure::write('App.baseUrl', env('SCRIPT_NAME'));
 ```
 
 さらに、`webroot/.htaccess` ファイルを削除します。レガシー構成の場合は、
-以下の .htaccess ファイルを削除します。
+以下の `.htaccess` ファイルを削除します。
 
     /.htaccess
     /app/.htaccess
@@ -611,7 +613,7 @@ Session
 
 ビルトインのデフォルトは以下の通りです。
 
-- 'php' - あなたの php.ini で定義されている設定を使う
+- 'php' - あなたの `php.ini` で定義されている設定を使う
 - 'cake' - セッションファイルを CakePHP の `tmp/sessions` ディレクトリに保存する
 - 'database' - CakePHP のデータベースセッションを使う
 - 'cache' - セッションの保存に Cache クラスを使う
@@ -653,7 +655,7 @@ true にすると、`Security::encrypt()` と `Security::decrypt()` (つまり C
 `'aes'`) が mcrypt ではなく OpenSSL を使います。mcrypt 拡張は PHP 7.2 以降同梱されていないので、
 `config/core.php` で有効にしてください。
 
-``` php
+```php
 Configure::write('Security.useOpenSsl', true);
 ```
 
@@ -676,7 +678,7 @@ CakePHP のアクセス制御リスト(ACL)機能で使われる定数。
 </div>
 
 > [!NOTE]
-> キャッシュの設定も core.php にあります。これについては後述します。
+> キャッシュの設定も `core.php` にあります。これについては後述します。
 
 `Configure` クラスは、コアの設定をその場で読み書き
 するのに使われます。これは、たとえばあなたのアプリケーションの
@@ -739,7 +741,7 @@ CakePHP の Configure クラスは、アプリケーションや実行時固有�
 このクラスは、あなたのアプリケーション中の静的なコンテキストにおいて、
 いかなるところからでも呼び出せるようになっています。
 
-``` php
+```php
 Configure::read('debug');
 ```
 
@@ -750,7 +752,7 @@ Configure::read('debug');
 
 アプリケーションの設定の中で `write()` を使ってデータを格納します。
 
-``` php
+```php
 Configure::write('Company.name', 'Pizza, Inc.');
 Configure::write('Company.slogan', 'Pizza for your body and soul');
 ```
@@ -761,7 +763,7 @@ Configure::write('Company.slogan', 'Pizza for your body and soul');
 
 直前の例は、以下のような単一の呼び出しとしても書けます。
 
-``` php
+```php
 Configure::write(
     'Company',
     [
@@ -785,7 +787,7 @@ CakePHP で重要な debug 値です。何らかのキーが指定されたら�
 データを返します。前述の write() の例を元に、そのデータを呼び出して
 みましょう。
 
-``` php
+```php
 Configure::read('Company.name'); // 'Pizza, Inc.' が返されます
 Configure::read('Company.slogan'); // 'Pizza for your body and soul' が返されます
 
@@ -821,7 +823,7 @@ key/path が存在し、かつ null でない値を持つかどうかをチェ�
 
 アプリケーションの設定から情報を削除します。
 
-``` php
+```php
 Configure::delete('Company.name');
 ```
 
@@ -861,7 +863,7 @@ Configure も歴史的にこれと同じフォーマットのファイルを読�
 コアの設定ファイルリーダーを使うには、そのリーダーを
 `Configure::config()` で Configure に接続してください。
 
-``` php
+```php
 // CONFIG (config/) から設定ファイルを読み込む
 Configure::config('default', new PhpReader());
 
@@ -880,7 +882,7 @@ Configure に複数のリーダーを接続することができます。それ�
 `Configure::configured()` を使って接続されている
 リーダーの別名を取得できます。
 
-``` php
+```php
 // 接続されたリーダーの別名の配列を取得する
 Configure::configured();
 
@@ -906,7 +908,7 @@ Configure::configured('default');
 
 Configure に設定リーダーを接続して、設定ファイルを読み込みます。
 
-``` php
+```php
 // リーダーオブジェクト 'default' を使って config/my_file.php をロードする
 Configure::load('my_file', 'default');
 ```
@@ -935,13 +937,13 @@ Configure にある全部または一部のデータをダンプして、ファ�
 'default' リーダーが PhpReader のインスタンスだとして、Configure
 にあるすべてのデータを `my_config.php` というファイルに保存します。
 
-``` php
+```php
 Configure::dump('my_config.php', 'default');
 ```
 
 エラーハンドラー設定だけを保存します。
 
-``` php
+```php
 Configure::dump('error.php', 'default', ['Error', 'Exception']);
 ```
 
@@ -966,7 +968,7 @@ configure は現在のリクエストの値しか記憶しないので、何ら�
 値を後続するリクエストでも使いたい場合は、それらを保存しておく
 必要があります。
 
-``` php
+```php
 // 'default' キャッシュにある 'user_1234' キーの中の現在の設定を保存する
 Configure::store('user_1234', 'default');
 ```
@@ -985,7 +987,7 @@ Configure::store('user_1234', 'default');
 実行時設定を保存した後は、おそらくそこに再度アクセスして値を取り出す
 ことになります。これは `Configure::restore()` により行います。
 
-``` php
+```php
 // キャッシュから実行時設定を取り出す
 Configure::restore('user_1234', 'default');
 ```
@@ -1004,7 +1006,7 @@ Configure::restore('user_1234', 'default');
 たとえば、あなたが本当に XML ファイルが好きなら、あなたのアプリケーションのために
 シンプルな XML 設定リーダーを作ることもできます。
 
-``` php
+```php
 // src/Lib/Configure/MyXmlReader.php
 class MyXmlReader implements ConfigReaderInterface
 {
@@ -1037,7 +1039,7 @@ class MyXmlReader implements ConfigReaderInterface
 
 `config/bootstrap.php` でこのリーダーを接続して利用できます。
 
-``` php
+```php
 Configure::config('xml', new MyXmlReader());
 // ...
 
@@ -1103,7 +1105,7 @@ CakePHP はそれぞれの部品を関連付けるにあたり、それぞれの
 カスタム inflection をロードするには `config/bootstrap.php`
 ファイルの中に `Inflector::rules()` を書きます。
 
-``` php
+```php
 Inflector::rules('singular', [
     'rules' => [
         '/^(bil)er$/i' => '\1',
@@ -1116,7 +1118,7 @@ Inflector::rules('singular', [
 
 または
 
-``` php
+```php
 Inflector::rules('plural', ['irregular' => ['phylum' => 'phyla']]);
 ```
 

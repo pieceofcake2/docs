@@ -70,7 +70,7 @@ Cookie コンポーネントがどのように動くかは、コントローラ�
 というパス以下で、1時間だけ有効な 'baker_id' という名前の HTTP のみで有効な
 Cookie を AES で暗号化して発行するための初期設定の例です。
 
-``` php
+```php
 // src/Controller/BakersController.php
 public $components = [
     'Cookie' => ['type' => 'aes'],
@@ -102,7 +102,7 @@ PECL から入れる必要があるため、`config/core.php` で OpenSSL によ
 `pieceofcake2/app` のスケルトン (v2.3.1 以降) から作成したアプリケーションにはこの行が含まれています。
 既存のアプリケーションでは追加してください。
 
-``` php
+```php
 Configure::write('Security.useOpenSsl', true);
 ```
 

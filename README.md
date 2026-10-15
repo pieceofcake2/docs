@@ -4,16 +4,44 @@ Documentation for [pieceofcake2/cakephp](https://github.com/pieceofcake2/cakephp
 a community-maintained fork of CakePHP 2.x for PHP 8, maintained by the
 [Piece of Cake 2](https://github.com/pieceofcake2) project.
 
-Published at https://pieceofcake2.github.io/docs/
-
 This repository is a fork of the `2.x` branch of
 [cakephp/docs](https://github.com/cakephp/docs/tree/2.x) (the CakePHP Cookbook).
 The book describes CakePHP 2 as it works on the fork today (Composer, PHP 8,
 the modern directory layout). Differences from the original book are listed on
-[Changes from the Original Book](https://pieceofcake2.github.io/docs/appendices/changes-from-the-original-book).
+[Changes from the Original Book](https://pieceofcake2.github.io/docs/appendices/changes-from-the-original-book.html).
 
 The theme lives in [pieceofcake2/docs-skeleton](https://github.com/pieceofcake2/docs-skeleton)
 (a fork of cakephp/docs-skeleton) and is cloned at build time.
+
+## Documentation
+
+- Website: https://pieceofcake2.github.io/docs/ (Japanese: https://pieceofcake2.github.io/docs/ja/)
+- Markdown: [docs/en/index.md](docs/en/index.md) (Japanese: [docs/ja/index.md](docs/ja/index.md)) (for AI tools and offline reading)
+
+For AI coding tools, install the Markdown docs of the CakePHP 2 book as a dev dependency: `composer require --dev pieceofcake2/docs` (files in `vendor/pieceofcake2/docs/docs/en/`).
+
+## Using the Docs with AI Tools
+
+The Markdown pages can be installed with Composer, so that AI coding tools and
+agents can read them locally. Install them as a development dependency:
+
+```bash
+composer require --dev pieceofcake2/docs
+```
+
+The pages are then in `vendor/pieceofcake2/docs/`:
+
+- `docs/en/`: the English pages, for example
+  `vendor/pieceofcake2/docs/docs/en/getting-started.md`
+- `docs/ja/`: the Japanese pages, with the same structure
+- `toc_en.json` and `toc_ja.json`: the table of contents of each language
+
+Point your AI tool to that directory, for example with a line in your agent
+instructions (`CLAUDE.md`, `AGENTS.md` or `.cursorrules`):
+
+```md
+The CakePHP 2 documentation is in vendor/pieceofcake2/docs/docs/en/.
+```
 
 ## Contributing
 
@@ -49,8 +77,8 @@ Pushes to the `2.x` branch are deployed to GitHub Pages by
 - `config.js` contains the site configuration, such as the navigation bar and
   the version banner.
 
-English pages are served from the root of the site (`/installation`), and
-Japanese pages from `/ja/` (`/ja/installation`).
+English pages are served from the root of the site (`/docs/installation.html`),
+and Japanese pages from `/ja/` (`/docs/ja/installation.html`).
 
 ## Editing Guidelines
 
@@ -58,7 +86,7 @@ Japanese pages from `/ja/` (`/ja/installation`).
   "fork-specific" pages or disclaimers; edit the original page instead.
 - Use the modern directory layout (`src/`, `templates/`, `config/`, `bin/cake`)
   in text and examples. Mention the legacy `app/` layout only where it helps.
-- PHP code samples follow the [coding standard](https://pieceofcake2.github.io/docs/contributing/cakephp-coding-conventions)
+- PHP code samples follow the [coding standard](https://pieceofcake2.github.io/docs/contributing/cakephp-coding-conventions.html)
   (CakePHP 5 codesniffer). Samples that deliberately show legacy code, such as
   the "before" side of a migration guide, are the exception.
 - When the fork behaves differently from the original CakePHP 2.10.24 in a way
@@ -222,6 +250,15 @@ examples. A line range in braces after the file name, such as `{28,97}`,
 includes only those lines. If you edit a file that is included elsewhere,
 search the repository for `@include` and check that the line ranges in the
 including files still select the same section.
+
+## Origin
+
+This package is a maintained fork of [cakephp/docs](https://github.com/cakephp/docs) (not published
+on Packagist, last upstream commit [`6b9d755`](https://github.com/cakephp/docs/commit/6b9d755) on
+`2.x`), originally by the CakePHP community (Cake Software Foundation, Inc.). It is maintained for
+CakePHP 2 on modern PHP by [pieceofcake2](https://github.com/pieceofcake2). Changes from the
+original are listed in the
+[commit history since the fork](https://github.com/pieceofcake2/docs/compare/6b9d755...2.x).
 
 ## License
 

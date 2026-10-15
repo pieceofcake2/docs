@@ -9,20 +9,20 @@ related tasks.
 The `Folder` and `File` classes are autoloaded, so you can create instances
 directly. To set up a new folder instance:
 
-``` php
+```php
 $dir = new Folder('/path/to/folder');
 ```
 
-and search for all *.ctp* files within that folder using regex:
+and search for all `*.ctp` files within that folder using regex:
 
-``` php
+```php
 $files = $dir->find('.*\.ctp');
 ```
 
 Now we can loop through the files and read from or write/append to the contents or
 simply delete the file:
 
-``` php
+```php
 foreach ($files as $file) {
     $file = new File($dir->pwd() . DS . $file);
     $contents = $file->read();
@@ -37,7 +37,7 @@ foreach ($files as $file) {
 
 `class` **Folder**(string $path = false, boolean $create = false, string|boolean $mode = false)
 
-``` php
+```php
 // Create a new folder with 0755 permissions
 $dir = new Folder('/path/to/folder', true, 0755);
 ```
@@ -62,14 +62,14 @@ Return type: `string`
 
 Returns \$path with \$element added, with correct slash in-between:
 
-``` php
+```php
 $path = Folder::addPathElement('/a/path/for', 'testing');
 // $path equals /a/path/for/testing
 ```
 
 \$element can also be an array:
 
-``` php
+```php
 $path = Folder::addPathElement('/a/path/for', ['testing', 'another']);
 // $path equals /a/path/for/testing/another
 ```
@@ -124,7 +124,7 @@ Return type: `boolean`
 
 Returns true if given \$path ends in a slash (i.e. is slash-terminated):
 
-``` php
+```php
 $result = Folder::isSlashTerm('/my/test/path');
 // $result = false
 $result = Folder::isSlashTerm('/my/test/path/');
@@ -167,7 +167,7 @@ Windows or other OS).
 
 `class` **File**(string $path, boolean $create = false, integer $mode = 755)
 
-``` php
+```php
 // Create a new file with 0644 permissions
 $file = new File('/path/to/file.php', true, 0644);
 ```

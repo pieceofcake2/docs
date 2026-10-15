@@ -31,7 +31,7 @@ CakePHP のスキャフォールディングはとても素晴らしいです。
 
 スキャフォールディングを追加するために、コントローラの中で、 `$scaffold` 変数を追加して下さい。
 
-``` php
+```php
 class CategoriesController extends AppController
 {
     public $scaffold;
@@ -57,7 +57,7 @@ Category 一覧に関連している User の ID が表示されているでし�
 手動で追加しなければなりません。このコードを追加する前だと、
 User 追加フォームに Group のための select ボックスが空のまま表示されます。
 
-``` php
+```php
 // In Group.php
 public $hasMany = 'User';
 // In User.php
@@ -68,7 +68,7 @@ public $belongsTo = 'Group';
 モデルで設定して下さい。それでは、スキャフォールディングの中で ID ではなく名前によってカテゴリに
 関連したユーザが示されるように User クラスに `$displayField` を設定してみましょう。
 
-``` php
+```php
 class User extends AppModel
 {
     public $displayField = 'first_name';
@@ -83,7 +83,7 @@ class User extends AppModel
 
 一旦管理ルーティングを有効にしたら、スキャフォールディング変数に admin プレフィクスを設定して下さい。
 
-``` php
+```php
 public $scaffold = 'admin';
 ```
 
@@ -99,7 +99,7 @@ public $scaffold = 'admin';
 管理用と非管理用の足場のメソッドを同時に使うことはできないことを覚えておいて下さい。
 普通のスキャフォールディングでは個別のメソッドを上書きしたり、独自実装に置き換えることができます。
 
-``` php
+```php
 public function admin_view($id = null)
 {
     // custom code here

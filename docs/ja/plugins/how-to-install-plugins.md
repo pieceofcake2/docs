@@ -19,13 +19,13 @@ CakePHP は `plugins/` と、アプリケーションの `Plugin/` ディレク�
 PHP 8 対応のフォークがあるかどうかを確認してください。たとえば DebugKit プラグインを
 インストールするには、次のコマンドを実行します。
 
-``` bash
+```bash
 composer require --dev pieceofcake2/debug_kit
 ```
 
 または、プロジェクトの `composer.json` に依存関係を追加して `composer update` を実行します。
 
-``` json
+```json
 {
     "require-dev": {
         "pieceofcake2/debug_kit": "^2.2"
@@ -43,7 +43,7 @@ CakePHP 2 のプラグインはタイプが `cakephp-plugin` のパッケージ�
 インストールするには、 `composer.json` に次の設定が必要です。
 [pieceofcake2/app](https://pieceofcake2.github.io/app/) スケルトンには最初から含まれています。
 
-``` json
+```json
 {
     "config": {
         "allow-plugins": {
@@ -66,7 +66,7 @@ Composer 2.2 以降では、 `config.allow-plugins` に記載した Composer プ
 
 従来の `app/` の構成のアプリケーションでは、インストール先を `app/Plugin/` にします。
 
-``` json
+```json
 "extra": {
     "installer-paths": {
         "app/Plugin/{$name}/": ["type:cakephp-plugin"]
@@ -89,7 +89,7 @@ webroot やその他のディレクトリを設置します。
 GitHub 上で管理されていると仮定しましょう。 `plugins/` フォルダ内で
 以下のコマンドを実行してクローンすることができます。
 
-``` bash
+```bash
 git clone https://github.com/example/contact-manager.git ContactManager
 ```
 
@@ -99,7 +99,7 @@ git clone https://github.com/example/contact-manager.git ContactManager
 クローンせず、Git サブモジュールとして統合することもできます。
 プロジェクトのルートフォルダで以下のコマンドを実行してください。
 
-``` bash
+```bash
 git submodule add https://github.com/example/contact-manager.git plugins/ContactManager
 git submodule update --init
 ```
@@ -113,7 +113,7 @@ git submodule update --init
 
 一つずつロードするか、もしくは一度に全てをロードすることができます。
 
-``` php
+```php
 CakePlugin::loadAll(); // すべてのプラグインを一度にロードする
 CakePlugin::load('ContactManager'); // 一つのプラグインをロードする
 ```

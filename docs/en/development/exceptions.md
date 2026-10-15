@@ -12,7 +12,7 @@ errors. See the section on [Built In Exceptions](#built-in-exceptions) for more 
 
 There are a few keys available for configuring exceptions:
 
-``` php
+```php
 // config/core.php
 Configure::write('Exception', [
     'handler' => 'ErrorHandler::handleException',
@@ -83,7 +83,7 @@ You can throw these exceptions from your controllers to indicate failure states,
 or HTTP errors. An example use of the HTTP exceptions could be rendering 404
 pages for items that have not been found:
 
-``` php
+```php
 public function view($id)
 {
     $post = $this->Post->findById($id);
@@ -119,7 +119,7 @@ the rfc2616 says:
 "The response MUST include an Allow header containing a list of valid methods for the requested resource."
 The headers you set are added to the error response by `ExceptionRenderer`:
 
-``` php
+```php
 $exception = new MethodNotAllowedException();
 $exception->responseHeader('Allow', 'GET, POST');
 throw $exception;
@@ -149,7 +149,7 @@ The framework layer exceptions include:
 You can throw any of the HTTP related exceptions from your controller actions
 to indicate failure states. For example:
 
-``` php
+```php
 public function view($id)
 {
     $post = $this->Post->findById($id);
@@ -206,7 +206,7 @@ When in development mode `CakeException` objects simply need a new template
 that matches the class name in order to provide useful information. If your
 application contained the following exception:
 
-``` php
+```php
 class MissingWidgetException extends CakeException
 {
 }
@@ -221,7 +221,7 @@ to represent the error in development mode. This allows you to create data rich
 exceptions, by providing more context for your errors. You can also provide a message
 template which allows the native `__toString()` methods to work as normal:
 
-``` php
+```php
 class MissingWidgetException extends CakeException
 {
     protected $_messageTemplate = 'Seems that %s is missing.';
@@ -241,7 +241,7 @@ your own rich development errors, just like CakePHP uses internally.
 You can create custom HTTP status codes by changing the code used when
 creating an exception:
 
-``` php
+```php
 throw new MissingWidgetHelperException('Its not here', 501);
 ```
 
@@ -275,7 +275,7 @@ define the handler as any callback type. By settings `Exception.handler` CakePHP
 will ignore all other Exception settings. A sample custom exception handling setup
 could look like:
 
-``` php
+```php
 // config/core.php
 Configure::write('Exception.handler', 'AppExceptionHandler::handle');
 
@@ -301,7 +301,7 @@ uncaught `Throwable`, including PHP `Error` objects, so type the parameter as
 `Throwable` (or leave it untyped) rather than `Exception`. You can define exception
 handlers as any type of callback, even an anonymous function:
 
-``` php
+```php
 Configure::write('Exception.handler', function (Throwable $error) {
     echo 'Ruh roh ' . $error->getMessage();
 });
@@ -311,7 +311,7 @@ By creating a custom exception handler you can provide custom error handling for
 application exceptions. In the method provided as the exception handler you
 could do the following:
 
-``` php
+```php
 // src/Lib/AppErrorHandler.php
 class AppErrorHandler
 {
@@ -339,7 +339,7 @@ recommended for new applications. This controller method is called instead of
 the default exception rendering. It receives the thrown exception as its only
 argument. You should implement your error handling in that method:
 
-``` php
+```php
 // src/Controller/AppController.php
 class AppController extends Controller
 {
@@ -362,7 +362,7 @@ don't need to load it yourself. Use the `Plugin.ClassName` syntax to use a
 renderer from a plugin. In a custom exception rendering class
 you can provide specialized handling for application specific errors:
 
-``` php
+```php
 // src/Lib/Error/AppExceptionRenderer.php
 class AppExceptionRenderer extends ExceptionRenderer
 {
@@ -396,7 +396,7 @@ custom error handling controller in your application. By implementing
 `_getController` in your `AppExceptionRenderer` class, you can use any
 controller you want:
 
-``` php
+```php
 // src/Lib/Error/AppExceptionRenderer.php
 class AppExceptionRenderer extends ExceptionRenderer
 {

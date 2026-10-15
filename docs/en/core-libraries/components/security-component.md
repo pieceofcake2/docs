@@ -122,7 +122,7 @@ Using the security component is generally done in the controllers
 `beforeFilter()`. You would specify the security restrictions you
 want and the Security Component will enforce them on its startup:
 
-``` php
+```php
 class WidgetController extends AppController
 {
     public $components = ['Security'];
@@ -137,7 +137,7 @@ class WidgetController extends AppController
 In this example the delete action can only be successfully
 triggered if it receives a POST request:
 
-``` php
+```php
 class WidgetController extends AppController
 {
     public $components = ['Security'];
@@ -154,7 +154,7 @@ class WidgetController extends AppController
 This example would force all actions that had admin routing to
 require secure SSL requests:
 
-``` php
+```php
 class WidgetController extends AppController
 {
     public $components = ['Security'];
@@ -208,7 +208,7 @@ you can benefit from the CSRF protection it provides. By default CSRF tokens are
 valid for 30 minutes and expire on use. You can control how long tokens last by setting
 csrfExpires on the component.
 
-``` php
+```php
 public $components = [
     'Security' => [
         'csrfExpires' => '+1 hour',
@@ -218,7 +218,7 @@ public $components = [
 
 You can also set this property in your controller's `beforeFilter`:
 
-``` php
+```php
 public function beforeFilter()
 {
     $this->Security->csrfExpires = '+1 hour';
@@ -246,7 +246,7 @@ applications. You can toggle on longer, multi-use tokens by setting
 `csrfUseOnce` to `false`. This can be done in the components array, or in
 the `beforeFilter` of your controller:
 
-``` php
+```php
 public $components = [
     'Security' => [
         'csrfUseOnce' => false,

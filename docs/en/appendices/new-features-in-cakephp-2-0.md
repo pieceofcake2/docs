@@ -38,7 +38,7 @@ this property will change the content that comes out of the view rendering.
 
 Example of how to set configuration file on controller:
 
-``` php
+```php
 public $helpers = [
     'Html' => [
         // Option one: an array with filename and reader name
@@ -89,7 +89,7 @@ modify them beyond adding the query string and fragment elements. For example
 this could be used to create routes to handle subdomains, or enabling https/http
 flags. An example of a route class that supports subdomains would be:
 
-``` php
+```php
 class SubdomainRoute extends CakeRoute
 {
 
@@ -109,7 +109,7 @@ class SubdomainRoute extends CakeRoute
 When creating links you could do the following to make links pointing at other
 subdomains.
 
-``` php
+```php
 echo $this->Html->link(
     'Other domain',
      ['subdomain' => 'test', 'controller' => 'posts', 'action' => 'add']
@@ -149,7 +149,7 @@ text easier. It's used in Shells whenever you use `Shell::wrapText()`.
 `debug()` no longer outputs HTML in the console. Instead it makes
 output like the following:
 
-``` text
+```text
 ########## DEBUG ##########
 
 [
@@ -179,7 +179,7 @@ enabled in `Router`, `RequestHandler` will treat it the
 same an extension. This expands CakePHP's support for REST style endpoints. To
 use this feature start off by enabling extensions in `app/Config/routes.php`:
 
-``` php
+```php
 Router::parseExtensions('json', 'xml');
 ```
 
@@ -221,7 +221,7 @@ Pagination now provides a default maxLimit for pagination at 100.
 
 This limit can be overridden with the paginate variable on Controller:
 
-``` php
+```php
 $this->paginate = ['maxLimit' => 1000];
 ```
 
@@ -237,7 +237,7 @@ and not need to replace every instance of `$this->Html` in your views. To do
 this, pass the 'className' key along with your class, like you would with
 models:
 
-``` php
+```php
 public $helpers = [
     'Html' => [
         'className' => 'MyHtml'
@@ -247,7 +247,7 @@ public $helpers = [
 
 Similarly, you can alias components for use in your controllers:
 
-``` php
+```php
 public $components = [
     'Email' => [
         'className' => 'QueueEmailer'
@@ -258,7 +258,7 @@ public $components = [
 Calls to the Email component would call the QueueEmailer component instead.
 Finally, you can alias behaviors as well:
 
-``` php
+```php
 public $actsAs = [
     'Containable' => [
         'className' => 'SuperContainable'

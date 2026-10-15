@@ -26,7 +26,7 @@ CakePHP にはデフォルトで２つのフィルタークラスが備わって
 リクエストですでに有効になっています。ここでは、それらがどのように追加
 されているのかを見てみましょう。:
 
-``` php
+```php
 // config/bootstrap.php
 Configure::write('Dispatcher.filters', [
     'AssetDispatcher',
@@ -54,7 +54,7 @@ Configure::write('Dispatcher.filters', [
 順番に実行されます。さらに、特殊な `DispatcherFilter` クラスとは関係ない
 フィルターを接続するための別の方法もあります。:
 
-``` php
+```php
 Configure::write('Dispatcher.filters', [
     'my-filter' => [
         'callable' => [$classInstance, 'methodName'],
@@ -70,7 +70,7 @@ Configure::write('Dispatcher.filters', [
 見てもらえず、クラス名として扱われます。無名関数もフィルターとして
 指定できます。:
 
-``` php
+```php
 Configure::write('Dispatcher.filters', [
     'my-filter' => [
         'callable' => function ($event) {
@@ -92,7 +92,7 @@ Configure::write('Dispatcher.filters', [
 すべてのフィルータの実行より前に実行させたければ、必要に応じてより小さな
 数値を指定してください。:
 
-``` php
+```php
 Configure::write('Dispatcher.filters', [
     'my-filter' => [
         'callable' => function ($event) {
@@ -117,7 +117,7 @@ Configure::write('Dispatcher.filters', [
 できます。フィルタークラスはプラグインの `Routing/Filter` ディレクトリ、
 たとえば `plugins/MyPlugin/Routing/Filter/MyFilter.php` から読み込まれます。:
 
-``` php
+```php
 Configure::write('Dispatcher.filters', [
     'MyPlugin.MyFilter',
 ]);
@@ -131,7 +131,7 @@ Configure::write('Dispatcher.filters', [
 あなたが作成したディスパッチフィルタークラスのコンストラクターに
 パラメーターや設定を渡す必要がある場合、設定を配列として渡します。:
 
-``` php
+```php
 Configure::write('Dispatcher.filters', [
     'MyAssetFilter' => ['service' => 'google.com'],
 ]);
@@ -156,7 +156,7 @@ Configure::write('Dispatcher.filters', [
 を継承している必要があります。ここで特定の URL に対して 'Hello World'
 を返すようなシンプルなフィルターを作ってみましょう。:
 
-``` php
+```php
 // src/Routing/Filter/HelloWorldFilter.php
 class HelloWorldFilter extends DispatcherFilter
 {
@@ -212,7 +212,7 @@ class HelloWorldFilter extends DispatcherFilter
 新たなフィルターを作ってみましょう。このケースでは、 `PagesController`
 から提供されるものであれば何でも構いません。:
 
-``` php
+```php
 // src/Routing/Filter/HttpCacheFilter.php
 class HttpCacheFilter extends DispatcherFilter
 {
@@ -247,7 +247,7 @@ class HttpCacheFilter extends DispatcherFilter
 クリティカルな API のエンドポイントで、なんとか数 ms でも節約しなければ
 ならないようなケースを想像してみてください。:
 
-``` php
+```php
 // config/bootstrap.php
 $postsList = function ($event) {
     if ($event->data['request']->url !== 'posts/recent.json') {

@@ -26,7 +26,7 @@ used for translations are treated as format strings for
 `sprintf()`. You can supply additional arguments to replace
 placeholders in your string:
 
-``` text
+```text
 __('You have %s unread messages', h($number));
 ```
 

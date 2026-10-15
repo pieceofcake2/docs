@@ -28,7 +28,7 @@ The framework and the [pieceofcake2/app](https://pieceofcake2.github.io/app/)
 application skeleton install the sniffer as a development dependency. To add it to an
 existing application, run:
 
-``` bash
+```bash
 composer require --dev cakephp/cakephp-codesniffer:^5.0
 ```
 
@@ -36,7 +36,7 @@ Composer asks whether to allow the `dealerdirect/phpcodesniffer-composer-install
 plugin, which registers the CakePHP ruleset with PHP_CodeSniffer. Allow it, or
 add it to `composer.json` yourself:
 
-``` json
+```json
 {
     "config": {
         "allow-plugins": {
@@ -51,7 +51,7 @@ Then add a `phpcs.xml` file to the root of your project (see
 PHP_CodeSniffer reads it automatically, so you can run the checks without any
 arguments:
 
-``` bash
+```bash
 # Report violations
 vendor/bin/phpcs
 
@@ -87,7 +87,7 @@ in the contribution guide.
 
 Indent with four spaces. Tabs are not allowed:
 
-``` php
+```php
 $booleanVariable = true;
 $stringVariable = 'moose';
 if ($booleanVariable) {
@@ -124,7 +124,7 @@ Use the short array syntax. Multi-line arrays have one element per line and a
 trailing comma after the last element. Single-line arrays have no trailing
 comma:
 
-``` php
+```php
 $users = ['John', 'Hans', 'Arne'];
 
 $options = [
@@ -142,7 +142,7 @@ Functions are called without a space between the function name and the
 opening parenthesis, with one space after each comma, and with one space on
 both sides of the assignment operator:
 
-``` php
+```php
 $var = foo($bar, $bar2, $bar3);
 ```
 
@@ -150,7 +150,7 @@ When a call does not fit on one line, put each argument on its own line. The
 opening parenthesis is the last thing on the first line, the closing
 parenthesis is on a line by itself, and the last argument has a trailing comma:
 
-``` php
+```php
 $matches = array_intersect_key(
     $this->_listeners,
     array_flip(
@@ -161,7 +161,7 @@ $matches = array_intersect_key(
 
 instead of:
 
-``` php
+```php
 $matches = array_intersect_key($this->_listeners,
                 array_flip(preg_grep($matchPattern,
                     array_keys($this->_listeners), 0)));
@@ -169,7 +169,7 @@ $matches = array_intersect_key($this->_listeners,
 
 Always use parentheses when you create an object, even without arguments:
 
-``` php
+```php
 $dispatcher = new Dispatcher();
 ```
 
@@ -178,7 +178,7 @@ $dispatcher = new Dispatcher();
 Control structures are for example `if`, `for`, `foreach`, `while` and
 `switch`. Below is an example with `if`:
 
-``` php
+```php
 if ($expr1 || $expr2) {
     // action 1
 } elseif (!$expr3 && $expr4) {
@@ -201,7 +201,7 @@ if ($expr1 || $expr2) {
 - Do not call `count()` or a similar function in the condition of a `for`
   loop. Assign the result to a variable first.
 
-``` php
+```php
 // wrong: no braces, statement on the same line
 if ($expr) statement();
 
@@ -227,7 +227,7 @@ for ($i = 0; $i < $count; $i++) {
 Assignments inside a condition are allowed, and are common in the CakePHP 2
 code base:
 
-``` php
+```php
 while ($row = $result->fetch()) {
     // ...
 }
@@ -246,7 +246,7 @@ Use the null coalescing operator when you check whether a value is set, and the
 short ternary operator when you fall back to another value. The sniffer reports
 the long forms:
 
-``` php
+```php
 // good
 $variable = $options['variable'] ?? true;
 $title = $title ?: 'Untitled';
@@ -266,7 +266,7 @@ for control structures. It is easier to read in templates that mix PHP and
 HTML. The control structures can be in a larger PHP block, or in separate PHP
 tags:
 
-``` php
+```php
 <?php
 if ($isAdmin):
     echo '<p>You are the admin user.</p>';
@@ -289,7 +289,7 @@ add a comment so that it is not mistaken for a mistake.
 
 To check whether a variable is null, use a strict check:
 
-``` php
+```php
 if ($value === null) {
     // ...
 }
@@ -298,7 +298,7 @@ if ($value === null) {
 Put the value you compare against on the right side. "Yoda" comparisons are
 reported by the sniffer:
 
-``` php
+```php
 // not allowed
 if (null === $this->foo()) {
     // ...
@@ -316,7 +316,7 @@ The opening brace of a class or method goes on its own line. Declare the
 visibility of every property, method and class constant, and do not use the
 `var` keyword:
 
-``` php
+```php
 class Article extends AppModel
 {
     /**
@@ -364,7 +364,7 @@ definition. Try to make your functions return something, at least `true` or
 Closures and arrow functions follow the same rules. Write arrow functions
 without a space after `fn`:
 
-``` php
+```php
 $callback = function ($item) use ($prefix) {
     return $prefix . $item;
 };
@@ -385,7 +385,7 @@ which PHPUnit 9 requires for methods such as `setUp(): void` anyway.
 
 You can still type hint arguments that expect objects or arrays:
 
-``` php
+```php
 /**
  * Some method description.
  *
@@ -404,7 +404,7 @@ Here `$Model` must be an instance of `Model` and `$array` must be an `array`.
 If you want to allow `$array` to also be an instance of `ArrayObject`, do not
 type hint it as `array`, because `array` accepts only the primitive type:
 
-``` php
+```php
 /**
  * Some method description.
  *
@@ -424,7 +424,7 @@ an overriding method causes fatal errors when the parent method has none.
 Method chaining should have multiple methods spread across separate lines,
 indented by four spaces:
 
-``` php
+```php
 $email->from('foo@example.com')
     ->to('bar@example.com')
     ->subject('A great message')
@@ -445,7 +445,7 @@ multi-line form; one-line comments such as `/** @var string */` are reported.
 
 The framework files start with a file header DocBlock like this one:
 
-``` php
+```php
 <?php
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
@@ -473,7 +473,7 @@ The included [phpDocumentor](https://phpdoc.org) tags are:
 
 Class DocBlocks should look like this:
 
-``` php
+```php
 /**
  * Short description of the class.
  *
@@ -511,7 +511,7 @@ analysis tools know about them.
 
 Property DocBlocks should look like this:
 
-``` php
+```php
 /**
  * Description of property.
  *
@@ -538,7 +538,7 @@ Property DocBlocks may contain the following
 
 Method and function DocBlocks should look like this:
 
-``` php
+```php
 /**
  * Short description of the method.
  *
@@ -607,7 +607,7 @@ For more than two types it is usually best to just use `mixed`.
 
 When returning the object itself, e.g. for chaining, use `$this`:
 
-``` php
+```php
 /**
  * Foo function.
  *
@@ -624,7 +624,7 @@ public function foo()
 Use single quotes for strings that contain no variables or escape sequences.
 Use double quotes only when you need interpolation or escape sequences:
 
-``` php
+```php
 $name = 'Article';
 $message = "Saved {$count} articles\n";
 ```
@@ -634,7 +634,7 @@ $message = "Saved {$count} articles\n";
 `include`, `require`, `include_once` and `require_once` are written without
 parentheses:
 
-``` php
+```php
 // wrong: parentheses
 require_once('ClassFileName.php');
 require_once ($class);
@@ -665,7 +665,7 @@ warning. Check for the error condition instead, or handle the error.
 
 Write all functions in camelBack:
 
-``` php
+```php
 function longFunctionName()
 {
 }
@@ -675,7 +675,7 @@ function longFunctionName()
 
 Class names should be written in CamelCase, for example:
 
-``` php
+```php
 class ExampleClass
 {
 }
@@ -690,7 +690,7 @@ should in some way associate to the class the variable is an object of.
 CakePHP 2 also uses variables named after a class, such as `$Model` for a model
 instance, and the sniffer allows them:
 
-``` php
+```php
 $user = 'John';
 $users = ['John', 'Hans', 'Arne'];
 
@@ -705,7 +705,7 @@ Additionally, protected method or variable names start with a single
 underscore (`_`). Public method names must not start with an underscore. For
 example:
 
-``` php
+```php
 class A
 {
     protected $_iAmAProtectedVariable;
@@ -720,7 +720,7 @@ class A
 Private methods or variable names start with a double underscore (`__`). For
 example:
 
-``` php
+```php
 class A
 {
     private $__iAmAPrivateVariable;
@@ -782,20 +782,20 @@ and `(float)$var` instead of `floatval($var)` when applicable.
 
 Constants should be defined in capital letters:
 
-``` php
+```php
 define('CONSTANT', 1);
 ```
 
 If a constant name consists of multiple words, they should be separated by an
 underscore character, for example:
 
-``` php
+```php
 define('LONG_NAMED_CONSTANT', 2);
 ```
 
 Class constants must declare their visibility:
 
-``` php
+```php
 class Article extends AppModel
 {
     public const STATUS_PUBLISHED = 1;
@@ -847,7 +847,7 @@ following `phpcs.xml` for the modern directory layout. It uses the same
 exclusions as the framework, except that it excludes only the parameter and
 property type rules and requires native return types in `tests/TestCase/`:
 
-``` xml
+```xml
 <?xml version="1.0"?>
 <ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">

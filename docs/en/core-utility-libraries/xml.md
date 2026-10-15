@@ -13,7 +13,7 @@ You can import data with `Xml::build()`. Depending on the `return` option, it
 returns a SimpleXMLElement (the default) or a DOMDocument object. Below you get
 some samples on how to import data from a URL:
 
-``` php
+```php
 // Using SimpleXML
 $xml = Xml::build('https://example.com/articles.rss');
 // $xml now is a instance of SimpleXMLElement
@@ -30,7 +30,7 @@ $xml = Xml::build('https://example.com/articles.rss', ['return' => 'domdocument'
 You can use `Xml::build()` to build XML objects from a variety of
 sources. You can use XML to build objects from string data:
 
-``` php
+```php
 $text = '<?xml version="1.0" encoding="utf-8"?>
 <post>
     <id>1</id>
@@ -43,7 +43,7 @@ $xml = Xml::build($text);
 You can also build Xml objects from either local files, or remote files. Remote
 files will be fetched with `HttpSocket`:
 
-``` php
+```php
 // local file
 $xml = Xml::build('/home/awesome/unicorns.xml');
 
@@ -62,7 +62,7 @@ $xml = Xml::build('https://example.com/articles.rss');
 
 You can also build Xml objects using an array:
 
-``` php
+```php
 $data = [
     'post' => [
         'id' => 1,
@@ -75,7 +75,7 @@ $xml = Xml::build($data);
 
 If your input is invalid the Xml class will throw a Exception:
 
-``` php
+```php
 $xmlString = 'What is XML?';
 try {
     $xmlObject = Xml::build($xmlString); // Here will throw a Exception
@@ -93,7 +93,7 @@ try {
 
 Converting XML strings into arrays is simple with the Xml class as well:
 
-``` php
+```php
 $xmlString = '<?xml version="1.0"?><root><child>value</child></root>';
 $xmlArray = Xml::toArray(Xml::build($xmlString));
 ```
@@ -102,7 +102,7 @@ If your XML is invalid it will throw an Exception.
 
 ## Transforming an array into a string of XML
 
-``` php
+```php
 $xmlArray = ['root' => ['child' => 'value']];
 $xmlObject = Xml::fromArray($xmlArray, ['format' => 'tags']); // You can use Xml::build() too
 $xmlString = $xmlObject->asXML();
@@ -112,7 +112,7 @@ Your array must have only one element in the "top level" and it can not be
 numeric. If the array is not in this format, Xml will throw an Exception.
 Examples of invalid arrays:
 
-``` text
+```text
 // Top level with numeric key
 [
     ['key' => 'value']
@@ -129,7 +129,7 @@ The default format is `tags`: each array key becomes a child element. You can
 create a mixed array with tags, attributes and value. Prefix keys that are
 supposed to be attributes with `@`, and use `@` as the key for the text value:
 
-``` php
+```php
 $xmlArray = [
     'project' => [
         '@id' => 1,
@@ -143,7 +143,7 @@ $xmlString = $xmlObject->asXML();
 
 The content of `$xmlString` will be:
 
-``` xml
+```xml
 <?xml version="1.0"?>
 <project id="1">Value of project<name>Name of project, as tag</name></project>
 ```
@@ -152,7 +152,7 @@ Child elements must be nested in a sub-tree of their parent, and keys are used
 as element names as they are (they are not changed by `Inflector`). Repeated
 elements are written as a numerically indexed array. See the sample below:
 
-``` php
+```php
 $data = [
     'projects' => [
         'project' => [
@@ -171,7 +171,7 @@ $data = [
 
 This will result in the XML below:
 
-``` xml
+```xml
 <?xml version="1.0"?>
 <projects>
     <project>
@@ -199,7 +199,7 @@ To use XML Namespaces in your array, you must create a key with name `xmlns:`
 to generic namespace or input the prefix `xmlns:` in a custom namespace. See
 the samples:
 
-``` php
+```php
 $xmlArray = [
     'root' => [
         'xmlns:' => 'https://cakephp.org',
@@ -224,7 +224,7 @@ $xml2 = Xml::fromArray($xmlArray);
 
 The value of `$xml1` and `$xml2` will be, respectively:
 
-``` xml
+```xml
 <?xml version="1.0"?>
 <root xmlns="https://cakephp.org"><child>value</child></root>
 
@@ -239,7 +239,7 @@ The Xml class doesn't provide the manipulation of content, this
 must be done using SimpleXMLElement or DOMDocument. Below you see the steps for
 creating a child node:
 
-``` php
+```php
 // Using SimpleXML
 $myXmlOriginal = '<?xml version="1.0"?><root><child>value</child></root>';
 $xml = Xml::build($myXmlOriginal);
@@ -286,31 +286,31 @@ When the input is an array, the options of `Xml::fromArray()` (such as
 
 Building XML from a string:
 
-``` php
+```php
 $xml = Xml::build('<example>text</example>');
 ```
 
 Building XML from string (output DOMDocument):
 
-``` php
+```php
 $xml = Xml::build('<example>text</example>', ['return' => 'domdocument']);
 ```
 
 Building XML from a file path:
 
-``` php
+```php
 $xml = Xml::build('/path/to/an/xml/file.xml');
 ```
 
 Building from a remote URL:
 
-``` php
+```php
 $xml = Xml::build('https://example.com/example.xml');
 ```
 
 Building from an array:
 
-``` php
+```php
 $value = [
     'tags' => [
         'tag' => [

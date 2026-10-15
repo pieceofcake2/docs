@@ -20,7 +20,7 @@ Router オブジェクトは、 `mapResources()` というメソッドを提供�
 routes をオーバーライドする他の routes よりも前に呼び出す必要があります。
 例えば、レシピ (recipe) データベースにアクセスする REST は、下記のようにします:
 
-``` php
+```php
 // config/routes.php
 
 Router::mapResources('recipes');
@@ -53,7 +53,7 @@ POST リクエストの中の、 *\_method* の値を使う方法は、ブラウ
 ルータが REST リクエストを、コントローラのアクションにマッピングすると、
 そのアクションに移動します。基本的なコントローラのサンプルは下記のようになります:
 
-``` php
+```php
 // src/Controller/RecipesController.php
 class RecipesController extends AppController
 {
@@ -133,7 +133,7 @@ RecipesController に対するビューファイルを `templates/Recipes/xml` �
 `Xml` クラスを使えば、このビューファイル内で簡単に素早く XML を出力させることができます。
 下記に index ビューの例を載せます。
 
-``` php
+```php
 // templates/Recipes/xml/index.ctp
 // Do some formatting and manipulation on
 // the $recipes array.
@@ -149,7 +149,7 @@ CakePHP は自動的にそのタイプに対応するビューヘルパーを探
 
 レンダリングされた XML は下記のような感じになります:
 
-``` html
+```html
 <recipes>
     <recipe id="234" created="2008-06-13" modified="2008-06-14">
         <author id="23423" first_name="Billy" last_name="Bob"></author>
@@ -191,7 +191,7 @@ CakePHP では、 `RequestHandlerComponent` クラスが助けてくれます。
 によって定義が適用されます。
 このメソッドを利用する場合は、 *全ての* デフォルト定義を記載しておく必要があります。
 
-``` php
+```php
 Router::resourceMap([
     ['action' => 'index', 'method' => 'GET', 'id' => false],
     ['action' => 'view', 'method' => 'GET', 'id' => true],
@@ -220,7 +220,7 @@ Router::resourceMap([
 `Router::mapResources()` の `$options` 配列の `connectOptions`
 キーで `Router::connect()` を使った設定ができます。
 
-``` php
+```php
 Router::mapResources('books', [
     'connectOptions' => [
         'routeClass' => 'ApiRoute',

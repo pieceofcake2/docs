@@ -7,11 +7,11 @@ as any methods that have been removed/renamed.
 
 **App File Replacements (important)**
 
-- webroot/index.php: Must be replaced due to changes in
+- `webroot/index.php`: Must be replaced due to changes in
   bootstrapping process.
-- config/core.php: Additional settings have been put in place
+- `config/core.php`: Additional settings have been put in place
   which are required for PHP 5.3.
-- webroot/test.php: Replace if you want to run unit tests.
+- `webroot/test.php`: Replace if you want to run unit tests.
 
 ## Removed Constants
 
@@ -33,13 +33,13 @@ application depends on them you must define them in
 
 **Bootstrapping Additional Paths.**
 
-In your app/config/bootstrap.php you may have variables like
+In your `app/config/bootstrap.php` you may have variables like
 `$pluginPaths` or `$controllerPaths`.
 There is a new way to add those paths. As of 1.3 RC1 the
 `$pluginPaths` variables will no longer work. You must use
 `App::build()` to modify paths.
 
-``` php
+```php
 App::build([
     'plugins' => [
       '/full/path/to/plugins/',
@@ -96,8 +96,8 @@ Also changed is the order in which bootstrapping occurs. In the
 past `app/config/core.php` was loaded **after**
 `app/config/bootstrap.php`. This caused any `App::import()` in
 an application bootstrap to be un-cached and considerably slower
-than a cached include. In 1.3 core.php is loaded and the core cache
-configs are created **before** bootstrap.php is loaded.
+than a cached include. In 1.3 `core.php` is loaded and the core cache
+configs are created **before** `bootstrap.php` is loaded.
 
 **Loading custom inflections**
 
@@ -106,7 +106,7 @@ hit, and the related features have been refactored into a method to
 increase their flexibility. You now use `Inflector::rules()` to
 load custom inflections:
 
-``` php
+```php
 Inflector::rules('singular', [
     'rules' => [
       '/^(bil)er$/i' => '\1',
@@ -124,22 +124,22 @@ added rules taking precedence over the core rules.
 
 **Library Renames**
 
-Core libraries of libs/session.php, libs/socket.php,
-libs/model/schema.php and libs/model/behavior.php have been renamed
+Core libraries of `libs/session.php`, `libs/socket.php`,
+`libs/model/schema.php` and `libs/model/behavior.php` have been renamed
 so that there is a better mapping between filenames and main
 classes contained within (as well as dealing with some name-spacing
 issues):
 
-- session.php -\> cake_session.php
+- `session.php` -\> `cake_session.php`
   - App::import('Core', 'Session') -\> App::import('Core',
     'CakeSession')
-- socket.php -\> cake_socket.php
+- `socket.php` -\> `cake_socket.php`
   - App::import('Core', 'Socket') -\> App::import('Core',
     'CakeSocket')
-- schema.php -\> cake_schema.php
+- `schema.php` -\> `cake_schema.php`
   - App::import('Model', 'Schema') -\> App::import('Model',
     'CakeSchema')
-- behavior.php -\> model_behavior.php
+- `behavior.php` -\> `model_behavior.php`
   - App::import('Core', 'Behavior') -\> App::import('Core',
     'ModelBehavior')
 
@@ -217,7 +217,7 @@ been modified to use an element. If you specified custom session
 flash layouts in your applications you will need to make the
 following changes.
 
-1.  Move the required layout files into app/views/elements
+1.  Move the required layout files into `app/views/elements`
 2.  Rename the \$content_for_layout variable to \$message
 3.  Make sure you have `echo $session->flash();` in your layout
 
@@ -230,7 +230,7 @@ declared like any other helper/component. You should update
 `AppController::$components` and `AppController::$helpers` to
 include these classes to retain existing behavior:
 
-``` php
+```php
 var $components = ['Session', 'Auth', ...];
 var $helpers = ['Session', 'Html', 'Form' ...];
 ```
@@ -253,7 +253,7 @@ behavior amongst all classes.
 
 - `SessionComponent::setFlash()` now uses an *element* instead
   of a *layout* as its second parameter. Be sure to move any flash
-  layouts from app/views/layouts to app/views/elements and change
+  layouts from `app/views/layouts` to `app/views/elements` and change
   instances of \$content_for_layout to \$message.
 
 **Folder**
@@ -279,9 +279,9 @@ behavior with other prefix style routes in that it was treated
 differently. Instead you should use `Routing.prefixes`. Prefix
 routes in 1.3 do not require additional routes to be declared
 manually. All prefix routes will be generated automatically. To
-update simply change your core.php:
+update simply change your `core.php`:
 
-``` php
+```php
 //from:
 Configure::write('Routing.admin', 'admin');
 
@@ -294,7 +294,7 @@ routes. A small change has also been done to routing params. Routed
 params should now only consist of alphanumeric chars, - and \_ or
 `/[A-Z0-9-_+]+/`:
 
-``` php
+```php
 Router::connect('/:$%@#param/:action/*', [...]); // BAD
 Router::connect('/:can/:anybody/:see/:m-3/*', [...]); //Acceptable
 ```
@@ -306,7 +306,7 @@ problematic and buggy even with the existing code base. First path
 segments using full regular expressions was removed. You can no
 longer create routes like:
 
-``` php
+```php
 Router::connect(
   '/([0-9]+)-p-(.*)/',
   ['controller' => 'products', 'action' => 'show']
@@ -319,7 +319,7 @@ you use route parameters with capture patterns. Next mid-route
 greedy star support has been removed. It was previously possible to
 use a greedy star in the middle of a route:
 
-``` php
+```php
 Router::connect(
     '/pages/*/:event',
     ['controller' => 'pages', 'action' => 'display'],
@@ -338,7 +338,7 @@ previously used this approach for passing the ID parameter to
 actions, you will need to rewrite all your \$html-\>link() and
 \$this-\>redirect() calls to reflect this change.
 
-``` php
+```php
 // old format:
 $url = ['controller' => 'posts', 'action' => 'view', 'id' => $id];
 // use cases:
@@ -404,7 +404,7 @@ This feature was also undocumented, and untested.
 
 **Cache**
 
-In addition to being able to load CacheEngines from app/libs or
+In addition to being able to load CacheEngines from `app/libs` or
 plugins, Cache underwent some refactoring for CakePHP1.3. These
 refactorings focused around reducing the number and frequency of
 method calls. The end result was a significant performance
@@ -422,7 +422,7 @@ configurations. Also checkout the
 [New features in CakePHP 1.3](../appendices/new-features-in-cakephp-1-3) for
 more information on the additional methods added to `Cache`.
 
-It should be noted that using an app/libs or plugin cache engine
+It should be noted that using an `app/libs` or plugin cache engine
 for the default cache config can cause performance issues as the
 import that loads these classes will always be uncached. It is
 recommended that you either use one of the core cache engines for
@@ -487,7 +487,7 @@ new core element called `sql_dump`. `DboSource` no longer
 automatically outputs SQL logs. If you want to output SQL logs in
 1.3, do the following:
 
-``` php
+```php
 echo $this->element('sql_dump');
 ```
 
@@ -632,7 +632,7 @@ TimeHelper has been refactored to make it more i18n friendly.
 Internally almost all calls to date() have been replaced by
 strftime(). The new method TimeHelper::i18nFormat() has been added
 and will take localization data from a LC_TIME locale definition
-file in app/locale following the POSIX standard. These are the
+file in `app/locale` following the POSIX standard. These are the
 changes made in the TimeHelper API:
 
 - TimeHelper::format() can now take a time string as first
@@ -685,7 +685,7 @@ be updated to return `false` instead.
 after printing the error message which now uses a slightly
 different formatting.
 
-``` php
+```php
 $this->error('Invalid Foo', 'Please provide bar.');
 // outputs:
 Error: Invalid Foo
@@ -706,7 +706,7 @@ returning true, it now returns the shifted argument instead.
 
 ## Vendors, Test Suite & schema
 
-**vendors/css, vendors/js, and vendors/img**
+**`vendors/css`, `vendors/js`, and `vendors/img`**
 
 Support for these three directories, both in `app/vendors` as
 well as `plugin/vendors` has been removed. They have been

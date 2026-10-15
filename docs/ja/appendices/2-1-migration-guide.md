@@ -9,7 +9,7 @@ CakePHP 2.1 は、2.0 の API の完全上位互換です。
 のコアからは削除されています。もし、これらのクラスを利用していなかった
 場合は、次のような方法でアップグレードすることができます。:
 
-``` php
+```php
 // app/View/Helper/AppHelper.php
 App::uses('Helper', 'View');
 class AppHelper extends Helper
@@ -38,7 +38,7 @@ class AppShell extends Shell
 もし、あなたのアプリケーションが既にこれらのファイルやクラスを利用して
 いた場合には、特に何もする必要はありません。
 その他、コアの PagesController を利用していた場合には、このファイルを
-app/Controller ディレクトリへコピーする必要があります。
+`app/Controller` ディレクトリへコピーする必要があります。
 
 ## .htaccess ファイル
 
@@ -125,9 +125,11 @@ CakeSession は P3P ヘッダをセットしなくなりました。このこと
 新しい TestShell が追加されました。ユニットテストを実行するために必要な
 タイプ数を軽減したり、ファイルパスベースの UI を提供します。
 
-    ./Console/cake test app Model/Post
-    ./Console/cake test app Controller/PostsController
-    ./Console/cake test Plugin View/Helper/MyHelper
+```bash
+./Console/cake test app Model/Post
+./Console/cake test app Controller/PostsController
+./Console/cake test Plugin View/Helper/MyHelper
+```
 
 古いテストスイートのシェルとその記法もまだ存在しています。
 
@@ -233,7 +235,7 @@ CakeSession は P3P ヘッダをセットしなくなりました。このこと
 
 - `$scripts_for_layout` は推奨されません。代わりに下記の記述を利用してください。
 
-  ``` php
+  ```php
   echo $this->fetch('meta');
   echo $this->fetch('css');
   echo $this->fetch('script');

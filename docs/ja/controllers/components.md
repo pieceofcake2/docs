@@ -18,7 +18,7 @@ CakePHP には、様々な共通のタスクを支援するための素晴らし
 これらのコンポーネントと普通のコンポーネントの設定は大抵の場合、
 `$components` 配列かコントローラの `beforeFilter()` メソッドで行われます。
 
-``` php
+```php
 class PostsController extends AppController
 {
     public $components = [
@@ -40,7 +40,7 @@ class PostsController extends AppController
 これは関数の結果をコンポーネントのプロパティに設定する時に役に立ちます。
 上記は、次のように表現することもできます。
 
-``` php
+```php
 public function beforeFilter()
 {
     $this->Auth->authorize = ['controller'];
@@ -58,7 +58,7 @@ public function beforeFilter()
 つまり、コンポーネントの中には `$components` 配列にオプションを設定することが
 できるものがあります。
 
-``` php
+```php
 public $components = [
     'DebugKit.Toolbar' => ['panels' => ['history', 'session']],
 ];
@@ -70,7 +70,7 @@ public $components = [
 別名をつけられます。この機能は `$this->Auth` や他のコンポーネントの参照を独自実装に
 置き換えたい時に便利です。
 
-``` php
+```php
 // src/Controller/PostsController.php
 class PostsController extends AppController
 {
@@ -101,7 +101,7 @@ class MyAuthComponent extends AuthComponent
 もし、 `SessionComponent` と `CookieComponent` を
 コントローラに読込んだ場合、以下のようにアクセスすることができます。
 
-``` php
+```php
 class PostsController extends AppController
 {
     public $components = ['Session', 'Cookie'];
@@ -127,7 +127,7 @@ class PostsController extends AppController
 このような状況では、実行時に [コンポーネントコレクション](../core-libraries/collections) を
 使ってコンポーネントを読込むことができます。コントローラ内部から以下のようにできます。
 
-``` php
+```php
 $this->OneTimer = $this->Components->load('OneTimer');
 $this->OneTimer->getTime();
 ```
@@ -152,7 +152,7 @@ $this->OneTimer->getTime();
 (従来の `app/` レイアウトでは `app/Controller/Component/` に作成します)。
 コンポーネントの基本構造は以下のようになります。
 
-``` php
+```php
 // src/Controller/Component/MathComponent.php
 class MathComponent extends Component
 {
@@ -174,7 +174,7 @@ class MathComponent extends Component
 コントローラはそのコンポーネントに由来する新しいプロパティを自動的に与えられ、
 そのプロパティを通してコンポーネントのインスタンスにアクセスできます。
 
-``` php
+```php
 /* 標準の $this->Session と同様に新しいコンポーネントを
    $this->Math で利用できるようにします。*/
 public $components = ['Math', 'Session'];
@@ -186,7 +186,7 @@ public $components = ['Math', 'Session'];
 コントローラの中でコンポーネントを読み込む時、コンポーネントのコンストラクタに渡すバラメータを
 宣言することもできます。このパラメータはコンポーネントによって処理することができます。
 
-``` php
+```php
 public $components = [
     'Math' => [
         'precision' => 2,
@@ -207,7 +207,7 @@ public $components = [
 作成中のコンポーネントから他のコンポーネントを読み込むことができ、その方法はコントローラから
 `$components` 変数を使って読み込む場合と同じです。
 
-``` php
+```php
 // src/Controller/Component/CustomComponent.php
 class CustomComponent extends Component
 {

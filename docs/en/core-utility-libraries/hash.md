@@ -55,7 +55,7 @@ Use matchers by appending them to the expression element (`{n}`, `{s}`, etc.) yo
 So to return `id` fields where a `name` matches you can use paths using `{n}` and `{s}` to insert data into multiple
 points:
 
-``` php
+```php
 $users = [
      [
         'id' => 123,
@@ -105,7 +105,7 @@ along arbitrary paths quickly without having to loop through the data
 structures. Instead you use path expressions to qualify which elements you
 want returned:
 
-``` php
+```php
 // Common Usage:
 $users = $this->User->find('all');
 $results = Hash::extract($users, '{n}.User.id');
@@ -119,7 +119,7 @@ Return type: `array`
 
 Inserts \$data into an array as defined by `$path`:
 
-``` php
+```php
 $a = [
     'pages' => ['name' => 'page'],
 ];
@@ -141,7 +141,7 @@ $result = Hash::insert($a, 'files', ['name' => 'files']);
 You can use paths using `{n}` and `{s}` to insert data into multiple
 points:
 
-``` php
+```php
 $users = $this->User->find('all');
 $users = Hash::insert($users, '{n}.User.new', 'value');
 ```
@@ -156,7 +156,7 @@ Return type: `array`
 
 Removes all elements from an array that match \$path.
 
-``` php
+```php
 $a = [
     'pages' => ['name' => 'page'],
     'files' => ['name' => 'files'],
@@ -188,7 +188,7 @@ specified, or doesn't match anything, values will be initialized to null.
 You can optionally group the values by what is obtained when following the
 path specified in \$groupPath.
 
-``` php
+```php
 $a = [
     [
         'User' => [
@@ -277,7 +277,7 @@ You can provide array's for both \$keyPath and \$valuePath. If you do this,
 the first value will be used as a format string, for values extracted by the
 other paths:
 
-``` php
+```php
 $result = Hash::combine(
     $a,
     '{n}.User.id',
@@ -315,7 +315,7 @@ Return type: `array`
 Returns a series of values extracted from an array, formatted with a
 format string:
 
-``` php
+```php
 $data = [
     [
         'Person' => [
@@ -372,7 +372,7 @@ Return type: `boolean`
 Determines if one Hash or array contains the exact keys and values
 of another:
 
-``` php
+```php
 $a = [
     0 => ['name' => 'main'],
     1 => ['name' => 'about'],
@@ -398,7 +398,7 @@ Return type: `boolean`
 
 Checks if a particular path is set in an array:
 
-``` php
+```php
 $set = [
     'My Index 1' => ['First' => 'The first item'],
 ];
@@ -435,7 +435,7 @@ Filters empty elements out of array, excluding '0'. You can also supply a
 custom \$callback to filter the array elements. Your callback should return
 `false` to remove elements from the resulting array:
 
-``` php
+```php
 $data = [
     '0',
     false,
@@ -465,7 +465,7 @@ Return type: `array`
 
 Collapses a multi-dimensional array into a single dimension:
 
-``` php
+```php
 $arr = [
     [
         'Post' => ['id' => '1', 'title' => 'First Post'],
@@ -498,7 +498,7 @@ Return type: `array`
 Expands an array that was previously flattened with
 `Hash::flatten()`:
 
-``` php
+```php
 $data = [
     '0.Post.id' => 1,
     '0.Post.title' => First Post,
@@ -538,7 +538,7 @@ containing strings (unlike `array_merge_recursive`).
 > This function will work with an unlimited amount of arguments and
 > typecasts non-array parameters into arrays.
 
-``` php
+```php
 $array = [
     [
         'id' => '48c2570e-dfa8-4c32-a35e-0d71cbdd56cb',
@@ -583,7 +583,7 @@ Return type: `boolean`
 
 Checks to see if all the values in the array are numeric:
 
-``` php
+```php
 $data = ['one'];
 $res = Hash::numeric(array_keys($data));
 // $res is true
@@ -600,7 +600,7 @@ Return type: `integer`
 Counts the dimensions of an array. This method will only
 consider the dimension of the first element in the array:
 
-``` php
+```php
 $data = ['one', '2', 'three'];
 $result = Hash::dimensions($data);
 // $result == 1
@@ -627,7 +627,7 @@ $result = Hash::dimensions($data);
 Similar to `Hash::dimensions()`, however this method returns,
 the deepest number of dimensions of any element in the array:
 
-``` php
+```php
 $data = ['1' => '1.1', '2', '3' => ['3.1' => '3.1.1']];
 $result = Hash::maxDimensions($data);
 // $result == 2
@@ -643,7 +643,7 @@ Creates a new array, by extracting \$path, and mapping \$function
 across the results. You can use both expression and matching elements with
 this method:
 
-``` php
+```php
 // Call the noop function $this->noop() on every element of $data
 $result = Hash::map($data, '{n}', [$this, 'noop']);
 
@@ -672,7 +672,7 @@ Return type: `array`
 Sorts an array by any value, determined by a [Hash Path Syntax](#hash-path-syntax)
 Only expression elements are supported by this method:
 
-``` php
+```php
 $a = [
     0 => ['Person' => ['name' => 'Jeff']],
     1 => ['Shirt' => ['color' => 'black']],
@@ -713,7 +713,7 @@ Return type: `array`
 
 Computes the difference between two arrays:
 
-``` php
+```php
 $a = [
     0 => ['name' => 'main'],
     1 => ['name' => 'about'],
@@ -744,7 +744,7 @@ data to the bottom of the resultant array.
 **Example 1**
 :
 
-``` php
+```php
 $array1 = ['ModelOne' => ['id' => 1001, 'field_one' => 'a1.m1.f1', 'field_two' => 'a1.m1.f2']];
 $array2 = ['ModelOne' => ['id' => 1003, 'field_one' => 'a3.m1.f1', 'field_two' => 'a3.m1.f2', 'field_three' => 'a3.m1.f3']];
 $res = Hash::mergeDiff($array1, $array2);
@@ -764,7 +764,7 @@ $res = Hash::mergeDiff($array1, $array2);
 **Example 2**
 :
 
-``` php
+```php
 $array1 = ['a' => 'b', 1 => 20938, 'c' => 'string'];
 $array2 = ['b' => 'b', 3 => 238, 'c' => 'string', ['extra_field']];
 $res = Hash::mergeDiff($array1, $array2);
@@ -791,7 +791,7 @@ normalized to be an associative array. Numeric keys with values, will be
 converted to string keys with null values. Normalizing an array, makes using
 the results with `Hash::merge()` easier:
 
-``` php
+```php
 $a = ['Tree', 'CounterCache',
     'Upload' => [
         'folder' => 'products',
@@ -852,7 +852,7 @@ Used by methods like `Model::find('threaded')`.
 
 Example:
 
-``` php
+```php
 $data = [
     ['ModelName' => ['id' => 1, 'parent_id' => null]],
     ['ModelName' => ['id' => 2, 'parent_id' => 1]],

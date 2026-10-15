@@ -16,7 +16,7 @@ Before we jump too far ahead trying to get our webservice up and
 running we need to do a few things. First parseExtensions needs to
 be activated, this is done in `config/routes.php`:
 
-``` php
+```php
 Router::parseExtensions('rss');
 ```
 
@@ -33,14 +33,14 @@ add in the rss-specific code.
 It is a good idea to add RequestHandler to your PostsController's
 \$components array. This will allow a lot of automagic to occur:
 
-``` php
+```php
 public $components = ['RequestHandler'];
 ```
 
 Our view will also use the `TextHelper` for formatting, so that
 should be added to the controller as well:
 
-``` php
+```php
 public $helpers = ['Text'];
 ```
 
@@ -54,7 +54,7 @@ make the RSS feed and the data for the HTML view you can use the
 `RequestHandler::isRss()` method, otherwise your controller can stay
 the same:
 
-``` php
+```php
 // Modify the Posts Controller action that corresponds to
 // the action which deliver the rss feed, which is the
 // index action in our example
@@ -89,7 +89,7 @@ With all the View variables set we need to create an rss layout.
 An Rss layout is very simple, put the following contents in
 `templates/Layouts/rss/default.ctp`:
 
-``` php
+```php
 if (!isset($documentData)) {
     $documentData = [];
 }
@@ -124,7 +124,7 @@ done by using the `View::set()` method which is analogous to the
 `Controller::set()` method. Here though we are passing the channel's
 metadata back to the layout:
 
-``` php
+```php
 $this->set('channelData', [
     'title' => __('Most Recent Posts'),
     'link' => $this->Html->url('/', true),
@@ -151,7 +151,7 @@ associative array into an element for each key value pair.
 > You will need to modify the \$postLink variable as appropriate to
 > your application.
 
-``` php
+```php
 foreach ($posts as $post) {
     $postTime = strtotime($post['Post']['created']);
 

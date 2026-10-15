@@ -9,7 +9,7 @@ CakePHP 2 を初めて使う場合は、[ブログチュートリアル](tutoria
 ## このフォークについて {#about-this-fork}
 
 このドキュメントは、CakePHP 2.x のコミュニティによるフォーク [pieceofcake2/cakephp](https://github.com/pieceofcake2/cakephp)
-について説明しています。このフォークは CakePHP 2.10.24 をベースにしており、PHP 8.0 から 8.5 で動作します。
+について説明しています。このフォークは [cakephp/cakephp](https://github.com/cakephp/cakephp/tree/2.10.24) の 2.10.24 をベースにしており、PHP 8.0 から 8.5 で動作します。
 保守を目的としたフォークで、CakePHP 2 を現在の PHP に対応させ、バグとセキュリティの問題を修正します。
 機能の追加は目的としておらず、追加するのは CakePHP 5 からのバックポートなど、保守と移行に役立つものに限っています。
 
@@ -21,6 +21,7 @@ CakePHP プロジェクトによる CakePHP 2.x のサポートは
 本家の CakePHP 2.x のドキュメントとの違いは [本家ドキュメントからの変更点](/ja/appendices/changes-from-the-original-book)
 にまとめています。フォークのほかのプロジェクトやリソースは
 [Piece of Cake 2 のサイト](https://pieceofcake2.github.io/) から参照できます。
+各パッケージがどのプロジェクトから来ているかは [メンテナンスされているプラグイン](/ja/plugins/maintained-plugins#origins) にまとめています。
 
 ## CakePHP 2.10 との違い {#whats-different}
 
