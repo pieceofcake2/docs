@@ -62,6 +62,7 @@ directly.
 - [Captcha Plugin](https://pieceofcake2.github.io/captcha/) ([Markdown](https://github.com/pieceofcake2/captcha/blob/1.x/docs/README.md)) - CAPTCHA widget and
   server-side verification with Cloudflare Turnstile (default), Google
   reCAPTCHA v2/v3 or hCaptcha
+- [Purifiable Plugin](https://pieceofcake2.github.io/purifiable/) ([Markdown](https://github.com/pieceofcake2/purifiable/blob/1.x/docs/README.md)) - HTML sanitization of model fields with HTML Purifier
 
 ### Database
 
@@ -71,6 +72,8 @@ directly.
 
 - [Authenticate Plugin](https://pieceofcake2.github.io/authenticate/) ([Markdown](https://github.com/pieceofcake2/authenticate/blob/1.x/docs/README.md)) - Authentication classes
 - [AclExtras Plugin](https://pieceofcake2.github.io/acl_extras/) ([Markdown](https://github.com/pieceofcake2/acl_extras/blob/2.x/docs/README.md)) - Console tools for managing ACL tables
+- [AclMenu Plugin](https://pieceofcake2.github.io/acl_menu/) ([Markdown](https://github.com/pieceofcake2/acl_menu/blob/1.x/docs/README.md)) - Navigation menus of the actions allowed by ACL
+- [Totp Plugin](https://pieceofcake2.github.io/totp/) ([Markdown](https://github.com/pieceofcake2/totp/blob/1.x/docs/README.md)) - Two-factor authentication with one-time passwords (TOTP)
 
 ### Files
 
