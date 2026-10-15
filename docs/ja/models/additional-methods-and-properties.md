@@ -7,7 +7,7 @@ CakePHP のモデルの標準機能があれば、やりたいことはなんで
 データの保存や取得を扱う操作は、モデルクラスの中に入れてしまうのがいいでしょう。
 こういう考え方は、ファットモデル (*fat model*) といわれます。
 
-``` php
+```php
 class Example extends AppModel
 {
     public function getRecent()
@@ -24,7 +24,7 @@ class Example extends AppModel
 
 こうしておけば、 `getRecent()` メソッドをコントローラ内で使えるようになります。
 
-``` php
+```php
 $recent = $this->Example->getRecent();
 ```
 
@@ -32,7 +32,7 @@ $recent = $this->Example->getRecent();
 
 アソシエーションを取得します。
 
-``` php
+```php
 $result = $this->Example->associations();
 // $result の値は ['belongsTo', 'hasOne', 'hasMany', 'hasAndBelongsToMany']
 ```
@@ -61,7 +61,7 @@ $result = $this->Example->associations();
 > \$id パラメータは 2.1 で追加されました。それ以前のバージョンでは、このメソッドには
 > パラメータはありません。
 
-``` php
+```php
 $this->Example->id = 9;
 if ($this->Example->exists()) {
     // ...

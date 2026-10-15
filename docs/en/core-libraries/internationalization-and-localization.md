@@ -20,14 +20,14 @@ to a multi-lingual application, the first of which is to make use
 of the `__()` function in your code. Below is an example of some code for a
 single-language application:
 
-``` html
+```html
 <h2>Posts</h2>
 ```
 
 To internationalize your code, all you need to do is to wrap
 strings in `__()` like so:
 
-``` html
+```html
 <h2><?php echo __('Posts'); ?></h2>
 ```
 
@@ -51,7 +51,7 @@ your code. In the modern layout your templates live outside `src/`,
 so pass both directories and the output directory explicitly when you
 run the task from the project root:
 
-``` bash
+```bash
 bin/cake i18n extract --paths src,templates --output resources/locales
 ```
 
@@ -61,14 +61,14 @@ templates used to create or update your
 the translations. CakePHP will look for your po files in the following
 location:
 
-``` text
+```text
 resources/locales/<locale>/LC_MESSAGES/<domain>.po
 ```
 
 The default domain is 'default', therefore your locale folder would
 look something like this:
 
-``` text
+```text
 resources/locales/eng/LC_MESSAGES/default.po (English)
 resources/locales/fra/LC_MESSAGES/default.po (French)
 resources/locales/por/LC_MESSAGES/default.po (Portuguese)
@@ -102,7 +102,7 @@ Remember that po files are useful for short messages, if you find
 you want to translate long paragraphs, or even whole pages - you
 should consider implementing a different solution. e.g.
 
-``` php
+```php
 // src/Controller/AppController.php
 public function beforeFilter()
 {
@@ -116,7 +116,7 @@ public function beforeFilter()
 
 or:
 
-``` php
+```php
 // View code
 echo $this->element(Configure::read('Config.language') . '/tos');
 ```
@@ -131,7 +131,7 @@ use these LC_TIME files.
 
 Just place LC_TIME file in its respective locale directory:
 
-``` text
+```text
 resources/locales/fra/LC_TIME (French)
 resources/locales/por/LC_TIME (Portuguese)
 ```
@@ -147,7 +147,7 @@ follow a few conventions.
 Instead of `__()` and `__n()` you will have to use `__d()` and `__dn()`. The D means
 domain. So if you have a plugin called 'DebugKit' you would have to do this:
 
-``` text
+```text
 __d('debug_kit', 'My example text');
 ```
 
@@ -156,13 +156,13 @@ find your translation file.
 
 Your translation file for this example should go into:
 
-``` text
+```text
 plugins/DebugKit/Locale/<locale>/LC_MESSAGES/<domain>.po
 ```
 
 And for other languages than the default:
 
-``` text
+```text
 plugins/DebugKit/Locale/eng/LC_MESSAGES/debug_kit.po (English)
 plugins/DebugKit/Locale/fra/LC_MESSAGES/debug_kit.po (French)
 plugins/DebugKit/Locale/por/LC_MESSAGES/debug_kit.po (Portuguese)
@@ -180,7 +180,7 @@ the plugin if there is a match for the given translation file.
 The Configure value `I18n.preferApp` can be used to control the order of translations.
 If set to true in bootstrap it will prefer the app translations over any plugins' ones:
 
-``` php
+```php
 Configure::write('I18n.preferApp', true);
 ```
 
@@ -194,7 +194,7 @@ It defaults to `false`.
 To change or set the language for your application, all you need to
 do is the following:
 
-``` php
+```php
 Configure::write('Config.language', 'fra');
 ```
 
@@ -207,14 +207,14 @@ in fact anytime at all before you want a message in a different language. To
 set the language for the current user, you can store the setting in the Session
 object, like this:
 
-``` php
+```php
 $this->Session->write('Config.language', 'fra');
 ```
 
 At the beginning of each request in your controller's `beforeFilter` you
 should configure `Configure` as well:
 
-``` php
+```php
 class AppController extends Controller
 {
     public function beforeFilter()
@@ -265,7 +265,7 @@ CakePHP will automatically extract the validation error when you are using the
 [i18n console task](../console-and-shells/i18n-shell). By default, the default domain is used.
 This can be overwritten by setting the `$validationDomain` property in your model:
 
-``` php
+```php
 class User extends AppModel
 {
     public $validationDomain = 'validation_errors';
@@ -275,7 +275,7 @@ class User extends AppModel
 Additional parameters defined in the validation rule are passed to the translation
 function. This allows you to create dynamic validation messages:
 
-``` php
+```php
 class User extends AppModel
 {
     public $validationDomain = 'validation';
@@ -293,6 +293,6 @@ class User extends AppModel
 
 Which will do the following internal call:
 
-``` text
+```text
 __d('validation', 'Username should be between %d and %d characters', [2, 10]);
 ```

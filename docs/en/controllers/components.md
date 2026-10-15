@@ -22,7 +22,7 @@ Configuration for these components, and for components in general, is usually do
 `$components` array or your controller's `beforeFilter()`
 method:
 
-``` php
+```php
 class PostsController extends AppController
 {
     public $components = [
@@ -47,7 +47,7 @@ method. This is useful when you need to assign the results of a
 function to a component property. The above could also be expressed
 as:
 
-``` php
+```php
 public function beforeFilter()
 {
     $this->Auth->authorize = ['controller'];
@@ -65,7 +65,7 @@ configuration options to be set before the controller's
 `beforeFilter()` is run. To this end, some components allow
 configuration options be set in the `$components` array:
 
-``` php
+```php
 public $components = [
     'DebugKit.Toolbar' => ['panels' => ['history', 'session']],
 ];
@@ -79,7 +79,7 @@ alias components. This feature is useful when you want to
 replace `$this->Auth` or another common Component reference with a custom
 implementation:
 
-``` php
+```php
 // src/Controller/PostsController.php
 class PostsController extends AppController
 {
@@ -112,7 +112,7 @@ controller. If you had loaded up the `SessionComponent` and
 the `CookieComponent` in your controller, you could access
 them like so:
 
-``` php
+```php
 class PostsController extends AppController
 {
     public $components = ['Session', 'Cookie'];
@@ -140,7 +140,7 @@ action. In situations like this you can load a component at runtime using the
 [Component Collection](../core-libraries/collections). From inside a
 controller's method you can do the following:
 
-``` php
+```php
 $this->OneTimer = $this->Components->load('OneTimer');
 $this->OneTimer->getTime();
 ```
@@ -170,7 +170,7 @@ the file in `src/Controller/Component/MathComponent.php` (`app/Controller/Compon
 in the legacy `app/` layout). The basic structure for the component would look
 something like this:
 
-``` php
+```php
 // src/Controller/Component/MathComponent.php
 class MathComponent extends Component
 {
@@ -193,7 +193,7 @@ part) in the controller's `$components` array. The controller will
 automatically be given a new attribute named after the component,
 through which we can access an instance of it:
 
-``` php
+```php
 /* Make the new component available at $this->Math,
 as well as the standard $this->Session */
 public $components = ['Math', 'Session'];
@@ -208,7 +208,7 @@ set of parameters that will be passed on to the Component's
 constructor. These parameters can then be handled by
 the Component:
 
-``` php
+```php
 public $components = [
     'Math' => [
         'precision' => 2,
@@ -230,7 +230,7 @@ Sometimes one of your components may need to use another component.
 In this case you can include other components in your component the exact same
 way you include them in controllers - using the `$components` var:
 
-``` php
+```php
 // src/Controller/Component/CustomComponent.php
 class CustomComponent extends Component
 {

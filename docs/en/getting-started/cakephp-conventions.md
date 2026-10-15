@@ -35,7 +35,7 @@ controller method has been prefixed with an underscore, the method
 will not be accessible directly from the web but is available for
 internal use. For example:
 
-``` php
+```php
 class NewsController extends AppController
 {
     public function latest()
@@ -157,7 +157,7 @@ directly manipulate your join table data, use direct
 [query](../models/retrieving-your-data#model-query) calls or add a primary key to act on it
 as a normal model. For example:
 
-``` sql
+```sql
 CREATE TABLE posts_tags (
     id INT(10) NOT NULL AUTO_INCREMENT,
     post_id INT(10) NOT NULL,

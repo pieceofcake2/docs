@@ -8,20 +8,20 @@ Folder と File ユーティリティは、ファイルの読み書きやフォ�
 `Folder` と `File` クラスはオートロードされるため、そのままインスタンスを作成できます。
 新しいフォルダインスタンスは次のようにセットアップします。
 
-``` php
+```php
 $dir = new Folder('/path/to/folder');
 ```
 
 インスタンスを作成したフォルダ内から `*.ctp` の拡張子が付いたファイルを
 正規表現検索する場合はこのようにします。
 
-``` php
+```php
 $files = $dir->find('.*\.ctp');
 ```
 
 これでファイルの読み込みや、コンテンツの書き込み、ファイルの削除などが行えるようになります。
 
-``` php
+```php
 foreach ($files as $file) {
     $file = new File($dir->pwd() . DS . $file);
     $contents = $file->read();
@@ -36,7 +36,7 @@ foreach ($files as $file) {
 
 `class` **Folder**(string $path = false, boolean $create = false, mixed $mode = false)
 
-``` php
+```php
 // 0755 のパーミッションで新しいフォルダを作成します
 $dir = new Folder('/path/to/folder', true, 0755);
 ```
@@ -60,7 +60,7 @@ Windows マシンでは何も影響しません。
 
 \$path と \$element の間に適切なスラッシュを加えて返します。
 
-``` php
+```php
 $path = Folder::addPathElement('/a/path/for', 'testing');
 // $path は /a/path/for/testing となります
 ```
@@ -115,7 +115,7 @@ $path = Folder::addPathElement('/a/path/for', 'testing');
 
 与えられた \$path がスラッシュで終了していれば true を返します。（つまり、 slash-terminated）:
 
-``` php
+```php
 $result = Folder::isSlashTerm('/my/test/path');
 // $result = false
 $result = Folder::isSlashTerm('/my/test/path/');
@@ -157,7 +157,7 @@ $result = Folder::isSlashTerm('/my/test/path/');
 
 `class` **File**(string $path, boolean $create = false, integer $mode = 755)
 
-``` php
+```php
 // 0644 のパーミッションで新しいファイルを作成します
 $file = new File('/path/to/file.php', true, 0644);
 ```

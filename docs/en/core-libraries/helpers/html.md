@@ -12,7 +12,7 @@ Many HtmlHelper methods include a `$options` parameter,
 that allow you to tack on any extra attributes on your tags. Here
 are a few examples of how to use the \$options parameter:
 
-``` html
+```html
 Desired attributes: <tag class="someClass" />
 Array parameter: array('class' => 'someClass')
 

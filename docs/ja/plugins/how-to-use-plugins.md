@@ -11,7 +11,7 @@ bootstrap ファイルを定義しながら、全てのプラグインを自動�
 
 大丈夫です。 `config/bootstrap.php` に次のように書きます。
 
-``` php
+```php
 CakePlugin::loadAll([
     'Blog' => ['routes' => true],
     'ContactManager' => ['bootstrap' => true],
@@ -32,7 +32,7 @@ CakePHP はプラグインの `Config/bootstrap.php` と `Config/routes.php` を
 全てのプラグインの bootstrap ファイルをロードして、さらに Blog プラグインの routes ファイルを
 ロード:
 
-``` php
+```php
 CakePlugin::loadAll([
     ['bootstrap' => true],
     'Blog' => ['routes' => true],
@@ -47,7 +47,7 @@ CakePHP 2.3.0 は、プラグインをロードする時に、routes ファイ�
 なくても無視することができる `ignoreMissing` オプションを追加しました。
 以下のように全てのプラグインをロードするために必要なコードが短くできます。
 
-``` php
+```php
 // Loads all plugins including any possible routes and bootstrap files
 CakePlugin::loadAll([
     ['routes' => true, 'bootstrap' => true, 'ignoreMissing' => true],
@@ -58,7 +58,7 @@ CakePlugin::loadAll([
 作成する必要があります。これらの場合に、しばしば、以下のような cake シェルから呼び出す
 schema ファイルを用意しています。
 
-``` bash
+```bash
 bin/cake schema create --plugin ContactManager
 ```
 
@@ -70,7 +70,7 @@ bin/cake schema create --plugin ContactManager
 もし、一つのプラグインで一つ以上の bootstrap ファイルをロードしたい場合、
 bootstrap 設定キーに複数ファイルの配列を設定します。
 
-``` php
+```php
 CakePlugin::loadAll([
     'Blog' => [
         'bootstrap' => [
@@ -83,7 +83,7 @@ CakePlugin::loadAll([
 
 プラグインがロードされた際に実行する必要がある呼び出し可能な関数を設定できます。
 
-``` php
+```php
 function aCallableFunction($pluginName, $config)
 {
 }
@@ -104,12 +104,12 @@ CakePlugin::loadAll([
 ContactManager プラグインの ContactInfoHelper を使用したいとします。
 コントローラの中で、 \$helper 配列は、以下のように記述します。
 
-``` php
+```php
 public $helpers = ['ContactManager.ContactInfo'];
 ```
 
 すると、ビューの中で他のヘルパーと同様に ContactInfoHelper にアクセスすることができます。
 
-``` php
+```php
 echo $this->ContactInfo->address($contact);
 ```

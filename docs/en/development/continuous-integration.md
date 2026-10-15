@@ -557,7 +557,7 @@ Start off by creating a job for your application, and connect your repository
 so that jenkins can access your code. Add a *shell script step* that installs
 the dependencies, including PHPUnit:
 
-``` bash
+```bash
 composer install --no-interaction
 ```
 
@@ -568,7 +568,7 @@ bleed through and avoids a number of basic problems. Once you've created a new
 database in a database server that jenkins can access (usually localhost). Add
 a *shell script step* to the build that contains the following:
 
-``` bash
+```bash
 cat > config/database.php <<'DATABASE_PHP'
 <?php
 class DATABASE_CONFIG
@@ -592,7 +592,7 @@ well. This insulates you from chained failures, where one broken build causes
 others to fail. Add another *shell script step* to the build that contains the
 following:
 
-``` bash
+```bash
 mysql -u jenkins -pcakephp_jenkins -e 'DROP DATABASE IF EXISTS jenkins_test; CREATE DATABASE jenkins_test';
 ```
 
@@ -602,7 +602,7 @@ Add another *shell script step* to your build. In this step run the tests for
 your application. Creating a junit log file, or clover coverage is often a nice
 bonus, as it gives you a nice graphical view of your testing results:
 
-``` bash
+```bash
 vendor/bin/phpunit \
     --log-junit junit.xml \
     --coverage-clover clover.xml

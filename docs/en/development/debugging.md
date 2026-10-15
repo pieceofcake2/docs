@@ -64,7 +64,7 @@ set to a value greater than 0.
 Dump prints out the contents of a variable. It will print out all
 properties and methods (if any) of the supplied variable:
 
-``` php
+```php
 $foo = [1,2,3];
 
 Debugger::dump($foo);
@@ -120,7 +120,7 @@ Returns the current stack trace. Each line of the trace includes
 the calling method, including which file and line the call
 originated from.
 
-``` text
+```text
 // In PostsController::index()
 pr(Debugger::trace());
 
@@ -151,7 +151,7 @@ filepath), highlights line number \$line with \$context number of
 lines around it. Each line is highlighted with `highlight_string()`, and the
 requested line is wrapped in `<span class="code-highlight">`:
 
-``` php
+```php
 pr(Debugger::excerpt(APP . 'Controller' . DS . 'PostsController.php', 48, 2));
 
 // will output an array of 5 HTML strings:
@@ -192,7 +192,7 @@ Logging messages is another good way to debug applications, and you can use
 extend `CakeObject` (controllers, components, models and so on) have an
 instance method `log()` which can be used to log messages:
 
-``` php
+```php
 $this->log('Got here', 'debug');
 ```
 
@@ -201,7 +201,7 @@ to help debug methods that involve redirects or complicated loops. You can also
 use `CakeLog::write()` to write log messages. Framework classes are autoloaded,
 so this method can be called statically anywhere in your application:
 
-``` php
+```php
 CakeLog::write('debug', 'Got here');
 ```
 
@@ -217,13 +217,13 @@ Use [pieceofcake2/debug_kit](https://pieceofcake2.github.io/debug_kit/), a
 PHP 8 compatible version of DebugKit 2.x maintained by the Piece of Cake 2
 project. Install it as a development dependency with Composer:
 
-``` bash
+```bash
 composer require --dev pieceofcake2/debug_kit
 ```
 
 Then load the plugin in `config/bootstrap.php`:
 
-``` php
+```php
 // config/bootstrap.php
 CakePlugin::load('DebugKit');
 ```

@@ -71,7 +71,7 @@ CakePHP のビューレイヤーはいくつかの異なるパーツによって
 サイドバーのマークアップの繰り返しを避けられます。これは次のような変更を加えるだけで
 実現できます。
 
-``` php
+```php
 // templates/Common/view.ctp
 <h1><?php echo $this->fetch('title'); ?></h1>
 <?php echo $this->fetch('content'); ?>
@@ -90,7 +90,7 @@ CakePHP が作る特別なブロックで、ビューの継承で捕捉されな
 ビューファイルに post データが格納されている `$post` という変数がある場合、
 ビューは次のようになります。
 
-``` php
+```php
 <?php
 // templates/Posts/view.ctp
 $this->extend('/Common/view');
@@ -118,7 +118,7 @@ echo $this->Html->link('edit', [
 一度実行が完了すると、継承されたビューが描画されます。一つのビューファイルで二回以上
 `extend()` が呼び出される場合、次に処理される親ビューを上書きします。
 
-``` php
+```php
 $this->extend('/Common/view');
 $this->extend('/Common/index');
 ```
@@ -146,7 +146,7 @@ $this->extend('/Common/index');
 ブロックを実装するには二つの方法があります。捕捉されるブロックとするか、直接割り当てるかです。
 `start()`, `append()`, `end()` メソッドは捕捉されるブロックと共に動作します。
 
-``` php
+```php
 // sidebar ブロックを作成する
 $this->start('sidebar');
 echo $this->element('sidebar/recent_topics');
@@ -162,7 +162,7 @@ $this->end();
 `start()` を複数回使ってブロックを追加できます。 `assign()` はクリアしたり
 任意のタイミングでブロックを上書きするために使われます。
 
-``` php
+```php
 // sidebar ブロックから以前のコンテンツを消去する
 $this->assign('sidebar', '');
 ```
@@ -170,7 +170,7 @@ $this->assign('sidebar', '');
 2.3 で、いくつかのメソッドがブロック機構に追加されました。
 `prepend()` は、既存のブロックの先頭に内容を追加します。
 
-``` php
+```php
 // sidebar の先頭に追加する
 $this->prepend('sidebar', 'this content goes on top of sidebar');
 ```
@@ -179,7 +179,7 @@ $this->prepend('sidebar', 'this content goes on top of sidebar');
 使用します。ブロックがすでに存在する場合は捕捉されたコンテンツは廃棄されます。ブロックの内容が
 存在しないときのためにデフォルトの内容を用意しておきたい、なんて場合に使うと便利です。
 
-``` php
+```php
 // ビューファイル
 // navbar ブロックを作成
 $this->startIfEmpty('navbar');
@@ -188,7 +188,7 @@ echo $this->element('notifications');
 $this->end();
 ```
 
-``` php
+```php
 // 親の view/layout
 <?php $this->startIfEmpty('navbar'); ?>
 <p>ブロックがこの時点で定義されていない場合、代わりにこの内容を表示する</p>
@@ -218,14 +218,14 @@ echo $this->fetch('navbar');
 ブロックの表示には、 `fetch()` メソッドを使います。 `fetch()` はブロックが
 存在しなかった場合、'' を返すのでブロックが安全に出力されます。
 
-``` php
+```php
 echo $this->fetch('sidebar');
 ```
 
 fetch を使うとブロックが存在するかどうかによってブロックに囲まれたコンテンツの表示を
 切り替えることができます。
 
-``` php
+```php
 // in templates/Layouts/default.ctp
 <?php if ($this->fetch('menu')): ?>
 <div class="menu">
@@ -239,7 +239,7 @@ fetch を使うとブロックが存在するかどうかによってブロッ�
 これによって、ブロックの内容が空のときはプレースホルダを表示するとったことが簡単にできます。
 デフォルト値は第2引数で指定します。
 
-``` php
+```php
 <div class="shopping-cart">
     <h3>Your Cart</h3>
     <?php echo $this->fetch('cart', 'Your cart is empty'); ?>
@@ -261,7 +261,7 @@ fetch を使うとブロックが存在するかどうかによってブロッ�
 `HtmlHelper::meta()` の各メソッドは `inline = false` オプションが
 渡されたとき、それぞれ同じ名前のブロックを更新します。
 
-``` php
+```php
 <?php
 // ビューファイルの中
 $this->Html->script('carousel', ['inline' => false]);
@@ -281,7 +281,7 @@ $this->Html->css('carousel', ['inline' => false]);
 
 `HtmlHelper` はスクリプトと CSS がどのブロックに対応するかを制御します。
 
-``` php
+```php
 // ビューの中
 $this->Html->script('carousel', ['block' => 'scriptBottom']);
 
@@ -304,7 +304,7 @@ echo $this->fetch('scriptBottom');
 そのためには、作成したレイアウトに `$this->fetch('content')` が含まれていることを
 確認して下さい。それでは、デフォルトレイアウトがどのようなものか実際に見てみましょう。
 
-``` php
+```php
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -364,7 +364,7 @@ CSS ファイルが含まれるのは便利です。
 ディレクトリにファイルを作って、コントローラアクションの中かビューの
 `View::$layout` プロパティを切り替えるだけで作成できます。
 
-``` php
+```php
 // コントローラから
 public function admin_view()
 {
@@ -379,7 +379,7 @@ $this->layout = 'loggedin';
 例えば、私のサイトに小さな広告バナー枠があるとします。その場合、私は小さな広告枠が含まれる
 新しいレイアウトを作って、以下のように全コントローラのアクションで指定するかもしれません。
 
-``` php
+```php
 class UsersController extends AppController
 {
     public function view_active()
@@ -413,7 +413,7 @@ xml, js, rss があります。
 もし既存のプラグインでレイアウトを使いたい場合、 `プラグイン記法` を使うことが出来ます。
 コンタクトプラグインからコンタクトのレイアウトを使う場合は以下のようになります。
 
-``` php
+```php
 class UsersController extends AppController
 {
     public function view_active()
@@ -437,7 +437,7 @@ class UsersController extends AppController
 エレメントは `templates/Elements/` フォルダの中に `.ctp` の拡張子を持つ名前で配置されます。
 次の例はビューのelementメソッドを使って出力しています。
 
-``` php
+```php
 echo $this->element('helpbox');
 ```
 
@@ -445,7 +445,7 @@ echo $this->element('helpbox');
 
 element メソッドの第二引数を通してエレメントにデータを渡すことができます。
 
-``` php
+```php
 echo $this->element('helpbox', [
     'helptext' => 'Oh, this text is very helpful.',
 ]);
@@ -455,7 +455,7 @@ echo $this->element('helpbox', [
 (ビューファイルにおけるコントローラの `Controller::set()` メソッドと同様の動作です。)
 上記の例では `templates/Elements/helpbox.ctp` の中で `$helptext` 変数が使えます。
 
-``` php
+```php
 // templates/Elements/helpbox.ctp の内部
 echo $helptext; //"Oh, this text is very helpful." と出力されます
 ```
@@ -463,7 +463,7 @@ echo $helptext; //"Oh, this text is very helpful." と出力されます
 `View::element()` メソッドは、エレメントのためのオプションをサポートしています。
 サポートされるオプションは、'cache' と 'callbacks' です。例えば:
 
-``` php
+```php
 echo $this->element(
     'helpbox',
     [
@@ -485,7 +485,7 @@ echo $this->element(
 あるアプリケーションの中で同じエレメントの異なるバージョンをキャッシュするためには、
 次の書式を使ってユニークなキャッシュキーを提供して下さい。
 
-``` php
+```php
 $this->element('helpbox', [], [
     'cache' => ['config' => 'short', 'key' => 'unique value'],
 ]);
@@ -500,7 +500,7 @@ $this->element('helpbox', [], [
 
 これを実際確認するため、Post の例のコントローラに以下のようなコードを追加して下さい。
 
-``` php
+```php
 class PostsController extends AppController
 {
     // ...
@@ -518,7 +518,7 @@ class PostsController extends AppController
 するとエレメントの中でページネイトされた posts モデルにアクセすることができます。
 整列されたリストから最新の5件を取得するためには、次のようにすればよいです。
 
-``` php
+```php
 <h2>Latest Posts</h2>
 <?php
 $posts = $this->requestAction(
@@ -540,7 +540,7 @@ false の場合、どのキャッシュ設定を使うかを設定すること�
 `Cache` の設定についての詳細は [キャッシュ](core-libraries/caching) をみて下さい。
 エレメントキャッシュの単純な例は以下のようになります。
 
-``` php
+```php
 echo $this->element('helpbox', [], ['cache' => true]);
 ```
 
@@ -548,7 +548,7 @@ echo $this->element('helpbox', [], ['cache' => true]);
 設定することで確実にキャッシュすることができます。これによって、element() を以前呼び出し時に
 生成されたキャッシュをそれに続く element() の呼び出しの結果で上書きすることが避けられます。
 
-``` php
+```php
 echo $this->element(
     'helpbox',
     ['var' => $var],
@@ -574,7 +574,7 @@ CakePHP は element() に何も設定されていない場合、この設定を�
 プラグインからエレメントを読み込むために、 `plugin` オプションを使って下さい。
 (バージョン 1.x の `data` オプションから移動しました。):
 
-``` php
+```php
 echo $this->element('helpbox', [], ['plugin' => 'Contacts']);
 ```
 
@@ -586,14 +586,14 @@ echo $this->element('helpbox', [], ['plugin' => 'Contacts']);
 自動的に接頭辞がつけられます。もしエレメントがプラグインに存在しない場合、
 メインアプリフォルダの中が検索されます。
 
-``` php
+```php
 echo $this->element('Contacts.helpbox');
 ```
 
 もしビューがプラグインの一部であれば、プラグイン名を省略できます。
 例えば、Contacts プラグインの `ContactsController` の中にいる場合:
 
-``` php
+```php
 echo $this->element('helpbox');
 // and
 echo $this->element('Contacts.helpbox');
@@ -618,7 +618,7 @@ CakePHP のビュークラスのほとんどのコンポーネントと同様に
 
 また、正しく動作するように、 `View` を継承しましょう。
 
-``` php
+```php
 // In src/View/PdfView.php
 class PdfView extends View
 {

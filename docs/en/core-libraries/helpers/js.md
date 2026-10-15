@@ -34,7 +34,7 @@ Then you must include the library in your page. To include it in
 all pages, add this line to the \<head\> section of
 `templates/Layouts/default.ctp`:
 
-``` php
+```php
 echo $this->Html->script('jquery'); // Include jQuery library
 ```
 
@@ -45,7 +45,7 @@ By default scripts are cached, and you must explicitly print out
 the cache. To do this at the end of each page, include this line
 just before the ending `</body>` tag:
 
-``` php
+```php
 echo $this->Js->writeBuffer(); // Write cached scripts
 ```
 
@@ -56,7 +56,7 @@ echo $this->Js->writeBuffer(); // Write cached scripts
 JavaScript engine selection is declared when you include the helper
 in your controller:
 
-``` php
+```php
 public $helpers = ['Js' => ['Jquery']];
 ```
 
@@ -79,7 +79,7 @@ That said, there is one caveat:
 
 To override the "\$" shortcut, use the jQueryObject variable:
 
-``` php
+```php
 $this->Js->JqueryEngine->jQueryObject = '$j';
 echo $this->Html->scriptBlock(
     'var $j = jQuery.noConflict();',
@@ -93,7 +93,7 @@ echo $this->Html->scriptBlock(
 Declare the JsHelper in the `$helpers` array in your
 customHelper:
 
-``` php
+```php
 public $helpers = ['Js'];
 ```
 
@@ -104,7 +104,7 @@ public $helpers = ['Js'];
 If you are willing to use an other JavaScript engine than the
 default, do the helper setup in your controller as follows:
 
-``` php
+```php
 public $helpers = [
     'Js' => ['Prototype'],
     'CustomHelper',
@@ -149,13 +149,13 @@ in the DOM, `$this->Js->get()` returns a \$this, allowing you to
 chain the methods using the selection. Method chaining allows you
 to write shorter, more expressive code:
 
-``` php
+```php
 $this->Js->get('#foo')->event('click', $eventCode);
 ```
 
 Is an example of method chaining. It is equivalent to:
 
-``` php
+```php
 $this->Js->get('#foo');
 $this->Js->event('click', $eventCode);
 ```
@@ -235,7 +235,7 @@ buffering. By appending an boolean to the end of the arguments you
 can force other methods to go into the buffer. For example the
 `each()` method does not normally buffer:
 
-``` php
+```php
 $this->Js->each('alert("whoa!");', true);
 ```
 
@@ -243,7 +243,7 @@ The above would force the `each()` method to use the buffer.
 Conversely if you want a method that does buffer to not buffer, you
 can pass a `false` in as the last argument:
 
-``` php
+```php
 $this->Js->event('click', 'alert("whoa!");', false);
 ```
 
@@ -318,7 +318,7 @@ jQuery (or whichever library you are using). Also make sure to
 include `RequestHandlerComponent` in your components. Add the
 following to your controller:
 
-``` php
+```php
 public $components = ['RequestHandler'];
 public $helpers = ['Js'];
 ```
@@ -326,7 +326,7 @@ public $helpers = ['Js'];
 Next link in the JavaScript library you want to use. For this
 example we'll be using jQuery:
 
-``` php
+```php
 echo $this->Html->script('jquery');
 ```
 
@@ -334,7 +334,7 @@ Similar to 1.2 you need to tell the `PaginatorHelper` that you
 want to make JavaScript enhanced links instead of plain HTML ones.
 To do so, call the `options()` at the top of your view:
 
-``` php
+```php
 $this->Paginator->options([
     'update' => '#content',
     'evalScripts' => true,
@@ -357,7 +357,7 @@ generated script content to reduce the number of `<script>` tags
 in your source code you **must** write the buffer out. At the
 bottom of your view file. Be sure to include:
 
-``` php
+```php
 echo $this->Js->writeBuffer();
 ```
 
@@ -370,7 +370,7 @@ have worry about the same JavaScript being output twice.
 Since `indicator` is no longer supported, you must add any
 indicator effects yourself:
 
-``` php
+```php
 <!DOCTYPE html>
 <html>
     <head>
@@ -401,7 +401,7 @@ will display a busy indicator animation that we will show and hide
 with the `JsHelper`. To do that we need to update our
 `options()` function:
 
-``` php
+```php
 $this->Paginator->options([
     'update' => '#content',
     'evalScripts' => true,

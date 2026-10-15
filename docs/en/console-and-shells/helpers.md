@@ -7,7 +7,7 @@ Shell Helpers were added in 2.8.0
 Shell Helpers let you package up complex output generation code. Shell
 Helpers can be accessed and used from any shell or task:
 
-``` php
+```php
 // Output some data as a table.
 $this->helper('table')->output($data);
 
@@ -17,7 +17,7 @@ $this->helper('Plugin.HelperName')->output($data);
 
 You can also get instances of helpers and call any public methods on them:
 
-``` php
+```php
 // Get and use the Progress Helper.
 $progress = $this->helper('Progress');
 $progress->increment(10);
@@ -31,7 +31,7 @@ application or plugins. As an example, we'll create a simple helper to generate
 fancy headings. Shell helper classes use the `ShellHelper` suffix. First create
 `src/Console/Helper/HeadingShellHelper.php` and put the following in it:
 
-``` php
+```php
 // src/Console/Helper/HeadingShellHelper.php
 class HeadingShellHelper extends BaseShellHelper
 {
@@ -48,7 +48,7 @@ class HeadingShellHelper extends BaseShellHelper
 is needed. The arguments of `output()` are passed as a single array. We can
 then use this new helper in one of our shell commands by calling it:
 
-``` php
+```php
 // With ### on either side
 $this->helper('heading')->output(['It works!']);
 
@@ -63,7 +63,7 @@ $this->helper('heading')->output(['It works!', '~', 4]);
 The TableHelper assists in making well formatted ASCII art tables. Using it is
 pretty simple:
 
-``` php
+```php
 $data = [
     ['Header 1', 'Header', 'Long Header'],
     ['short', 'Longish thing', 'short'],
@@ -86,7 +86,7 @@ The ProgressHelper can be used in two different ways. The simple mode lets you
 provide a callback, as the first element of the options array, that is invoked
 until the progress is complete:
 
-``` php
+```php
 $this->helper('progress')->output([
     function ($progress) {
         // Do work here.
@@ -105,7 +105,7 @@ You can control the progress bar more by providing additional options:
 
 An example of all the options in use would be:
 
-``` php
+```php
 $this->helper('progress')->output([
     'total' => 10,
     'width' => 20,
@@ -118,7 +118,7 @@ $this->helper('progress')->output([
 The progress helper can also be used manually to increment and re-render the
 progress bar as necessary:
 
-``` php
+```php
 $progress = $this->helper('Progress');
 $progress->init([
     'total' => 10,

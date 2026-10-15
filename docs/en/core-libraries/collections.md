@@ -14,7 +14,7 @@ for Helpers, Behaviors, and Tasks in addition to Components.
 Loading objects on every kind of collection can be done using the `load()`
 method:
 
-``` php
+```php
 $this->Prg = $this->Components->load('Prg');
 $this->Prg->process();
 ```
@@ -24,7 +24,7 @@ collection, a new instance will be created. If the component is already loaded,
 another instance will not be created. When loading components, you can also
 provide additional configuration for them:
 
-``` php
+```php
 $this->Cookie = $this->Components->load('Cookie', ['name' => 'sweet']);
 ```
 
@@ -34,7 +34,7 @@ used to alias objects in a collection. This allows you to have component names
 that do not reflect the classnames, which can be helpful when extending core
 components:
 
-``` php
+```php
 $this->Auth = $this->Components->load(
     'Auth',
     ['className' => 'MyCustomAuth'],
@@ -45,7 +45,7 @@ $this->Auth->user(); // Actually using MyCustomAuth::user();
 The inverse of loading an object, is unloading it. Unloaded objects are removed
 from memory, and will not have additional callbacks triggered on them:
 
-``` php
+```php
 $this->Components->unload('Cookie');
 $this->Cookie->read(); // Fatal error.
 ```
@@ -56,7 +56,7 @@ Callbacks are supported by collection objects. When a collection has a callback
 triggered, that method will be called on all enabled objects in the collection.
 You can pass parameters to the callback loop as well:
 
-``` php
+```php
 $this->Behaviors->trigger('afterFind', [$this, $results, $primary]);
 ```
 
@@ -83,7 +83,7 @@ control how callbacks are fired:
 Using the `break` and `breakOn` options you can cancel a callback loop
 midway similar to stopping event propagation in JavaScript:
 
-``` php
+```php
 $this->Behaviors->trigger(
     'beforeFind',
     [$this, $query],
@@ -101,7 +101,7 @@ Once an object is loaded into a collection you may need to disable it.
 Disabling an object in a collection prevents future callbacks from being fired
 on that object unless the `triggerDisabled` option is used:
 
-``` php
+```php
 // Disable the HtmlHelper
 $this->Helpers->disable('Html');
 
@@ -114,7 +114,7 @@ primary difference between an enabled and disabled object is with regards to
 callbacks. You can interrogate a collection about the enabled objects, or check
 if a specific object is still enabled using `enabled()`:
 
-``` php
+```php
 // Check whether or not a specific helper is enabled.
 $this->Helpers->enabled('Html');
 
@@ -129,7 +129,7 @@ The handling of priority values and order of triggering is the same as
 explained [here](../core-libraries/events#event-priorities).
 Here's how you can specify priority at declaration time:
 
-``` php
+```php
 class SomeController
 {
     public $components = [
@@ -158,7 +158,7 @@ class Post
 
 When dynamically loading objects to a collection you can specify the priority like this:
 
-``` php
+```php
 $this->MyComponent = $this->Components->load(
     'MyComponent',
     ['priority' => 9],
@@ -167,7 +167,7 @@ $this->MyComponent = $this->Components->load(
 
 You can also change priorities at run time using the `ObjectCollection::setPriority()` function:
 
-``` php
+```php
 //For a single object
 $this->Components->setPriority('Foo', 2);
 

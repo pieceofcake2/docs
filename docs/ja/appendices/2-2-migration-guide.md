@@ -8,7 +8,7 @@ CakePHP 2.2 は、2.0/2.1 の API の完全上位互換です。 このページ
 
 CakePHP2.2 にアップグレードする際には、 `app/Config/bootstrap.php` ファイルに新しい設定項目を追加する必要があります。この追加設定は、2.1.xと同じような振舞いをする設定です:
 
-``` php
+```php
 // アセットプラグイン、キャッシュヘルパープラグインの
 // ディスパッチャーフィルターを有効化
 Configure::write('Dispatcher.filters', [
@@ -32,7 +32,7 @@ CakeLog::config('error', [
 また、 `app/Config/core.php` ファイルも修正が必要です。
 定数 `LOG_ERROR` に `LOG_ERR` の値で定義してください。
 
-``` text
+```text
 define('LOG_ERROR', LOG_ERR);
 ```
 
@@ -208,7 +208,7 @@ define('LOG_ERROR', LOG_ERR);
 これにより、グループ単位で一度に同一ラベルのキャッシュを消すなどの処理が簡単になります。
 グループはキャッシュエンジン生成時の設定のものが定義されます:
 
-``` php
+```php
 Cache::config([
     'engine' => 'Redis',
     ...

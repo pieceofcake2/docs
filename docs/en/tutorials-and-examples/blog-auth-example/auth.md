@@ -10,7 +10,7 @@ disallowing other authors to make any changes on one's posts.
 
 First, let's create a new table in our blog database to hold our users' data:
 
-``` sql
+```sql
 CREATE TABLE users (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50),
@@ -29,7 +29,7 @@ us when implementing the user login.
 Next step is to create our User model, responsible for finding, saving and
 validating any user data:
 
-``` php
+```php
 // src/Model/User.php
 class User extends AppModel
 {
@@ -61,7 +61,7 @@ Let's also create our UsersController, the following contents correspond to a
 basic "baked" UsersController class generated with the
 [Bake plugin](../../console-and-shells/code-generation-with-bake):
 
-``` php
+```php
 // src/Controller/UsersController.php
 class UsersController extends AppController
 {
@@ -153,7 +153,7 @@ In the same way we created the views for our blog posts or by using the code
 generation tool, we implement the views. For the purpose of this tutorial, we
 will show just the `add.ctp`:
 
-``` php
+```php
 <!-- templates/Users/add.ctp -->
 <div class="users form">
 <?php echo $this->Form->create('User'); ?>
@@ -180,7 +180,7 @@ users to the actions they are allowed to reach.
 To add this component to your application open your `src/Controller/AppController.php`
 file and add the following lines:
 
-``` php
+```php
 // src/Controller/AppController.php
 class AppController extends Controller
 {
@@ -229,7 +229,7 @@ and, more importantly, hash their password so it is not stored as plain text in
 our database. Let's tell the AuthComponent to let un-authenticated users access
 the users add function and implement the login and logout action:
 
-``` php
+```php
 // src/Controller/UsersController.php
 
 public function beforeFilter()
@@ -258,7 +258,7 @@ public function logout()
 Password hashing is not done yet, open your `src/Model/User.php` model file
 and add the following:
 
-``` php
+```php
 // src/Model/User.php
 
 class User extends AppModel
@@ -290,7 +290,7 @@ BlowfishPasswordHasher class. We're just missing a template view file for the
 login function. Open up your `templates/Users/login.ctp` file and add the
 following lines:
 
-``` php
+```php
 // templates/Users/login.ctp
 
 <div class="users form">
@@ -336,14 +336,14 @@ As stated before, we are converting this blog into a multi-user authoring tool,
 and in order to do this, we need to modify the posts table a bit to add the
 reference to the User model:
 
-``` sql
+```sql
 ALTER TABLE posts ADD COLUMN user_id INT UNSIGNED;
 ```
 
 Also, a small change in the PostsController is required to store the currently
 logged in user as a reference for the created post:
 
-``` php
+```php
 // src/Controller/PostsController.php
 public function add()
 {
@@ -369,7 +369,7 @@ URL, while normal users (the author role) can only access the permitted actions.
 Open again the AppController class and add a few more options to the Auth
 config:
 
-``` php
+```php
 // src/Controller/AppController.php
 
 public $components = [
@@ -414,7 +414,7 @@ add to PostsController should allow authors to create posts but prevent the
 edition of posts if the author does not match. Open the file `PostsController.php`
 and add the following content:
 
-``` php
+```php
 // src/Controller/PostsController.php
 
 public function isAuthorized($user)
@@ -444,7 +444,7 @@ the user is authorized to edit the post or not, we're calling a `isOwnedBy()`
 function in the Post model. It is in general a good practice to move as much
 logic as possible into models. Let's then implement the function:
 
-``` php
+```php
 // src/Model/Post.php
 
 public function isOwnedBy($post, $user)

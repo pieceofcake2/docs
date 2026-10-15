@@ -95,13 +95,13 @@ PHP 5.3が名前空間のサポートをしていることから、このPHPバ�
 
 翻訳の結果を表示させたい場合は:
 
-``` text
+```text
 echo __('My Message');
 ```
 
 としてください。この変更は全ての翻訳のショートカット関数を含みます:
 
-``` text
+```text
 __()
 __n()
 __d()
@@ -114,7 +114,7 @@ __c()
 これに併せて、オプションパラメータを渡しているなら、翻訳はパラメータを用いて [sprintf](https://www.php.net/manual/ja/function.sprintf.php) を値を返す前に呼び出します。
 以下は一例です:
 
-``` text
+```text
 // "Called: MyClass:myMethod" のようなものを返す
 echo __('Called: %s:%s', $className, $methodName);
 ```
@@ -198,7 +198,7 @@ CakePHPは `$_GET['url']` をアプリケーションのリクエストパスの
 Note: ホームページ自体(`http://domain/`)の \$this-\>request-\>url は、
 `/` の代わりに `false` を返します。必要に応じて判定に使ってください:
 
-``` php
+```php
 if (!$this->request->url) {} // $this->request->url === '/' の代わり
 ```
 
@@ -207,7 +207,7 @@ if (!$this->request->url) {} // $this->request->url === '/' の代わり
 Componentは、全てのコンポーネントが必須とする基底クラスになりました。
 コンポーネントとそのコンストラクタが変更になったことから、これを書き換える必要があります:
 
-``` php
+```php
 class PrgComponent extends Component
 {
     public function __construct(ComponentCollection $collection,
@@ -225,7 +225,7 @@ class PrgComponent extends Component
 設定がコンポーネントのコンストラクタに移動したことで、 `initialize()` コールバックは2番目の引数に `$settings` を受け取らないようになりました。
 以下のメソッド特性を使うようにコンポーネントを書き換える必要があります:
 
-``` php
+```php
 public function initialize(Controller $controller)
 {
 }
@@ -240,7 +240,7 @@ Componentで非推奨となったすべてのコールバックはComponentColle
 コールバックと対話するには代わりに `trigger()` メソッドを使う必要があります。
 コールバックを引き起こす必要があるなら、以下のように呼び出すことができます:
 
-``` php
+```php
 $this->Components->trigger('someCallback', [&$this]);
 ```
 
@@ -400,7 +400,7 @@ Appクラスは以下のプロパティを失いました。
 クラスの読み込み方が大きく書き直されましたが、手慣れた方法を尊重するためにアプリケーションのコードを変更する必要が稀にあります。
 最も大きな変更は新しいメソッドが導入されたことです:
 
-``` php
+```php
 App::uses('AuthComponent', 'Controller/Component');
 ```
 
@@ -412,7 +412,7 @@ CakePHP 1.3の `App::import()` との主な違いは、前者が実際にクラ�
 
 `App::import()` から移行し `App::uses()` を使用するいくつかの例を挙げます:
 
-``` php
+```php
 App::import('Controller', 'Pages');
 // は次のようになる
 App::uses('PagesController', 'Controller');
@@ -437,7 +437,7 @@ App::uses('MongoDbSource', 'MongoDb.Model/Datasource');
 以前 `App::import('Core', $class);` を用いて読み込んでいたすべてのクラスは、正しいパッケージを参照する `App::uses()` を用いて読み込む必要があります。
 APIを見て新しいフォルダでクラスを探索するようにしてください。いくつか例を挙げます:
 
-``` php
+```php
 App::import('Core', 'CakeRoute');
 // は次のようになる
 App::uses('CakeRoute', 'Routing/Route');
@@ -461,7 +461,7 @@ App::uses('HttpSocket', 'Network/Http');
 
 例:
 
-``` php
+```php
 App::build(['controllers' => ['/full/path/to/controllers']]);
 // は次のようになる
 App::build(['Controller' => ['/full/path/to/Controller']]);
@@ -487,7 +487,7 @@ App::build(['View/Helper' => ['/full/path/to/View/Helper']]);
 - Cacheは最後に設定されたエンジンの名前を保有しないようになりました。
   これはエンジンを指定する操作をしたいときは、\$configパラメータが指定したい設定名と同一でなければいけないということを意味します。
 
-``` php
+```php
 Cache::config('something');
 Cache::write('key', $value);
 
@@ -519,7 +519,7 @@ Cache::write('key', $value, 'something');
   2.0では、 `index` アクションのみがショートカットルートとして与えられます。
   引き続きショートカットを利用したいと思う方は、以下のようにルートを追加できます:
 
-  ``` php
+  ```php
   Router::connect(
     '/users/:action',
     ['controller' => 'users', 'plugin' => 'users']
@@ -530,7 +530,7 @@ Cache::write('key', $value, 'something');
 
 `app/Config/routes.php` ファイルは以下の行をファイルの後方に追加するように更新する必要があります:
 
-``` text
+```text
 require CAKE . 'Config' . DS . 'routes.php';
 ```
 
@@ -612,7 +612,7 @@ CakeSessionは完全に静的なクラスとなり、 `SessionHelper` と `Sessi
 ClassRegistryからViewが削除されたことに対応して、Helper::\_\_construct()の特性(*signature*)が変わりました。
 以下のものを使うようにサブクラスを更新する必要があります:
 
-``` php
+```php
 public function __construct(View $View, $settings = [])
 ```
 
@@ -726,14 +726,14 @@ Helperクラスは更に3つのprotectedな属性を持つようになりまし�
 
 Html・Formヘルパー、またその他でこれを使うには、次のように書けます:
 
-``` php
+```php
 $this->Form->checkbox('field', ['checked' => true, 'value' => 'some_value']);
 ```
 
 他の便宜的方法は最小化される属性をキーではなくアイテムとして渡すことです。
 例を挙げます:
 
-``` php
+```php
 $this->Form->checkbox('field', ['checked', 'value' => 'some_value']);
 ```
 
@@ -834,7 +834,7 @@ beforeRenderもまた同様で、ビューでの変数全てが操作される�
 ヘルパーのコールバックは常に一つの引数、beforeRenderとafterRenderにはレンダリングされるビューファイルが、beforeLayoutとafterLayoutにはレンダリングされるレイアウトファイルが与えられるようになりました。
 ヘルパーの関数特性は以下のようにする必要があります:
 
-``` php
+```php
 public function beforeRender($viewFile)
 {
 
@@ -870,7 +870,7 @@ public function afterLayout($layoutFile)
 このタグはXMLスキーマの要素ではなく、HTMLまたはXMLドキュメントで有効となり得ませんでした。
 2.0では、このタグはHTML・XMLのコメントに置き換えられました:
 
-``` html
+```html
 <cake:nocache> が <!--nocache-->
 </cake:nocache> が <!--/nocache-->
 ```
@@ -920,21 +920,21 @@ PHPUnitによって全てのコマンドラインオプションがサポート�
 関連モデルは遅延読み込みが為されるようになりました。
 存在しないモデルのプロパティに値を割り当てようとすると、エラーを投げるような事態を垣間見ることが出来るでしょう:
 
-``` text
+```text
 $Post->inexistentProperty[] = 'value';
 ```
 
 上記は「注意：オーバーロードされた（訳注：PHPのオーバーロードのこと）プロパティの\$inexistentPropertyへの間接的な変更は効果がありません。」(*Notice: Indirect modification of overloaded property \$inexistentProperty has no effect*)というエラーを投げることでしょう。
 以下のように、プロパティに初期値を与えることによってこの問題を解決できます:
 
-``` text
+```text
 $Post->nonexistentProperty = [];
 $Post->nonexistentProperty[] = 'value';
 ```
 
 また、以下のようにモデルのクラスにプロパティを定義するだけでも解決できます:
 
-``` php
+```php
 class Post
 {
     public $nonexistentProperty = [];
@@ -973,13 +973,13 @@ PDOを採用した後に追加された素晴らしい機能のうちの一つ�
 - DboSource::executeのAPIが変更されました。
   二番目の引数としてクエリの値の配列をとるようになりました:
 
-  ``` php
+  ```php
   public function execute($sql, $params = [], $options = [])
   ```
 
   上記が以下のようになりました:
 
-  ``` php
+  ```php
   public function execute($sql, $options = [], $params = [])
   ```
 
@@ -990,7 +990,7 @@ PDOを採用した後に追加された素晴らしい機能のうちの一つ�
 - DboSource::fetchAll() は第二引数に配列を受け取ることができるようになり、クエリに結び付けられる値を渡します。
   第三引数は削除されました。例:
 
-  ``` php
+  ```php
   $db->fetchAll(
     'SELECT
       * from users
@@ -1045,7 +1045,7 @@ PDOドライバは自動的にこれらの値をエスケープします。
 
 - 設定として文字列をサポートしなくなりました。例:
 
-  ``` php
+  ```php
   public $actsAs = [
       'Acl' => 'Controlled',
       'Tree' => 'nested'
@@ -1054,7 +1054,7 @@ PDOドライバは自動的にこれらの値をエスケープします。
 
   こうなりました:
 
-  ``` php
+  ```php
   public $actsAs = [
       'Acl' => ['type' => 'Controlled'],
       'Tree' => ['type' => 'nested']
@@ -1066,7 +1066,7 @@ PDOドライバは自動的にこれらの値をエスケープします。
 プラグインはコンポーネント、ヘルパー、モデルに、マジックとして自身のプラグイン接頭辞を付け加えなくなりました。
 明示的に使いたいものを指定しなければなりません。以前は:
 
-``` php
+```php
 public $components = ['Session', 'Comments'];
 ```
 
@@ -1074,7 +1074,7 @@ public $components = ['Session', 'Comments'];
 これはアプリケーション・コアのコンポーネントのみを見るようになりました。
 プラグインからオブジェクトを使いたい場合は、プラグインの名前を指定しなければなりません:
 
-``` php
+```php
 public $components = ['Session', 'Comment.Comments'];
 ```
 
@@ -1156,7 +1156,7 @@ public $components = ['Session', 'Comment.Comments'];
 また、データソースがパッケージに移動したため、探索するためのパッケージを渡す必要があります。
 例を挙げます:
 
-``` php
+```php
 public $default = [
     'datasource' => 'Database/Mysql',
     'persistent' => false,

@@ -281,7 +281,7 @@ are then reachable from the web, while your configuration, source code and
 Assuming you installed the application into `/var/www/my_app`, an Apache
 virtual host looks like this:
 
-``` text
+```text
 <VirtualHost *:80>
     ServerName www.example.com
     DocumentRoot /var/www/my_app/webroot
@@ -329,7 +329,7 @@ CakePHP 2, continue with the [Blog Tutorial](tutorials-and-examples/blog/blog).
 Not working? If you're getting timezone related errors from PHP uncomment one
 line in `config/core.php` and set your server's timezone:
 
-``` php
+```php
 /**
  * Uncomment this line and correct your server timezone to fix
  * any date & time related errors.

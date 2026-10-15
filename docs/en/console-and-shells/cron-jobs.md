@@ -4,7 +4,7 @@ A common thing to do with a shell is making it run as a cronjob to
 clean up the database once in a while or send newsletters. This is
 trivial to setup, for example:
 
-``` text
+```text
 */5  *    *    *    *  cd /full/path/to/my_app && bin/cake myshell myparam
 # *    *    *    *    *  command to execute
 # │    │    │    │    │

@@ -31,7 +31,7 @@ The application skeleton ships `config/database.php.default`; copy it to
 `config/database.php` and edit the connections. Each connection is a public
 property of the `DATABASE_CONFIG` class:
 
-``` php
+```php
 // config/database.php
 class DATABASE_CONFIG
 {
@@ -63,7 +63,7 @@ integer and float columns as PHP `int` and `float` instead of strings. If your
 application relies on the old behavior (for example strict comparisons with
 strings), set `PDO::ATTR_STRINGIFY_FETCHES`:
 
-``` php
+```php
 public $default = [
     'datasource' => 'Database/Mysql',
     // ...
@@ -132,7 +132,7 @@ methods. Let's write a datasource that will access a fictitious remote JSON
 based API. We'll call it `FarAwaySource` and we'll put it in
 `src/Model/Datasource/FarAwaySource.php`:
 
-``` php
+```php
 // src/Model/Datasource/FarAwaySource.php
 class FarAwaySource extends DataSource
 {
@@ -310,7 +310,7 @@ class FarAwaySource extends DataSource
 We can then configure the datasource in our `config/database.php` file
 by adding something like this:
 
-``` php
+```php
 public $faraway = [
     'datasource' => 'FarAwaySource',
     'apiKey' => '1234abcd',
@@ -319,7 +319,7 @@ public $faraway = [
 
 Then use the database config in our models like this:
 
-``` php
+```php
 class MyModel extends AppModel
 {
     public $useDbConfig = 'faraway';
@@ -328,7 +328,7 @@ class MyModel extends AppModel
 
 We can retrieve data from our remote source using the familiar model methods:
 
-``` php
+```php
 // Get all messages from 'Some Person'
 $messages = $this->MyModel->find('all', [
     'conditions' => ['name' => 'Some Person'],
@@ -341,7 +341,7 @@ $messages = $this->MyModel->find('all', [
 
 Similarly we can save a new message:
 
-``` php
+```php
 $this->MyModel->save([
     'name' => 'Some Person',
     'message' => 'New Message',
@@ -350,7 +350,7 @@ $this->MyModel->save([
 
 Update the previous message:
 
-``` php
+```php
 $this->MyModel->id = 42;
 $this->MyModel->save([
     'message' => 'Updated message',
@@ -359,7 +359,7 @@ $this->MyModel->save([
 
 And delete the message:
 
-``` php
+```php
 $this->MyModel->delete(42);
 ```
 
@@ -371,7 +371,7 @@ Simply place your datasource file into
 `plugins/[YourPlugin]/Model/Datasource/[YourSource].php`
 and refer to it using the plugin notation:
 
-``` php
+```php
 public $faraway = [
     'datasource' => 'MyPlugin.FarAwaySource',
     'apiKey' => 'abcd1234',
@@ -395,7 +395,7 @@ properly.
 
 A SQL Server connection looks like this:
 
-``` php
+```php
 public $default = [
     'datasource' => 'Database/Sqlserver',
     'persistent' => false,

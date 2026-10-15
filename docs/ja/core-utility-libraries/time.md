@@ -5,7 +5,7 @@
 `TimeHelper` の機能が `View` の外部で必要な場合、
 `CakeTime` クラスを使用してください。
 
-``` php
+```php
 class UsersController extends AppController
 {
     public $components = ['Auth'];

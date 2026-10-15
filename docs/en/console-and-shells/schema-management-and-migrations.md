@@ -10,7 +10,7 @@ A generated schema file allows you to easily transport a database
 agnostic schema. You can generate a schema file of your database
 using:
 
-``` bash
+```bash
 $ bin/cake schema generate
 ```
 
@@ -25,7 +25,7 @@ directory (`app/Config/Schema` in the legacy layout).
 To later rebuild the database schema from your previously made
 `schema.php` file run:
 
-``` bash
+```bash
 $ bin/cake schema create
 ```
 
@@ -36,7 +36,7 @@ Schema files can also be used to generate sql dump files. To
 generate a sql file containing the `CREATE TABLE` statements,
 run:
 
-``` bash
+```bash
 $ bin/cake schema dump --write filename.sql
 ```
 
@@ -54,14 +54,14 @@ CakeSchema callbacks. Every schema file is generated with a
 The `$event` param holds an array with two keys. One to tell if a
 table is being dropped or created and another for errors. Examples:
 
-``` text
+```text
 ['drop' => 'posts', 'errors' => null]
 ['create' => 'posts', 'errors' => null]
 ```
 
 Adding data to a posts table for example would like this:
 
-``` php
+```php
 App::uses('Post', 'Model');
 public function after($event = [])
 {
@@ -87,7 +87,7 @@ When inserting data to more than one table you'll need to flush the database
 cache after each table is created. Cache can be disable by setting
 `$db->cacheSources = false` in the before action().
 
-``` php
+```php
 public $connection = 'default';
 
 public function before($event = [])
@@ -102,7 +102,7 @@ public function before($event = [])
 If you use models in your callbacks make sure to initialize them with the
 correct datasource, lest they fallback to their default datasources:
 
-``` php
+```php
 public function before($event = [])
 {
     $articles = ClassRegistry::init('Articles', [
@@ -131,7 +131,7 @@ engine type. Each Dbo implements the tableParameters they support.
 
 Here is a full example from the acl class:
 
-``` php
+```php
 /**
  * ACO - Access Control Object - Something that is wanted
  */
@@ -181,7 +181,7 @@ the following attributes.
 
 Example column:
 
-``` text
+```text
 'id' => [
     'type' => 'integer',
     'null' => false,
@@ -236,7 +236,7 @@ This is either a single column name or an array of columns.
 
 e.g. Single:
 
-``` text
+```text
 'indexes' => [
     'PRIMARY' => [
         'column' => 'id',
@@ -247,7 +247,7 @@ e.g. Single:
 
 e.g. Multiple:
 
-``` text
+```text
 'indexes' => [
     'AB_KEY' => [
         'column' => [
@@ -287,7 +287,7 @@ your schema files.
 You use `tableParameters` just as you would any other key in a
 schema file. Much like `indexes`:
 
-``` php
+```php
 public $comments = [
     'id' => [
         'type' => 'integer',
@@ -323,13 +323,13 @@ SCM controlled schema files or schema snapshots. Versioning a
 schema file with the schema shell is quite easy. If you already
 have a schema file created running:
 
-``` bash
+```bash
 $ bin/cake schema generate
 ```
 
 Will bring up the following choices:
 
-``` text
+```text
 Generating Schema...
 Schema file exists.
  [O]verwrite
@@ -343,7 +343,7 @@ if you have `schema.php`, it will create `schema_2.php` and so on. You
 can then restore to any of these schema files at any time by
 running:
 
-``` bash
+```bash
 $ bin/cake schema update -s 2
 ```
 
@@ -372,7 +372,7 @@ would follow these steps:
 
 3.  Commit the created or updated `schema.php` file:
 
-    ``` bash
+    ```bash
     $ # once your database has been updated
     $ bin/cake schema generate
     $ git commit -a
@@ -391,7 +391,7 @@ of an error message saying you are missing a table):
 
 1.  Execute `cake schema` to update your database:
 
-    ``` bash
+    ```bash
     $ git pull
     $ bin/cake schema create
     $ bin/cake schema update
@@ -411,14 +411,14 @@ been created.
 Using `update` will, on the contrary, drop any field which differ from the
 schema file:
 
-``` bash
+```bash
 $ git revert HEAD
 $ bin/cake schema update
 ```
 
 Will bring up the following choices:
 
-``` text
+```text
 The following statements will run.
 ALTER TABLE `roles`
 DROP `position`;

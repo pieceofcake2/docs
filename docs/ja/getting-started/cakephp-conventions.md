@@ -26,7 +26,7 @@ CakePHP の規約は長年のウェブ開発経験とベストプラクティス
 隠蔽することが可能です。アンダースコアが付けられたコントローラメソッドはウェブ上では見えないように
 設定され、内部での利用のみ可能になります。例えば:
 
-``` php
+```php
 class NewsController extends AppController
 {
     public function latest()
@@ -132,7 +132,7 @@ CakePHP は複合主キーをサポートしません。join テーブルのデ�
 [query](../models/retrieving-your-data#model-query) を呼び出すか、通常のモデルのように振舞えるよう主キーを追加してください。
 例は次のようになります:
 
-``` sql
+```sql
 CREATE TABLE posts_tags (
     id INT(10) NOT NULL AUTO_INCREMENT,
     post_id INT(10) NOT NULL,

@@ -19,7 +19,7 @@ magic method and its `set()` method.
 To use the default flash message handler, you can use the `set()`
 method:
 
-``` php
+```php
 $this->Flash->set('This is a message');
 ```
 
@@ -32,7 +32,7 @@ method allows you use a method name that maps to an element located under
 the `templates/Elements/Flash` directory. By convention, camelcased
 methods will map to the lowercased and underscored element name:
 
-``` php
+```php
 // Uses templates/Elements/Flash/success.ctp
 $this->Flash->success('This was successful');
 
@@ -54,7 +54,7 @@ parameter, an array of options:
 
 An example of using these options:
 
-``` php
+```php
 // In your Controller
 $this->Flash->success('The user has been saved', [
     'key' => 'positive',
@@ -77,7 +77,7 @@ If you are using the `__call()` magic method, the `element` option will
 always be replaced. In order to retrieve a specific element from a plugin, you
 should set the `plugin` parameter. For example:
 
-``` php
+```php
 // In your Controller
 $this->Flash->warning('My message', ['plugin' => 'PluginName']);
 ```

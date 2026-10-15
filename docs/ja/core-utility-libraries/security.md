@@ -27,7 +27,7 @@
 
 与えられたキーにを利用してテキストを暗号化・復号します。
 
-``` php
+```php
 // 'my_key' でテキストを暗号化する
 $secret = Security::cipher('hello world', 'my_key');
 
@@ -53,7 +53,7 @@ rijndael-256 暗号を使って、テキストを暗号化・復号します。
 をインストールしておく必要があります。新しく書くコードでは、`Security.useOpenSsl` を有効にして
 `Security::encrypt()` と `Security::decrypt()` を使うことをお勧めします。使い方は次のとおりです。
 
-``` php
+```php
 // データを暗号化
 $encrypted = Security::rijndael('a secret', Configure::read('Security.key'), 'encrypt');
 
@@ -79,7 +79,7 @@ AES-256 で `$text` を暗号化します。 `$key` は、適切なパスワー�
 `Security::hash()` などの一方行ハッシュメソッドを使用してください。
 以下が使用例です。
 
-``` php
+```php
 // キーはどこかに格納されていて、後で復号に再利用されると仮定
 $key = 'wt1U5MACWJFTXGenFoZoiLwQGrLgdbHA';
 $result = Security::encrypt($value, $key);
@@ -104,7 +104,7 @@ $result = Security::encrypt($value, $key);
 暗号化に使用した値と一致しなければなりません。そうでなければ復号に失敗します。
 以下が使用例です。
 
-``` php
+```php
 // キーはどこかに格納されていて、後で復号に再利用されると仮定
 $key = 'wt1U5MACWJFTXGenFoZoiLwQGrLgdbHA';
 
@@ -129,7 +129,7 @@ $result = Security::decrypt($cipher, $key);
 指定されなかった場合は、順次利用可能なメソッドで生成を試みます。
 `$salt` を true にした場合、アプリケーションに設定した salt が利用されます。
 
-``` php
+```php
 // アプリケーションの salt 値を利用
 $sha1 = Security::hash('CakePHP Framework', 'sha1', true);
 
@@ -144,7 +144,7 @@ $hash = Security::hash('CakePHP Framework');
 bcrypt を使用した場合、わずかに使用方法が異なることに注意してください。
 最初にハッシュを生成することは、他のアルゴリズムと同じ動作をします。
 
-``` php
+```php
 // bcrypt を使用してハッシュを作成
 Security::setHash('blowfish');
 $hash = Security::hash('CakePHP Framework');
@@ -153,7 +153,7 @@ $hash = Security::hash('CakePHP Framework');
 他のハッシュタイプと異なる点は、プレーンテキストの値とハッシュ化した値を比較する際に、
 以下のようにしなければならない点です。
 
-``` php
+```php
 // $storedPassword は、事前に生成された bcrypt ハッシュ
 $newHash = Security::hash($newPassword, 'blowfish', $storedPassword);
 ```

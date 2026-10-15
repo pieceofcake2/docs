@@ -35,7 +35,7 @@ RecipesController と IngredientsController を作るでしょう。
 `Controller` クラスを継承しています。
 `AppController` は `src/Controller/AppController.php` に次のように定義されます。
 
-``` php
+```php
 // src/Controller/AppController.php
 class AppController extends Controller
 {
@@ -65,7 +65,7 @@ Html ヘルパーと Form ヘルパーが追加されます。
 また、子コントローラのコールバック中で `AppController` のコールバックを呼び出すのは、
 このようにするのがベストです。
 
-``` php
+```php
 public function beforeFilter()
 {
     parent::beforeFilter();
@@ -81,7 +81,7 @@ Composer によってオートロードされます。また、アプリケー�
 ([pieceofcake2/app](https://pieceofcake2.github.io/app/)) では、 `composer.json` の
 classmap 設定でアプリケーションのクラスを登録しています。
 
-``` json
+```json
 "autoload": {
     "classmap": ["src/"]
 }
@@ -117,7 +117,7 @@ CakePHP は規約に従って、アクション名のビューを描画します
 含まれています。このコントローラは `src/Controller/RecipesController.php` にあり、
 次のようなコードになっています。
 
-``` php
+```php
 // src/Controller/RecipesController.php
 
 class RecipesController extends AppController
@@ -161,7 +161,7 @@ class RecipesController extends AppController
 requestAction からも呼ばれるコントローラのメソッドがあれば、値を返す前にリクエストタイプを
 チェックしましょう。
 
-``` php
+```php
 class RecipesController extends AppController
 {
     public function popular()
@@ -224,7 +224,7 @@ CakePHP のコントローラは、リクエストのライフサイクル周り
 一度 `Controller::render()` を呼び出すと、
 CakePHP は再度ビューを描画することはありません。
 
-``` php
+```php
 class PostsController extends AppController
 {
     public function my_action()
@@ -242,7 +242,7 @@ class PostsController extends AppController
 
 例:
 
-``` php
+```php
 class PostsController extends AppController
 {
     public function my_action()

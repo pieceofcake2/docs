@@ -12,7 +12,7 @@ CakePHP のこのコレクションオブジェクトは、アプリケーショ
 
 すべての種類のコレクションにおいて、オブジェクトのロードは `load()` メソッドを使えば可能になります。
 
-``` php
+```php
 $this->Prg = $this->Components->load('Prg');
 $this->Prg->process();
 ```
@@ -21,7 +21,7 @@ $this->Prg->process();
 新しいインスタンスが生成されます。もし既にそのコンポーネントがロードされているなら、
 別のインスタンスは新たに生成されません。ロードする際に、コンポーネントに設定を追加することもできます。
 
-``` php
+```php
 $this->Cookie = $this->Components->load('Cookie', ['name' => 'sweet']);
 ```
 
@@ -30,7 +30,7 @@ $this->Cookie = $this->Components->load('Cookie', ['name' => 'sweet']);
 用いられる特別なキーです。これにより、クラス名とは別のコンポーネント名を使えるようになり、
 コアのコンポーネントを拡張する際に便利です。
 
-``` php
+```php
 $this->Auth = $this->Components->load(
     'Auth',
     ['className' => 'MyCustomAuth'],
@@ -42,7 +42,7 @@ $this->Auth->user(); // 実際には MyCustomAuth::user() が使用されます
 アンロードされたオブジェクトはメモリから消去され、それによりトリガーされるコールバックを
 追加されることもありません。
 
-``` php
+```php
 $this->Components->unload('Cookie');
 $this->Cookie->read(); // Fatal error.
 ```
@@ -53,7 +53,7 @@ $this->Cookie->read(); // Fatal error.
 持っていると、そのメソッドはコレクション内の実行可能（enabled）なすべてのオブジェクトに対して
 コールされます。さらに、パラメータをコールバックのループに渡せます。
 
-``` php
+```php
 $this->Behaviors->trigger('afterFind', [$this, $results, $primary]);
 ```
 
@@ -79,7 +79,7 @@ $this->Behaviors->trigger('afterFind', [$this, $results, $primary]);
 `break` や `breakOn` オプションを用いることで、コールバックループを
 JavaScript におけるイベント伝播を停止させるような感じで途中でキャンセルすることができます。
 
-``` php
+```php
 $this->Behaviors->trigger(
     'beforeFind',
     [$this, $query],
@@ -96,7 +96,7 @@ $this->Behaviors->trigger(
 コレクション内のオブジェクトを無効化することで、それ以降、 `triggerDisabled`
 オプションを用いない場合のコールバックの発火を防ぎます。
 
-``` php
+```php
 // HtmlHelper を無効化
 $this->Helpers->disable('Html');
 
@@ -109,7 +109,7 @@ $this->Helpers->enable('Html');
 有効オブジェクトに何があるのかを問い合わせたり、特定のオブジェクトがまだ有効であるのかを
 チェックできます。
 
-``` php
+```php
 // あるヘルパーが有効かどうかをチェックします
 $this->Helpers->enabled('Html');
 
@@ -123,7 +123,7 @@ $enabled = $this->Helpers->enabled();
 プライオリティ値とトリガーの順番との取り扱いは [ここ](../core-libraries/events#event-priorities) の説明と同じです。
 宣言時にプライオリティを設定できる方法は次に示します。
 
-``` php
+```php
 class SomeController
 {
     public $components = [
@@ -152,7 +152,7 @@ class Post
 
 コレクションへ動的にオブジェクトをロードした場合、こんな感じでプライオリティを指定できます。
 
-``` php
+```php
 $this->MyComponent = $this->Components->load(
     'MyComponent',
     ['priority' => 9],
@@ -161,7 +161,7 @@ $this->MyComponent = $this->Components->load(
 
 `ObjectCollection::setPriority()` メソッドを用いることで、実行時にプライオリティを変更できます。
 
-``` php
+```php
 //オブジェクトがひとつの場合
 $this->Components->setPriority('Foo', 2);
 

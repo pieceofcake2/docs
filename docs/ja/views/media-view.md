@@ -15,7 +15,7 @@
 中で宣言する必要があります。あとは、ファイルが何処にあるかを示すために追加パラメータを
 渡して下さい。
 
-``` php
+```php
 class ExampleController extends AppController
 {
     public function download()
@@ -37,7 +37,7 @@ class ExampleController extends AppController
 ここではメディアビューの `$mimeType` に登録されていないmimeタイプのファイルを描画する例を
 示します。ファイルは `webroot/files` フォルダにあり、 `WWW_ROOT . 'files'` で指定できます。
 
-``` php
+```php
 public function download()
 {
     $this->viewClass = 'Media';

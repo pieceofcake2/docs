@@ -30,7 +30,7 @@
 以下はパスを追加する新しい方法です。1.3 RC1 では `$pluginPaths` 変数はもはや働かないでしょう。
 パスを更新するには `App::build()` を使う必要があります。
 
-``` php
+```php
 App::build([
     'plugins' => [
       '/full/path/to/plugins/',
@@ -93,7 +93,7 @@ App::build([
 不必要なファイルの読み込みをしていた `inflections.php` は削除され、関連した機能は柔軟性を増強するため、メソッドに書き直されています。
 今やカスタム *inflections* を読み込むためには、 `Inflector::rules()` を使います。
 
-``` php
+```php
 Inflector::rules('singular', [
     'rules' => [
       '/^(bil)er$/i' => '\1',
@@ -195,7 +195,7 @@ Inflector::rules('singular', [
 SessionHelper と SessionComponent は他のコンポーネントと同じように振る舞い、他のヘルパ・コンポーネントと同じように宣言されなければなりません。
 既存の振る舞いを保持するなら、 `AppController::$components` と `AppController::$helpers` にこれらのクラスを読み込むように書き換えてください。
 
-``` php
+```php
 var $components = ['Session', 'Auth', ...];
 var $helpers = ['Session', 'Html', 'Form' ...];
 ```
@@ -241,7 +241,7 @@ var $helpers = ['Session', 'Html', 'Form' ...];
 1.3のprefixルートは手動でルート定義を追加する必要がありません。
 全ての prefix ルートは自動で生成されます。シンプルに変更するには、`core.php` を変更してください。
 
-``` php
+```php
 // このような書き方から:
 Configure::write('Routing.admin', 'admin');
 
@@ -253,7 +253,7 @@ prefixルートの更なる情報に関しては、新機能ガイドを見て�
 また、ルーティングパラメータに小さな変更があります。
 ルーティングパラメータは今や英数字と「-」、「\_」または `/[A-Z0-9-_+]+/` から成る必要があります。
 
-``` php
+```php
 Router::connect('/:$%@#param/:action/*', [...]); // ダメ
 Router::connect('/:can/:anybody/:see/:m-3/*', [...]); // 許容可能
 ```
@@ -263,7 +263,7 @@ Router::connect('/:can/:anybody/:see/:m-3/*', [...]); // 許容可能
 バグを引き起こしやすかった二つのまれにしか使われない機能が削除されました。 まず、
 フル正規表現を使うパスセグメントが削除されました。もう次のようなルートは作れません。
 
-``` php
+```php
 Router::connect(
   '/([0-9]+)-p-(.*)/',
   ['controller' => 'products', 'action' => 'show']
@@ -275,7 +275,7 @@ Router::connect(
 推奨されます。次に、ルートの中間でのワイルドカードのサポートが削除されました。
 以前はワイルドカードがルートの中間で使えました。
 
-``` php
+```php
 Router::connect(
     '/pages/*/:event',
     ['controller' => 'pages', 'action' => 'display'],
@@ -289,7 +289,7 @@ Router::connect(
 また、配列形式のURLに「id」キーを用いている人は、Router::url()がこれを名前付き(*named*)パラメータとして扱うことに気づくでしょう。
 もし過去にこのようなアプローチでIDパラメータをアクションに渡していたなら、この変更を反映するために、全ての \$html-\>link() と \$this-\>redirect() を書き換える必要あります。
 
-``` php
+```php
 // 古いフォーマット:
 $url = ['controller' => 'posts', 'action' => 'view', 'id' => $id];
 // ユースケース:
@@ -401,7 +401,7 @@ Cacheはエンジン毎のシングルトンの使用をやめ、代わりに `C
 `DboSource` はもはや自動でSQLログを吐き出しません。
 もし1.3でSQLログを吐き出したいなら、下記のようにしてください。
 
-``` php
+```php
 echo $this->element('sql_dump');
 ```
 
@@ -549,7 +549,7 @@ JavascriptHelper と AjaxHelperは両方とも非推奨となり、JsHelper + Ht
 `Shell::error()` はエラーメッセージを出力した後に、ステータスコード 1 で exit します。
 また、メッセージのフォーマットに多少の変更があります。
 
-``` php
+```php
 $this->error('Invalid Foo', 'Please provide bar.');
 // 出力:
 Error: Invalid Foo

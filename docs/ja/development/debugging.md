@@ -55,7 +55,7 @@ Debugger を使用する際にはまず、Configure::read('debug') に 0 より�
 dump は変数の内容を出力します。渡された変数のすべてのプロパティと
 （可能なら）メソッドを出力します:
 
-``` php
+```php
 $foo = [1,2,3];
 
 Debugger::dump($foo);
@@ -108,7 +108,7 @@ Car::stop()
 現在のスタックトレースを返します。トレースの各行には、呼び出しているメソッド、
 どこから呼ばれたかというファイルと行番号が含まれています:
 
-``` text
+```text
 // PostsController::index() の中で
 pr(Debugger::trace());
 
@@ -135,7 +135,7 @@ trace() の時点でどの関数が現在走っているのか特定できるの
 \$line 行目の前後 \$context 行もあわせて取得します。各行は `highlight_string()` で
 ハイライトされ、指定した行は `<span class="code-highlight">` で囲まれます:
 
-``` php
+```php
 pr(Debugger::excerpt(APP . 'Controller' . DS . 'PostsController.php', 48, 2));
 
 // 5 つの HTML 文字列の配列が出力されます:
@@ -175,7 +175,7 @@ Debugger のシングルトンを返します。クラス名を渡すと、CakeP
 インスタンスメソッド `log()` を持っており、
 ログメッセージを出力するのに使えます:
 
-``` php
+```php
 $this->log('通ったよ', 'debug');
 ```
 
@@ -184,7 +184,7 @@ $this->log('通ったよ', 'debug');
 使うことで、ログメッセージを書きだすことも可能です。フレームワークのクラスはオートロードされるので、
 このメソッドはアプリケーション内のどこからでも static に呼び出すことができます:
 
-``` php
+```php
 CakeLog::write('debug', '通ったよ');
 ```
 
@@ -199,13 +199,13 @@ Piece of Cake 2 プロジェクトがメンテナンスしている、PHP 8 対�
 [pieceofcake2/debug_kit](https://pieceofcake2.github.io/debug_kit/) を使ってください。
 Composer で開発用の依存パッケージとしてインストールします。
 
-``` bash
+```bash
 composer require --dev pieceofcake2/debug_kit
 ```
 
 インストールしたら、`config/bootstrap.php` でプラグインを読み込みます。
 
-``` php
+```php
 // config/bootstrap.php
 CakePlugin::load('DebugKit');
 ```

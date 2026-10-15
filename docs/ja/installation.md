@@ -251,7 +251,7 @@ v2.12.3 からデフォルトのポートは 8765 です。それより前のバ
 
 アプリケーションを `/var/www/my_app` にインストールした場合、Apache のバーチャルホストは次のようになります。
 
-``` text
+```text
 <VirtualHost *:80>
     ServerName www.example.com
     DocumentRoot /var/www/my_app/webroot
@@ -295,7 +295,7 @@ CakePHP 2 を初めて使う場合は、続けて [ブログチュートリア�
 もし PHP のタイムゾーンに関連するエラーが出るなら、 `config/core.php` の中のとある一行のコメントを外し、
 サーバのタイムゾーンを設定してください。
 
-``` php
+```php
 /**
  * Uncomment this line and correct your server timezone to fix
  * any date & time related errors.

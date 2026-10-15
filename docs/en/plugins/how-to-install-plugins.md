@@ -20,14 +20,14 @@ take the time to read the
 Before installing a plugin, check [Repositories and Plugins](/plugins/maintained-plugins)
 for a PHP 8 compatible fork. To install the DebugKit plugin, for example, run:
 
-``` bash
+```bash
 composer require --dev pieceofcake2/debug_kit
 ```
 
 or add it as a dependency to your project's `composer.json` and run
 `composer update`:
 
-``` json
+```json
 {
     "require-dev": {
         "pieceofcake2/debug_kit": "^2.2"
@@ -47,7 +47,7 @@ your `composer.json` are required so that each plugin is installed into
 `plugins/<Name>/`. The [pieceofcake2/app](https://pieceofcake2.github.io/app/)
 skeleton already contains them:
 
-``` json
+```json
 {
     "config": {
         "allow-plugins": {
@@ -71,7 +71,7 @@ project root. In both cases `CakePlugin::load()` cannot find the plugin.
 In an application that uses the legacy `app/` layout, set the installer path to
 `app/Plugin/` instead:
 
-``` json
+```json
 "extra": {
     "installer-paths": {
         "app/Plugin/{$name}/": ["type:cakephp-plugin"]
@@ -93,7 +93,7 @@ If the plugin you want to install is hosted as a Git repo, you can also clone it
 Let's assume the imaginary plugin 'ContactManager' is hosted on GitHub.
 You could clone it by executing the following command in your `plugins/` folder:
 
-``` bash
+```bash
 git clone https://github.com/example/contact-manager.git ContactManager
 ```
 
@@ -103,7 +103,7 @@ If the plugin you want to install is hosted as a Git repo,
 but you prefer not to clone it, you can also integrate it as a Git submodule.
 Execute the following commands in the root folder of your project:
 
-``` bash
+```bash
 git submodule add https://github.com/example/contact-manager.git plugins/ContactManager
 git submodule update --init
 ```
@@ -117,7 +117,7 @@ Plugins need to be loaded manually in `config/bootstrap.php`
 
 You can either load one by one or all of them in a single call:
 
-``` php
+```php
 CakePlugin::loadAll(); // Loads all plugins at once
 CakePlugin::load('ContactManager'); // Loads a single plugin
 ```

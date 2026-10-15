@@ -39,7 +39,7 @@ also access it in Components by using the controller reference. Some of the duti
 `CakeRequest` exposes several interfaces for accessing request parameters. The first uses object
 properties, the second uses array indexes, and the third uses `$this->request->params`:
 
-``` php
+```php
 $this->request->controller;
 $this->request['controller'];
 $this->request->params['controller'];
@@ -53,7 +53,7 @@ In addition to [Route Elements](../development/routing#route-elements), you also
 [Passed Arguments](../development/routing#passed-arguments) and [Named Parameters](../development/routing#named-parameters). These are both available
 on the request object as well:
 
-``` php
+```php
 // Passed arguments
 $this->request->pass;
 $this->request['pass'];
@@ -82,7 +82,7 @@ are also all found in the request parameters:
 
 Querystring parameters can be read using `CakeRequest::$query`:
 
-``` php
+```php
 // URL is /posts/index?page=1&sort=title
 $this->request->query['page'];
 
@@ -95,7 +95,7 @@ You can either directly access the `CakeRequest::$query` property, or you can us
 `CakeRequest::query()` to read the URL query array in an error-free manner.
 Any keys that do not exist will return `null`:
 
-``` php
+```php
 $foo = $this->request->query('value_that_does_not_exist');
 // $foo === null
 ```
@@ -105,7 +105,7 @@ $foo = $this->request->query('value_that_does_not_exist');
 All POST data can be accessed using `CakeRequest::$data`. Any form data
 that contains a `data` prefix will have that data prefix removed. For example:
 
-``` php
+```php
 // An input with a name attribute equal to 'data[MyModel][title]'
 // is accessible at
 $this->request->data['MyModel']['title'];
@@ -115,7 +115,7 @@ You can either directly access the `CakeRequest::$data` property, or you can use
 `CakeRequest::data()` to read the data array in an error-free manner.
 Any keys that do not exist will return `null`:
 
-``` php
+```php
 $foo = $this->request->data('Value.that.does.not.exist');
 // $foo == null
 ```
@@ -138,7 +138,7 @@ post bodies. You can read input data in any format using
 `CakeRequest::input()`. By providing a decoding function, you can
 receive the content in a deserialized format:
 
-``` php
+```php
 // Get JSON encoded data submitted to a PUT/POST action
 $data = $this->request->input('json_decode');
 ```
@@ -148,7 +148,7 @@ such as the 'as array' parameter on `json_decode`. If you want XML converted
 into a DOMDocument object, `CakeRequest::input()` supports passing
 in additional parameters as well:
 
-``` php
+```php
 // Get Xml encoded data submitted to a PUT/POST action
 $data = $this->request->input('Xml::build', ['return' => 'domdocument']);
 ```
@@ -169,7 +169,7 @@ Detecting various request conditions used to require using
 `CakeRequest`, and offer a new interface alongside a more backwards-compatible
 usage:
 
-``` php
+```php
 $this->request->is('post');
 $this->request->isPost(); // deprecated
 ```
@@ -195,7 +195,7 @@ that you can create:
 
 Some examples would be:
 
-``` php
+```php
 // Add an environment detector.
 $this->request->addDetector(
     'post',
@@ -306,13 +306,13 @@ or check whether a specific language is accepted.
 
 Get the list of accepted languages:
 
-``` css
+```css
 CakeRequest::acceptLanguage();
 ```
 
 Check whether a specific language is accepted:
 
-``` css
+```css
 CakeRequest::acceptLanguage('es-es');
 ```
 
@@ -363,7 +363,7 @@ You can control the Content-Type of your application's responses with
 content types that are not built into `CakeResponse`, you can map them
 with `CakeResponse::type()` as well:
 
-``` php
+```php
 // Add a vCard type
 $this->response->type(['vcf' => 'text/v-card']);
 
@@ -384,7 +384,7 @@ Prior to version 2.3, you could use `MediaView`.
 As of 2.3, `MediaView` is deprecated and you can use `CakeResponse::file()`
 to send a file as response:
 
-``` php
+```php
 public function sendFile($id)
 {
     $file = $this->Attachment->getFile($id);
@@ -403,7 +403,7 @@ by using the `CakeResponse::type()` method.
 If you want, you can also force a file to be downloaded instead of displayed in
 the browser by specifying the options:
 
-``` php
+```php
 $this->response->file(
     $file['path'],
     ['download' => true, 'name' => 'foo'],
@@ -415,7 +415,7 @@ $this->response->file(
 You can respond with a file that does not exist on the disk, such as
 a pdf or an ics generated on the fly from a string:
 
-``` php
+```php
 public function sendIcs()
 {
     $icsString = $this->Calendar->generateIcs();
@@ -436,7 +436,7 @@ public function sendIcs()
 Setting headers is done with the `CakeResponse::header()` method. It
 can be called with a few different parameter configurations:
 
-``` php
+```php
 // Set a single header
 $this->response->header('Location', 'https://example.com');
 
@@ -468,7 +468,7 @@ the redirect location header.
 You sometimes need to force browsers not to cache the results of a controller
 action. `CakeResponse::disableCache()` is intended for just that:
 
-``` php
+```php
 public function index()
 {
     // do something.
@@ -483,7 +483,7 @@ public function index()
 You can also tell clients that you want them to cache responses. By using
 `CakeResponse::cache()`:
 
-``` php
+```php
 public function index()
 {
     //do something
@@ -537,7 +537,7 @@ The second parameter of this method is used to specify a `max-age` for the cache
 which is the number of seconds after which the response is no longer considered
 fresh:
 
-``` php
+```php
 public function view()
 {
     ...
@@ -565,7 +565,7 @@ You can set the `Expires` header to a date and time after which the response is
 no longer considered fresh. This header can be set using the
 `CakeResponse::expires()` method:
 
-``` php
+```php
 public function view()
 {
     $this->response->expires('+5 days');
@@ -595,7 +595,7 @@ To take advantage of this header, you must either call the
 `CakeResponse::checkNotModified()` method manually or include the
 `RequestHandlerComponent` in your controller:
 
-``` php
+```php
 public function index()
 {
     $articles = $this->Article->find('all');
@@ -621,7 +621,7 @@ To take advantage of this header, you must either call the
 `CakeResponse::checkNotModified()` method manually or include the
 `RequestHandlerComponent` in your controller:
 
-``` php
+```php
 public function view()
 {
     $article = $this->Article->find('first');
@@ -639,7 +639,7 @@ In some cases, you might want to serve different content using the same URL.
 This is often the case if you have a multilingual page or respond with different
 HTML depending on the browser. Under such circumstances you can use the `Vary` header:
 
-``` php
+```php
 $this->response->vary('User-Agent');
 $this->response->vary('Accept-Encoding', 'User-Agent');
 $this->response->vary('Accept-Language');
@@ -655,7 +655,7 @@ several objects, you only have to mock a single object, since controllers and
 components delegate to `CakeResponse`. This helps you to get closer to a unit
 test and makes testing controllers easier:
 
-``` php
+```php
 public function testSomething()
 {
     $this->controller->response = $this->getMockBuilder('CakeResponse')

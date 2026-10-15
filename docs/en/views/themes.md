@@ -6,7 +6,7 @@ your page quickly and easily.
 To use themes, specify the theme name in your
 controller:
 
-``` php
+```php
 class ExampleController extends AppController
 {
     public $theme = 'Example';
@@ -20,7 +20,7 @@ Versions previous to 2.1 required setting the `$this->viewClass = 'Theme'`. 2.1 
 You can also set or change the theme name within an action or within the
 `beforeFilter` or `beforeRender` callback functions:
 
-``` php
+```php
 $this->theme = 'AnotherExample';
 ```
 
@@ -54,7 +54,7 @@ the application's webroot. See below for more information.
 
 To use the new theme webroot create directories like:
 
-``` text
+```text
 templates/Themed/<themeName>/webroot<path_to_file>
 ```
 
@@ -65,7 +65,7 @@ All of CakePHP's built-in helpers are aware of themes and will create the
 correct paths automatically. Like view files, if a file isn't in the theme
 folder, it will default to the main webroot folder:
 
-``` php
+```php
 // When in a theme with the name of 'purple_cupcake'
 $this->Html->css('main.css');
 

@@ -15,7 +15,7 @@ CakePHP で posts/index の xml/rss バージョンはすぐに作成できま�
 公開して実行する前にいくつか行う必要があります。最初に parseExtensions を
 有効にします。これは `config/routes.php` で行います。
 
-``` php
+```php
 Router::parseExtensions('rss');
 ```
 
@@ -32,14 +32,14 @@ Router::parseExtensions('rss');
 PostsController の \$components 配列に RequestHandler を加えるのは
 良いアイディアです。これで、多くのことが自動的に行われます。
 
-``` php
+```php
 public $components = ['RequestHandler'];
 ```
 
 ビューで `TextHelper` を、フォーマットに使うために
 コントローラに追加します。
 
-``` php
+```php
 public $helpers = ['Text'];
 ```
 
@@ -51,7 +51,7 @@ posts/index の RSS バージョンが作れるようになる前に、いくつ
 用意しているのであれば、 `RequestHandler::isRss()` メソッドが使えます。
 それ以外、あなたのコントローラに手を加えずにすみます。
 
-``` php
+```php
 // Posts コントローラで RSS フィードの配信を行うアクション、
 // この例では index アクションを修正してください。
 
@@ -85,7 +85,7 @@ public function index()
 RSS レイアウトはとてもシンプルです。 `templates/Layouts/rss/default.ctp` 内に
 以下の内容を記述します。
 
-``` php
+```php
 if (!isset($documentData)) {
     $documentData = [];
 }
@@ -118,7 +118,7 @@ CakePHP では、あなたのビューからレイアウトに変数を渡すこ
 これは、 `Controller::set()` メソッドと同様の `View::set()`
 メソッドを使って行われます。ここでチャンネルのメタデータを渡すとレイアウトに戻ります。
 
-``` php
+```php
 $this->set('channelData', [
     'title' => __('Most Recent Posts'),
     'link' => $this->Html->url('/', true),
@@ -141,7 +141,7 @@ $this->set('channelData', [
 > [!NOTE]
 > アプリケーションに適切な \$postLink 変数を更新する必要があります。
 
-``` php
+```php
 foreach ($posts as $post) {
     $postTime = strtotime($post['Post']['created']);
 

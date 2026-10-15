@@ -39,7 +39,7 @@
 > アプリケーションの AppController と AppModel を継承します。
 > ContacktManager の例ではこうなります。
 
-``` php
+```php
 // plugins/ContactManager/Controller/ContactManagerAppController.php の中で
 App::uses('AppController', 'Controller');
 
@@ -48,7 +48,7 @@ class ContactManagerAppController extends AppController
 }
 ```
 
-``` php
+```php
 // plugins/ContactManager/Model/ContactManagerAppModel.php の中で
 App::uses('AppModel', 'Model');
 
@@ -69,13 +69,13 @@ class ContactManagerAppModel extends AppModel
 
 プラグインを bake するのは以下のコマンドになります。
 
-``` bash
+```bash
 bin/cake bake plugin ContactManager
 ```
 
 そうすると、いつも通りの bake ができます。 例えば controllers を bake するには、次のようにします。
 
-``` bash
+```bash
 bin/cake bake controller Contacts --plugin ContactManager
 ```
 
@@ -100,7 +100,7 @@ contacts の管理ですので、このプラグインには ContactsController 
 そこで ContactsController を `plugins/ContactManager/Controller` に設置し、
 このように書きます。
 
-``` php
+```php
 // plugins/ContactManager/Controller/ContactsController.php の中で
 
 class ContactsController extends ContactManagerAppController
@@ -135,7 +135,7 @@ class ContactsController extends ContactManagerAppController
 プラグインのモデルは `plugins/ContactManager/Model` に設置されます。
 プラグインの ContactsController は既に定義してあるので、そのモデルを作成します。
 
-``` php
+```php
 // plugins/ContactManager/Model/Contact.php の中で
 
 class Contact extends ContactManagerAppModel
@@ -152,7 +152,7 @@ class Contact extends ContactManagerAppModel
 
 例えば:
 
-``` php
+```php
 // plugins/ContactManager/Model/Contact.php の中で
 
 class Contact extends ContactManagerAppModel
@@ -163,7 +163,7 @@ class Contact extends ContactManagerAppModel
 
 プラグインの接頭語との連携の無い配列キーを参照したいなら、代わりのシンタックスを使います。
 
-``` php
+```php
 // plugins/ContactManager/Model/Contact.php の中で
 
 class Contact extends ContactManagerAppModel
@@ -183,7 +183,7 @@ class Contact extends ContactManagerAppModel
 ContactManager プラグインでは、ContactsController::index()
 アクションのビューが必要になるので、 このような内容になります。
 
-``` html
+```html
 <!-- plugins/ContactManager/View/Contacts/index.ctp: -->
 <h1>Contacts</h1>
 <p>Following is a sortable list of your contacts</p>
@@ -226,7 +226,7 @@ ContactManager プラグインでは、ContactsController::index()
 それらにシンボリックリンクを張っておくことを強くおすすめします。
 例えばこのようにします。
 
-``` bash
+```bash
 ln -s ../../plugins/YourPlugin/webroot/css/yourplugin.css webroot/css/yourplugin.css
 ```
 
@@ -246,7 +246,7 @@ ln -s ../../plugins/YourPlugin/webroot/css/yourplugin.css webroot/css/yourplugin
 アセットのリクエストには `プラグイン記法` を使用してください。 View での利用方法:
 :::
 
-``` php
+```php
 echo $this->Html->css('ContactManager.style');
 ```
 
@@ -263,7 +263,7 @@ echo $this->Html->css('ContactManager.style');
 プラグインの内部や外部からコンポーネントを参照する方法は、
 コンポーネント名の前にプラグイン名を付けるだけです。 例えば:
 
-``` php
+```php
 // 'ContactManager' プラグインのコンポーネントとして定義
 
 class ExampleComponent extends Component
@@ -330,7 +330,7 @@ CakePHP アプリケーションで動作するプラグインの最後の tips 
 インストールされるように `composer/installers` を require に追加して、 `installer-name` に
 プラグインのフォルダ名を指定します。
 
-``` json
+```json
 {
     "name": "foo-bar/cakephp-logging",
     "type": "cakephp-plugin",

@@ -85,42 +85,42 @@ straightforward mock object expectations.
 
 ##### Replace expectOnce() no params
 
-``` text
+```text
 expectOnce\(([^\)]+)\);
 expects(\$this->once())->method($1);
 ```
 
 ##### Replace expectOnce() with params
 
-``` text
+```text
 expectOnce\(([^,]+), array\((.+)\)\);
 expects(\$this->once())->method($1)->with($2);
 ```
 
 ##### Replace expectAt()
 
-``` text
+```text
 expectAt\((\d+), (.+), array\((.+)\)\);
 expects(\$this->at($1))->method($2)->with($3);
 ```
 
 ##### Replace expectNever
 
-``` text
+```text
 expectNever\(([^\)]+)\);
 expects(\$this->never())->method($1);
 ```
 
 ##### Replace setReturnValue
 
-``` text
+```text
 setReturnValue\(([^,]+), (.+)\);
 expects(\$this->once())->method($1)->will($this->returnValue($2));
 ```
 
 ##### Replace setReturnValueAt
 
-``` text
+```text
 setReturnValueAt((\d+), ([^,]+), (.+));
 expects(\$this->at($1))->method($2)->will($this->returnValue($3));
 ```
@@ -132,7 +132,7 @@ suites as composable entities in the runner. You can place group tests inside
 the cases directory and use `PHPUnit_Framework_TestSuite` as a base class. An
 example Testsuite would look like:
 
-``` php
+```php
 class AllJavascriptHelpersTest extends PHPUnit_Framework_TestSuite
 {
 

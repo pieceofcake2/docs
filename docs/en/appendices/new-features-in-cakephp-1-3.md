@@ -12,7 +12,7 @@ The various requireXX methods like `requireGet` and
 `requirePost` now accept a single array as their argument as well
 as a collection of string names.
 
-``` php
+```php
 $this->Security->requirePost(['edit', 'update']);
 ```
 
@@ -22,7 +22,7 @@ Component settings for all core components can now be set from the
 `$components` array. Much like behaviors, you can declare
 settings for components when you declare the component.
 
-``` php
+```php
 var $components = [
     'Cookie' => [
         'name' => 'MyCookie'
@@ -75,7 +75,7 @@ to any asset under WWW_ROOT. It works with
 functionality used in Html and Javascript helpers has been made
 available to all helpers. Assuming `Asset.timestamp == force`
 
-``` php
+```php
 $path = 'css/cake.generic.css'
 $stamped = $this->Html->assetTimestamp($path);
 
@@ -95,7 +95,7 @@ highlight() now accepts an array of words to highlight.
 A new method `addFormat()` has been added. This method allows you
 to set currency parameter sets, so you don't have to retype them:
 
-``` php
+```php
 $this->Number->addFormat('NOK', ['before' => 'Kr. ']);
 $formatted = $this->Number->currency(1000, 'NOK');
 ```
@@ -125,7 +125,7 @@ as an `app/libs`. Or in `$plugin/libs/cache/my_custom_cache.php` as
 part of a plugin. Cache configs from plugins need to use the plugin
 dot syntax:
 
-``` php
+```php
 Cache::config('custom', [
     'engine' => 'CachePack.MyCustomCache',
     ...
@@ -168,7 +168,7 @@ with a LastFm datasource
 (`plugin/webservice_pack/models/datasources/last_fm.php`), you
 could do:
 
-``` php
+```php
 var $lastFm = array(
     'datasource' => 'WebservicePack.LastFm'
     ...
@@ -226,7 +226,7 @@ your schema files.
 You use `tableParameters` just as you would any other key in a
 schema file. Much like `indexes`:
 
-``` php
+```php
 var $comments => [
     'id' => [
       'type' => 'integer',
@@ -308,7 +308,7 @@ persist/behave in the same way. Assuming you have
 in your `core.php` you will be able to do the following from a
 non-prefixed URL:
 
-``` php
+```php
 $this->Html->link(
   'Go',
   ['controller' => 'posts', 'action' => 'index', 'member' => true]
@@ -322,7 +322,7 @@ $this->Html->link(
 Likewise, if you are in a prefixed URL and want to go to a
 non-prefixed URL, do the following:
 
-``` php
+```php
 $this->Html->link(
   'Go',
   [
@@ -376,7 +376,7 @@ Set has a new method `Set::apply()`, which allows you to apply
 [callbacks](https://ca2.php.net/callback) to the results of
 `Set::extract` and do so in either a map or reduce fashion:
 
-``` css
+```css
 Set::apply('/Movie/rating', $data, 'array_sum');
 ```
 
@@ -411,13 +411,13 @@ vendors. This allows you to separate your organization's internal
 libraries from vendor libraries. `App::import()` has also been
 updated to import from libs directories:
 
-``` php
+```php
 App::import('Lib', 'ImageManipulation'); //imports app/libs/image_manipulation.php
 ```
 
 You can also import libs files from plugins:
 
-``` php
+```php
 App::import('Lib', 'Geocoding.Geocode'); //imports app/plugins/geocoding/libs/geocode.php
 ```
 
@@ -448,7 +448,7 @@ ubuntu you can find a french locale file at:
 LC_TIME into `app/locale/fr_fr/LC_TIME` file. You can then access
 the time preferences for French language this way:
 
-``` php
+```php
 Configure::write('Config.language','fr-fr'); // set the current language
 $monthNames = __c('mon',LC_TIME,true); // returns an array with the month names in French
 $dateFormat = __c('d_fmt',LC_TIME,true); // return the preferred dates format for France
@@ -475,7 +475,7 @@ error404, then you will need to do it manually.
 With the addition of `Routing.prefixes` scaffolding has been
 updated to allow the scaffolding of any one prefix:
 
-``` php
+```php
 Configure::write('Routing.prefixes', ['admin', 'member']);
 
 class PostsController extends AppController
@@ -498,7 +498,7 @@ country prefix it does not know how to handle to another class with
 the appropriate name. For example if you lived in the Netherlands
 you would create a class like:
 
-``` php
+```php
 class NlValidation
 {
     public function phone($check)
@@ -516,7 +516,7 @@ This file could be placed anywhere in your application, but must be
 imported before attempting to use it. In your model validation you
 could use your NlValidation class by doing the following:
 
-``` php
+```php
 public $validate = [
     'phone_no' => ['rule' => ['phone', null, 'nl']],
     'postal_code' => ['rule' => ['postal', null, 'nl']]
@@ -538,7 +538,7 @@ Validation of IP Addresses has been extended to allow strict
 validation of a specific IP Version. It will also make use of PHP
 native validation mechanisms if available:
 
-``` css
+```css
 Validation::ip($someAddress);         // Validates both IPv4 and IPv6
 Validation::ip($someAddress, 'IPv4'); // Validates IPv4 Addresses only
 Validation::ip($someAddress, 'IPv6'); // Validates IPv6 Addresses only

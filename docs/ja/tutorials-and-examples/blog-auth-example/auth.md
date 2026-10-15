@@ -9,7 +9,7 @@
 
 初めに、ユーザーのデータを保持するためにブログデータベースに新しいテーブルを作成しましょう:
 
-``` sql
+```sql
 CREATE TABLE users (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50),
@@ -27,7 +27,7 @@ CREATE TABLE users (
 次のステップはユーザーのデータを探索 (*finding*)、保存 (*saving*)、
 検証 (*validating*) する責任を持つ、ユーザーモデルを作成することです:
 
-``` php
+```php
 // src/Model/User.php
 class User extends AppModel
 {
@@ -58,7 +58,7 @@ class User extends AppModel
 UsersController もまた作成しましょう。以下のコードは
 [Bake プラグイン](../../console-and-shells/code-generation-with-bake) で「焼き上げた」(*baked*) 基本的な UsersController クラスに該当します:
 
-``` php
+```php
 // src/Controller/UsersController.php
 class UsersController extends AppController
 {
@@ -149,7 +149,7 @@ class UsersController extends AppController
 以前ビューを作成した方法と同様に、またはコード生成ツールを用いて、ビューを実装します。
 このチュートリアルの目的に沿って、`add.ctp` だけを示します:
 
-``` php
+```php
 <!-- templates/Users/add.ctp -->
 <div class="users form">
 <?php echo $this->Form->create('User'); ?>
@@ -176,7 +176,7 @@ class UsersController extends AppController
 このコンポーネントをアプリケーションに追加するには、
 `src/Controller/AppController.php` ファイルを開いて、以下の行を追加してください:
 
-``` php
+```php
 // src/Controller/AppController.php
 class AppController extends Controller
 {
@@ -224,7 +224,7 @@ users テーブルで規約を用いたので、設定することが多くあ�
 ハッシュ化にすることを可能にする必要があります。AuthComponent に認証されていないユーザーが
 users の add 関数にアクセスすること、実装にログインとログアウトアクションを伝えましょう:
 
-``` php
+```php
 // src/Controller/UsersController.php
 
 public function beforeFilter()
@@ -254,7 +254,7 @@ public function logout()
 パスワードのハッシュ化はまだされていません。 `src/Model/User.php` のモデルファイルを
 開いて、以下のものを追加してください:
 
-``` php
+```php
 // src/Model/User.php
 
 class User extends AppModel
@@ -285,7 +285,7 @@ class User extends AppModel
 ハッシュ化されます。あとはログイン関数用のビューテンプレートファイルだけです。
 `templates/Users/login.ctp` ファイルを開いて、以下の行を追加してください:
 
-``` php
+```php
 // templates/Users/login.ctp
 
 <div class="users form">
@@ -329,14 +329,14 @@ logoutUrl にユーザーをリダイレクトさせます。この URL は `Aut
 前述の通り、このブログを複数ユーザーが書き込めるツールに書き換えようとしていますが、
 これをするために、posts テーブルを多少書き換えて User モデルへの参照を追加する必要があります:
 
-``` sql
+```sql
 ALTER TABLE posts ADD COLUMN user_id INT UNSIGNED;
 ```
 
 また、作成された投稿に、現在ログインしているユーザーを参照として保存するために、
 PostsController での小さな変更が必要です:
 
-``` php
+```php
 // src/Controller/PostsController.php
 public function add()
 {
@@ -360,7 +360,7 @@ Auth コンポーネントの `user()` 関数は現在ログインしている�
 アクションだけにアクセスできる一方、管理者ユーザーが全てのURLにアクセスできるということです。
 もう一度 AppController クラスを開いて Auth の設定にちょっとばかりのオプションを追加しましょう:
 
-``` php
+```php
 // src/Controller/AppController.php
 
 public $components = [
@@ -404,7 +404,7 @@ public function isAuthorized($user)
 ルールは投稿の作成を著者に許可すべきですが、著者が合っていない場合投稿の編集を防止する必要が
 あります。 `PostsController.php` のファイルを開き、以下の内容を追加してください:
 
-``` php
+```php
 // src/Controller/PostsController.php
 
 public function isAuthorized($user)
@@ -434,7 +434,7 @@ add アクションへのアクセス、条件的に edit と delete を許可�
 一般的に、できるだけ多くのロジックをモデルに移動することは良い習慣です。
 それではその関数を実装していきましょう:
 
-``` php
+```php
 // src/Model/Post.php
 
 public function isOwnedBy($post, $user)

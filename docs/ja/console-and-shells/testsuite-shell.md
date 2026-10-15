@@ -2,7 +2,7 @@
 
 一度書き始めた [テスト](../development/testing) はテストシェルで実行可能です。
 
-``` bash
+```bash
 bin/cake test app AllTests
 ```
 

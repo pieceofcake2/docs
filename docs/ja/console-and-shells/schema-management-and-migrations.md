@@ -8,7 +8,7 @@
 作成したスキーマファイルを使うと、データベースに依存することなく簡単に別の環境へ移植できます。
 また、既存のデータベースを使用してスキーマファイルを生成することもできます。
 
-``` bash
+```bash
 $ bin/cake schema generate
 ```
 
@@ -20,7 +20,7 @@ $ bin/cake schema generate
 
 前もって作成した `schema.php` からデータベースを再構築するためには、次のコマンドを実行してください。
 
-``` bash
+```bash
 $ bin/cake schema create
 ```
 
@@ -29,7 +29,7 @@ $ bin/cake schema create
 スキーマファイルは SQL ダンプファイルの作成に使用することもできます。
 `CREATE TABLE` 文を含む SQL ファイルを生成するには次のコマンドを実行してください。
 
-``` bash
+```bash
 $ bin/cake schema dump --write filename.sql
 ```
 
@@ -47,14 +47,14 @@ $ bin/cake schema dump --write filename.sql
 `$event` パラメータは2つのキーを持つ配列です。１つはテーブルを削除するのか
 作成するのかを示すパラメータで、もう１つはエラーに関するパラメータです。例を示します。
 
-``` text
+```text
 ['drop' => 'posts', 'errors' => null]
 ['create' => 'posts', 'errors' => null]
 ```
 
 データを posts テーブルへ加える例は以下のようになります。
 
-``` php
+```php
 App::uses('Post', 'Model');
 public function after($event = [])
 {
@@ -81,7 +81,7 @@ public function after($event = [])
 before アクション内で `$db->cacheSources = false` を設定することにより、
 キャッシュを無効にできます。
 
-``` php
+```php
 public $connection = 'default';
 
 public function before($event = [])
@@ -96,7 +96,7 @@ public function before($event = [])
 コールバック中に正しいデータソースで初期化したモデルを使用したい場合、
 デフォルトのデータソースを使わないようにします。
 
-``` php
+```php
 public function before($event = [])
 {
     $articles = ClassRegistry::init('Articles', [
@@ -125,7 +125,7 @@ CakeSchema はまた、 `tableParameters` をサポートします。
 
 以下は acl クラスの例全部です。
 
-``` php
+```php
 /**
  * ACO - Access Control Object - Something that is wanted
  */
@@ -174,7 +174,7 @@ public $acos = [
 
 カラムの例:
 
-``` text
+```text
 'id' => [
     'type' => 'integer',
     'null' => false,
@@ -229,7 +229,7 @@ column
 
 単一の場合:
 
-``` text
+```text
 'indexes' => [
     'PRIMARY' => [
         'column' => 'id',
@@ -240,7 +240,7 @@ column
 
 複数の場合:
 
-``` text
+```text
 'indexes' => [
     'AB_KEY' => [
         'column' => [
@@ -279,7 +279,7 @@ MySQL の dbo は、 tableParameters に加えて `fieldParameters` を実装し
 スキーマファイル中の他のキーと同じように `tableParameters` が使えます。
 例えば `indexes` のように:
 
-``` php
+```php
 public $comments = [
     'id' => [
         'type' => 'integer',
@@ -314,13 +314,13 @@ public $comments = [
 スキーマシェルを使ったスキーマファイルのバージョン管理はとても簡単です。
 もし既に作成済みのスキーマファイルがあるのであれば、次のコマンドを実行してください。
 
-``` bash
+```bash
 $ bin/cake schema generate
 ```
 
 実行すると、次の選択肢が表示されるはずです。
 
-``` text
+```text
 Generating Schema...
 Schema file exists.
  [O]verwrite
@@ -333,7 +333,7 @@ Would you like to do? (o/s/q)
 もし `schema.php` があれば、`schema_2.php` あるいは同様のファイルが生成されるはずです。
 いつでも以下のコマンドでスキーマファイルへの保存ができます。
 
-``` bash
+```bash
 $ bin/cake schema update -s 2
 ```
 
@@ -359,7 +359,7 @@ $ bin/cake schema update -s 2
 
 3.  生成または更新された `schema.php` のコミット:
 
-    ``` bash
+    ```bash
     $ # 一度データベースを更新した後で
     $ bin/cake schema generate
     $ git commit -a
@@ -378,7 +378,7 @@ $ bin/cake schema update -s 2
 
 1.  `cake schema` を実行し、データベースを更新してください:
 
-    ``` bash
+    ```bash
     $ git pull
     $ bin/cake schema create
     $ bin/cake schema update
@@ -394,14 +394,14 @@ $ bin/cake schema update -s 2
 
 対照的に `update` を使用した場合は、スキーマファイルとの差分からフィールドが削除されます。
 
-``` bash
+```bash
 $ git revert HEAD
 $ bin/cake schema update
 ```
 
 上のコマンドを実行すると、以下の選択肢が表示されるはずです。
 
-``` text
+```text
 The following statements will run.
 ALTER TABLE `roles`
 DROP `position`;

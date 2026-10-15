@@ -562,7 +562,7 @@ Unix ライクな環境に Jenkins がインストールされていて、管理
 アクセスできるように、リポジトリと接続します。PHPUnit を含む依存パッケージをインストールする
 *シェルスクリプトの実行* を加えてください。
 
-``` bash
+```bash
 composer install --no-interaction
 ```
 
@@ -572,7 +572,7 @@ Jenkins のために別のデータベースを用意するのは、初歩的な
 Jenkins がアクセスできる (通常は localhost の) データベースサーバーに新しくデータベースを
 作成したら、以下のような *シェルスクリプトの実行* をビルドに加えてください。
 
-``` bash
+```bash
 cat > config/database.php <<'DATABASE_PHP'
 <?php
 class DATABASE_CONFIG
@@ -596,7 +596,7 @@ DATABASE_PHP
 
 さらに以下の *シェルスクリプトの実行* をビルドに加えてください。
 
-``` bash
+```bash
 mysql -u jenkins -pcakephp_jenkins -e 'DROP DATABASE IF EXISTS jenkins_test; CREATE DATABASE jenkins_test';
 ```
 
@@ -605,7 +605,7 @@ mysql -u jenkins -pcakephp_jenkins -e 'DROP DATABASE IF EXISTS jenkins_test; CRE
 また別の *シェルスクリプトの実行* をビルドに加えてください。このステップではアプリケーションのテストを実行します。
 junit のログファイル作成、またはCloverのカバレッジにより、テストの結果を視覚的に確認できるようになります。
 
-``` bash
+```bash
 vendor/bin/phpunit \
     --log-junit junit.xml \
     --coverage-clover clover.xml

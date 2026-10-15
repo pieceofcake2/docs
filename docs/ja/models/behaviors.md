@@ -34,7 +34,7 @@ CakePHP に含まれるいくつかのビヘイビアがあります。それぞ
 
 ビヘイビアはモデルのクラス変数 `$actsAs` を通してモデルに割り当てられます。
 
-``` php
+```php
 class Category extends AppModel
 {
     public $actsAs = ['Tree'];
@@ -45,7 +45,7 @@ class Category extends AppModel
 示します。ビヘイビアが指定されたら、あたかも元のモデルのメソッドの一部として存在しているかのような、
 ビヘイビアによって追加されたメソッドを使用してください。
 
-``` php
+```php
 // ID をセット
 $this->Category->id = 42;
 
@@ -57,7 +57,7 @@ $kids = $this->Category->children();
 あるでしょう。ここでは、基底のデータベーステーブルの「左 (*left*)」と「右 (*right*)」の
 フィールド名を TreeBehavior に伝えましょう。
 
-``` php
+```php
 class Category extends AppModel
 {
     public $actsAs = ['Tree' => [
@@ -70,7 +70,7 @@ class Category extends AppModel
 また、モデルにはいくつものビヘイビアを割り当てることもできます。例えば、Category モデルが
 ツリーとしてだけ振る舞うべき理由はなく、国際化のサポートも必要とするかもしれません:
 
-``` php
+```php
 class Category extends AppModel
 {
     public $actsAs = [
@@ -89,7 +89,7 @@ class Category extends AppModel
 前の Category モデルを見てみましょう。このモデルは、Tree としても Translate モデルとしても
 振舞いますが、何らかの理由で強制的にTranslateモデルとしての振る舞いを止める必要があるとします:
 
-``` php
+```php
 // モデルからビヘイビアをはずす:
 $this->Category->Behaviors->unload('Translate');
 ```
@@ -99,7 +99,7 @@ find・save 等の動作時に翻訳ビヘイビアを無効にする必要が�
 モデルのコールバックの動作時にビヘイビアを無効にする方法を見てみます。ビヘイビアをはずす代わりに、
 翻訳ビヘイビアへのコールバック通知を停止するようにモデルに指示します。
 
-``` php
+```php
 // ビヘイビアにモデルのコールバックを処理させない
 $this->Category->Behaviors->disable('Translate');
 ```
@@ -107,7 +107,7 @@ $this->Category->Behaviors->disable('Translate');
 ビヘイビアがモデルのコールバックを処理しているかどうかを確認する必要があるかもしれません。
 もし処理していない場合は、再度動作するように元に戻します。:
 
-``` php
+```php
 // ビヘイビアはモデルのコールバックを処理していない場合
 if (!$this->Category->Behaviors->enabled('Translate')) {
     // 処理の開始をビヘイビアに通知
@@ -119,7 +119,7 @@ if (!$this->Category->Behaviors->enabled('Translate')) {
 これまでみてきた Category モデルは、Christmas モデルとして振る舞う必要がありますが、それはクリスマスの
 日だけです。
 
-``` php
+```php
 // 今日が12月25日だったら
 if (date('m/d') === '12/25') {
     // モデルは Christmas モデルとして振る舞う必要がある
@@ -129,7 +129,7 @@ if (date('m/d') === '12/25') {
 
 load メソッドを使用して、ビヘイビアの設定を上書きできます。
 
-``` php
+```php
 // すでに割り当てられたビヘイビアのある設定を変更
 $this->Category->Behaviors->load('Tree', ['left' => 'new_left_node']);
 ```
@@ -137,7 +137,7 @@ $this->Category->Behaviors->load('Tree', ['left' => 'new_left_node']);
 そして、エイリアスを使用することで、ロードするビヘイビアの別名をカスタマイズでき、
 異なる設定で複数回ロードすることができます。
 
-``` php
+```php
 // Tree ビヘイビアが 'MyTree' として利用可能
 $this->Category->Behaviors->load('MyTree', ['className' => 'Tree']);
 ```
@@ -146,7 +146,7 @@ $this->Category->Behaviors->load('MyTree', ['className' => 'Tree']);
 メソッドにビヘイビア名を渡すと、ビヘイビアがモデルに割り当たっているかどうかを返します。
 何も渡さないと、割り当てられているビヘイビアのリストを返します。
 
-``` php
+```php
 // Translate ビヘイビアが割り当てられていない場合
 if (!$this->Category->Behaviors->loaded('Translate')) {
     // モデルに割り当てられているすべてのビヘイビアのリストを取得
@@ -177,7 +177,7 @@ if (!$this->Category->Behaviors->loaded('Translate')) {
 
 以下はモデルからビヘイビアへ設定を渡す方法を示す簡単な例です:
 
-``` php
+```php
 class Post extends AppModel
 {
     public $actsAs = [
@@ -192,7 +192,7 @@ class Post extends AppModel
 ビヘイビアを使っているエイリアス・モデルの名前ごとに設定を保持することは良い習慣となります。
 ビヘイビアが生成されたときに、ビヘイビアの `setup()` メソッドが呼ばれます。
 
-``` php
+```php
 public function setup(Model $Model, $settings = [])
 {
     if (!isset($this->settings[$Model->alias])) {
@@ -214,7 +214,7 @@ public function setup(Model $Model, $settings = [])
 ビヘイビアのメソッドは、そのビヘイビアを振る舞いをする全てのモデルで自動的に利用可能になります。
 例として、以下のようにしたとします:
 
-``` php
+```php
 class Duck extends AppModel
 {
     public $actsAs = ['Flying'];
@@ -226,13 +226,13 @@ Duck モデルにメソッドあるかのように `FlyingBehavior` のメソッ
 他の与えられた引数全ては1つずつ右にずれます。
 例を上げます:
 
-``` php
+```php
 $this->Duck->fly('toronto', 'montreal');
 ```
 
 このメソッドは２つの引数をとりますが、メソッドの定義は次のようになります:
 
-``` php
+```php
 public function fly(Model $Model, $from, $to)
 {
     // 飛ぶことをする。
@@ -251,7 +251,7 @@ public function fly(Model $Model, $from, $to)
 メソッドのマッピングはビヘイビアの `$mapMethods` 配列に定義されます。
 マッピングされたメソッドの定義は普通の mixin なビヘイビアのメソッドとはわずかに違います。
 
-``` php
+```php
 class MyBehavior extends ModelBehavior
 {
     public $mapMethods = ['/do(\w+)/' => 'doSomething'];
@@ -269,7 +269,7 @@ class MyBehavior extends ModelBehavior
 これを用いて、 `Model::findAllByXX` と同じように、補足的な情報としてメソッド名の一部を
 使うことができます。上記のビヘイビアがモデルに割り当てられると、次のようなことになります:
 
-``` php
+```php
 $model->doReleaseTheHounds('karl', 'lenny');
 
 // 以下が出力される

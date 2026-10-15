@@ -31,7 +31,7 @@ Return type: `string`
 
 Encrypts/Decrypts text using the given key:
 
-``` php
+```php
 // Encrypt your text with my_key
 $secret = Security::cipher('hello world', 'my_key');
 
@@ -57,7 +57,7 @@ Encrypts/Decrypts text using the rijndael-256 cipher. This requires the
 PECL. For new code, prefer `Security::encrypt()` and `Security::decrypt()` with
 `Security.useOpenSsl` enabled. Usage looks like this:
 
-``` php
+```php
 // Encrypt some data.
 $encrypted = Security::rijndael('a secret', Configure::read('Security.key'), 'encrypt');
 
@@ -88,7 +88,7 @@ This method should **never** be used to store passwords. Instead you should
 use the one way hashing methods provided by `Security::hash()`.
 An example use would be:
 
-``` php
+```php
 // Assuming key is stored somewhere it can be re-used for
 // decryption later.
 $key = 'wt1U5MACWJFTXGenFoZoiLwQGrLgdbHA';
@@ -114,7 +114,7 @@ Decrypt a previously encrypted value. The `$key` and `$hmacSalt`
 parameters must match the values used to encrypt or decryption will fail. An
 example use would be:
 
-``` php
+```php
 // Assuming key is stored somewhere it can be re-used for
 // decryption later.
 $key = 'wt1U5MACWJFTXGenFoZoiLwQGrLgdbHA';
@@ -141,7 +141,7 @@ Create a hash from a string using given method or fallback to next
 available method. If `$salt` is set to true, the applications salt
 value will be used:
 
-``` php
+```php
 // Using the application's salt value
 $sha1 = Security::hash('CakePHP Framework', 'sha1', true);
 
@@ -156,7 +156,7 @@ $hash = Security::hash('CakePHP Framework');
 using bcrypt, you should be mindful of the slightly different usage.
 Creating an initial hash works the same as other algorithms:
 
-``` php
+```php
 // Create a hash using bcrypt
 Security::setHash('blowfish');
 $hash = Security::hash('CakePHP Framework');
@@ -165,7 +165,7 @@ $hash = Security::hash('CakePHP Framework');
 Unlike other hash types comparing plain text values to hashed values should
 be done as follows:
 
-``` php
+```php
 // $storedPassword, is a previously generated bcrypt hash.
 $newHash = Security::hash($newPassword, 'blowfish', $storedPassword);
 ```

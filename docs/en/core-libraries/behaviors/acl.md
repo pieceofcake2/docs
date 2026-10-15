@@ -11,7 +11,7 @@ your model. When adding it to the actsAs array you choose to make
 the related Acl entry an ARO or an ACO. The default is to create
 ACOs:
 
-``` php
+```php
 class User extends AppModel
 {
     public $actsAs = ['Acl' => ['type' => 'requester']];
@@ -21,7 +21,7 @@ class User extends AppModel
 This would attach the Acl behavior in ARO mode. To join the ACL
 behavior in ACO mode use:
 
-``` php
+```php
 class Post extends AppModel
 {
     public $actsAs = ['Acl' => ['type' => 'controlled']];
@@ -31,7 +31,7 @@ class Post extends AppModel
 For User and Group models it is common to have both ACO and ARO nodes,
 to achieve this use:
 
-``` php
+```php
 class User extends AppModel
 {
     public $actsAs = ['Acl' => ['type' => 'both']];
@@ -40,7 +40,7 @@ class User extends AppModel
 
 You can also attach the behavior on the fly like so:
 
-``` php
+```php
 $this->Post->Behaviors->load('Acl', ['type' => 'controlled']);
 ```
 
@@ -56,7 +56,7 @@ parentNode() method defined. This is used by the AclBehavior to
 determine parent-\>child relationships. A model's parentNode()
 method must return null or return a parent Model reference:
 
-``` php
+```php
 public function parentNode()
 {
     return null;
@@ -66,7 +66,7 @@ public function parentNode()
 If you want to set an ACO or ARO node as the parent for your Model,
 parentNode() must return the alias of the ACO or ARO node:
 
-``` php
+```php
 public function parentNode()
 {
     return 'root_node';
@@ -76,7 +76,7 @@ public function parentNode()
 A more complete example. Using an example User Model, where User
 belongsTo Group:
 
-``` php
+```php
 public function parentNode()
 {
     if (!$this->id && empty($this->data)) {
@@ -108,7 +108,7 @@ with a model record. After setting \$model-\>id. You can use
 You can also retrieve the Acl Node for any row, by passing in a
 data array:
 
-``` php
+```php
 $this->User->id = 1;
 $node = $this->User->node();
 
@@ -123,7 +123,7 @@ Will both return the same Acl Node information.
 If you had setup AclBehavior to create both ACO and ARO nodes, you need to
 specify which node type you want:
 
-``` php
+```php
 $this->User->id = 1;
 $node = $this->User->node(null, 'Aro');
 

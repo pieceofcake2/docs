@@ -6,13 +6,13 @@
 `Router::url()` に渡される属性の配列。
 典型的には以下のようになります:
 
-``` text
+```text
 ['controller' => 'posts', 'action' => 'view', 5]
 ```
 
 また、より複雑な例は:
 
-``` text
+```text
 [
     'subdomain' => 'dev',
     'plugin' => 'account',
@@ -31,7 +31,7 @@
 HTML属性  
 HTMLの属性を構成するキー =\> 値の配列。例:
 
-``` text
+```text
 // これを与えると
 ['class' => 'my-class', 'target' => '_blank']
 
@@ -41,7 +41,7 @@ class="my-class" target="_blank"
 
 オプションが最小化できるか、名前そのもが値として許可される場合は、 `true` が利用できます:
 
-``` text
+```text
 // これを与えると
 ['checked' => true]
 
@@ -61,7 +61,7 @@ checked="checked"
 
 は以下の値を指し示すことでしょう:
 
-``` text
+```text
 [
     'Asset' => [
         'filter' => [

@@ -35,7 +35,7 @@
 
 コントローラで設定ファイルを指定する方法の例:
 
-``` php
+```php
 public $helpers = [
     'Html' => [
         // 一つ目の方法：ファイル名とリーダー名の配列
@@ -84,7 +84,7 @@ public $helpers = [
 これは例えば、サブドメインやHTTPS/HTTPのフラグを扱うルートを作成するのに使用することができます。
 以下はサブドメインをサポートするルートクラスの一例です:
 
-``` php
+```php
 class SubdomainRoute extends CakeRoute
 {
 
@@ -103,7 +103,7 @@ class SubdomainRoute extends CakeRoute
 
 リンクを生成するときにサブドメインを指定するには、以下のようにします。
 
-``` php
+```php
 echo $this->Html->link(
     'Other domain',
      ['subdomain' => 'test', 'controller' => 'posts', 'action' => 'add']
@@ -140,7 +140,7 @@ CakePHP 2.0は [例外(Exception)](../development/exceptions) と [エラーハ�
 `debug()` はコンソールでHTMLを吐き出さないようになりました。
 代わりに以下のような出力をします:
 
-``` text
+```text
 ########## DEBUG ##########
 
 [
@@ -167,7 +167,7 @@ CakePHP 2.0は [例外(Exception)](../development/exceptions) と [エラーハ�
 これはCakePHPのRESTスタイルのエンドポイントのサポートを拡張します。
 この機能を使うには、まず `app/Config/routes.php` で拡張子を有効にしてください。
 
-``` php
+```php
 Router::parseExtensions('json', 'xml');
 ```
 
@@ -206,7 +206,7 @@ CakePHP2.0のコンソールはほとんど完全に書き直されました。
 
 この制限はコントローラーでpaginate変数を用いて上書き可能です。
 
-``` php
+```php
 $this->paginate = ['maxLimit' => 1000];
 ```
 
@@ -218,7 +218,7 @@ $this->paginate = ['maxLimit' => 1000];
 これは、ビューで全ての `$this->Html` のインスタンスを置き換える必要なく `MyHtml` ヘルパーを作成することが、非常に簡単にできるようになったということです。
 これを為すには、モデルでしていたのと同じように、クラスを用いた「className」キーを渡してください。
 
-``` php
+```php
 public $helpers = [
     'Html' => [
         'className' => 'MyHtml'
@@ -228,7 +228,7 @@ public $helpers = [
 
 同様に、コントローラで使うためにコンポーネントを別名として使うことができます。
 
-``` php
+```php
 public $components = [
     'Email' => [
         'className' => 'QueueEmailer'
@@ -239,7 +239,7 @@ public $components = [
 Emailコンポーネントを呼び出すことは、代わりにQueueEmailerを呼び出すことになるでしょう。
 最後に、ビヘイビアでも別名呼び出しが可能です。
 
-``` php
+```php
 public $actsAs = [
     'Containable' => [
         'className' => 'SuperContainable'
