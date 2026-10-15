@@ -313,7 +313,8 @@ unset($dotenvFile);
 |----------|------|------------------------|
 | `DEBUG` | `debug`: `0`、`1`、`2` (`true` は 2、`false` は 0) | `2` |
 | `SECURITY_SALT` | `Security.salt` | `config/core.php` の値 |
-| `SECURITY_CIPHER_SEED` | `Security.cipherSeed` (数字のみ) | `config/core.php` の値 |
+| `SECURITY_CIPHER_SEED` | `Security.cipherSeed` (1〜4294967295。[cipherSeed](#cipher-seed) を参照) | `config/core.php` の値 |
+| `COOKIE_KEY` | `Cookie.key`。`'aes'` タイプの `CookieComponent` のキー ([`'aes'` への移行](#migrating-to-aes) を参照) | `null`。`CookieComponent` は `Security.salt` を使います |
 | `DB_DATASOURCE`、`DB_HOST`、`DB_PORT`、`DB_USERNAME`、`DB_PASSWORD`、`DB_DATABASE` | `default` 接続の `datasource`、`host`、`port`、`login`、`password`、`database` | `config/database.php` の値 |
 | `DB_TEST_DATASOURCE`、`DB_TEST_HOST`、`DB_TEST_PORT`、`DB_TEST_USERNAME`、`DB_TEST_PASSWORD`、`DB_TEST_DATABASE` | `test` 接続の同じ設定 | `config/database.php` の値 |
 
@@ -636,6 +637,7 @@ Security.salt
 アプリケーションごとに一意な値に変更し、秘密にしておいてください。
 スケルトンのデフォルト値のままだと、CakePHP が警告を表示します。
 スケルトンは、環境変数 `SECURITY_SALT` が設定されていればその値を使います。
+生成方法と、変更したときの影響は [セキュリティ用のソルトの生成](#security-salts) を参照してください。
 
 ::: pieceofcake2
 `SecurityComponent` が発行する CSRF トークンは
@@ -647,8 +649,12 @@ Security.salt
 Security.cipherSeed  
 `Security::cipher()` で文字列を暗号化／復号化するのに使われるランダムな文字列（数字のみ）。
 このメソッドを使うのは `CookieComponent` の暗号化タイプ `'cipher'` だけです。
-このタイプは脆弱で、後方互換性のためだけに残されています。Cookie には `'aes'` タイプを使ってください。
+このタイプは脆弱で、後方互換性のためだけに残されています。Cookie には `'aes'` タイプを使い、
+`Security.useOpenSsl` が `true` になっていることを確認してください (app スケルトンでは設定済みです)。
 スケルトンは、環境変数 `SECURITY_CIPHER_SEED` が設定されていればその値を使います。
+意味があるのは 1 から 4294967295 までの数値だけです。本家の `config/core.php` にある 29 桁のデフォルト値を含め、これより長い値はすべて同じ
+シード `0` になります。どの値にしても `'cipher'` タイプは安全になりません。
+[cipherSeed と Cookie の 'cipher' タイプ](#cipher-seed) を参照してください。
 
 Security.useOpenSsl  
 true にすると、`Security::encrypt()` と `Security::decrypt()` (つまり Cookie の暗号化タイプ
@@ -683,6 +689,315 @@ CakePHP のアクセス制御リスト(ACL)機能で使われる定数。
 `Configure` クラスは、コアの設定をその場で読み書き
 するのに使われます。これは、たとえばあなたのアプリケーションの
 限られた範囲でデバッグ設定を有効にしたい場合などに特に便利です。
+
+### セキュリティ用のソルトの生成 {#security-salts}
+
+`Security.salt` は、アプリケーションごとに一意で秘密の値にする必要があります。
+暗号論的に安全な乱数生成器で生成してください。自分で考えた値や、サンプルにある値を使ってはいけません。
+以下のコマンドは、Linux と macOS の POSIX シェル (`sh`、`bash`、`zsh`) で動作します。
+
+`Security.salt` には、32 バイトの乱数を 64 文字の 16 進数で表した値を使います。
+
+::: code-group
+
+```bash [PHP]
+php -r 'echo bin2hex(random_bytes(32)), PHP_EOL;'
+```
+
+```bash [OpenSSL]
+openssl rand -hex 32
+```
+
+:::
+
+ソルトは 32 文字以上にしてください。ソルトは `CookieComponent` のデフォルトの暗号化キーで、
+暗号化タイプ `'aes'` (`Security::encrypt()`) は 32 バイト未満のキーに対して例外を投げます。
+
+`Security.cipherSeed` を使うのは古い Cookie の `'cipher'` タイプだけで、値は 1 から 4294967295 までの
+数値にする必要があります。本家の `config/core.php` にある 29 桁のデフォルト値を含め、これより長い値はすべて同じシードになり、どの値にしても
+`'cipher'` は安全になりません。設定する前に [cipherSeed と Cookie の 'cipher' タイプ](#cipher-seed) を
+読んでください。
+
+Windows では、コマンドプロンプトや PowerShell で PHP のコマンドを実行するとき、シングルクォートの代わりに
+ダブルクォートを使ってください。たとえば `php -r "echo bin2hex(random_bytes(32)), PHP_EOL;"` のようにします。
+
+`pieceofcake2/app` のスケルトンから作成したアプリケーションでは、これらの値を
+[環境変数](#environment-variables) `SECURITY_SALT` と `SECURITY_CIPHER_SEED` で設定します。
+開発環境では、次のコマンドでソルトと範囲内のシードを `config/.env` に追記できます (先に `config/.env.example` を
+コピーしておいてください。同じ変数が 2 回設定されている場合は、後の行が有効になります)。
+
+::: code-group
+
+```bash [PHP]
+php -r 'printf("SECURITY_SALT=\"%s\"\nSECURITY_CIPHER_SEED=\"%d\"\n", bin2hex(random_bytes(32)), random_int(1, 4294967295));' >> config/.env
+```
+
+```bash [Shell]
+printf 'SECURITY_SALT="%s"\nSECURITY_CIPHER_SEED="%s"\n' "$(openssl rand -hex 32)" "$(od -An -N4 -tu4 /dev/urandom | tr -dc 0-9)" >> config/.env
+```
+
+:::
+
+値は秘密にし、環境ごとに分けてください。
+
+- 環境 (開発、ステージング、本番) ごと、アプリケーションごとに異なる値を使います。
+- 値をコミットしないでください。スケルトンでは `config/.env` と `.env` は Git で無視されます。
+  本番環境では `.env` ファイルではなく、実際の環境変数を設定してください。値を `config/core.php`
+  に書く場合は、そのファイルを公開リポジトリに置かないでください。
+- ソルトが漏れた場合 (コミットした、共有した、サンプル値のままだった場合など) は、値を変更してください。
+
+#### ソルトに依存するもの
+
+`Security.salt` を変更すると、次のものに影響します。
+
+- **ソルトを使ってハッシュ化したパスワード。** `FormAuthenticate` と `BasicAuthenticate` のデフォルトの
+  パスワードハッシャーである `SimplePasswordHasher` と、非推奨の `AuthComponent::password()` は、
+  パスワードの前にソルトを付けてハッシュ化します (`$salt = true` での `Security::hash()`)。
+  保存済みのハッシュが一致しなくなり、ユーザーはログインできなくなります。bcrypt のハッシュ
+  (`BlowfishPasswordHasher`、`Security::hash($password, 'blowfish')`) はソルトを使わないので影響を受けません。
+- **暗号化した Cookie。** `CookieComponent` は、`$this->Cookie->key` を設定しない限りソルトをキーに使います。
+  また、`'aes'` タイプは専用のキーを設定してもソルトをキーに組み合わせます。そのため、専用のキーを設定した
+  `'cipher'` と `'rijndael'` の Cookie を除き、変更前に書き込んだ Cookie は読めなくなります。
+- **`Security::encrypt()` で暗号化したデータ。** `$hmacSalt` を指定しない場合はソルトが暗号化キーの一部になるため、
+  変更前に暗号化した値に対して `Security::decrypt()` は `false` を返します。
+- **セッション。** `Session.checkAgent` が `false` でない場合 (デフォルト)、セッションにはユーザーエージェントと
+  ソルトのハッシュが保存されているため、既存のセッションは破棄され、ユーザーはログアウトされます。
+- **CSRF トークンとフォーム改ざん防止用トークン。** `SecurityComponent` と `FormHelper` が発行するトークンは
+  ソルトで署名されています。変更前に表示したフォームは一度だけ拒否されます。
+
+`Security.cipherSeed` を使うのは `Security::cipher()` だけです。変更すると `Security::cipher()` で暗号化した値が
+読めなくなります。実際には、`CookieComponent` のデフォルトの暗号化タイプ `'cipher'` で書き込んだ Cookie が該当します。
+[cipherSeed と Cookie の 'cipher' タイプ](#cipher-seed) を参照してください。
+
+#### ソルトの変更手順
+
+セッション、CSRF トークン、フォームのトークンは自然に回復します。ユーザーがログインし直し、フォームを
+送信し直せばよいので、利用の少ない時間帯にソルトを変更してください。変更する前に、長く保存される値を
+ソルトに依存しないようにしておきます。
+
+1. ソルトを使ったパスワードのハッシュを bcrypt (`'passwordHasher' => 'Blowfish'`) に移行します。
+   ハッシュは変換できないので、ユーザーのログイン時に古いハッシュで確認し、パスワードの bcrypt ハッシュを
+   保存します。ソルトを使ったハッシュがなくなってからソルトを変更するか、残ったユーザーにパスワードの
+   再設定を求めてください。
+2. デフォルトの `$hmacSalt` で `Security::encrypt()` を使って暗号化した保存済みの値は、古いソルトを
+   `Security::decrypt()` に渡して暗号化し直します。`Security.salt` と一緒に変わらない専用の `$hmacSalt`
+   を渡すようにすると、より安全です。
+
+   ```php
+   $plain = Security::decrypt($encrypted, $key, $oldSalt);
+   $encrypted = Security::encrypt($plain, $key, $hmacSalt);
+   ```
+
+3. 暗号化した Cookie は引き継げません。`'aes'` タイプはキーに `Security.salt` を組み合わせるため、
+   ソルトを変更すると Cookie は読めなくなり、ログイン状態を保持する Cookie を持っていたユーザーは
+   一度ログインし直す必要があります。まだ `'cipher'` タイプを使っている場合は、同時に専用のキーを設定した
+   `'aes'` に移行すれば、Cookie が失われるのは一度だけで済みます。その際は `Security.useOpenSsl` が
+   `true` になっていることを確認してください (app スケルトンでは設定済みです。
+   [`'aes'` への移行](#migrating-to-aes) を参照してください)。
+
+#### その他の秘密の値
+
+- `Security::encrypt()` と `Security::decrypt()` に渡すキーや、`CookieComponent` のキーは 32 バイト以上に
+  してください。`Security.salt` と同じ方法で生成し、`COOKIE_KEY` から `Cookie.key` に読み込むように、環境変数から設定に読み込みます
+  ([`'aes'` への移行](#migrating-to-aes) を参照してください)。
+- データベースやメールのパスワード、API キーは、コミットするコードではなく、環境変数や、
+  `config/database.php` と `config/email.php` のような Git で無視されるファイルに置いてください。
+
+### cipherSeed と Cookie の 'cipher' タイプ {#cipher-seed}
+
+`Security.cipherSeed` を使うのは `Security::cipher()` だけです。実際には、デフォルトの暗号化タイプが
+`'cipher'` である `CookieComponent` がこれに当たります。`'cipher'` タイプは以前から安全でないと
+説明されており、後方互換性のためだけに残されています。この節では、シードの既知の弱点と、
+それがアプリケーションに与える影響、`'aes'` タイプへの移行方法を説明します。
+
+#### シードの使われ方
+
+`Security::cipher()` は `mt_srand((int)(float)$seed)` で PHP のメルセンヌ・ツイスタを初期化し、
+`mt_rand()` で得た数値と値を XOR します。キー (`CookieComponent` のキーを設定していなければ
+`Security.salt`) も組み合わされます。
+
+`mt_srand()` のシードは 32 ビットなので、意味があるのは 1 から 4294967295 までの数値だけです。
+これより長い値にしても何も加わりません。
+
+- 19 桁を超える値は PHP の整数に収まらず、変換でビットが失われます。
+- 27 桁以上の値と、26 桁の値の約 95% は、すべてシード `0` になります。
+
+シード `0` になるよく知られた値には、次のものがあります。
+
+- `76859309657453542496749683645`: 本家 CakePHP 2 とこのフォークの `config/core.php` のデフォルト値。
+  `pieceofcake2/app` スケルトンの以前のバージョンから作成したアプリケーションでも、環境変数がない場合の
+  値として使われています
+- `7485712659625147843639846751`: 本家のドキュメントのブログチュートリアルにあるサンプル値
+- `pieceofcake2/app` スケルトンの以前のバージョンの `config/.env.example` に書かれていたコマンドで
+  生成した 30 桁の値
+
+#### 範囲内のシードでも十分ではありません
+
+1 から 4294967295 までのシードにすれば `0` になることは避けられますが、`'cipher'` が安全になるわけでは
+ありません。
+
+- シードは約 43 億通りしかないため、すべて試すことができます。
+- キーストリームは暗号用ではないメルセンヌ・ツイスタで生成され、値はそれと XOR されるだけです。
+- `Security.salt` (または `CookieComponent` のキー) も組み合わされますが、それで本当の暗号化になる
+  わけではありません。
+
+シードがどの値であっても、値を秘密にするために `'cipher'` に頼らないでください。
+
+#### 影響
+
+- 影響を受けるのは `Security::cipher()` で暗号化した値だけです。つまり、`CookieComponent` が
+  `'cipher'` タイプ (デフォルト) で書き込む Cookie と、アプリケーションが直接呼び出す
+  `Security::cipher()` です。Cookie の `'aes'` と `'rijndael'` タイプ、`Security::encrypt()`、
+  パスワードのハッシュ、セッション、CSRF トークンはシードを使いません。
+- 上記のいずれかの値や、その他の 27 桁以上の値を使っているアプリケーションでは、シードは秘密として
+  まったく役に立たず、そうしたアプリケーションはすべて同じシードを使っています。
+- シードをほかの値に変更すると、`'aes'` に切り替えた場合と同じように、既存の `'cipher'` の Cookie は
+  読めなくなります。
+
+#### どうすればよいですか
+
+- **新しいアプリケーション:** [`'aes'` への移行](#migrating-to-aes) のとおり、専用のキーを設定した
+  `'aes'` タイプを使い、`'cipher'` は使わないでください。`Security.useOpenSsl` は `true` にします
+  (app スケルトンでは設定済みです)。
+- **`'cipher'` の Cookie を使っている既存のアプリケーション:** `'aes'` に移行してください。
+  既存の Cookie の値は一度だけ失われます。たとえば、ログイン状態を保持する Cookie でログインしていた
+  ユーザーはログインし直す必要があり、Cookie に保存した設定は元に戻ります。手順は
+  [`'aes'` への移行](#migrating-to-aes) を参照してください。
+- **移行期間中も古い Cookie を読み続ける必要があるアプリケーション:** 影響なく移行する方法は
+  ありません。古い Cookie を読めるのは古いシードを使い続けている間だけで、その間は弱点も残ります。
+  範囲内のシードに変更するとキーストリームも変わるため、結局古い Cookie は読めなくなり、
+  変更後も `'cipher'` は安全ではありません。Cookie が一度失われる日を決めておき、シードだけを
+  変更するのではなく、その日に `'aes'` に切り替えてください。
+- **`CookieComponent` も `Security::cipher()` も使っていないアプリケーション、**
+  または `'aes'` タイプだけを使っているアプリケーション: `Security.cipherSeed` を 1 から 4294967295
+  までの有効な値にすること以外に、することはありません。
+
+#### `'aes'` への移行 {#migrating-to-aes}
+
+1. 32 バイトの乱数で Cookie のキーを生成します。`Security.salt` を使い回さないでください。
+
+   ::: code-group
+
+   ```bash [PHP]
+   php -r 'echo bin2hex(random_bytes(32)), PHP_EOL;'
+   ```
+
+   ```bash [OpenSSL]
+   openssl rand -hex 32
+   ```
+
+   :::
+
+   生成した値を環境変数 `COOKIE_KEY` に設定します。開発環境では `config/.env` に書き、
+   本番環境では実際の環境変数として設定してください。
+
+2. `Security.useOpenSsl` が `true` になっていることを確認します (app スケルトンでは設定済みです)。
+   `'aes'` タイプが使う `Security::encrypt()` と `Security::decrypt()` は、この設定が `true` のときだけ
+   OpenSSL を使います。そうでない場合は PHP 8 には存在しない `mcrypt` を呼び出すため、`'aes'` の
+   Cookie は失敗します。古いアプリケーションにはこの行がないことがあるので、`config/core.php` に
+   追加してください ([OpenSSL を有効にする](/ja/appendices/migrating-from-cakephp-2-10#enable-openssl) を参照してください)。
+
+   ```php
+   Configure::write('Security.useOpenSsl', true);
+   ```
+
+3. `CookieComponent` のタイプとキーを設定します。方法は `pieceofcake2/cakephp` のバージョンによって
+   異なります。下記を参照してください。
+
+::: pieceofcake2
+v2.12.6 からは、`Cookie.type` と `Cookie.key` を設定で指定できます。
+
+**v2.12.6 以降:** `config/core.php` のソルトの近くで設定します。コントローラーを変更する必要は
+ありません。`pieceofcake2/app` スケルトンの新しいバージョンにはこれらの行があります。
+`config/core.php` にない場合は追加してください。
+
+```php
+// config/core.php
+/**
+ * Default encryption type and key of CookieComponent. The key is a random
+ * value of at least 32 bytes.
+ *
+ * The key can be set with the COOKIE_KEY environment variable.
+ */
+Configure::write('Cookie.type', 'aes');
+Configure::write('Cookie.key', env('COOKIE_KEY') ?: null);
+```
+
+`CookieComponent` のタイプは、`'type'` の設定または `$this->Cookie->type()` が最優先で、次に
+`Cookie.type`、どちらもなければ `'cipher'` です。キーは、`'key'` の設定または `$this->Cookie->key` が
+最優先で、次に `Cookie.key`、どちらもなければ `Security.salt` です。
+
+**v2.12.5 以前:** `CookieComponent` は `Cookie.type` と `Cookie.key` を読まないため、上の設定は
+効果がありません。`config/core.php` の `Cookie.key` の行は残し、タイプとキーはコントローラーで渡します。
+タイプはコンポーネントの設定で指定し、キーは Cookie を読む前に `beforeFilter()` で設定します。
+`AppController`、またはこのコンポーネントを使うすべてのコントローラーで設定してください。
+
+```php
+// src/Controller/AppController.php
+public $components = [
+    'Cookie' => ['type' => 'aes'],
+];
+
+public function beforeFilter()
+{
+    parent::beforeFilter();
+    $key = Configure::read('Cookie.key');
+    if ($key) {
+        $this->Cookie->key = $key;
+    }
+}
+```
+
+`null` を代入するとデフォルトのキーが置き換えられて暗号化に失敗するため、キーは値が設定されている
+場合だけ代入してください。`'type'` の設定は v2.12.3 から反映されます。それより古いバージョンでは
+`beforeFilter()` で `$this->Cookie->type('aes');` を呼び出してください。明示的な設定が優先される
+ため、このコードは v2.12.6 以降もそのまま動作します。
+:::
+
+`'aes'` タイプには 32 バイト以上のキーが必要です。`COOKIE_KEY` が設定されていない場合、`Cookie.key`
+は `null` になり、キーには `Security.salt` が使われます。ソルトが 32 バイト未満の場合、暗号化した
+Cookie を書き込んだり読んだりするたびに、`Security::encrypt()` と `Security::decrypt()` が
+`CakeException` を投げます。
+
+4. 必要に応じて `$this->Cookie->name` で Cookie の名前を変更します。そうすると、古い `'cipher'` の
+   Cookie は新しいタイプで復号されずに無視され、そのまま期限切れになります。
+
+5. デプロイします。ログイン状態を保持する Cookie を持っていたユーザーは、一度ログインし直します。
+
+`'aes'` タイプが使う `Security::encrypt()` は、キーに `Security.salt` も組み合わせます。
+後で `Security.salt` を変更すると、`'aes'` の Cookie も読めなくなります。
+
+#### cipherSeed の生成
+
+`'cipher'` をまだ使っている場合に限り、`Security.cipherSeed` を 1 から 4294967295 までの数値にします。
+これで `0` になることは避けられますが、`'cipher'` は安全でないままです。また、シードを変更すると
+既存の `'cipher'` の Cookie は読めなくなります。
+
+::: code-group
+
+```bash [PHP]
+php -r 'echo random_int(1, 4294967295), PHP_EOL;'
+```
+
+```bash [Shell]
+od -An -N4 -tu4 /dev/urandom | tr -dc 0-9; echo
+```
+
+:::
+
+#### v2.12.6 で予定している変更
+
+v2.12.6 からは、`pieceofcake2/cakephp` が動作を変えずに次の問題を報告する予定です。
+
+- `'cipher'` タイプまたは `Security::cipher()` を使うと、リクエストごとに一度だけ非推奨の警告を
+  ログに記録します。
+- `Security.cipherSeed` が 1 から 4294967295 の範囲外の場合はログに記録し、デバッグモードでは
+  警告を表示します。
+
+値の暗号化と復号は以前とまったく同じなので、既存の Cookie はそのまま読めます。
+
+また、v2.12.6 からは、`CookieComponent` のデフォルトのタイプとキーを `Cookie.type` と `Cookie.key` として
+設定で指定できます ([`'aes'` への移行](#migrating-to-aes) を参照してください)。
 
 ### 構成用定数
 

@@ -19,6 +19,12 @@
 > OpenSSL による実装は `mcrypt` と同じ形式で暗号化するため、以前に暗号化した値も復号できます。
 > `Security::rijndael()` には OpenSSL による実装がなく、常に `mcrypt` が必要です。
 
+`$salt = true` を指定した `hash()` と、`$hmacSalt` を指定しない `encrypt()` と `decrypt()` は
+アプリケーションの `Security.salt` を使い、`cipher()` は `Security.cipherSeed` を使います。
+これらの値の生成方法と、変更したときの影響は
+[セキュリティ用のソルトの生成](/ja/development/configuration#security-salts) を参照してください。
+`encrypt()` と `decrypt()` に渡すキーも、`openssl rand -hex 32` のようにソルトと同じ方法で生成できます。
+
 ## Security API
 
 `static` Security::**cipher**( $text, $key )
@@ -41,6 +47,14 @@ $nosecret = Security::cipher($secret, 'my_key');
 > このメソッドは、後方互換性のためだけに残されています。
 > `CookieComponent` のデフォルトの暗号化タイプ `'cipher'` もこのメソッドを使っているため、
 > 代わりに `'aes'` タイプを使ってください ([脆弱性への対応](/ja/security/fixes) を参照してください)。
+
+> [!WARNING]
+> `cipher()` は `Security.cipherSeed` で `mt_srand()` を初期化しますが、意味があるのは 1 から 4294967295
+> までの数値だけです。よく知られたデフォルト値を含め、これより長い値はすべてシード `0` になり、
+> 範囲内のシードでも総当たりで破れます。影響と `'aes'` への移行方法は
+> [cipherSeed と Cookie の 'cipher' タイプ](/ja/development/configuration#cipher-seed) を参照してください。
+> `'aes'` に切り替えるときは、`Security.useOpenSsl` が `true` になっていることを確認してください
+> (app スケルトンでは設定済みです。[OpenSSL を有効にする](/ja/appendices/migrating-from-cakephp-2-10#enable-openssl) を参照してください)。
 
 `static` Security::**rijndael**($text, $key, $mode)
 

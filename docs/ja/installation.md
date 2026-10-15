@@ -139,6 +139,18 @@ my_app/
    [データベース設定](development/configuration#database-configuration) を参照してください。
 2. `config/core.php` の `Security.salt` と `Security.cipherSeed` の値を変更します。
    スケルトンに入っている値は誰でも知っているサンプル値なので、実際のアプリケーションでは使わないでください。
+   安全な乱数生成器で新しい値を生成します。
+
+   ```bash
+   php -r 'echo bin2hex(random_bytes(32)), PHP_EOL;'  # Security.salt
+   php -r 'echo random_int(1, 4294967295), PHP_EOL;'  # Security.cipherSeed
+   ```
+
+   PHP を使わないコマンドや、後で値を変更したときの影響は
+   [セキュリティ用のソルトの生成](development/configuration#security-salts) を参照してください。
+   サイファシードを使うのは古い Cookie の `'cipher'` タイプだけで、このタイプはどのシードでも安全では
+   ありません。Cookie には `'aes'` タイプを使い、`Security.useOpenSsl` を `true` にしてください
+   (スケルトンでは設定済みです。[cipherSeed と Cookie の 'cipher' タイプ](development/configuration#cipher-seed) を参照してください)。
 
 ファイルを編集する代わりに、デバッグレベル、セキュリティ用のソルト、データベースの設定を
 環境変数でセットすることもできます。開発環境では、`config/.env.example` を `config/.env`

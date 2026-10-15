@@ -79,6 +79,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - New application: debug level, salts and database settings can also be set with environment variables (`config/.env` or `.env` in the project root)
   - "Adding CakePHP to an Existing Application" comes before "Creating a New Application"; the closing link points to the blog tutorial instead of Getting Started
   - Apache virtual host: `Options -Indexes -MultiViews +FollowSymLinks`, a warning against a project-root document root and a link to the Apache 2.2 syntax
+  - New application: commands to generate `Security.salt` and `Security.cipherSeed`, noting that the seed does not make the 'cipher' cookie type secure
 - [Advanced Installation](/installation/advanced-installation)
   - Removed PEAR installation, the old Composer/bake project setup and CAKE_CORE_INCLUDE_PATH core sharing
   - Added Composer setup details: replace directive, plugin installer-paths, classmap autoloading, exclude-from-classmap
@@ -196,6 +197,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
 - [Cookie](/core-libraries/components/cookie)
   - Example uses type('aes') with `Security.useOpenSsl`; warning that the default 'cipher' is insecure and 'rijndael' needs mcrypt
   - Type set with `'Cookie' => ['type' => 'aes']` in `$components` (type() as an alternative); change note that the setting was ignored before v2.12.3; `Security.useOpenSsl` already enabled in the pieceofcake2/app v2.3.1 skeleton
+  - Note that the default type is 'cipher' and is insecure with any cipherSeed; recommend 'aes' with its own key in `Cookie.key` (from the `COOKIE_KEY` environment variable) and `Security.useOpenSsl`; the example no longer writes a key in the code; `Cookie.type` and `Cookie.key` in `config/core.php` become the defaults from v2.12.6; link to migrating to 'aes'
 - [Flash](/core-libraries/components/flash)
   - Flash elements in `templates/Elements/Flash`
 - [Pagination](/core-libraries/components/pagination)
@@ -240,6 +242,8 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
 - [Security](/core-utility-libraries/security)
   - Explain that mcrypt is not bundled since PHP 7.2 and `Security.useOpenSsl` should be enabled in `config/core.php` (compatible format); rijndael() needs PECL mcrypt; Cookie 'cipher' type warning
   - Noted that the pieceofcake2/app skeleton (v2.3.1 and later) already enables `Security.useOpenSsl`
+  - Which methods use `Security.salt` and `Security.cipherSeed`, with a link to generating them
+  - Warning on `cipher()`: only seeds from 1 to 4294967295 are meaningful, the well-known default ends up as seed 0, and in-range seeds can still be brute-forced
 - [Set](/core-utility-libraries/set)
   - Test file path updated to `tests/TestCase/Utility/SetTest.php`
 - [CakeText](/core-utility-libraries/string)
@@ -293,6 +297,9 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - Inflector path `src/Cake/Utility/Inflector.php` and bootstrap `config/bootstrap.php` folded into text; era-specific examples (old IE/Chrome Frame, AMF/SOAP) modernized; ja: `$merge` description corrected, `Configure::consume()` added
   - New "Environment Variables" section: the pieceofcake2/app skeleton loads `config/.env` and the project-root `.env` with josegonzalez/dotenv at the top of `config/core.php` (backport of the `.env` support of the CakePHP 3+/5 app skeleton; change note: added in app v2.4.0), precedence (real environment > `config/.env` > root `.env`), quoting advice, adding the loader to legacy-layout and older applications, and the variables read by the skeleton (`DEBUG`, `SECURITY_SALT`, `SECURITY_CIPHER_SEED`, `DB_*`, `DB_TEST_*`)
   - `App.baseUrl`: keep the document root at `webroot/` when the `.htaccess` files are removed
+  - New "Generating the Security Salts" section: secure one-liners (PHP and shell), what depends on each value (the 'aes' cookie type mixes in `Security.salt` even with its own key), and how to rotate them
+  - New "cipherSeed and the 'cipher' Cookie Type" section: how `Security::cipher()` uses the seed, only 1-4294967295 meaningful, values with 27 or more digits (the default of the original `config/core.php`, the blog tutorial example and the old `.env.example` generator) end up as seed 0, in-range seeds are still not secure, impact, which action to take, migrating to 'aes' with a 32-byte key in `Cookie.key` (from `COOKIE_KEY`), `Cookie.type` set to 'aes' and `Security.useOpenSsl` set to true (`Cookie.type` and `Cookie.key` can be set in configuration from v2.12.6; controller form for v2.12.5 and earlier; exception when the fallback key `Security.salt` is shorter than 32 bytes), and the warnings planned for v2.12.6
+  - `Security.cipherSeed` entry: only 1-4294967295 is meaningful and no value makes 'cipher' secure, with a link to the new section
 - [Routing](/development/routing)
   - Routes file path changed to `config/routes.php` (legacy `app/Config/routes.php` noted with link to the folder structure page)
   - Built-in routes located in `vendor/pieceofcake2/cakephp/config/routes.php`; disabling them means removing the require line from `config/routes.php`
@@ -389,6 +396,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - Setup rewritten: `composer create-project pieceofcake2/app blog`, PHP 8.0+, built-in server via `bin/cake server` (default port 8765); removed archive download/git clone steps
   - Paths updated to `config/database.php`, `config/core.php`, `tmp/` and `logs/`; MySQL example uses `utf8mb4`
   - mod_rewrite section replaced by a short "Using Apache" section (DocumentRoot = `webroot/`)
+  - Salt and cipher seed generated with commands instead of example values; cipher seed from 1 to 4294967295, noting that it is used only by the insecure 'cipher' cookie type, which the tutorial does not use
 - [Blog Tutorial - Adding a layer](/tutorials-and-examples/blog/part-two)
   - Files placed in `src/Model`, `src/Controller`, `templates/Posts`, `config/routes.php`
   - `view()` and `delete()` take `$id = null` so a missing ID raises NotFoundException instead of an ArgumentCountError on PHP 8

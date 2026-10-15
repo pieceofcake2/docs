@@ -77,6 +77,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - 新規アプリケーション: デバッグレベル、ソルト、データベースの設定を環境変数 (`config/.env` またはプロジェクトルートの `.env`) でもセットできることを記載
   - 「既存のアプリケーションへの導入」を「新しいアプリケーションの作成」の前に移動。最後のリンクは「入門」ではなくブログチュートリアルを指すように変更
   - Apache のバーチャルホスト: `Options -Indexes -MultiViews +FollowSymLinks` を追加し、ドキュメントルートをプロジェクトのディレクトリにしないよう警告、Apache 2.2 の書き方へのリンクを追加
+  - 新規アプリケーション: `Security.salt` と `Security.cipherSeed` を生成するコマンドを記載。シードで Cookie の 'cipher' タイプが安全になるわけではないことを追記
 - [応用インストール](/ja/installation/advanced-installation)
   - PEAR でのインストール、旧来の Composer/bake によるプロジェクト作成、CAKE_CORE_INCLUDE_PATH によるコア共有を削除
   - Composer 設定の詳細を追加: replace、プラグインの installer-paths、classmap オートロード、exclude-from-classmap
@@ -191,6 +192,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
 - [Cookie](/ja/core-libraries/components/cookie)
   - 例で type('aes') と `Security.useOpenSsl` を使用。デフォルトの 'cipher' は脆弱で 'rijndael' は mcrypt が必要という警告を追加
   - タイプは `$components` の `'Cookie' => ['type' => 'aes']` で設定 (type() でも設定可能)。v2.12.3 より前はこの設定が無視されていたことを変更点として記載。pieceofcake2/app v2.3.1 のスケルトンでは `Security.useOpenSsl` が有効
+  - デフォルトのタイプは 'cipher' で、cipherSeed をどの値にしても安全でないことを記載。'aes' と、環境変数 `COOKIE_KEY` から `Cookie.key` に設定する専用のキー、`Security.useOpenSsl` の有効化を推奨。例ではキーをコードに書かないように変更。v2.12.6 から `config/core.php` の `Cookie.type` と `Cookie.key` がデフォルトになることを記載し、'aes' への移行へのリンクを追加
 - [フラッシュ](/ja/core-libraries/components/flash)
   - フラッシュ用エレメントの場所を `templates/Elements/Flash` に変更
 - [ページ制御](/ja/core-libraries/components/pagination)
@@ -235,6 +237,8 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
 - [Security](/ja/core-utility-libraries/security)
   - mcrypt は PHP 7.2 以降同梱されないため `config/core.php` で `Security.useOpenSsl` を有効にすること (互換の形式)、rijndael() は PECL の mcrypt が必要、Cookie の 'cipher' タイプへの警告を本文で説明
   - pieceofcake2/app のスケルトン (v2.3.1 以降) では `Security.useOpenSsl` が有効になっていることを追記
+  - `Security.salt` と `Security.cipherSeed` を使うメソッドと、それらの生成方法へのリンクを追記
+  - `cipher()` に警告を追加: 意味があるシードは 1〜4294967295 だけで、よく知られたデフォルト値はシード 0 になり、範囲内のシードでも総当たりで破れる
 - [Set](/ja/core-utility-libraries/set)
   - テストファイルのパスを `tests/TestCase/Utility/SetTest.php` に変更
 - [CakeText](/ja/core-utility-libraries/string)
@@ -288,6 +292,9 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - Inflector のパス `src/Cake/Utility/Inflector.php` と `config/bootstrap.php` を本文に反映。古い IE/Chrome Frame や AMF/SOAP の例を更新。ja: `$merge` の説明を修正し `Configure::consume()` を追加
   - 「環境変数」の節を追加: pieceofcake2/app スケルトンが `config/core.php` の先頭で josegonzalez/dotenv により `config/.env` とプロジェクトルートの `.env` を読み込むこと (CakePHP 3〜5 のアプリケーションスケルトンの `.env` サポートのバックポート。変更点: app v2.4.0 で追加)、優先順位 (実際の環境変数 > `config/.env` > ルートの `.env`)、値のクォート、レガシー構成や以前のアプリケーションへの読み込み処理の追加方法、スケルトンが読み込む環境変数 (`DEBUG`、`SECURITY_SALT`、`SECURITY_CIPHER_SEED`、`DB_*`、`DB_TEST_*`)
   - `App.baseUrl`: `.htaccess` ファイルを削除してもドキュメントルートは `webroot/` のままにすることを追記
+  - 「セキュリティ用のソルトの生成」の節を追加: 安全な生成コマンド (PHP とシェル)、それぞれの値に依存するもの (Cookie の 'aes' タイプは専用のキーを設定しても `Security.salt` を組み合わせる)、値の変更手順
+  - 「cipherSeed と Cookie の 'cipher' タイプ」の節を追加: `Security::cipher()` でのシードの使われ方、意味があるのは 1〜4294967295 だけで、27 桁以上の値 (本家の `config/core.php` のデフォルト値、ブログチュートリアルのサンプル値、以前の `.env.example` の生成コマンド) はシード 0 になること、範囲内のシードでも安全ではないこと、影響、どうすればよいか、`COOKIE_KEY` から `Cookie.key` に読み込む 32 バイトのキー、'aes' にした `Cookie.type`、`Security.useOpenSsl` を使った 'aes' への移行 (v2.12.6 からは `Cookie.type` と `Cookie.key` を設定で指定できること、v2.12.5 以前でのコントローラーでの設定、代わりのキーの `Security.salt` が 32 バイト未満のときの例外)、v2.12.6 で予定している警告
+  - `Security.cipherSeed` の説明: 意味があるのは 1〜4294967295 だけで、どの値でも 'cipher' は安全にならないことを記載し、新しい節へのリンクを追加
 - [ルーティング](/ja/development/routing)
   - ルート設定ファイルのパスを `config/routes.php` に変更（従来の `app/Config/routes.php` はフォルダ構造ページへのリンク付きで併記）
   - 組み込みルートの場所を `vendor/pieceofcake2/cakephp/config/routes.php` に修正し、無効化は `config/routes.php` の require 行を削除すると説明
@@ -384,6 +391,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - セットアップを書き直し: `composer create-project pieceofcake2/app blog`、PHP 8.0 以上、`bin/cake server` によるビルトインサーバ (デフォルトのポートは 8765)。アーカイブのダウンロードと git clone の手順を削除
   - パスを `config/database.php`、`config/core.php`、`tmp/`、`logs/` に更新。MySQL の設定例で `utf8mb4` を使用
   - mod_rewrite の節を短い「Apache を使う場合」の節 (DocumentRoot は `webroot/`) に置き換え
+  - ソルトとサイファシードはサンプル値ではなくコマンドで生成するように変更。サイファシードは 1〜4294967295 で、チュートリアルでは使わない安全でない 'cipher' タイプだけが使うことを追記
 - [ブログチュートリアル - レイヤーの追加](/ja/tutorials-and-examples/blog/part-two)
   - ファイルの配置を `src/Model`、`src/Controller`、`templates/Posts`、`config/routes.php` に変更
   - `view()` と `delete()` の引数を `$id = null` にし、ID がない場合に PHP 8 で ArgumentCountError ではなく NotFoundException になるよう修正

@@ -156,7 +156,20 @@ Next, finish the configuration:
    [Database Configuration](development/configuration#database-configuration).
 2. In `config/core.php`, change the values of `Security.salt` and
    `Security.cipherSeed`. The skeleton ships with well-known example values
-   that must not be used in a real application.
+   that must not be used in a real application. Generate new values with a
+   secure random generator:
+
+   ```bash
+   php -r 'echo bin2hex(random_bytes(32)), PHP_EOL;'  # Security.salt
+   php -r 'echo random_int(1, 4294967295), PHP_EOL;'  # Security.cipherSeed
+   ```
+
+   See [Generating the Security Salts](development/configuration#security-salts)
+   for commands without PHP, and for what changing the values later affects.
+   The cipher seed is used only by the legacy `'cipher'` cookie type, which
+   stays insecure with any seed; use the `'aes'` type for cookies, with
+   `Security.useOpenSsl` set to `true` (the skeleton sets it; see
+   [cipherSeed and the 'cipher' Cookie Type](development/configuration#cipher-seed)).
 
 Instead of editing the files, you can set the debug level, the security salts
 and the database settings with environment variables. For development, copy
