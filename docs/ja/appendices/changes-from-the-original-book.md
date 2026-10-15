@@ -379,7 +379,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - `/ja/appendices/security-fixes` から移動 (古い URL はこのページにリダイレクト)。報告の節は脆弱性の報告に移動
   - `'readFile' => false` を指定した `Xml::build()` の SSRF (2.12.3 で修正) を追加。Cookie のタイプを `$components` で設定。`Security.useOpenSsl` のスケルトンについての注記
   - SmtpTransport/MailTransport のメールヘッダーインジェクション (GHSA-4f9q-3c4x-52cv)、ビュー・レイアウト・エレメント名のパストラバーサル (GHSA-w2mh-x92p-5p95)、AuthComponent のログイン後のオープンリダイレクト (GHSA-x4p9-p4cx-gxwx) を追加 (いずれも 2.12.5 で修正)。表に GHSA の ID を記載。本家の CakePHP 2.x を使うアプリケーションは pieceofcake2/cakephp に切り替えると修正を適用できることを記載
-  - 'cipher' 暗号化と `Security.cipherSeed` の弱さ (GHSA-65v5-h65v-8pgg、CVE 申請中) を追加: 2.12.6 での変更 (非推奨の警告、シードの範囲の警告、範囲内のデフォルトのシード、`Cookie.type` / `Cookie.key`)、'cipher' は安全でないままであること、`Security.useOpenSsl` を有効にした 'aes' への移行。構成設定の cipherSeed の節へのリンク
+  - 'cipher' 暗号化と `Security.cipherSeed` の弱さ (GHSA-65v5-h65v-8pgg) を追加: 2.12.6 での変更 (非推奨の警告、シードの範囲の警告、範囲内のデフォルトのシード、`Cookie.type` / `Cookie.key`)、'cipher' は安全でないままであること、`Security.useOpenSsl` を有効にした 'aes' への移行。構成設定の cipherSeed の節へのリンク
 - [本家のアドバイザリ](/ja/security/upstream-advisories)
   - 新しいページ: CakePHP 2.x に関係する本家 CakePHP のアドバイザリの対応状況 (フォークで修正済み、または対象外)。フォークの CHANGELOG、`UPGRADE.md`、アドバイザリに基づく
   - 'cipher' の弱さ (GHSA-65v5-h65v-8pgg) には本家のアドバイザリがなく、本家の CakePHP 2.x にも影響し、修正されないことを記載
