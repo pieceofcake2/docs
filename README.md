@@ -246,6 +246,15 @@ includes only those lines. If you edit a file that is included elsewhere,
 search the repository for `@include` and check that the line ranges in the
 including files still select the same section.
 
+## Origin
+
+This package is a maintained fork of [cakephp/docs](https://github.com/cakephp/docs) (not published
+on Packagist, last upstream commit [`6b9d755`](https://github.com/cakephp/docs/commit/6b9d755) on
+`2.x`), originally by the CakePHP community (Cake Software Foundation, Inc.). It is maintained for
+CakePHP 2 on modern PHP by [pieceofcake2](https://github.com/pieceofcake2). Changes from the
+original are listed in the
+[commit history since the fork](https://github.com/pieceofcake2/docs/compare/6b9d755...2.x).
+
 ## License
 
 See [LICENSE](LICENSE).
