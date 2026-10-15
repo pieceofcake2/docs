@@ -20,6 +20,7 @@ CakePHP advisories, see [Upstream Advisories](/security/upstream-advisories).
 | [GHSA-4f9q-3c4x-52cv](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-4f9q-3c4x-52cv) | Email header injection in `SmtpTransport` and `MailTransport` (CakePHP 2 equivalent of CVE-2026-77634) | 2.12.5 |
 | [GHSA-w2mh-x92p-5p95](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-w2mh-x92p-5p95) | Path traversal in view, layout and element names (CakePHP 2 equivalent of CVE-2026-48820) | 2.12.5 |
 | [GHSA-x4p9-p4cx-gxwx](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-x4p9-p4cx-gxwx) | Open redirect after login via a protocol-relative `Auth.redirect` URL | 2.12.5 |
+| [GHSA-65v5-h65v-8pgg](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-65v5-h65v-8pgg) | Weak `'cipher'` encryption and `Security.cipherSeed`: the default `CookieComponent` type is not secure, and most long seeds become seed 0 (deprecated with warnings; switch to `'aes'`) | 2.12.6 |
 
 All of these vulnerabilities are present in the original CakePHP 2.10.24, and
 the CakePHP team no longer releases fixes for it. If your application still
@@ -151,6 +152,49 @@ security advisory
 needed. Until you can update, check the value of `Auth.redirect` before
 redirecting, and reject values that start with `//`, `/\`, `\/` or `\\`.
 
+### Weak `'cipher'` encryption and `Security.cipherSeed` {#cipher}
+
+`Security::cipher()`, which the default `'cipher'` type of `CookieComponent`
+uses, XORs the value with numbers from PHP's Mersenne Twister generator seeded
+with `Security.cipherSeed`. This is not real encryption: Mersenne Twister is
+not a cryptographic generator, and `mt_srand()` keeps only 32 bits of the
+seed, so there are only about 4.3 billion keystreams. Worse, every seed with
+27 or more digits and most 26-digit seeds, including the default
+`76859309657453542496749683645` of the original `config/core.php`, become
+seed `0`, so all applications that use such a seed share the same seed. An
+attacker who can read or forge `'cipher'` cookies may be able to recover or
+tamper with their values.
+
+This affects `pieceofcake2/cakephp` 2.12.5 and earlier, and every
+`cakephp/cakephp` 2.x release. See the security advisory
+[GHSA-65v5-h65v-8pgg](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-65v5-h65v-8pgg). A CVE ID has been
+requested and is still pending.
+
+`'cipher'` cannot be made secure without breaking every existing cookie, so
+2.12.6 does not change how values are encrypted. Instead it:
+
+- deprecates `'cipher'`: the first use of the `'cipher'` type or of
+  `Security::cipher()` in a process writes a `warning` to the log, also with
+  debug off, and with debug on also triggers `E_USER_DEPRECATED`;
+- warns about seeds outside 1 to 4294967295: the first `Security::cipher()`
+  call in a process logs a `warning` (the seed is never logged), and with
+  debug on `Debugger::checkSecurityKeys()` triggers an `E_USER_NOTICE`;
+- sets the in-range default seed `'2659758734'` and `Security.useOpenSsl` in
+  the fallback `config/core.php` of the core;
+- adds the `Cookie.type` and `Cookie.key` settings, which set the default type
+  and key of `CookieComponent` for the whole application.
+
+**What you need to do:** `'cipher'` remains insecure on 2.12.6 with any seed;
+an in-range seed only avoids the collapse to `0`. Update to 2.12.6 or later and
+switch to `'aes'`: set `Security.useOpenSsl` to `true`, `Cookie.type` to
+`'aes'`, and `Cookie.key` to a random value of at least 32 bytes from an
+environment variable, in `config/core.php`. Existing `'cipher'` cookies are
+lost once when you switch. Replace your own calls to `Security::cipher()` with
+`Security::encrypt()` and `Security::decrypt()`. On 2.12.5 and earlier, set the
+type and key in the controller instead. See
+[cipherSeed and the 'cipher' Cookie Type](/development/configuration#cipher-seed)
+for the details and the migration steps.
+
 ## Other Security Changes
 
 ### SSL/TLS certificate validation
@@ -208,6 +252,10 @@ You can also call `$this->Cookie->type('aes');` in `beforeFilter()`.
 ::: pieceofcake2
 The `'type'` setting in `$components` is honored since v2.12.3. In v2.12.2 and
 earlier it was ignored and cookies were encrypted with `'cipher'`.
+
+Since v2.12.6, `'cipher'` is deprecated, and `Cookie.type` and `Cookie.key` in
+`config/core.php` set the default type and key for the whole application. See
+[Weak `'cipher'` encryption](#cipher) above.
 :::
 
 ::: warning

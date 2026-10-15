@@ -185,6 +185,37 @@ Get the type of a variable. Objects will return their class name
 ::: info Added in version 2.1
 :::
 
+## Debug Error Pages {#debug-error-pages}
+
+::: pieceofcake2
+Since v2.12.6, in debug mode (`debug` > 0) the core error pages (missing
+controller, action, view or layout, database errors, and uncaught exceptions
+without an application `error400.ctp` / `error500.ctp`) use a `dev_error`
+layout ported from CakePHP 5. It shows the error title and the exception
+class, the suggested fix with the real file path, and a stack trace of the
+exception and its previous exceptions with code excerpts for every frame and
+`(edit)` links that open the file in your editor.
+
+The links open PhpStorm by default. To use another editor, set
+`Debugger.editor` to `atom`, `emacs`, `macvim`, `sublime`, `textmate`,
+`vscode` or `vscodium`. When the application runs in a container, set
+`Debugger.editorBasePath` to the application path on your machine:
+
+```php
+// config/core.php
+Configure::write('Debugger.editor', 'vscode');
+Configure::write('Debugger.editorBasePath', '/home/me/projects/my_app');
+```
+
+`Debugger::editorUrl()`, `Debugger::setEditor()` and `Debugger::addEditor()`
+work as in CakePHP 5. Production mode (`debug` = 0), AJAX requests and the
+console are unchanged. Error templates provided by your application, plugin
+or theme keep rendering in your layout, and a `Layouts/dev_error.ctp` in the
+application or theme overrides the core layout. See
+[Migrating from CakePHP 2.10](/appendices/migrating-from-cakephp-2-10#dev-error-pages)
+for how to keep the old look.
+:::
+
 ## Using Logging to debug
 
 Logging messages is another good way to debug applications, and you can use

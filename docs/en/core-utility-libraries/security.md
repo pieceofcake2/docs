@@ -63,6 +63,14 @@ $nosecret = Security::cipher($secret, 'my_key');
 > make sure `Security.useOpenSsl` is `true` (the app skeleton sets it; see
 > [Enable OpenSSL](/appendices/migrating-from-cakephp-2-10#enable-openssl)).
 
+::: pieceofcake2
+Deprecated since v2.12.6. The first call in a process writes a `warning` to the
+log, and with debug on also triggers `E_USER_DEPRECATED`; a `Security.cipherSeed`
+outside 1 to 4294967295 is also reported. The output is unchanged. Use
+`Security::encrypt()` and `Security::decrypt()` with a key of at least 32 bytes
+instead. See [Security Fixes](/security/fixes#cipher).
+:::
+
 `static` Security::**rijndael**($text, $key, $mode)
 
 - `string $text`: The text to encrypt

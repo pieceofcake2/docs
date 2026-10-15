@@ -23,6 +23,13 @@
 ([GHSA-wgww-24w3-wfqp](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-wgww-24w3-wfqp)、
 2.12.3 で修正) はフォークで見つかったもので、本家のアドバイザリはありません。
 
+`'cipher'` 暗号化と `Security.cipherSeed` の弱さ
+([GHSA-65v5-h65v-8pgg](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-65v5-h65v-8pgg)、CVE 申請中) もフォークで見つかったもので、
+本家のアドバイザリはありません。この問題は `cakephp/cakephp` 2.x のすべてのリリースにも影響しますが、
+CakePHP 2.x はサポートが終了しているため、本家では修正されません。フォークでは 2.12.6 から `'cipher'` を
+警告付きで非推奨にしましたが、安全でないことに変わりはありません。
+[脆弱性への対応](/ja/security/fixes#cipher) の説明に従って `'aes'` に移行してください。
+
 <a id="not-listed"></a>
 
 ## ここに無いアドバイザリ

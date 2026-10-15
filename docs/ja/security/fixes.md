@@ -18,6 +18,7 @@ CakePHP 2.x は 2021年6月にサポートが終了し、CakePHP チームによ
 | [GHSA-4f9q-3c4x-52cv](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-4f9q-3c4x-52cv) | `SmtpTransport` と `MailTransport` のメールヘッダーインジェクション（CVE-2026-77634 に相当する CakePHP 2 の脆弱性） | 2.12.5 |
 | [GHSA-w2mh-x92p-5p95](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-w2mh-x92p-5p95) | ビュー・レイアウト・エレメント名のパストラバーサル（CVE-2026-48820 に相当する CakePHP 2 の脆弱性） | 2.12.5 |
 | [GHSA-x4p9-p4cx-gxwx](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-x4p9-p4cx-gxwx) | プロトコル相対 URL の `Auth.redirect` によるログイン後のオープンリダイレクト | 2.12.5 |
+| [GHSA-65v5-h65v-8pgg](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-65v5-h65v-8pgg) | `'cipher'` 暗号化と `Security.cipherSeed` の弱さ: `CookieComponent` のデフォルトのタイプが安全でなく、長いシードの多くがシード 0 になる（警告付きで非推奨に。`'aes'` へ移行が必要） | 2.12.6 |
 
 いずれの脆弱性も本家の CakePHP 2.10.24 に存在し、CakePHP チームによる修正はリリースされません。
 `cakephp/cakephp` を使っているアプリケーションは、`pieceofcake2/cakephp` に切り替えると修正を適用できます。
@@ -122,6 +123,42 @@ CakePHP 2 についての本家のアドバイザリはありません。`cakeph
 **必要な対応:** 2.12.5 以降に更新してください。コードの変更は不要です。すぐに更新できない場合は、
 リダイレクトする前に `Auth.redirect` の値を確認し、`//`、`/\`、`\/`、`\\` で始まる値を拒否してください。
 
+### `'cipher'` 暗号化と `Security.cipherSeed` の弱さ {#cipher}
+
+`CookieComponent` のデフォルトの `'cipher'` タイプが使う `Security::cipher()` は、`Security.cipherSeed`
+で初期化した PHP のメルセンヌ・ツイスタから得た数値と値を XOR します。これは本当の暗号化ではありません。
+メルセンヌ・ツイスタは暗号用の乱数生成器ではなく、`mt_srand()` はシードの 32 ビットしか使わないため、
+鍵ストリームは約 43 億通りしかありません。さらに、27 桁以上のシードと 26 桁のシードの多くは、本家の
+`config/core.php` のデフォルト値 `76859309657453542496749683645` も含めてシード `0` になるため、
+このようなシードを使うアプリケーションはすべて同じシードを共有しています。`'cipher'` の Cookie を読んだり
+偽造したりできる攻撃者は、その値を復元したり改ざんしたりできる可能性があります。
+
+影響を受けるのは `pieceofcake2/cakephp` 2.12.5 以前と、`cakephp/cakephp` 2.x のすべてのリリースです。
+セキュリティアドバイザリ [GHSA-65v5-h65v-8pgg](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-65v5-h65v-8pgg) を参照してください。
+CVE ID は申請中で、まだ割り当てられていません。
+
+既存の Cookie をすべて読めなくせずに `'cipher'` を安全にすることはできないため、2.12.6 でも値の暗号化の
+方法は変えていません。その代わりに、次の変更を行いました。
+
+- `'cipher'` を非推奨にしました。プロセスの中で最初に `'cipher'` タイプまたは `Security::cipher()` を
+  使うと、デバッグモードがオフでも `warning` をログに記録し、デバッグモードがオンのときは
+  `E_USER_DEPRECATED` も発生させます。
+- 1 から 4294967295 の範囲外のシードを警告します。プロセスの中で最初に `Security::cipher()` を呼び出した
+  ときに `warning` をログに記録し (シードの値は記録しません)、デバッグモードがオンのときは
+  `Debugger::checkSecurityKeys()` が `E_USER_NOTICE` を発生させます。
+- コアの代替の `config/core.php` で、範囲内のデフォルトのシード `'2659758734'` と `Security.useOpenSsl`
+  を設定しました。
+- `CookieComponent` のデフォルトのタイプとキーをアプリケーション全体で指定する `Cookie.type` と
+  `Cookie.key` の設定を追加しました。
+
+**必要な対応:** 2.12.6 でも、`'cipher'` はどのシードでも安全ではありません。範囲内のシードで避けられるのは
+`0` になることだけです。2.12.6 以降に更新し、`'aes'` に移行してください。`config/core.php` で
+`Security.useOpenSsl` を `true` に、`Cookie.type` を `'aes'` に、`Cookie.key` を環境変数から読み込む
+32 バイト以上のランダムな値に設定します。移行すると既存の `'cipher'` の Cookie は一度失われます。
+`Security::cipher()` を直接呼び出している場合は、`Security::encrypt()` と `Security::decrypt()` に
+置き換えてください。2.12.5 以前では、タイプとキーをコントローラーで設定してください。詳細と移行の手順は
+[cipherSeed と Cookie の 'cipher' タイプ](/ja/development/configuration#cipher-seed) を参照してください。
+
 ## その他のセキュリティ関連の変更
 
 ### SSL/TLS 証明書の検証
@@ -172,6 +209,10 @@ public $components = [
 ::: pieceofcake2
 `$components` の `'type'` は v2.12.3 から反映されます。v2.12.2 以前では無視され、
 Cookie は `'cipher'` で暗号化されていました。
+
+v2.12.6 以降では `'cipher'` は非推奨で、`config/core.php` の `Cookie.type` と `Cookie.key` で
+アプリケーション全体のデフォルトのタイプとキーを設定できます。上記の
+[`'cipher'` 暗号化の弱さ](#cipher) を参照してください。
 :::
 
 ::: warning

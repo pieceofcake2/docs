@@ -29,6 +29,8 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
 | `..` を含むビュー・レイアウト・エレメントの名前 | サーバー上の任意のファイルを指せる（パストラバーサル） | ビューのパスの中のファイルのみ。それ以外は存在しないものとして扱う | [脆弱性への対応](/ja/security/fixes#view-path-traversal) |
 | プロトコル相対 URL の `Auth.redirect` | ログイン後に別のホストへリダイレクトされる（オープンリダイレクト） | ローカルのパスに変換 | [脆弱性への対応](/ja/security/fixes#auth-redirect) |
 | `order` のソート方向 | 指定どおり SQL に追加される | `ASC` / `DESC` と省略可能な `NULLS FIRST` / `NULLS LAST`。それ以外は `E_USER_DEPRECATED` (v2.12.5)、将来のバージョンでは例外 | [並び順](/ja/models/retrieving-your-data#sort-order) |
+| `'cipher'` 暗号化（`CookieComponent` のデフォルトのタイプ） | デフォルトのタイプで安全でなく、警告もない | 非推奨でログに警告を記録。範囲外の `Security.cipherSeed` を報告。`Cookie.type` / `Cookie.key` でデフォルトを設定 (v2.12.6) | [脆弱性への対応](/ja/security/fixes#cipher) |
+| デバッグモードのエラーページ | CakePHP 2 のレイアウト | コードの抜粋とエディターへのリンクを含む CakePHP 5 風の `dev_error` レイアウト (v2.12.6) | [デバッグ](/ja/development/debugging#debug-error-pages) |
 | `.env` ファイル | 非対応 | `pieceofcake2/app` スケルトン (v2.4.0) が josegonzalez/dotenv で読み込み (フレームワークは読み込まない) | [環境変数](/ja/development/configuration#environment-variables) |
 
 破壊的変更の一覧は [CakePHP 2.10 からの移行](/ja/appendices/migrating-from-cakephp-2-10) と
@@ -66,6 +68,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - 概要の文章と、ページに取り込んでいたブログチュートリアルを削除。チュートリアルは [チュートリアル & 例](/ja/tutorials-and-examples/blog/blog) にあります
   - ページのタイトルを「入門」から「はじめに」に変更し、サイドバーの「はじめに」グループの先頭に移動。その他のページは、インストール、高度なインストール、Web サーバーの設定、フォルダ構造、規約、構造、典型的なリクエストの順に並べ替え
   - 「CakePHP 2.10 との違い」: バックポートの項目のリンク先を、GitHub のアップグレードガイドから [統合テスト](/ja/development/integration-testing) に変更
+  - 「CakePHP 2.10 との違い」: バックポートの項目に、CakePHP 5 風のデバッグ用エラーページと `utf8` バリデーションルール (v2.12.6) を追加
 - [インストール](/ja/installation)
   - 動作要件: PHP 8.0〜8.5、Composer、MySQL 5.6 以上など対応 DB、mbstring/intl/openssl の説明
   - `composer create-project pieceofcake2/app` による新規作成 (モダンな構成) と `database.php`、salt/cipherSeed の設定
@@ -192,7 +195,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
 - [Cookie](/ja/core-libraries/components/cookie)
   - 例で type('aes') と `Security.useOpenSsl` を使用。デフォルトの 'cipher' は脆弱で 'rijndael' は mcrypt が必要という警告を追加
   - タイプは `$components` の `'Cookie' => ['type' => 'aes']` で設定 (type() でも設定可能)。v2.12.3 より前はこの設定が無視されていたことを変更点として記載。pieceofcake2/app v2.3.1 のスケルトンでは `Security.useOpenSsl` が有効
-  - デフォルトのタイプは 'cipher' で、cipherSeed をどの値にしても安全でないことを記載。'aes' と、環境変数 `COOKIE_KEY` から `Cookie.key` に設定する専用のキー、`Security.useOpenSsl` の有効化を推奨。例ではキーをコードに書かないように変更。v2.12.6 から `config/core.php` の `Cookie.type` と `Cookie.key` がデフォルトになることを記載し、'aes' への移行へのリンクを追加
+  - デフォルトのタイプは 'cipher' で、cipherSeed をどの値にしても安全でないことを記載。'aes' と、環境変数 `COOKIE_KEY` から `Cookie.key` に設定する専用のキー、`Security.useOpenSsl` の有効化を推奨。例ではキーをコードに書かないように変更。v2.12.6 以降は `config/core.php` の `Cookie.type` と `Cookie.key` がデフォルトになることを記載し、'aes' への移行へのリンクを追加
 - [フラッシュ](/ja/core-libraries/components/flash)
   - フラッシュ用エレメントの場所を `templates/Elements/Flash` に変更
 - [ページ制御](/ja/core-libraries/components/pagination)
@@ -239,6 +242,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - pieceofcake2/app のスケルトン (v2.3.1 以降) では `Security.useOpenSsl` が有効になっていることを追記
   - `Security.salt` と `Security.cipherSeed` を使うメソッドと、それらの生成方法へのリンクを追記
   - `cipher()` に警告を追加: 意味があるシードは 1〜4294967295 だけで、よく知られたデフォルト値はシード 0 になり、範囲内のシードでも総当たりで破れる
+  - 変更の注記: `cipher()` は v2.12.6 で非推奨になり、警告をログに記録すること。`encrypt()` / `decrypt()` を使うこと
 - [Set](/ja/core-utility-libraries/set)
   - テストファイルのパスを `tests/TestCase/Utility/SetTest.php` に変更
 - [CakeText](/ja/core-utility-libraries/string)
@@ -293,8 +297,9 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - 「環境変数」の節を追加: pieceofcake2/app スケルトンが `config/core.php` の先頭で josegonzalez/dotenv により `config/.env` とプロジェクトルートの `.env` を読み込むこと (CakePHP 3〜5 のアプリケーションスケルトンの `.env` サポートのバックポート。変更点: app v2.4.0 で追加)、優先順位 (実際の環境変数 > `config/.env` > ルートの `.env`)、値のクォート、レガシー構成や以前のアプリケーションへの読み込み処理の追加方法、スケルトンが読み込む環境変数 (`DEBUG`、`SECURITY_SALT`、`SECURITY_CIPHER_SEED`、`DB_*`、`DB_TEST_*`)
   - `App.baseUrl`: `.htaccess` ファイルを削除してもドキュメントルートは `webroot/` のままにすることを追記
   - 「セキュリティ用のソルトの生成」の節を追加: 安全な生成コマンド (PHP とシェル)、それぞれの値に依存するもの (Cookie の 'aes' タイプは専用のキーを設定しても `Security.salt` を組み合わせる)、値の変更手順
-  - 「cipherSeed と Cookie の 'cipher' タイプ」の節を追加: `Security::cipher()` でのシードの使われ方、意味があるのは 1〜4294967295 だけで、27 桁以上の値 (本家の `config/core.php` のデフォルト値、ブログチュートリアルのサンプル値、以前の `.env.example` の生成コマンド) はシード 0 になること、範囲内のシードでも安全ではないこと、影響、どうすればよいか、`COOKIE_KEY` から `Cookie.key` に読み込む 32 バイトのキー、'aes' にした `Cookie.type`、`Security.useOpenSsl` を使った 'aes' への移行 (v2.12.6 からは `Cookie.type` と `Cookie.key` を設定で指定できること、v2.12.5 以前でのコントローラーでの設定、代わりのキーの `Security.salt` が 32 バイト未満のときの例外)、v2.12.6 で予定している警告
+  - 「cipherSeed と Cookie の 'cipher' タイプ」の節を追加: `Security::cipher()` でのシードの使われ方、意味があるのは 1〜4294967295 だけで、27 桁以上の値 (本家の `config/core.php` のデフォルト値、ブログチュートリアルのサンプル値、以前の `.env.example` の生成コマンド) はシード 0 になること、範囲内のシードでも安全ではないこと、影響、どうすればよいか、`COOKIE_KEY` から `Cookie.key` に読み込む 32 バイトのキー、'aes' にした `Cookie.type`、`Security.useOpenSsl` を使った 'aes' への移行 (v2.12.6 以降は `Cookie.type` と `Cookie.key` を設定で指定できること、v2.12.5 以前でのコントローラーでの設定、代わりのキーの `Security.salt` が 32 バイト未満のときの例外)、警告
   - `Security.cipherSeed` の説明: 意味があるのは 1〜4294967295 だけで、どの値でも 'cipher' は安全にならないことを記載し、新しい節へのリンクを追加
+  - 「v2.12.6 で予定している変更」を「v2.12.6 以降の警告」に変更: 'cipher' の非推奨の警告 (プロセスごとに一度、デバッグモードでは `E_USER_DEPRECATED`)、シードの範囲の警告と通知、コアの代替の `config/core.php` の範囲内のデフォルトのシード `'2659758734'`、`Cookie.type` / `Cookie.key`。以前のデフォルトのシードは v2.12.5 までのデフォルト値と記載
 - [ルーティング](/ja/development/routing)
   - ルート設定ファイルのパスを `config/routes.php` に変更（従来の `app/Config/routes.php` はフォルダ構造ページへのリンク付きで併記）
   - 組み込みルートの場所を `vendor/pieceofcake2/cakephp/config/routes.php` に修正し、無効化は `config/routes.php` の require 行を削除すると説明
@@ -328,6 +333,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - ログの出力先を `logs/`（`debug.log`/`error.log`）に変更し、Object を CakeObject に、App::uses('CakeLog') を削除
   - DebugKit: pieceofcake2/debug_kit を Composer でインストールし、`config/bootstrap.php` で読み込む。フォークの DebugKit のドキュメントへのリンクを追加
   - DebugKit: 現在のツールバー (右下の CakePHP アイコン、パネル、リクエスト履歴) の説明に更新
+  - 「デバッグ用のエラーページ」の節を追加 (v2.12.6): CakePHP 5 から移植した `dev_error` レイアウト、`(edit)` リンク用の `Debugger.editor` と `Debugger.editorBasePath`、`Layouts/dev_error.ctp` での置き換え
 - [テスト](/ja/development/testing)
   - PHPUnit 9.6 を Composer (require-dev) でインストール。PHPUnit 3.7/4.x/5.x、.phar、オートローダー回避策の手順を削除
   - テストケースは `tests/TestCase`、フィクスチャは `tests/Fixture`、設定は `config/` に変更。レガシーな `app/Test` 構成は代替として記載
@@ -373,8 +379,10 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - `/ja/appendices/security-fixes` から移動 (古い URL はこのページにリダイレクト)。報告の節は脆弱性の報告に移動
   - `'readFile' => false` を指定した `Xml::build()` の SSRF (2.12.3 で修正) を追加。Cookie のタイプを `$components` で設定。`Security.useOpenSsl` のスケルトンについての注記
   - SmtpTransport/MailTransport のメールヘッダーインジェクション (GHSA-4f9q-3c4x-52cv)、ビュー・レイアウト・エレメント名のパストラバーサル (GHSA-w2mh-x92p-5p95)、AuthComponent のログイン後のオープンリダイレクト (GHSA-x4p9-p4cx-gxwx) を追加 (いずれも 2.12.5 で修正)。表に GHSA の ID を記載。本家の CakePHP 2.x を使うアプリケーションは pieceofcake2/cakephp に切り替えると修正を適用できることを記載
+  - 'cipher' 暗号化と `Security.cipherSeed` の弱さ (GHSA-65v5-h65v-8pgg、CVE 申請中) を追加: 2.12.6 での変更 (非推奨の警告、シードの範囲の警告、範囲内のデフォルトのシード、`Cookie.type` / `Cookie.key`)、'cipher' は安全でないままであること、`Security.useOpenSsl` を有効にした 'aes' への移行。構成設定の cipherSeed の節へのリンク
 - [本家のアドバイザリ](/ja/security/upstream-advisories)
   - 新しいページ: CakePHP 2.x に関係する本家 CakePHP のアドバイザリの対応状況 (フォークで修正済み、または対象外)。フォークの CHANGELOG、`UPGRADE.md`、アドバイザリに基づく
+  - 'cipher' の弱さ (GHSA-65v5-h65v-8pgg) には本家のアドバイザリがなく、本家の CakePHP 2.x にも影響し、修正されないことを記載
 - [セキュリティチェックリスト](/ja/security/hardening)
   - 新しいページ: debug 0、固有のソルトとシード値、Composer での更新、SecurityComponent/CSRF、クッキーとセッションのフラグ、ファイルのパーミッション、HTTPS、サポートされている PHP。各設定を説明しているページへのリンク
 - [出力時のエスケープと HTML の無害化](/ja/security/escaping-and-sanitizing-html)
@@ -454,6 +462,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
 - [CakePHP 2.10 からの移行](/ja/appendices/migrating-from-cakephp-2-10)
   - v2.12.3 の節を追加 (Xml::build() の SSRF 修正、Cookie の `'type'` 設定、ServerShell のポート、テストケースの一覧、SQL Server の ERRMODE)。Cookie の例で `$components` を使用
   - v2.12.5 の節を追加 (メールのヘッダー、ビュー・レイアウト・エレメントの名前、ログイン後のリダイレクトのセキュリティ修正。不正な ORDER BY のソート方向の非推奨化)
+  - v2.12.6 の節を追加 ('cipher' の非推奨化とシードの警告、`Cookie.type` / `Cookie.key`、CakePHP 5 風のデバッグ用エラーページ、`E_USER_ERROR` の代わりの例外、ConsoleLog の色付け、`Validation::utf8()`、Folder のストリームラッパーのスキーム、アプリケーションの `core.php` がないときのコンソール、PHPStan レベル 5 の docblock)。'cipher' の破壊的変更の節からリンク
 - [SimpleTest から PHPUnit 3.7 への移行](/ja/appendices/phpunit-migration-hints)
   - 題を「SimpleTest から PHPUnit 3.7 への移行」に変更し、PHPUnit 9.6 への移行ガイドへのリンクを追加
 

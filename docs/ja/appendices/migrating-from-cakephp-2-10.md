@@ -24,6 +24,169 @@
 4. **PHP をアップグレードする**: PHP 8.0 以降に更新します
 5. **十分にテストする**: アプリケーションのテストスイートを実行し、互換性を確認します
 
+## v2.12.6
+
+v2.12.6 の変更のうち、すでにフォークで動いているアプリケーションに影響する可能性があるものです。
+
+### セキュリティ修正: 'cipher' 暗号化を非推奨に ([PR #62](https://github.com/pieceofcake2/cakephp/pull/62)) {#cipher-deprecated}
+
+`Security::cipher()` と、`CookieComponent` の `'cipher'` タイプ (デフォルトのタイプ) は、
+`Security.cipherSeed` をどの値にしても安全ではありません
+([GHSA-65v5-h65v-8pgg](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-65v5-h65v-8pgg))。
+これらを非推奨にしました。値の暗号化は以前とまったく同じで、例外も投げませんが、次の点が変わります。
+
+- プロセス (1 回のリクエストや 1 回のコンソール実行) の中で最初に `'cipher'` を使うと、デバッグモードが
+  オフでも `warning` をログに記録します。デバッグモードがオンのときは、同じメッセージを
+  `E_USER_DEPRECATED` としても発生させます。`'aes'` と `'rijndael'` のタイプや、暗号化しない Cookie では
+  何も記録しません。
+- `Security.cipherSeed` が 1 から 4294967295 までの数字だけの値でない場合は、最初に `Security::cipher()` を
+  呼び出したときに `warning` をログに記録し (シードの値は記録しません)、デバッグモードがオンのときは
+  `Debugger::checkSecurityKeys()` (`AuthComponent` から呼ばれます) が `E_USER_NOTICE` を発生させます。
+  デフォルトのシードの変更を求める通知は、以前のデフォルト値 `'76859309657453542496749683645'` と
+  新しいデフォルト値 `'2659758734'` の両方で表示されるようになりました。
+- コアの代替の `config/core.php` (アプリケーションに `config/core.php` がない場合にだけ使われます) は、
+  `Security.cipherSeed` を `'2659758734'` に、`Security.useOpenSsl` を `true` に設定します。
+
+**移行方法:**
+
+- 警告を消すためだけに `Security.cipherSeed` を変更しないでください。シードを変えると既存の
+  `'cipher'` の Cookie が読めなくなり、`'cipher'` は安全でないままです。
+  [`'aes'` への移行](/ja/development/configuration#migrating-to-aes) の説明に従って `'aes'` に
+  移行してください。
+- テストで非推奨の警告や通知を例外にしている場合、テスト実行中の最初の `'cipher'` の使用や、
+  デバッグモードがオンで範囲外のシードのときの `AuthComponent` は失敗するようになります。
+  アプリケーションを `'aes'` に移行したら `cookieEncrypted()` / `assertCookieEncrypted()` のモードに
+  `'aes'` を渡すか、テストの設定で範囲内のシードを指定してください。
+- `Security::cipher()` を直接呼び出している場合は、32 バイト以上のキーを使う `Security::encrypt()` /
+  `Security::decrypt()` に置き換えてください。
+
+[脆弱性への対応](/ja/security/fixes#cipher) と
+[cipherSeed と Cookie の 'cipher' タイプ](/ja/development/configuration#cipher-seed) を参照してください。
+
+### CookieComponent が `Cookie.type` と `Cookie.key` を読む ([PR #62](https://github.com/pieceofcake2/cakephp/pull/62)) {#cookie-type-key}
+
+- `'key'` の設定がない場合、`CookieComponent` は Configure の `Cookie.key` が空でない文字列ならその値を、
+  そうでなければ以前と同じく `Security.salt` を使います。
+- `'type'` の設定がない場合は、Configure の `Cookie.type` が設定されていればその値を、そうでなければ
+  以前と同じく `'cipher'` を使います。不正な値を設定すると、これまでと同じ `E_USER_WARNING` が発生し、
+  `'cipher'` になります。
+- 明示的な `'key'` / `'type'` の設定、`$this->Cookie->key = ...`、`$this->Cookie->type(...)` が常に
+  優先されます。
+- `IntegrationTestTrait` の `cookieEncrypted()` / `assertCookieEncrypted()` も同じデフォルトのキーを
+  使います。
+
+どちらも設定していないアプリケーションでは何も変わりません。アプリケーション全体を `'aes'` に
+切り替えるには、`config/core.php` で次のように設定します。
+
+```php
+Configure::write('Security.useOpenSsl', true);
+Configure::write('Cookie.type', 'aes');
+Configure::write('Cookie.key', env('COOKIE_KEY') ?: null);
+```
+
+`'aes'` には 32 バイト以上のキーが必要です。`'cipher'` のまま `Cookie.key` を設定するとキーが変わるため、
+既存の `'cipher'` の Cookie は読めなくなります。[Cookie](/ja/core-libraries/components/cookie) を
+参照してください。
+
+### CakePHP 5 風のデバッグ用エラーページ ([PR #60](https://github.com/pieceofcake2/cakephp/pull/60)) {#dev-error-pages}
+
+- デバッグモードでは、コアのエラーページが CakePHP 5 から移植した新しい `dev_error` レイアウトを
+  使います。すべてのスタックフレームのコードの抜粋と、エディターでファイルを開く `(edit)` リンクを
+  表示します (デフォルトは PhpStorm です。`Debugger.editor` と、コンテナーでは
+  `Debugger.editorBasePath` を設定してください)。
+  [デバッグ用のエラーページ](/ja/development/debugging#debug-error-pages) を参照してください。
+- 本番モード (`debug` = 0)、AJAX リクエスト、コンソールでは何も変わらず、既存の PHP の API も
+  変わっていません。アプリケーション、プラグイン、テーマが用意したエラーテンプレートはこれまでどおり
+  アプリケーションのレイアウトで表示され、`exception_stack_trace` エレメントも使えます。
+
+**移行方法:**
+
+- コアのエラーページを以前の見た目のままにするには、独自の `Layouts/dev_error.ctp` を
+  (`templates/Layouts/`、`app/View/Layouts/`、またはテーマに) 用意します。このレイアウトには
+  `title`、`subheading`、`file`、`templateName` のブロックと、ビュー変数 `$error` が渡されます。
+  または、残したいエラーテンプレートを以前のリリースからアプリケーションの `Errors/` ディレクトリに
+  コピーしてください。
+
+  ```php
+  <?php $this->extend('/Layouts/default'); ?>
+  <h2><?php echo $this->fetch('title'); ?></h2>
+  <p class="error"><?php echo $this->fetch('subheading'); ?></p>
+  <?php echo $this->fetch('file'); ?>
+  <?php echo $this->element('exception_stack_trace'); ?>
+  ```
+
+### `E_USER_ERROR` の代わりに例外を投げる ([PR #58](https://github.com/pieceofcake2/cakephp/pull/58)) {#user-error-exceptions}
+
+PHP 8.4 で `E_USER_ERROR` の発生が非推奨になったため、次のエラーは同じメッセージの例外になりました。
+
+- `Configure::bootstrap()` は、アプリケーションの `core.php` または `bootstrap.php` を読み込めない場合に
+  `ConfigureException` を投げます。コンソールではメッセージを `Error: ...` として表示し、終了コード 1 で
+  終了します。
+- `TranslateBehavior` は、モデルのデータソースが接続されていない場合や、`bindTranslation()` に
+  すでにモデルに関連付けられているアソシエーション名を渡した場合に `CakeException` を投げます。
+  [Translate](/ja/core-libraries/behaviors/translate) を参照してください。
+- `bin/cake` は、Composer のオートローダーが見つからない場合にメッセージを STDERR に出力し、
+  終了コード 1 で終了します。
+
+**移行方法:** これらの箇所では以前から処理が止まっていたため、ほとんどのアプリケーションでは変更は
+不要です。独自のエラーハンドラーでこれらの `E_USER_ERROR` を捕捉して処理を続けていた場合は、
+代わりに例外を捕捉してください。[例外](/ja/development/exceptions) を参照してください。
+
+### ConsoleLog の色付けの判定 ([PR #58](https://github.com/pieceofcake2/cakephp/pull/58)) {#consolelog-colors}
+
+- `ConsoleLog` は、STDIN ではなく出力先の `stream` が端末かどうかで、色付きで出力するかどうかを
+  決めます。端末から実行してファイルやパイプにログを出力しても ANSI エスケープコードは書き込まれず、
+  STDIN をリダイレクトしていても端末上の `php://stderr` への出力は色付きになります。
+- `ConsoleOutput` は `stream_isatty()` を使うため、判定できないストリーム (`php://memory`、
+  `php://temp`) では警告を出さずにプレーンな出力になります。
+
+**移行方法:** 出力の形式を自分で選ぶには、ログの設定で `'outputAs' => ConsoleOutput::COLOR`
+(または `PLAIN` / `RAW`) を指定してください。[ロギング](/ja/core-libraries/logging) を参照してください。
+
+### 新しいバリデーションルール `Validation::utf8()` ([PR #64](https://github.com/pieceofcake2/cakephp/pull/64)) {#validation-utf8}
+
+- CakePHP 5 のルールのバックポートです。値が正しい UTF-8 の文字列で、MySQL の `utf8` (`utf8mb3`) の
+  カラムに保存できない基本多言語面より外の文字を含まないことを確認します。`['extended' => true]` を
+  指定すると、そのような文字も許可します (`utf8mb4` 向け)。文字列でない値と不正なバイト列は、
+  どちらのモードでも拒否します。
+
+  ```php
+  public $validate = [
+      'title' => ['rule' => 'utf8'],
+      'body' => ['rule' => ['utf8', ['extended' => true]]],
+  ];
+  ```
+
+- 既存のルールは変わりません。モデルに `utf8()` という名前のメソッドがある場合は、そちらがコアのルールより
+  優先されます。[データバリデーション](/ja/models/data-validation) を参照してください。
+
+### Folder が認識するストリームラッパーのスキームを拡大 ([PR #63](https://github.com/pieceofcake2/cakephp/pull/63)) {#folder-stream-wrappers}
+
+- `Folder::isAbsolute()` と `Folder::isRegisteredStreamWrapper()` は、`s3://` のように数字、`+`、`-`、`.` を
+  含む登録済みのストリームラッパーのスキームを認識します。`Folder` と `File` は、このようなパスを
+  相対パスとして扱わなくなりました。[Folder & File](/ja/core-utility-libraries/file-folder) を
+  参照してください。
+
+### アプリケーションの `core.php` がなくてもコンソールが動作 ([PR #59](https://github.com/pieceofcake2/cakephp/pull/59)) {#console-without-core-php}
+
+- アプリケーションに `config/core.php` がない場合でも、コンソールが「Can't find application core file」
+  という致命的エラーで止まらなくなりました。コアの代替の `core.php` を読み込むため、アプリケーションの
+  設定を必要としないコマンドを実行できます。`config/core.php` があるアプリケーションには影響しません。
+  [シェルとタスクとコンソール](/ja/console-and-shells) を参照してください。
+
+### PHPStan レベル 5 に合わせた docblock ([PR #56](https://github.com/pieceofcake2/cakephp/pull/56)) {#phpstan-docblocks}
+
+- コア (`TestSuite` を含む) は、`pieceofcake2/phpstan-cakephp2` ^0.2.4 を使った PHPStan のレベル 5 を
+  ベースラインなしで通過します。修正したのは docblock だけです。ネイティブの引数・戻り値・プロパティの
+  型は追加しておらず、public と protected のシグネチャも変わっていないため、アプリケーションや
+  プラグインのサブクラスはそのまま動作します。
+- 動的に作られていた一部のプロパティ (PHP 8.2 で非推奨) を宣言しました。たとえば `Scaffold::$redirect` や
+  `ControllerTestDispatcher::$response` です。
+
+**移行方法:** 不要です。アプリケーションで PHPStan を実行している場合は、修正した docblock によって
+コードに新しいエラーが報告されたり、ベースラインの項目が不要になったりすることがあります。
+[静的解析](/ja/development/static-analysis) を参照してください。
+
 ## v2.12.5
 
 v2.12.5 の変更のうち、すでにフォークで動いているアプリケーションに影響する可能性があるものです。
@@ -617,6 +780,9 @@ public $components = [
 ::: pieceofcake2
 `$components` の `'type'` は v2.12.3 から反映されます。v2.12.2 以前では無視され、
 Cookie は `'cipher'` で暗号化されていました。
+
+v2.12.6 以降では `'cipher'` は非推奨で警告をログに記録し、`config/core.php` の `Cookie.type` と
+`Cookie.key` でデフォルトのタイプとキーを設定できます。[v2.12.6](#cipher-deprecated) を参照してください。
 :::
 
 PHP 8 では `'aes'` を使う場合も `Security.useOpenSsl` の設定が必要です。下記の

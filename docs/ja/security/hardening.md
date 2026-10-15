@@ -62,7 +62,7 @@ GET・HEAD・OPTIONS 以外のすべてのリクエストでトークンを検�
 
 リクエストから受け取るすべての項目を、モデルの検証ルールでサーバー側で検証し、ユーザーのデータは
 検証を有効にしたまま保存してください。許可リストと長さの上限を使い、`fieldList` で保存する項目を限定し、
-v2.12.6 からは `utf8` ルールで不正な UTF-8 を拒否してください。
+v2.12.6 以降では `utf8` ルールで不正な UTF-8 を拒否してください。
 [入力の検証](/ja/security/escaping-and-sanitizing-html#validate-input) と
 [データバリデーション](/ja/models/data-validation) を参照してください。
 

@@ -35,7 +35,7 @@ Cookie コンポーネントがどのように動くかは、コントローラ�
 <td>string $key</td>
 <td>null</td>
 <td><p>この文字列は Cookie の値を暗号化するために使われます。 ランダムで特定されにくい文字列を使うべきです。</p>
-<p>rijndael または aes 暗号化を使うときは32バイトより長い値にしなければなりません。デフォルトでは <code>Security.salt</code> の値が使われます。v2.12.6 からは、<code>Cookie.key</code> が設定されていればその値がデフォルトになります。</p></td>
+<p>rijndael または aes 暗号化を使うときは32バイトより長い値にしなければなりません。デフォルトでは <code>Security.salt</code> の値が使われます。v2.12.6 以降では、<code>Cookie.key</code> が設定されていればその値がデフォルトになります。</p></td>
 </tr>
 <tr>
 <td>string $domain</td>
@@ -96,7 +96,7 @@ public function beforeFilter()
 > `'aes'` を使い、32 バイト以上の乱数の専用のキーを設定してください。また、`Security.useOpenSsl` が
 > `true` になっていることを確認してください (app スケルトンでは設定済みです。下記を参照してください)。
 > キーはコードに書かず、`config/core.php` で `Configure::write('Cookie.type', 'aes');` と
-> `Configure::write('Cookie.key', env('COOKIE_KEY') ?: null);` を設定します。v2.12.6 からは
+> `Configure::write('Cookie.key', env('COOKIE_KEY') ?: null);` を設定します。v2.12.6 以降では
 > `Cookie.type` と `Cookie.key` を設定で指定でき、`CookieComponent` がデフォルトとして使います。v2.12.5 以前では、
 > 上の例のようにタイプを設定し、`beforeFilter()` でキーを `$this->Cookie->key` に代入してください。キーの生成方法と
 > 既存の Cookie の移行方法は [`'aes'` への移行](/ja/development/configuration#migrating-to-aes) を参照してください。
@@ -140,3 +140,10 @@ Cookie の値の暗号化方式を設定します。指定できるのは `'ciph
 > 上の例のように `'aes'` を使い、`Security.useOpenSsl` も有効にしてください。`'rijndael'` には `mcrypt` 拡張が必要で、PHP 7.2 以降では PECL からインストールする必要があります。
 > 暗号化方式を変更すると、変更前の方式で書き込まれた Cookie は読めなくなります。
 > [`'aes'` への移行](/ja/development/configuration#migrating-to-aes) を参照してください。
+
+::: pieceofcake2
+v2.12.6 以降では `'cipher'` は非推奨です。プロセスの中で最初に使ったときに `warning` をログに記録し、
+デバッグモードがオンのときは `E_USER_DEPRECATED` も発生させます。`'type'` の設定がない場合、
+`Cookie.type` が設定されていればその値がデフォルトのタイプになります。
+[脆弱性への対応](/ja/security/fixes#cipher) を参照してください。
+:::

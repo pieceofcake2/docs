@@ -56,6 +56,13 @@ $nosecret = Security::cipher($secret, 'my_key');
 > `'aes'` に切り替えるときは、`Security.useOpenSsl` が `true` になっていることを確認してください
 > (app スケルトンでは設定済みです。[OpenSSL を有効にする](/ja/appendices/migrating-from-cakephp-2-10#enable-openssl) を参照してください)。
 
+::: pieceofcake2
+v2.12.6 で非推奨になりました。プロセスの中で最初に呼び出したときに `warning` をログに記録し、デバッグモードが
+オンのときは `E_USER_DEPRECATED` も発生させます。`Security.cipherSeed` が 1 から 4294967295 の範囲外の
+場合も報告します。出力は変わりません。代わりに、32 バイト以上のキーで `Security::encrypt()` と
+`Security::decrypt()` を使ってください。[脆弱性への対応](/ja/security/fixes#cipher) を参照してください。
+:::
+
 `static` Security::**rijndael**($text, $key, $mode)
 
 - `string $text`: 暗号化するテキスト

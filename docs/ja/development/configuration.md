@@ -824,7 +824,7 @@ printf 'SECURITY_SALT="%s"\nSECURITY_CIPHER_SEED="%s"\n' "$(openssl rand -hex 32
 
 シード `0` になるよく知られた値には、次のものがあります。
 
-- `76859309657453542496749683645`: 本家 CakePHP 2 とこのフォークの `config/core.php` のデフォルト値。
+- `76859309657453542496749683645`: 本家 CakePHP 2 と、v2.12.5 までのこのフォークの `config/core.php` のデフォルト値。
   `pieceofcake2/app` スケルトンの以前のバージョンから作成したアプリケーションでも、環境変数がない場合の
   値として使われています
 - `7485712659625147843639846751`: 本家のドキュメントのブログチュートリアルにあるサンプル値
@@ -905,7 +905,7 @@ printf 'SECURITY_SALT="%s"\nSECURITY_CIPHER_SEED="%s"\n' "$(openssl rand -hex 32
    異なります。下記を参照してください。
 
 ::: pieceofcake2
-v2.12.6 からは、`Cookie.type` と `Cookie.key` を設定で指定できます。
+v2.12.6 以降では、`Cookie.type` と `Cookie.key` を設定で指定できます。
 
 **v2.12.6 以降:** `config/core.php` のソルトの近くで設定します。コントローラーを変更する必要は
 ありません。`pieceofcake2/app` スケルトンの新しいバージョンにはこれらの行があります。
@@ -985,19 +985,39 @@ od -An -N4 -tu4 /dev/urandom | tr -dc 0-9; echo
 
 :::
 
-#### v2.12.6 で予定している変更
+#### v2.12.6 以降の警告 {#cipher-warnings}
 
-v2.12.6 からは、`pieceofcake2/cakephp` が動作を変えずに次の問題を報告する予定です。
+::: pieceofcake2
+v2.12.6 以降の `pieceofcake2/cakephp` は、動作を変えずに次の問題を報告します。
 
-- `'cipher'` タイプまたは `Security::cipher()` を使うと、リクエストごとに一度だけ非推奨の警告を
-  ログに記録します。
-- `Security.cipherSeed` が 1 から 4294967295 の範囲外の場合はログに記録し、デバッグモードでは
-  警告を表示します。
+- `'cipher'` は非推奨です。プロセス (1 回のリクエストや 1 回のコンソール実行) の中で最初に
+  `'cipher'` タイプまたは `Security::cipher()` を使うと、デバッグモードがオフでも `warning` を
+  ログに記録します。デバッグモードがオンのときは、同じメッセージを `E_USER_DEPRECATED` としても
+  発生させます。メッセージには呼び出し元と対処方法 (`Security.useOpenSsl` を有効にして、
+  `Cookie.type` を `'aes'` に、`Cookie.key` を 32 バイト以上のランダムな値にすること) が含まれます。
+- `Security.cipherSeed` が 1 から 4294967295 までの数字だけの値でない場合は、プロセスの中で最初に
+  `Security::cipher()` を呼び出したときに `warning` もログに記録します。シードの値そのものは
+  記録しません。デバッグモードがオンのときは、`Debugger::checkSecurityKeys()` (`AuthComponent`
+  から呼ばれます) がこのようなシードに対して `E_USER_NOTICE` も発生させます。
+- アプリケーションに `config/core.php` がない場合にだけ使われるコアの代替の `config/core.php` は、
+  範囲内のシード `'2659758734'` (app スケルトンと同じデフォルト値) を設定し、`Security.useOpenSsl` を
+  有効にします。デフォルトの `Security.cipherSeed` の変更を求める通知は、以前のデフォルト値と
+  この新しいデフォルト値の両方で表示されます。
+- `Cookie.type` と `Cookie.key` で `CookieComponent` のデフォルトのタイプとキーを設定できます
+  ([`'aes'` への移行](#migrating-to-aes) を参照してください)。
 
-値の暗号化と復号は以前とまったく同じなので、既存の Cookie はそのまま読めます。
+値の暗号化と復号は以前とまったく同じなので、既存の Cookie はそのまま読め、例外も投げられません。
+警告を消すためだけに `Security.cipherSeed` を変更しないでください。シードを変えると既存の `'cipher'`
+の Cookie が読めなくなり、どのシードでも `'cipher'` は安全ではありません。代わりに `'aes'` に
+移行してください。
 
-また、v2.12.6 からは、`CookieComponent` のデフォルトのタイプとキーを `Cookie.type` と `Cookie.key` として
-設定で指定できます ([`'aes'` への移行](#migrating-to-aes) を参照してください)。
+テストで非推奨の警告や通知を例外にしている場合、テスト実行中の最初の `'cipher'` の使用や、
+デバッグモードがオンで範囲外のシードのときの `AuthComponent` は失敗するようになります。
+アプリケーションを `'aes'` に移行したら、`IntegrationTestTrait` の `cookieEncrypted()` /
+`assertCookieEncrypted()` のモードに `'aes'` を渡してください。
+
+v2.12.5 以前では何も報告されませんが、弱点は同じです。
+:::
 
 ### 構成用定数
 
