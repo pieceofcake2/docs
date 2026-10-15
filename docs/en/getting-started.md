@@ -10,7 +10,8 @@ walks you through a small application step by step.
 
 This book documents [pieceofcake2/cakephp](https://github.com/pieceofcake2/cakephp),
 a community-maintained fork of CakePHP 2.x. The fork is based on
-CakePHP 2.10.24 and runs on PHP 8.0 to 8.5. It is maintenance-focused: it
+[cakephp/cakephp](https://github.com/cakephp/cakephp/tree/2.10.24) 2.10.24
+and runs on PHP 8.0 to 8.5. It is maintenance-focused: it
 keeps CakePHP 2 compatible with current PHP versions and fixes bugs and
 security issues. It does not aim to add features; additions are limited to what
 helps maintenance and migration, such as backports from CakePHP 5.
@@ -24,7 +25,8 @@ Composer, PHP 8, and the modern directory layout used by
 [Changes from the Original Book](/appendices/changes-from-the-original-book)
 lists how it differs from the original CakePHP 2.x documentation. The
 [Piece of Cake 2 website](https://pieceofcake2.github.io/) links to the
-fork's other projects and resources.
+fork's other projects and resources. Where each of these packages comes from
+is listed in [Maintained Plugins](/plugins/maintained-plugins#origins).
 
 ## What's Different from CakePHP 2.10 {#whats-different}
 
