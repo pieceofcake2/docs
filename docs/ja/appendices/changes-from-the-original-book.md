@@ -421,7 +421,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - 貢献の手順は Organization の `CONTRIBUTING.md` で説明し、この章のページは概要とその各セクションへのリンクを記載
 - [ドキュメント](/ja/contributing/documentation)
   - ドキュメントは pieceofcake2/docs (2.x)、Markdown と VitePress、GitHub Actions でデプロイ、`bin/dev-server.sh` でローカル確認。メンテナンスは en/ja のみ。Jenkins、IRC、ドキュメントチームのメールを削除
-  - reStructuredText/Sphinx のフォーマットガイドを Markdown/VitePress のガイドに置き換え (見出しとアンカー、リンク、コードブロック、アラート、info/pieceofcake2 コンテナ、取り込み)、pieceofcake2/docs の README に記載
+  - このドキュメントの編集ガイドに書き直し: ローカルでの開発、リポジトリの構成、編集のガイドライン、翻訳、reStructuredText/Sphinx のガイドに代わる Markdown/VitePress のフォーマットガイド (見出しとアンカー、リンク、コードブロック、アラート、info/pieceofcake2 コンテナ、取り込み)
 - [チケット](/ja/contributing/tickets)
   - Issue は pieceofcake2/* リポジトリへ。報告前に CHANGELOG と移行ガイドを確認。質問は Stack Overflow (IRC と Google グループを削除)
   - セキュリティ問題は `SECURITY.md` に従い GitHub の非公開の脆弱性報告 (Security タブの Report a vulnerability) で報告。security@cakephp.org を削除
