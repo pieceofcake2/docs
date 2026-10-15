@@ -3,7 +3,7 @@
 Once you've started writing [Tests](../development/testing) you can run them
 using the test shell:
 
-``` bash
+```bash
 bin/cake test app AllTests
 ```
 

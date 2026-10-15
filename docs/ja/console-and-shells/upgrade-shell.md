@@ -16,14 +16,14 @@
 `vendor/bin/cake` から実行しています。プラグインを開発用の依存パッケージとしてインストールし、
 `app/Config/bootstrap.php` でロードします。
 
-``` bash
+```bash
 composer require --dev pieceofcake2/upgrade
 ```
 
 `composer.json` に [Composer でのプラグインのインストール](/ja/plugins/how-to-install-plugins#composer)
 で説明している `installer-paths` の設定があれば、プラグインは `plugins/Upgrade/` にインストールされます。
 
-``` php
+```php
 // app/Config/bootstrap.php
 CakePlugin::load('Upgrade');
 ```

@@ -36,31 +36,31 @@ Accepted keys for `$options`:
 
 Assuming you are paginating some posts, and are on page one:
 
-``` php
+```php
 echo $this->Paginator->sort('user_id');
 ```
 
 Output:
 
-``` html
+```html
 <a href="/posts/index/page:1/sort:user_id/direction:asc/">User Id</a>
 ```
 
 You can use the title parameter to create custom text for your link:
 
-``` php
+```php
 echo $this->Paginator->sort('user_id', 'User account');
 ```
 
 Output:
 
-``` html
+```html
 <a href="/posts/index/page:1/sort:user_id/direction:asc/">User account</a>
 ```
 
 If you are using HTML like images in your links remember to set escaping off:
 
-``` php
+```php
 echo $this->Paginator->sort(
     'user_id',
     '<em>User account</em>',
@@ -70,7 +70,7 @@ echo $this->Paginator->sort(
 
 Output:
 
-``` html
+```html
 <a href="/posts/index/page:1/sort:user_id/direction:asc/">
   <em>User account</em>
 </a>
@@ -79,19 +79,19 @@ Output:
 The direction option can be used to set the default direction for a link. Once a
 link is active, it will automatically switch directions like normal:
 
-``` php
+```php
 echo $this->Paginator->sort('user_id', null, ['direction' => 'desc']);
 ```
 
 Output:
 
-``` html
+```html
 <a href="/posts/index/page:1/sort:user_id/direction:desc/">User Id</a>
 ```
 
 The lock option can be used to lock sorting into the specified direction:
 
-``` php
+```php
 echo $this->Paginator->sort('user_id', null, ['direction' => 'asc', 'lock' => true]);
 ```
 
@@ -130,7 +130,7 @@ Supported options are:
   string is set a link to the first page will be generated with the value as the
   title:
 
-  ``` php
+  ```php
   echo $this->Paginator->numbers(['first' => 'First page']);
   ```
 
@@ -154,7 +154,7 @@ Supported options are:
 While this method allows a lot of customization for its output. It is
 also ok to just call the method without any params.
 
-``` php
+```php
 echo $this->Paginator->numbers();
 ```
 
@@ -162,7 +162,7 @@ Using the first and last options you can create links to the beginning
 and end of the page set. The following would create a set of page links that
 include links to the first 2 and last 2 pages in the paged results:
 
-``` php
+```php
 echo $this->Paginator->numbers(['first' => 2, 'last' => 2]);
 ```
 
@@ -228,7 +228,7 @@ There are a number of options for `counter()`. The supported ones are:
   You could also supply only a string to the counter method using the tokens
   available. For example:
 
-  ``` php
+  ```php
   echo $this->Paginator->counter(
       'Page {:page} of {:pages}, showing {:current} records out of
        {:count} total, starting on record {:start}, ending on {:end}',
@@ -237,7 +237,7 @@ There are a number of options for `counter()`. The supported ones are:
 
   Setting 'format' to range would output like '1 - 3 of 13':
 
-  ``` php
+  ```php
   echo $this->Paginator->counter([
       'format' => 'range',
   ]);
@@ -247,7 +247,7 @@ There are a number of options for `counter()`. The supported ones are:
   pages. Defaults to ' of '. This is used in conjunction with 'format' =
   'pages' which is 'format' default value:
 
-  ``` php
+  ```php
   echo $this->Paginator->counter([
       'separator' => ' of a total of ',
   ]);
@@ -273,7 +273,7 @@ Sets all the options for the Paginator Helper. Supported options are:
   You can also append additional URL content into all URLs generated in the
   helper:
 
-  ``` php
+  ```php
   $this->Paginator->options([
       'url' => [
           'sort' => 'email', 'direction' => 'desc', 'page' => 6,
@@ -293,7 +293,7 @@ Sets all the options for the Paginator Helper. Supported options are:
 - `update` The CSS selector of the element to update with the results of AJAX
   pagination calls. If not specified, regular links will be created:
 
-  ``` php
+  ```php
   $this->Paginator->options(['update' => '#content']);
   ```
 
@@ -312,7 +312,7 @@ this feature is in `PaginatorComponent`, you have some additional
 control in the view. You can use `options()` to indicate that you want other
 named parameters to be converted:
 
-``` php
+```php
 $this->Paginator->options([
   'convertKeys' => ['your', 'keys', 'here'],
 ]);
@@ -325,7 +325,7 @@ features. However, if you don't want that and want to use a custom helper
 for AJAX links, you can do so by changing the `$helpers` array in your controller.
 After running `paginate()` do the following:
 
-``` php
+```php
 // In your controller action.
 $this->set('posts', $this->paginate());
 $this->helpers['Paginator'] = ['ajax' => 'CustomJs'];
@@ -348,7 +348,7 @@ See the details on
 in the API. As mentioned, the PaginatorHelper also offers sorting features
 which can be easily integrated into your table column headers:
 
-``` php
+```php
 // templates/Posts/index.ctp
 <table>
     <tr>
@@ -370,7 +370,7 @@ data by a given field.
 
 It is also possible to sort a column based on associations:
 
-``` html
+```html
 <table>
     <tr>
         <th><?php echo $this->Paginator->sort('title', 'Title'); ?></th>
@@ -388,7 +388,7 @@ It is also possible to sort a column based on associations:
 The final ingredient to pagination display in views is the addition
 of page navigation, also supplied by the PaginationHelper:
 
-``` php
+```php
 // Shows the page numbers
 echo $this->Paginator->numbers();
 
@@ -413,7 +413,7 @@ echo $this->Paginator->counter();
 The wording output by the counter() method can also be customized
 using special markers:
 
-``` php
+```php
 echo $this->Paginator->counter([
     'format' => 'Page {:page} of {:pages}, showing {:current} records out of
              {:count} total, starting on record {:start}, ending on {:end}',

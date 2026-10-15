@@ -12,7 +12,7 @@ Bake は [pieceofcake2/bake](https://pieceofcake2.github.io/bake/) プラグイ�
 pieceofcake2/app スケルトンから作成したアプリケーションには、開発用の依存パッケージとして
 すでに含まれています。それ以外の場合は Composer でインストールします。
 
-``` bash
+```bash
 composer require --dev pieceofcake2/bake
 ```
 
@@ -21,7 +21,7 @@ Composer はプラグインを `plugins/Bake/` にインストールします。
 `composer.json` の `allow-plugins` と `installer-paths` の設定が必要です。pieceofcake2/app
 スケルトンにはすでに設定されています。プラグインは `config/bootstrap.php` でロードしてください。
 
-``` php
+```php
 // config/bootstrap.php
 CakePlugin::load('Bake');
 ```
@@ -51,7 +51,7 @@ cake スクリプトは PHP CLI (command line interface) で実行されます�
 
 データベース設定ファイルを作ったあと、Bake を実行すると次のようなオプションが表示されます。
 
-``` text
+```text
 ---------------------------------------------------------------
 App : src
 Path: /path-to/project/src/
@@ -72,7 +72,7 @@ What would you like to Bake? (D/M/V/C/P/F/T/Q)
 
 代わりに、次のようにコマンドラインから直接これらのコマンドを実行することが出来ます。
 
-``` bash
+```bash
 $ bin/cake bake db_config
 $ bin/cake bake model
 $ bin/cake bake view
@@ -141,7 +141,7 @@ Bake は、アプリケーションの `src/Console/Templates/` と、ロード�
 bake のテーマ名はユニークである必要がありますので、'default' は使わないでください。
 複数のテーマがある場合は、Bake がどれを使うか尋ねます。 `--theme` オプションで指定することもできます。
 
-``` bash
+```bash
 bin/cake bake view Posts --theme myTheme
 ```
 

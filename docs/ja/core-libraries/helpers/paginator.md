@@ -38,31 +38,31 @@
 
 ここで複数の投稿 (*post*) をページ制御していて、今１ページ目にいるとすると:
 
-``` php
+```php
 echo $this->Paginator->sort('user_id');
 ```
 
 出力結果:
 
-``` html
+```html
 <a href="/posts/index/page:1/sort:user_id/direction:asc/">User Id</a>
 ```
 
 title パラーメーターを使って、リンクに付けるカスタムテキストを作ることもできます。
 
-``` php
+```php
 echo $this->Paginator->sort('user_id', 'User account');
 ```
 
 出力結果:
 
-``` html
+```html
 <a href="/posts/index/page:1/sort:user_id/direction:asc/">User account</a>
 ```
 
 リンクに対して HTML のような画像を使っている場合は、エスケープを off にする必要があります。
 
-``` php
+```php
 echo $this->Paginator->sort(
     'user_id',
     '<em>User account</em>',
@@ -72,7 +72,7 @@ echo $this->Paginator->sort(
 
 出力結果:
 
-``` html
+```html
 <a href="/posts/index/page:1/sort:user_id/direction:asc/">
   <em>User account</em>
 </a>
@@ -81,19 +81,19 @@ echo $this->Paginator->sort(
 direction オプションでリンクのデフォルトのソート順を設定できます。
 一度リンクがアクティブになると、自動的にソート順は通常に戻ります。
 
-``` php
+```php
 echo $this->Paginator->sort('user_id', null, ['direction' => 'desc']);
 ```
 
 出力結果:
 
-``` html
+```html
 <a href="/posts/index/page:1/sort:user_id/direction:desc/">User Id</a>
 ```
 
 lock オプションでソート順を指定された順に固定できます。
 
-``` php
+```php
 echo $this->Paginator->sort('user_id', null, ['direction' => 'asc', 'lock' => true]);
 ```
 
@@ -131,7 +131,7 @@ echo $this->Paginator->sort('user_id', null, ['direction' => 'asc', 'lock' => tr
   分を作るかを整数で指定します。デフォルトは false です。文字列を指定すると、
   その文字列をタイトルの値として先頭ページへのリンクを生成します。
 
-  ``` php
+  ```php
   echo $this->Paginator->numbers(['first' => 'First page']);
   ```
 
@@ -155,7 +155,7 @@ echo $this->Paginator->sort('user_id', null, ['direction' => 'asc', 'lock' => tr
 このメソッドを使えば出力の多くをカスタマイズできますが、
 一切パラメーターを指定せずにコールしても問題ありません。
 
-``` php
+```php
 echo $this->Paginator->numbers();
 ```
 
@@ -163,7 +163,7 @@ first と last オプションを使って先頭ページと最終ページへ�
 以下の例ではページ制御された結果セットの中の、先頭から２ページと末尾から
 ２ページのリンクを含むページリンクの並びを生成します。
 
-``` php
+```php
 echo $this->Paginator->numbers(['first' => 2, 'last' => 2]);
 ```
 
@@ -230,7 +230,7 @@ echo $this->Paginator->numbers(['first' => 2, 'last' => 2]);
   counter メソッドに対して利用できるトークンを使って、単なる文字列を
   与えることもできます。たとえば以下のような感じです。
 
-  ``` php
+  ```php
   echo $this->Paginator->counter(
       '{:page} / {:pages} ページ, {:current} 件目 / 全 {:count} 件,
        開始レコード番号 {:start}, 終了レコード番号 {:end}',
@@ -239,7 +239,7 @@ echo $this->Paginator->numbers(['first' => 2, 'last' => 2]);
 
   range に対して 'format' を設定すると '1 - 3 of 13' のように出力します。
 
-  ``` php
+  ```php
   echo $this->Paginator->counter([
       'format' => 'range',
   ]);
@@ -249,7 +249,7 @@ echo $this->Paginator->numbers(['first' => 2, 'last' => 2]);
   ' of ' です。これは 'format' = 'pages' と組み合わせて使われます。
   これは 'format' のデフォルト値です。
 
-  ``` php
+  ```php
   echo $this->Paginator->counter([
       'separator' => ' of a total of ',
   ]);
@@ -277,7 +277,7 @@ Paginatorヘルパーのすべてのオプションを設定します。
   使えます。このヘルパーで生成された URL に対して、追加的な URL
   コンテンツを追加できます。
 
-  ``` php
+  ```php
   $this->Paginator->options([
       'url' => [
           'sort' => 'email', 'direction' => 'desc', 'page' => 6,
@@ -298,7 +298,7 @@ Paginatorヘルパーのすべてのオプションを設定します。
 - `update` AJAX の pagination 呼び出しの結果を使って更新する、要素の
   CSS セレクター。指定されない場合は通常のリンクが作成されます。
 
-  ``` php
+  ```php
   $this->Paginator->options(['update' => '#content']);
   ```
 
@@ -317,7 +317,7 @@ GET パラメーターを使いたいケースもあります。この機能に�
 追加の制御を行うことが可能です。 `options()` を使って変換したい名前付き
 パラメーターを指定できます。
 
-``` php
+```php
 $this->Paginator->options([
   'convertKeys' => ['your', 'keys', 'here'],
 ]);
@@ -330,7 +330,7 @@ $this->Paginator->options([
 を使いたい場合は、コントローラーにある `$helpers` 配列を変更します。
 `paginate()` が動いた後、以下の処理を行います。
 
-``` php
+```php
 // コントローラーの中で
 $this->set('posts', $this->paginate());
 $this->helpers['Paginator'] = ['ajax' => 'CustomJs'];
@@ -353,7 +353,7 @@ $this->helpers['Paginator'] = ['ajax' => 'CustomJs'];
 を参照してください。なお前述のように PaginatorHelper ではソート機能を提供
 してますので、これをテーブルの見出しの中に簡単に組み込めるようになっています。
 
-``` php
+```php
 // templates/Posts/index.ctp
 <table>
     <tr>
@@ -375,7 +375,7 @@ $this->helpers['Paginator'] = ['ajax' => 'CustomJs'];
 
 アソシエーションをベースにしてカラムをソートすることもできます。
 
-``` html
+```html
 <table>
     <tr>
         <th><?php echo $this->Paginator->sort('title', 'Title'); ?></th>
@@ -393,7 +393,7 @@ $this->helpers['Paginator'] = ['ajax' => 'CustomJs'];
 ビューにおけるページ制御の表示に関する最後のネタは、これも
 PaginationHelper で提供されるページナビゲーションの追加です。
 
-``` php
+```php
 // ページ番号を表示する
 echo $this->Paginator->numbers();
 
@@ -418,7 +418,7 @@ echo $this->Paginator->counter();
 counter() メソッドによる説明文の表示についても、
 特殊なマーカーによりカスタマイズできます。
 
-``` php
+```php
 echo $this->Paginator->counter([
     'format' => 'ページ {:page} / {:pages}, 全 {:count} レコード中の
     {:current} レコードを表示中, 先頭レコード {:start}, 末尾 {:end}',

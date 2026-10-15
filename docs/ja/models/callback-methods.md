@@ -25,7 +25,7 @@ findから返された結果を変更するため、あるいは他のfindの後
 このコールバックに渡された\$resultsパラメータには、
 モデルのfindから返された結果が含まれます。たとえば次のようなものです。:
 
-``` php
+```php
 $results = [
     0 => [
         'ModelName' => [
@@ -44,7 +44,7 @@ $results = [
 `$results` のフォーマットは少し異なり、
 通常の find の結果の代わりに次のようになります:
 
-``` php
+```php
 $results = [
     'field_1' => 'value1',
     'field_2' => 'value2',
@@ -58,7 +58,7 @@ $results = [
 
 afterFind によってデータをフォーマットする例を次に示します。:
 
-``` php
+```php
 public function afterFind($results, $primary = false)
 {
     foreach ($results as $key => $val) {
@@ -113,7 +113,7 @@ beforeSaveによってどのように日付を加工するかの例を次に示�
 もちろん、この変更はとても簡単に行えます。
 このコードを適切なモデルにおいて使用します。
 
-``` php
+```php
 public function beforeSave($options = [])
 {
     if (
@@ -165,7 +165,7 @@ public function dateFormatBeforeSave($dateString)
 > beforeDelete()は必ずtrueを返すようにしてください。
 > そうしないとsaveは失敗します。
 
-``` php
+```php
 // src/Model/ProductCategory.php を使用する。
 // 以下の例では、プロダクトをまだ保有してる場合、
 // プロダクトのカテゴリを削除しないようにします。

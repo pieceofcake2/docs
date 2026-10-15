@@ -16,7 +16,7 @@ The shell works on applications in the legacy `app/` layout, so the examples bel
 through `vendor/bin/cake`. Install the plugin as a development dependency and load it in
 `app/Config/bootstrap.php`:
 
-``` bash
+```bash
 composer require --dev pieceofcake2/upgrade
 ```
 
@@ -24,7 +24,7 @@ Composer installs it into `plugins/Upgrade/` when your `composer.json` has the
 `installer-paths` setting described in
 [Installing a plugin with Composer](/plugins/how-to-install-plugins#composer).
 
-``` php
+```php
 // app/Config/bootstrap.php
 CakePlugin::load('Upgrade');
 ```

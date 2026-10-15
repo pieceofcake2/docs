@@ -79,42 +79,42 @@ WEBテストランナーは基本的な正規表現を指定することが出�
 
 ##### 引数のないexpectOnce()の置換
 
-``` text
+```text
 expectOnce\(([^\)]+)\);
 expects(\$this->once())->method($1);
 ```
 
 ##### 引数つきのexpectOnce()の置換
 
-``` text
+```text
 expectOnce\(([^,]+), array\((.+)\)\);
 expects(\$this->once())->method($1)->with($2);
 ```
 
 ##### expectAt()の置換
 
-``` text
+```text
 expectAt\((\d+), (.+), array\((.+)\)\);
 expects(\$this->at($1))->method($2)->with($3);
 ```
 
 ##### expectNeverの置換
 
-``` text
+```text
 expectNever\(([^\)]+)\);
 expects(\$this->never())->method($1);
 ```
 
 ##### setReturnValueの置換
 
-``` text
+```text
 setReturnValue\(([^,]+), (.+)\);
 expects(\$this->once())->method($1)->will($this->returnValue($2));
 ```
 
 ##### setReturnValueAtの置換
 
-``` text
+```text
 setReturnValueAt((\d+), ([^,]+), (.+));
 expects(\$this->at($1))->method($2)->will($this->returnValue($3));
 ```
@@ -125,7 +125,7 @@ PHPUnitが個々のテストケースとテストスイートをテストラン�
 グループテストをテストケースディレクトリの中に置いて、 `PHPUnit_Framework_TestSuite` を基底クラスとして使うことが出来ます。
 テストスイートの例は以下のようになります:
 
-``` php
+```php
 class AllJavascriptHelpersTest extends PHPUnit_Framework_TestSuite
 {
 

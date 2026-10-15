@@ -29,7 +29,7 @@ CakePHP のある程度の経験と、MVCの概念についての理解、
 
 まず、Composer で新しいアプリケーションを作成しましょう。
 
-``` bash
+```bash
 composer create-project pieceofcake2/app acl
 cd acl
 ```
@@ -42,7 +42,7 @@ cd acl
 がすでに含まれていて、 `plugins/Bake/` にインストールされています (スケルトンの `composer.json` には
 そのための `installer-paths` の設定があります)。 `config/bootstrap.php` でロードしてください。
 
-``` php
+```php
 // config/bootstrap.php
 CakePlugin::load('Bake');
 ```
@@ -50,7 +50,7 @@ CakePlugin::load('Bake');
 それから、アプリケーションを構築するための簡単なデータベーススキーマを作成しましょう。
 次の SQL 文をデータベースに実行してください:
 
-``` sql
+```sql
 CREATE TABLE users (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255) NOT NULL UNIQUE,
@@ -121,7 +121,7 @@ bake は必要なリレーションを全て行っているでしょうが、も
 Auth と Acl コンポーネントを追加する前に、多少の部品を加える必要があります。
 まずは `UsersController` にログインとログアウトのアクションを加えましょう:
 
-``` php
+```php
 public function login()
 {
     if ($this->request->is('post')) {
@@ -141,7 +141,7 @@ public function logout()
 更に、以下の様にビューファイルを
 `templates/Users/login.ctp` に作成してください:
 
-``` php
+```php
 <?php
 // templates/Users/login.ctp
 echo $this->Form->create('User', ['url' => ['action' => 'login']]);
@@ -159,7 +159,7 @@ echo $this->Form->end('Login');
 パスワードがハッシュ化されていることを期待します。ここでは、bcrypt でパスワードをハッシュ化する
 `BlowfishPasswordHasher` を使います。 `src/Model/User.php` で以下を追加してください:
 
-``` php
+```php
 // src/Model/User.php
 class User extends AppModel
 {
@@ -185,7 +185,7 @@ class User extends AppModel
 行います。bake したコントローラはメッセージの表示に FlashComponent を使うので、
 ここでロードしておきます。次のコードを加えてください:
 
-``` php
+```php
 // src/Controller/AppController.php
 class AppController extends Controller
 {
@@ -229,7 +229,7 @@ ACL をセットアップし終わってしまう前に、ユーザとグルー�
 `AuthComponent` に許可させるために、いくつかの例外を設けましょう。
 `GroupsController` と `UsersController` の **両方** に、次のコードを追加してください:
 
-``` php
+```php
 public function beforeFilter()
 {
     parent::beforeFilter();
@@ -271,7 +271,7 @@ Auth と ACL をきちんと動作させるには、ユーザとグループを 
 これを使用するにあたり、モデル中で `parentNode()` を実行する必要があります。
 `User` モデルに次のコードを追加してください:
 
-``` php
+```php
 class User extends AppModel
 {
     public $belongsTo = ['Group'];
@@ -298,7 +298,7 @@ class User extends AppModel
 
 `Group` モデルには、次のコードを追加します:
 
-``` php
+```php
 class Group extends AppModel
 {
     public $actsAs = ['Acl' => ['type' => 'requester']];
@@ -332,7 +332,7 @@ ACL の管理機能を、アプリケーションの一部として作成でき�
 簡単なものを使うようにしてください。MySQL のプロンプトで
 `SELECT * FROM aros;` を実行した場合、次のような結果を取得できるでしょう:
 
-``` text
+```text
 +----+-----------+-------+-------------+-------+------+------+
 | id | parent_id | model | foreign_key | alias | lft  | rght |
 +----+-----------+-------+-------------+-------+------+------+
@@ -354,7 +354,7 @@ ACL の管理機能を、アプリケーションの一部として作成でき�
 グループごとのみのパーミッションに単純化したい場合、 `User` モデルに `bindNode()`
 を実装する必要があります:
 
-``` php
+```php
 public function bindNode($user)
 {
     return ['model' => 'Group', 'foreign_key' => $user['User']['group_id']];
@@ -363,7 +363,7 @@ public function bindNode($user)
 
 `User` モデルの `actsAs` を更新して、 requester ディレクティブを無効化します:
 
-``` php
+```php
 public $actsAs = ['Acl' => ['type' => 'requester', 'enabled' => false]];
 ```
 
@@ -374,7 +374,7 @@ public $actsAs = ['Acl' => ['type' => 'requester', 'enabled' => false]];
 
 この場合、 `aros` テーブルは以下のようになるでしょう:
 
-``` text
+```text
 +----+-----------+-------+-------------+-------+------+------+
 | id | parent_id | model | foreign_key | alias | lft  | rght |
 +----+-----------+-------+-------------+-------+------+------+
@@ -407,7 +407,7 @@ bin/cake acl create aco root controllers
 
 AclComponent を使う方法は次のようになります:
 
-``` php
+```php
 $this->Acl->Aco->create(['parent_id' => null, 'alias' => 'controllers']);
 $this->Acl->Aco->save();
 ```
@@ -421,7 +421,7 @@ ACL を使用しないということです。グローバルなルート ACO �
 これを行うには、先のコードで定義してあるように、 `AppController` の `$components` で、
 配列が `actionPath` を必ず含むようにしてください:
 
-``` php
+```php
 class AppController extends Controller
 {
     public $components = [

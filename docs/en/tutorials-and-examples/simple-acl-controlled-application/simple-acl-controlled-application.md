@@ -30,7 +30,7 @@ What you will need
 
 First, let's create a new application with Composer:
 
-``` bash
+```bash
 composer create-project pieceofcake2/app acl
 cd acl
 ```
@@ -45,7 +45,7 @@ as a development dependency, installed in `plugins/Bake/` (the skeleton's
 `composer.json` already has the `installer-paths` setting for this). Load it in
 `config/bootstrap.php`:
 
-``` php
+```php
 // config/bootstrap.php
 CakePlugin::load('Bake');
 ```
@@ -53,7 +53,7 @@ CakePlugin::load('Bake');
 From there we will build a simple database schema to build our
 application on. Execute the following SQL statements into your database:
 
-``` sql
+```sql
 CREATE TABLE users (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255) NOT NULL UNIQUE,
@@ -131,7 +131,7 @@ few other pieces that need to be added before we can add the Auth and
 Acl components. First add a login and logout action to your
 `UsersController`:
 
-``` php
+```php
 public function login()
 {
     if ($this->request->is('post')) {
@@ -151,7 +151,7 @@ public function logout()
 Then create the following view file for login at
 `templates/Users/login.ctp`:
 
-``` php
+```php
 <?php
 // templates/Users/login.ctp
 echo $this->Form->create('User', ['url' => ['action' => 'login']]);
@@ -170,7 +170,7 @@ AuthComponent will expect that your passwords are hashed. We use
 `BlowfishPasswordHasher`, which hashes passwords with bcrypt. In
 `src/Model/User.php` add the following:
 
-``` php
+```php
 // src/Model/User.php
 class User extends AppModel
 {
@@ -196,7 +196,7 @@ site controlled with Auth and Acl, we will set them up in
 `AppController`. The baked controllers use the FlashComponent for their
 messages, so we load it here as well:
 
-``` php
+```php
 // src/Controller/AppController.php
 class AppController extends Controller
 {
@@ -241,7 +241,7 @@ exceptions so `AuthComponent` will allow us to create some groups
 and users. In **both** your `GroupsController` and your
 `UsersController` Add the following:
 
-``` php
+```php
 public function beforeFilter()
 {
     parent::beforeFilter();
@@ -288,7 +288,7 @@ automagic connection of models with the Acl tables. Its use
 requires an implementation of `parentNode()` on your model. In
 our `User` model we will add the following:
 
-``` php
+```php
 class User extends AppModel
 {
     public $belongsTo = ['Group'];
@@ -315,7 +315,7 @@ class User extends AppModel
 
 Then in our `Group` Model Add the following:
 
-``` php
+```php
 class Group extends AppModel
 {
     public $actsAs = ['Acl' => ['type' => 'requester']];
@@ -350,7 +350,7 @@ use easy passwords so you don't forget. If you do a
 `SELECT * FROM aros;` from a MySQL prompt you should get
 something like the following:
 
-``` text
+```text
 +----+-----------+-------+-------------+-------+------+------+
 | id | parent_id | model | foreign_key | alias | lft  | rght |
 +----+-----------+-------+-------------+-------+------+------+
@@ -373,7 +373,7 @@ per-group or per-user basis.
 In case we want simplified per-group only permissions, we need to
 implement `bindNode()` in `User` model:
 
-``` php
+```php
 public function bindNode($user)
 {
     return ['model' => 'Group', 'foreign_key' => $user['User']['group_id']];
@@ -382,7 +382,7 @@ public function bindNode($user)
 
 Then modify the `actsAs` for the model `User` and disable the requester directive:
 
-``` php
+```php
 public $actsAs = ['Acl' => ['type' => 'requester', 'enabled' => false]];
 ```
 
@@ -393,7 +393,7 @@ Note: Every user has to have `group_id` assigned for this to work.
 
 Now the `aros` table will look like this:
 
-``` text
+```text
 +----+-----------+-------+-------------+-------+------+------+
 | id | parent_id | model | foreign_key | alias | lft  | rght |
 +----+-----------+-------+-------------+-------+------+------+
@@ -427,7 +427,7 @@ bin/cake acl create aco root controllers
 
 While using the AclComponent would look like:
 
-``` php
+```php
 $this->Acl->Aco->create(['parent_id' => null, 'alias' => 'controllers']);
 $this->Acl->Aco->save();
 ```
@@ -444,7 +444,7 @@ node, so that when making ACL checks it can use the correct node
 path when looking up controllers/actions. In `AppController` ensure
 that your `$components` array contains the `actionPath` defined earlier:
 
-``` php
+```php
 class AppController extends Controller
 {
     public $components = [

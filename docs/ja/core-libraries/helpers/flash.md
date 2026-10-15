@@ -22,7 +22,7 @@ FlashHelper は、非推奨となった `SessionHelper` の `flash()` メソッ�
 フラッシュメッセージを表示するためには、FlashHelper の `render()` メソッドを
 使用します。
 
-``` php
+```php
 <?php echo $this->Flash->render() ?>
 ```
 
@@ -30,13 +30,13 @@ FlashHelper は、非推奨となった `SessionHelper` の `flash()` メソッ�
 使用します。しかし、 [FlashComponent](../../core-libraries/components/flash)
 の中でフラッシュメッセージを設定した時にキーを指定した場合、そのキーを指定して表示します。
 
-``` php
+```php
 <?php echo $this->Flash->render('other') ?>
 ```
 
 FlashComponent 内で設定したオプションを上書きすることができます。
 
-``` php
+```php
 // コントローラの中で
 $this->Flash->set('The user has been saved.', [
     'element' => 'success'

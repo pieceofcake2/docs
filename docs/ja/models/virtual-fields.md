@@ -11,7 +11,7 @@
 `$virtualFields` プロパティを定義することができます。MySQL を用いたバーチャルフィールドの
 定義の例としては、以下のようになります。
 
-``` php
+```php
 public $virtualFields = [
     'name' => 'CONCAT(User.first_name, " ", User.last_name)',
 ];
@@ -19,7 +19,7 @@ public $virtualFields = [
 
 PostgreSQLだと、以下のようになります。
 
-``` php
+```php
 public $virtualFields = [
     'name' => 'User.first_name || \' \' || User.last_name',
 ];
@@ -45,7 +45,7 @@ Model::hasField() は、モデルが実際に持っているフィールドを�
 `hasField()` の二番目の引数を true にすることによって、バーチャルフィールドもチェックされるように
 なります。上記の例を用いれば:
 
-``` php
+```php
 // 「name」というフィールドが実在しないため false を返します。
 $this->User->hasField('name');
 // 「name」というバーチャルフィールドがあるため true を返します。
@@ -57,7 +57,7 @@ $this->User->hasField('name', true);
 このメソッドは、フィールド・カラムがバーチャルフィールドか実在するフィールドかどうかを
 判定するときに用いられます。カラムがバーチャルであるときに true を返します。
 
-``` php
+```php
 $this->User->isVirtualField('name'); //true
 $this->User->isVirtualField('first_name'); //false
 ```
@@ -67,7 +67,7 @@ $this->User->isVirtualField('first_name'); //false
 このメソッドは、バーチャルフィールドを構成する SQL 表現にアクセスするために用いられます。
 引数が与えられない場合、そのモデルのすべてのバーチャルフィールドを返します。
 
-``` php
+```php
 // 'CONCAT(User.first_name, ' ', User.last_name)' を返します。
 $this->User->getVirtualField('name');
 ```
@@ -78,7 +78,7 @@ $this->User->getVirtualField('name');
 バーチャルフィールドを扱います。返り値のセットの中で、バーチャルフィールドの値は
 モデルのキーの下に置かれます。
 
-``` php
+```php
 $results = $this->User->find('first');
 
 // 返り値は以下のものを含みます。
@@ -104,7 +104,7 @@ $results = $this->User->find('first');
 別名を持つようなモデルでバーチャルフィールドを使用するには、
 モデルのコンストラクタでバーチャルフィールドを定義するのがベストでしょう。
 
-``` php
+```php
 public function __construct($id = false, $table = null, $ds = null)
 {
     parent::__construct($id, $table, $ds);
@@ -123,14 +123,14 @@ public function __construct($id = false, $table = null, $ds = null)
 次の例は、hasMany アソシエーションのカウンターを持ち、バーチャルフィールドを有効にすることができます。
 例えば、もしテンプレートの中で次のようなソートリンクがある場合:
 
-``` php
+```php
 // バーチャルフィールドのソートリンクを作成
 $this->Paginator->sort('ProductsItems.Total', 'Items Total');
 ```
 
 コントローラの中で、次のようなページ制御の設定を行います。
 
-``` php
+```php
 $this->Products->recursive = -1;
 
 // Products hasMany ProductsItems アソシエーション
@@ -164,7 +164,7 @@ $data = $this->Paginator->paginate();
 
 次のようなものを返すでしょう。
 
-``` text
+```text
 
 [
     [0] => 
@@ -199,7 +199,7 @@ $data = $this->Paginator->paginate();
 SQL クエリ中で直接使用される関数は、返されるデータがモデルのデータと同じ配列に格納されるのを防ぎます。
 例えば以下のようなとき:
 
-``` php
+```php
 $this->Timelog->query(
     "SELECT
         project_id, SUM(id) as TotalHours
@@ -214,7 +214,7 @@ $this->Timelog->query(
 
 戻り値はこのようになります。
 
-``` text
+```text
 
 [
     [0] => 
@@ -237,14 +237,14 @@ $this->Timelog->query(
 別のクエリがバーチャルフィールドを使用しようとする場合、デフォルト値として `0` を与えます。
 それが発生した場合、 `0` が TotalHours 列に入ります。
 
-``` php
+```php
 $this->Timelog->virtualFields['TotalHours'] = 0;
 ```
 
 また、バーチャルフィールドを追加することに加えて、カラムを `MyModel__MyField` の形式で
 別名にする必要があります。
 
-``` php
+```php
 $this->Timelog->query(
     "SELECT
         project_id, SUM(id) as Timelog__TotalHours
@@ -259,7 +259,7 @@ $this->Timelog->query(
 
 バーチャルフィールドを設定した後クエリを再度実行すると、きれいな値のグループになるはずです。
 
-``` text
+```text
 
 [
     [0] => 
@@ -283,12 +283,12 @@ $this->Timelog->query(
 この実装の問題に対する一般的な回避策としては、利用する必要がある時に
 `virtualFields` をあるモデルから別のモデルにコピーすることです。
 
-``` php
+```php
 $this->virtualFields['name'] = $this->Author->virtualFields['name'];
 ```
 
 もしくは以下のようにします。
 
-``` php
+```php
 $this->virtualFields += $this->Author->virtualFields;
 ```

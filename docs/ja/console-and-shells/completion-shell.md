@@ -63,7 +63,7 @@ bin/cake Completion options Bake.bake
 
 以下の bash の例は、原著作者によるものです:
 
-``` bash
+```bash
 # bash completion for CakePHP console
 
 _cake()

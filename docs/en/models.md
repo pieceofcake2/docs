@@ -29,7 +29,7 @@ associated with another.
 
 Here is a simple example of a model definition in CakePHP:
 
-``` php
+```php
 // src/Model/Ingredient.php
 class Ingredient extends AppModel
 {
@@ -88,7 +88,7 @@ available for access when its name matches that of the controller. For example,
 a controller named IngredientsController will automatically initialize the
 Ingredient model and attach it to the controller at `$this->Ingredient`:
 
-``` php
+```php
 class IngredientsController extends AppController
 {
     public function index()
@@ -103,7 +103,7 @@ class IngredientsController extends AppController
 Associated models are available through the main model. In the following
 example, Recipe has an association with the Ingredient model:
 
-``` php
+```php
 class Recipe extends AppModel
 {
     public function steakRecipes()

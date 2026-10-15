@@ -6,7 +6,7 @@
 
 `Model::saveAll()` and friends now support passing the `fieldList` for multiple models. Example:
 
-``` php
+```php
 $this->SomeModel->saveAll($data, [
     'fieldList' => [
         'SomeModel' => ['field_1'],
@@ -17,7 +17,7 @@ $this->SomeModel->saveAll($data, [
 
 `Model::saveAll()` and friends now can save unlimited levels deep. Example:
 
-``` php
+```php
 $data = [
     'Article' => ['title' => 'My first article'],
     'Comment' => [
@@ -39,7 +39,7 @@ View Blocks are a mechanism to allow the inclusion of slots of content, whilst a
 
 Blocks are output by calling the `fetch` method on the `View`. For example, the following can be placed in your `View/Layouts/default.ctp` file:
 
-``` php
+```php
 <?php echo $this->fetch('my_block'); ?>
 ```
 
@@ -47,13 +47,13 @@ This will echo the content of the block if available, or an empty string if it i
 
 Setting the content of a block can be done in a number of ways. A simple assignment of data can be done using `assign`:
 
-``` php
+```php
 <?php $this->assign('my_block', 'Hello Block'); ?>
 ```
 
 Or you can use it to capture a section of more complex content:
 
-``` php
+```php
 <?php $this->start('my_block'); ?>
     <h1>Hello Block!</h1>
     <p>This is a block of content</p>
@@ -63,7 +63,7 @@ Or you can use it to capture a section of more complex content:
 
 Block capturing also supports nesting:
 
-``` php
+```php
 <?php $this->start('my_block'); ?>
     <h1>Hello Block!</h1>
     <p>This is a block of content</p>
@@ -79,7 +79,7 @@ In 2.1, the use of `ThemeView` is deprecated in favor of using the `View` class 
 
 All custom pathing code has been moved into the `View` class, meaning that it is now possible for classes extending the `View` class to automatically support themes. Whereas before we might set the `$viewClass` Controller property to `Theme`, it is now possible to enable themes by simply setting the `$theme` property. Example:
 
-``` php
+```php
 App::uses('Controller', 'Controller');
 
 class AppController extends Controller
@@ -98,7 +98,7 @@ Previously, it was necessary to create a JSON layout (`APP/View/Layouts/json/def
 
 The `JsonView` is used like any other view class, by defining it on the controller. Example:
 
-``` php
+```php
 App::uses('Controller', 'Controller');
 
 class AppController extends Controller
@@ -109,14 +109,14 @@ class AppController extends Controller
 
 Once you have setup the controller, you need to identify what content should be serialized as JSON, by setting the view variable `_serialize`. Example:
 
-``` php
+```php
 $this->set(compact('users', 'posts', 'tags'));
 $this->set('_serialize', ['users', 'posts']);
 ```
 
 The above example would result in only the `users` and `posts` variables being serialized for the JSON output, like so:
 
-``` json
+```json
 {"users": [...], "posts": [...]}
 ```
 
@@ -126,7 +126,7 @@ Further customization of the output can be achieved by extending the `JsonView` 
 
 The following example wraps the result with `{results: ... }`:
 
-``` php
+```php
 App::uses('JsonView', 'View');
 class ResultsJsonView extends JsonView
 {
@@ -147,7 +147,7 @@ Much like the `JsonView`, the `XmlView` requires you to
 set the `_serialize` view variable in order to indicate what information
 should be serialized into XML for output:
 
-``` php
+```php
 $this->set(compact('users', 'posts', 'tags'));
 $this->set('_serialize', ['users', 'posts']);
 ```
@@ -155,7 +155,7 @@ $this->set('_serialize', ['users', 'posts']);
 The above example would result in only the `users` and `posts` variables
 being serialized for the XML output, like so:
 
-``` html
+```html
 <response><users>...</users><posts>...</posts></response>
 ```
 
@@ -176,7 +176,7 @@ response is already cached in the client and will send a `304 Not Modified`
 status code before rendering the view. Skipping the view rendering process saves
 CPU cycles and memory.
 
-``` php
+```php
 class ArticlesController extends AppController
 {
     public $components = ['RequestHandler'];
@@ -202,7 +202,7 @@ and `CakeNumber` classes respectively.
 
 To use the new utility classes:
 
-``` php
+```php
 class AppController extends Controller
 {
 
@@ -218,7 +218,7 @@ You can override the default class to use by creating a new class in your
 `APP/Utility` folder, e.g.: `Utility/MyAwesomeStringClass.php`, and specify
 it in `engine` key:
 
-``` php
+```php
 // Utility/MyAwesomeStringClass.php
 class MyAwesomeStringClass extends String
 {

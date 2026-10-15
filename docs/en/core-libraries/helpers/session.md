@@ -13,7 +13,7 @@ to the session.
 As with the Session Component, data is read by using
 `dot notation` array structures:
 
-``` text
+```text
 ['User' => [
     'username' => 'super@example.com'
 ]];

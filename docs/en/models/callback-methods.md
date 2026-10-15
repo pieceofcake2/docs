@@ -34,7 +34,7 @@ find operation, or to perform any other post-find logic. The
 \$results parameter passed to this callback contains the returned
 results from the model's find operation, i.e. something like:
 
-``` php
+```php
 $results = [
     0 => [
         'ModelName' => [
@@ -56,7 +56,7 @@ an association the format of `$results` can differ; instead of the
 result you would normally get from a find operation, you may get
 this:
 
-``` php
+```php
 $results = [
     'field_1' => 'value1',
     'field_2' => 'value2',
@@ -71,7 +71,7 @@ $results = [
 Below is an example of how afterfind can be used for date
 formatting:
 
-``` php
+```php
 public function afterFind($results, $primary = false)
 {
     foreach ($results as $key => $val) {
@@ -126,7 +126,7 @@ a begindate formatted like YYYY-MM-DD in the database and is
 displayed like DD-MM-YYYY in the application. Of course this can be
 changed very easily. Use the code below in the appropriate model.
 
-``` php
+```php
 public function beforeSave($options = [])
 {
     if (
@@ -182,7 +182,7 @@ on this record will also be deleted.
 > Make sure that beforeDelete() returns true, or your delete is going
 > to fail.
 
-``` php
+```php
 // using src/Model/ProductCategory.php
 // In the following example, do not let a product category be deleted if it
 // still contains products.
@@ -210,7 +210,7 @@ public function beforeDelete($cascade = true)
 Place any logic that you want to be executed after every deletion
 in this callback method.
 
-``` php
+```php
 /**
  * perhaps after deleting a record from the database, you also want to delete
  * an associated file

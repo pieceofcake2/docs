@@ -4,7 +4,7 @@ CakePHP makes saving model data a snap. Data ready to be saved
 should be passed to the model's `save()` method using the
 following basic format:
 
-``` text
+```text
 
 [
     [ModelName] => 
@@ -24,7 +24,7 @@ quick usage.
 Here's a quick example of a controller action that uses a CakePHP
 model to save data to a database table:
 
-``` php
+```php
 public function edit($id)
 {
     // Has any form data been POSTed?
@@ -50,7 +50,7 @@ information). If for some reason your data isn't saving, be sure to check to see
 if some validation rules are being broken. You can debug this situation by
 outputting `Model::$validationErrors`:
 
-``` php
+```php
 if ($this->Recipe->save($this->request->data)) {
     // handle the success.
 }
@@ -66,7 +66,7 @@ find useful:
 data array inside a model. This is useful when using models with
 the ActiveRecord features offered by Model:
 
-``` php
+```php
 $this->Post->read(null, 1);
 $this->Post->set('title', 'New title for the article');
 $this->Post->save();
@@ -76,7 +76,7 @@ Is an example of how you can use `set()` to update
 single fields, in an ActiveRecord approach. You can also use
 `set()` to assign new values to multiple fields:
 
-``` php
+```php
 $this->Post->read(null, 1);
 $this->Post->set([
     'title' => 'New title',
@@ -113,7 +113,7 @@ the `fieldList` automatically.
 
 The save method also has an alternate syntax:
 
-``` php
+```php
 save(array $data = null, array $params = [])
 ```
 
@@ -139,7 +139,7 @@ Once a save has been completed, the ID for the object can be found
 in the `$id` attribute of the model object - something especially
 handy when creating new objects.
 
-``` php
+```php
 $this->Ingredient->save($newData);
 $newIngredientId = $this->Ingredient->id;
 ```
@@ -148,7 +148,7 @@ Creating or updating is controlled by the model's `id` field. If
 `$Model->id` is set, the record with this primary key is updated.
 Otherwise a new record is created:
 
-``` php
+```php
 // Create: id isn't set or is null
 $this->Recipe->create();
 $this->Recipe->save($this->request->data);
@@ -164,7 +164,7 @@ $this->Recipe->save($this->request->data);
 If you want to update a value, rather than create a new one, make sure
 you are passing the primary key field into the data array:
 
-``` php
+```php
 $data = ['id' => 10, 'title' => 'My new title'];
 // This will update Recipe with id 10
 $this->Recipe->save($data);
@@ -197,7 +197,7 @@ field.
 For example, to update the title of a blog post, the call to
 `saveField` from a controller might look something like this:
 
-``` php
+```php
 $this->Post->saveField('title', 'A New Title for a New Day');
 ```
 
@@ -207,7 +207,7 @@ $this->Post->saveField('title', 'A New Title for a New Day');
 
 The saveField method also has an alternate syntax:
 
-``` php
+```php
 saveField(string $fieldName, string $fieldValue, array $params = [])
 ```
 
@@ -230,7 +230,7 @@ all records will be updated.
 For example, to approve all bakers who have been members for over a
 year, the update call might look something like:
 
-``` php
+```php
 $thisYear = date('Y-m-d H:i:s', strtotime('-1 year'));
 
 $this->Baker->updateAll(
@@ -243,7 +243,7 @@ The `$fields` array accepts SQL expressions. Literal values should be
 quoted manually using `DboSource::value()`. For example if one of your
 model methods was calling `updateAll()` you would do the following:
 
-``` php
+```php
 $db = $this->getDataSource();
 $value = $db->value($value, 'string');
 $this->updateAll(
@@ -260,7 +260,7 @@ $this->updateAll(
 For example, to close all tickets that belong to a certain
 customer:
 
-``` php
+```php
 $this->Ticket->updateAll(
     ['Ticket.status' => "'closed'"],
     ['Ticket.customer_id' => 453],
@@ -290,7 +290,7 @@ options may be used:
 For saving multiple records of single model, \$data needs to be a
 numerically indexed array of records like this:
 
-``` php
+```php
 $data = [
     ['title' => 'title 1'],
     ['title' => 'title 2'],
@@ -305,7 +305,7 @@ $data = [
 
 It is also acceptable to have the data in the following format:
 
-``` php
+```php
 $data = [
     ['Article' => ['title' => 'title 1']],
     ['Article' => ['title' => 'title 2']],
@@ -314,7 +314,7 @@ $data = [
 
 To save also associated data with `$options['deep'] = true` (since 2.1), the two above examples would look like:
 
-``` php
+```php
 $data = [
     ['title' => 'title 1', 'Assoc' => ['field' => 'value']],
     ['title' => 'title 2'],
@@ -332,7 +332,7 @@ $Model->saveMany($data, ['deep' => true]);
 Keep in mind that if you want to update a record instead of creating a new
 one you just need to add the primary key index to the data row:
 
-``` php
+```php
 $data = [
     [
         // This creates a new row
@@ -365,7 +365,7 @@ options may be used:
 For saving a record along with its related record having a hasOne
 or belongsTo association, the data array should be like this:
 
-``` php
+```php
 $data = [
     'User' => ['username' => 'billy'],
     'Profile' => ['sex' => 'Male', 'occupation' => 'Programmer'],
@@ -375,7 +375,7 @@ $data = [
 For saving a record along with its related records having hasMany
 association, the data array should be like this:
 
-``` php
+```php
 $data = [
     'Article' => ['title' => 'My first article'],
     'Comment' => [
@@ -389,7 +389,7 @@ $data = [
 And for saving a record along with its related records having hasMany with more
 than two levels deep associations, the data array should be as follow:
 
-``` php
+```php
 $data = [
     'User' => ['email' => 'john-doe@cakephp.org'],
     'Cart' => [
@@ -421,7 +421,7 @@ For saving a record along with its related records having hasMany
 association and deeper associated Comment belongsTo User data as well,
 the data array should be like this:
 
-``` php
+```php
 $data = [
     'Article' => ['title' => 'My first article'],
     'Comment' => [
@@ -436,7 +436,7 @@ $data = [
 
 And save this data with:
 
-``` php
+```php
 $Article->saveAssociated($data, ['deep' => true]);
 ```
 
@@ -446,7 +446,7 @@ $Article->saveAssociated($data, ['deep' => true]);
 
 Example of using `fieldList` with multiple models:
 
-``` php
+```php
 $this->SomeModel->saveAll($data, [
     'fieldList' => [
         'SomeModel' => ['field_1'],
@@ -492,7 +492,7 @@ and a related Profile. The example action shown below will assume
 that you've POSTed enough data (using the FormHelper) to create a
 single User and a single Profile:
 
-``` php
+```php
 public function add()
 {
     if (!empty($this->request->data)) {
@@ -543,7 +543,7 @@ models at the same time.
 First, you need to build your form for both Company and Account
 models (we'll assume that Company hasMany Account):
 
-``` php
+```php
 echo $this->Form->create('Company', ['action' => 'add']);
 echo $this->Form->input('Company.name', ['label' => 'Company name']);
 echo $this->Form->input('Company.description');
@@ -569,7 +569,7 @@ having `Account.0.fieldName` is exactly what we need.
 Now, in our CompaniesController we can create an `add()`
 action:
 
-``` php
+```php
 public function add()
 {
     if (!empty($this->request->data)) {
@@ -592,7 +592,7 @@ Our example involves the Head of Cake School asking us to write an application t
 him to log a student's attendance on a course with days attended and grade. Take
 a look at the following code.
 
-``` php
+```php
 // src/Controller/CourseMembershipController.php
 class CourseMembershipsController extends AppController
 {
@@ -630,7 +630,7 @@ class CourseMembershipsController extends AppController
 
 The data array will look like this when submitted.
 
-``` text
+```text
 
 [
     [Student] => 
@@ -659,7 +659,7 @@ with a `saveAssociated` call with this data structure. If we run the index
 action of our CourseMembershipsController the data structure
 received now from a find('all') is:
 
-``` text
+```text
 
 [
     [0] => 
@@ -697,7 +697,7 @@ a CourseMembership. So you might have a form that allows selection
 of existing students and courses from pick lists or ID entry and
 then the two meta-fields for the CourseMembership, e.g.
 
-``` php
+```php
 // templates/CourseMemberships/add.ctp
 
 <?php echo $this->Form->create('CourseMembership'); ?>
@@ -729,7 +729,7 @@ then the two meta-fields for the CourseMembership, e.g.
 
 And the resultant POST:
 
-``` text
+```text
 
 [
     [Student] => 
@@ -764,7 +764,7 @@ ID of the associated model. Once that's done, you just call the
 correctly. An example of the required format for the data array
 passed to `save()` for the Tag model is shown below:
 
-``` text
+```text
 
 [
     [Recipe] => 
@@ -782,7 +782,7 @@ You can also use this format to save several records and their
 HABTM associations with `saveAll()`, using an array like the
 following:
 
-``` text
+```text
 
 [
     [0] => 
@@ -840,7 +840,7 @@ You need to pass the associated HABTM data in the following HABTM array format. 
 you only need to pass in the id's of the associated HABTM model however it needs
 to be nested again:
 
-``` text
+```text
 
 [
     [0] => 
@@ -900,7 +900,7 @@ some recipe.
 The simplest form might look something like this (we'll assume that
 `$recipe_id` is already set to something):
 
-``` php
+```php
 <?php echo $this->Form->create('Tag'); ?>
     <?php echo $this->Form->input(
         'Recipe.id',
@@ -916,7 +916,7 @@ value is set to the ID of the recipe we want to link the tag to.
 When the `save()` method is invoked within the controller, it'll
 automatically save the HABTM data to the database:
 
-``` php
+```php
 public function add()
 {
     // Save the association
@@ -935,7 +935,7 @@ using the `find('list')` method and assigned to a view variable
 of the model name. An input with the same name will automatically
 pull in this data into a `<select>`:
 
-``` php
+```php
 // in the controller:
 $this->set('tags', $this->Recipe->Tag->find('list'));
 
@@ -950,7 +950,7 @@ data is pulled out of the model the same way, but the form input is
 declared slightly different. The tag name is defined using the
 `ModelName` convention:
 
-``` php
+```php
 // in the controller:
 $this->set('tags', $this->Recipe->Tag->find('list'));
 
@@ -972,7 +972,7 @@ The key is in the model setup the `className`. Simply adding a
 By setting the `className` to the models name and use the alias as
 key we avoid those issues.
 
-``` php
+```php
 class Project extends AppModel
 {
     public $hasAndBelongsToMany = [
@@ -987,14 +987,14 @@ class Project extends AppModel
 
 Creating form elements and saving the data works the same as before but you use the alias instead. This:
 
-``` php
+```php
 $this->set('projects', $this->Project->find('list'));
 $this->Form->input('Project');
 ```
 
 Becomes this:
 
-``` php
+```php
 $this->set('relatedProjects', $this->Project->find('list'));
 $this->Form->input('RelatedProject');
 ```
@@ -1075,7 +1075,7 @@ from \$this-\>data and not automagically updated. If you don't want that you can
 `unset($this->data['Model']['modified'])`, etc. Alternatively you can override
 the Model::save() to always do it for you:
 
-``` php
+```php
 class AppModel extends Model
 {
     public function save($data = null, $validate = true, $fieldList = [])

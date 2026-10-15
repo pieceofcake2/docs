@@ -9,7 +9,7 @@ CakePHP 2.1 は、2.0 の API の完全上位互換です。
 のコアからは削除されています。もし、これらのクラスを利用していなかった
 場合は、次のような方法でアップグレードすることができます。:
 
-``` php
+```php
 // app/View/Helper/AppHelper.php
 App::uses('Helper', 'View');
 class AppHelper extends Helper
@@ -235,7 +235,7 @@ CakeSession は P3P ヘッダをセットしなくなりました。このこと
 
 - `$scripts_for_layout` は推奨されません。代わりに下記の記述を利用してください。
 
-  ``` php
+  ```php
   echo $this->fetch('meta');
   echo $this->fetch('css');
   echo $this->fetch('script');

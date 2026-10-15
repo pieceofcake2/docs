@@ -6,14 +6,14 @@ and type which supports transactions.
 All transaction methods must be performed on a model's DataSource
 object. To get a model's DataSource from within the model, use:
 
-``` php
+```php
 $dataSource = $this->getDataSource();
 ```
 
 You can then use the data source to start, commit, or roll back
 transactions.
 
-``` php
+```php
 $dataSource->begin();
 
 // Perform some tasks
@@ -31,7 +31,7 @@ It is possible to start a transaction several times using the
 `Datasource::begin()` method. The transaction will finish only when
 the number of `commit` and `rollback` calls match with `begin`.
 
-``` php
+```php
 $dataSource->begin();
 // Perform some tasks
 $dataSource->begin();

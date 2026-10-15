@@ -39,7 +39,7 @@ There is a new way to add those paths. As of 1.3 RC1 the
 `$pluginPaths` variables will no longer work. You must use
 `App::build()` to modify paths.
 
-``` php
+```php
 App::build([
     'plugins' => [
       '/full/path/to/plugins/',
@@ -106,7 +106,7 @@ hit, and the related features have been refactored into a method to
 increase their flexibility. You now use `Inflector::rules()` to
 load custom inflections:
 
-``` php
+```php
 Inflector::rules('singular', [
     'rules' => [
       '/^(bil)er$/i' => '\1',
@@ -230,7 +230,7 @@ declared like any other helper/component. You should update
 `AppController::$components` and `AppController::$helpers` to
 include these classes to retain existing behavior:
 
-``` php
+```php
 var $components = ['Session', 'Auth', ...];
 var $helpers = ['Session', 'Html', 'Form' ...];
 ```
@@ -281,7 +281,7 @@ routes in 1.3 do not require additional routes to be declared
 manually. All prefix routes will be generated automatically. To
 update simply change your `core.php`:
 
-``` php
+```php
 //from:
 Configure::write('Routing.admin', 'admin');
 
@@ -294,7 +294,7 @@ routes. A small change has also been done to routing params. Routed
 params should now only consist of alphanumeric chars, - and \_ or
 `/[A-Z0-9-_+]+/`:
 
-``` php
+```php
 Router::connect('/:$%@#param/:action/*', [...]); // BAD
 Router::connect('/:can/:anybody/:see/:m-3/*', [...]); //Acceptable
 ```
@@ -306,7 +306,7 @@ problematic and buggy even with the existing code base. First path
 segments using full regular expressions was removed. You can no
 longer create routes like:
 
-``` php
+```php
 Router::connect(
   '/([0-9]+)-p-(.*)/',
   ['controller' => 'products', 'action' => 'show']
@@ -319,7 +319,7 @@ you use route parameters with capture patterns. Next mid-route
 greedy star support has been removed. It was previously possible to
 use a greedy star in the middle of a route:
 
-``` php
+```php
 Router::connect(
     '/pages/*/:event',
     ['controller' => 'pages', 'action' => 'display'],
@@ -338,7 +338,7 @@ previously used this approach for passing the ID parameter to
 actions, you will need to rewrite all your \$html-\>link() and
 \$this-\>redirect() calls to reflect this change.
 
-``` php
+```php
 // old format:
 $url = ['controller' => 'posts', 'action' => 'view', 'id' => $id];
 // use cases:
@@ -487,7 +487,7 @@ new core element called `sql_dump`. `DboSource` no longer
 automatically outputs SQL logs. If you want to output SQL logs in
 1.3, do the following:
 
-``` php
+```php
 echo $this->element('sql_dump');
 ```
 
@@ -685,7 +685,7 @@ be updated to return `false` instead.
 after printing the error message which now uses a slightly
 different formatting.
 
-``` php
+```php
 $this->error('Invalid Foo', 'Please provide bar.');
 // outputs:
 Error: Invalid Foo

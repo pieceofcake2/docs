@@ -11,7 +11,7 @@
 
 プラグインは Composer でインストールします。
 
-``` bash
+```bash
 composer require pieceofcake2/acl_extras
 ```
 
@@ -20,7 +20,7 @@ composer require pieceofcake2/acl_extras
 `installer-paths` の設定がすでにあるので、プラグインは `plugins/AclExtras/` にインストールされます。
 次に、次に示すように `config/bootstrap.php` ファイル中でプラグインを有効にしてください:
 
-``` php
+```php
 // config/bootstrap.php
 // ...
 CakePlugin::load('AclExtras');
@@ -55,7 +55,7 @@ bin/cake acl --help
 
 `AclComponent` を用いて許可を行うには、独自の方法の中で以下の文法のコード使います:
 
-``` php
+```php
 $this->Acl->allow($aroAlias, $acoAlias);
 ```
 
@@ -65,7 +65,7 @@ $this->Acl->allow($aroAlias, $acoAlias);
 `SELECT * FROM aros_acos` を実行すると、結果に 1 と -1 がたくさん含まれているはずです。
 パーミッションがセットできたことを確認したら、作成した関数を削除してください:
 
-``` php
+```php
 public function beforeFilter()
 {
     parent::beforeFilter();
@@ -117,7 +117,7 @@ index と view は、public になります。権限を持たないユーザで�
 さて、users と groups コントローラから `Auth->allowedActions` への参照を
 取り外したいですね。その場合は、posts と widgets コントローラに次の行を追加しましょう:
 
-``` php
+```php
 public function beforeFilter()
 {
     parent::beforeFilter();
@@ -129,7 +129,7 @@ public function beforeFilter()
 posts と widgets コントローラの index および view アクションにパブリックなアクセスを
 与えています。 `AppController::beforeFilter()` で以下を追加してください:
 
-``` php
+```php
 $this->Auth->allow('display');
 ```
 
@@ -144,7 +144,7 @@ $this->Auth->allow('display');
 しかし、先にログインを行うまえに、それ用のビューを作成しなければなりません。
 もし `templates/Users/login.ctp` をまだ作成していないなら、次のコードを設置してください:
 
-``` php
+```php
 <!-- templates/Users/login.ctp -->
 <h2>Login</h2>
 <?php
@@ -162,7 +162,7 @@ echo $this->Form->end('Login');
 ユーザーが既にログインしていたら、Users コントローラの `login()` アクションを次のように
 書き換えてリダイレクトさせるようにしましょう:
 
-``` php
+```php
 public function login()
 {
     if ($this->Auth->user()) {
@@ -189,7 +189,7 @@ public function login()
 先に、ログアウトの関数を空のままにしておきましたが、これを埋めていきます。
 `UsersController::logout()` に次の行を追加してください:
 
-``` php
+```php
 $this->Flash->success(__('Good-Bye'));
 
 return $this->redirect($this->Auth->logout());

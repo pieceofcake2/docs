@@ -69,7 +69,7 @@ CakePHP の Hash クラスは Inflector クラスと同様で、どのモデル�
 取り出すことができます。もはやデータ構造をループする必要はありません。
 その代わりに欲しい要素を絞り込むパス式を使うのです:
 
-``` php
+```php
 // 共通の使い方:
 $users = $this->user->find('all');
 $results = Hash::extract($users, '{n}.User.id');
@@ -83,7 +83,7 @@ $results = Hash::extract($users, '{n}.User.id');
 
 \$data を `$path` の定義に従って配列の中に挿入します。　:
 
-``` php
+```php
 $a = [
     'pages' => ['name' => 'page'],
 ];
@@ -105,7 +105,7 @@ $result = Hash::insert($a, 'files', ['name' => 'files']);
 `{n}` や `{s}` を使ったパスを使うことで、複数のポイントにデータを挿入することが
 できます:
 
-``` php
+```php
 $users = $this->User->find('all');
 $users = Hash::insert($users, '{n}.User.new', 'value');
 ```
@@ -120,7 +120,7 @@ $users = Hash::insert($users, '{n}.User.new', 'value');
 
 \$path に合致するすべての要素を配列から削除します。
 
-``` php
+```php
 $a = [
     'pages' => ['name' => 'page'],
     'files' => ['name' => 'files'],
@@ -150,7 +150,7 @@ $result = Hash::remove($a, 'files');
 \$valuePath が省略された場合や、\$valuePath に合致するものが無かった場合は、値は null で初期化されます。
 \$groupPath が指定された場合は、そのパスにしたがって生成したものをグルーピングします:
 
-``` php
+```php
 $a = [
     [
         'User' => [
@@ -239,7 +239,7 @@ $result = Hash::combine($a, '{n}.User.id', '{n}.User.Data.name', '{n}.User.group
 その場合は、配列の１要素目はフォーマット文字列とみなされ、
 ２要素目以降のパスで取得された値のために使われます:
 
-``` php
+```php
 $result = Hash::combine(
     $a,
     '{n}.User.id',
@@ -276,7 +276,7 @@ $result = Hash::combine(
 
 配列から取り出し、フォーマット文字列でフォーマットされた文字列の配列を返します:
 
-``` php
+```php
 $data = [
     [
         'Person' => [
@@ -332,7 +332,7 @@ $res = Hash::format($data, ['{n}.Person.first_name', '{n}.Person.something'], '%
 
 一方のハッシュや配列の中に、もう一方のキーと値が厳密に見てすべて存在しているかを判定します:
 
-``` php
+```php
 $a = [
     0 => ['name' => 'main'],
     1 => ['name' => 'about'],
@@ -358,7 +358,7 @@ $result = Hash::contains($b, $a);
 
 配列の中に特定のパスがセットされているかをチェックします:
 
-``` php
+```php
 $set = [
     'My Index 1' => ['First' => 'The first item'],
 ];
@@ -395,7 +395,7 @@ $result = Hash::check($set, 'My Index 1.First.Seconds.Third.Fourth');
 また、カスタム引数 \$callback を指定することで配列の要素を抽出することができます。
 コールバック関数が `false` を返した場合、その要素は配列から取り除かれます:
 
-``` php
+```php
 $data = [
     '0',
     false,
@@ -425,7 +425,7 @@ $res = Hash::filter($data);
 
 多次元配列を１次元配列へと平坦化します:
 
-``` php
+```php
 $arr = [
     [
         'Post' => ['id' => '1', 'title' => 'First Post'],
@@ -457,7 +457,7 @@ $res = Hash::flatten($arr);
 
 `Hash::flatten()`:: によって前もって平坦化された配列を再構築します:
 
-``` php
+```php
 $data = [
     '0.Post.id' => 1,
     '0.Post.title' => First Post,
@@ -496,7 +496,7 @@ $res = Hash::expand($data);
 > この関数の引数の個数に制限はありません。また、配列以外が引数に指定された場合は
 > 配列へとキャストされます。
 
-``` php
+```php
 $array = [
     [
         'id' => '48c2570e-dfa8-4c32-a35e-0d71cbdd56cb',
@@ -541,7 +541,7 @@ $res = Hash::merge($array, $arrayB, $arrayC, $arrayD);
 
 配列内のすべての値が数値であるかをチェックします:
 
-``` php
+```php
 $data = ['one'];
 $res = Hash::numeric(array_keys($data));
 // $res は true
@@ -557,7 +557,7 @@ $res = Hash::numeric($data);
 
 配列の次元数を数えます。このメソッドは配列の１つ目の要素だけを見て次元を判定します:
 
-``` php
+```php
 $data = ['one', '2', 'three'];
 $result = Hash::dimensions($data);
 // $result == 1
@@ -584,7 +584,7 @@ $result = Hash::countDim($data);
 
 `Hash::dimensions()` に似ていますが、このメソッドは配列内にあるもっとも大きな次元数を返します:
 
-``` php
+```php
 $data = ['1' => '1.1', '2', '3' => ['3.1' => '3.1.1']];
 $result = Hash::dimensions($data, true);
 // $result == 2
@@ -611,7 +611,7 @@ $result = Hash::countDim($data, true);
 [Hash Path Syntax](#hash-path-syntax) によって、どの次元のどの値によってでもソートすることができます。
 このメソッドでは式のみがサポートされます:
 
-``` php
+```php
 $a = [
     0 => ['Person' => ['name' => 'Jeff']],
     1 => ['Shirt' => ['color' => 'black']],
@@ -652,7 +652,7 @@ $result = Hash::sort($a, '{n}.Person.name', 'asc');
 
 ２つの配列の差分を計算します:
 
-``` php
+```php
 $a = [
     0 => ['name' => 'main'],
     1 => ['name' => 'about'],
@@ -682,7 +682,7 @@ $result = Hash::diff($a, $b);
 **例１**
 :
 
-``` php
+```php
 $array1 = ['ModelOne' => ['id' => 1001, 'field_one' => 'a1.m1.f1', 'field_two' => 'a1.m1.f2']];
 $array2 = ['ModelOne' => ['id' => 1003, 'field_one' => 'a3.m1.f1', 'field_two' => 'a3.m1.f2', 'field_three' => 'a3.m1.f3']];
 $res = Hash::mergeDiff($array1, $array2);
@@ -702,7 +702,7 @@ $res = Hash::mergeDiff($array1, $array2);
 **例２**
 :
 
-``` php
+```php
 $array1 = ['a' => 'b', 1 => 20938, 'c' => 'string'];
 $array2 = ['b' => 'b', 3 => 238, 'c' => 'string', ['extra_field']];
 $res = Hash::mergeDiff($array1, $array2);
@@ -728,7 +728,7 @@ $res = Hash::mergeDiff($array1, $array2);
 返ります。値を持つ数値キーは null を持つ文字列キーへと変換されます。
 配列を正規化すると、 `Hash::merge()` で扱いやすくなります:
 
-``` php
+```php
 $a = ['Tree', 'CounterCache',
     'Upload' => [
         'folder' => 'products',
@@ -788,7 +788,7 @@ $result = Hash::normalize($b);
 
 例:
 
-``` php
+```php
 $data = [
     ['ModelName' => ['id' => 1, 'parent_id' => null]],
     ['ModelName' => ['id' => 2, 'parent_id' => 1]],

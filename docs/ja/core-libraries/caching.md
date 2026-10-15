@@ -69,7 +69,7 @@ Cache クラスの設定は、どこでもできます。しかし、一般的�
 
 例:
 
-``` php
+```php
 Cache::config('short', [
     'engine' => 'File',
     'duration' => '+1 hours',
@@ -109,7 +109,7 @@ Cache::config('long', [
 `$plugin/Lib/Cache/Engine/MyCustomCacheEngine.php` に配置されます。
 プラグインの Cache 設定は、ドット記法を使用する必要があります。
 
-``` php
+```php
 Cache::config('custom', [
     'engine' => 'CachePack.MyCustomCache',
     // ...
@@ -151,7 +151,7 @@ CacheEngine に必要な API は、以下の通りです。
 パフォーマンスが劇的に改善されます。 `Model::find()` の検索結果が好例です。
 検索結果を格納する Cache を使用するメソッドは以下のようになります。
 
-``` php
+```php
 class Post extends AppModel
 {
     public function newest()
@@ -175,7 +175,7 @@ class Post extends AppModel
 上記を実現することができます。 `remember()`
 メソッドは、以下のように使用します。
 
-``` php
+```php
 class Post extends AppModel
 {
     public function newest()
@@ -203,7 +203,7 @@ Cache クラスは、簡単な方法で、アトミックにカウンターの�
 整数値をセットした後、 `Cache::increment()` と
 `Cache::decrement()` を使って操作できます。
 
-``` php
+```php
 Cache::write('initial_count', 10);
 
 // Later on
@@ -227,7 +227,7 @@ Cache::increment('initial_count');
 全体を無効化するキーが必要になります。これには、キャッシュの設定内で groups を宣言することで
 可能になります。
 
-``` php
+```php
 Cache::config('site_home', [
     'engine' => 'Redis',
     'duration' => '+999 days',
@@ -243,7 +243,7 @@ Cache::config('site_home', [
 例えば、新しい投稿が追加された時は必ず、 `post` グループに関連する全てのデータを
 削除するために、キャッシュエンジンに通知することができます。
 
-``` php
+```php
 // src/Model/Post.php
 
 public function afterSave($created, $options = [])
@@ -260,7 +260,7 @@ public function afterSave($created, $options = [])
 `Cache::groupConfigs()` は、(例えば同一の)グループに属する設定を
 取得するのに使用します。
 
-``` php
+```php
 // src/Model/Post.php
 
 /**
@@ -301,7 +301,7 @@ public function afterSave($created, $options = [])
 
 例:
 
-``` php
+```php
 $cloud = Cache::read('cloud');
 
 if ($cloud !== false) {
@@ -326,7 +326,7 @@ return $cloud;
 あらゆる型のオフジェクトを格納することができ、モデルの検索結果を
 格納することに適しています。
 
-``` php
+```php
 if (($posts = Cache::read('posts')) === false) {
     $posts = $this->Post->find('all');
     Cache::write('posts', $posts);
@@ -347,7 +347,7 @@ posts を取得する回数を容易に削減することができます。
 データを読み込む前にも `Cache::set()` を使用してください。これを行わなかった場合、
 キャッシュキーで読み込む時にデフォルトの設定が使用されます。
 
-``` php
+```php
 Cache::set(['duration' => '+30 days']);
 Cache::write('results', $data);
 
@@ -410,7 +410,7 @@ add メソッドは、2.8.0 で追加されました。
 例えば、問い合わせの結果をキャッシュしたい時、 `remember` を使用して、
 シンプルに実現できます。
 
-``` php
+```php
 class Articles extends AppModel
 {
     public function all()

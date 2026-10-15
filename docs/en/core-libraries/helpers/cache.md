@@ -27,7 +27,7 @@ files when handling requests.
 Once you've uncommented the `Cache.check` line you will need to add the helper
 to your controller's `$helpers` array:
 
-``` php
+```php
 class PostsController extends AppController
 {
     public $helpers = ['Cache'];
@@ -36,7 +36,7 @@ class PostsController extends AppController
 
 You will also need to add the CacheDispatcher to your dispatcher filters in your bootstrap:
 
-``` php
+```php
 Configure::write('Dispatcher.filters', [
     'CacheDispatcher',
 ]);
@@ -58,7 +58,7 @@ expressed in a `strtotime()` format (e.g. "1 hour", or "3 minutes").
 Using the example of an ArticlesController, that receives a lot of
 traffic that needs to be cached:
 
-``` php
+```php
 public $cacheAction = [
     'view' => 36000,
     'index' => 48000,
@@ -69,7 +69,7 @@ This will cache the view action 10 hours, and the index action 13 hours. By
 making `$cacheAction` a `strtotime()` friendly value you can cache every action in the
 controller:
 
-``` php
+```php
 public $cacheAction = '1 hour';
 ```
 
@@ -77,7 +77,7 @@ You can also enable controller/component callbacks for cached views
 created with `CacheHelper`. To do so you must use the array
 format for `$cacheAction` and create an array like the following:
 
-``` php
+```php
 public $cacheAction = [
     'view' => ['callbacks' => true, 'duration' => 21600],
     'add' => ['callbacks' => true, 'duration' => 36000],
@@ -104,7 +104,7 @@ user is currently logged in or browsing your site as a guest.
 To indicate blocks of content that are *not* to be cached, wrap
 them in `<!--nocache--> <!--/nocache-->` like so:
 
-``` php
+```php
 <!--nocache-->
 <?php if ($this->Session->check('User.name')): ?>
     Welcome, <?php echo h($this->Session->read('User.name')); ?>.

@@ -5,7 +5,7 @@
 If you need `NumberHelper` functionalities outside of a `View`,
 use the `CakeNumber` class:
 
-``` php
+```php
 class UsersController extends AppController
 {
     public $components = ['Auth'];

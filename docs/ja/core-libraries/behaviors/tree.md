@@ -41,7 +41,7 @@ Tree ビヘイビアを使用するには、テーブルが次に挙げる3つ�
 Tree ビヘイビアで出来ることはたくさんあります。しかし、簡単な例からはじめてみましょう。
 次のデータベーステーブルを作成し、データを投入してください。
 
-``` sql
+```sql
 CREATE TABLE categories (
     id INTEGER(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     parent_id INTEGER(10) DEFAULT NULL,
@@ -117,7 +117,7 @@ VALUES
 カテゴリツリーのコンテンツの出力がどのようになるかを確認します。
 簡単なコントローラを使います。
 
-``` php
+```php
 class CategoriesController extends AppController
 {
     public function index()
@@ -136,7 +136,7 @@ class CategoriesController extends AppController
 
 シンプルなモデルの定義例です。
 
-``` php
+```php
 // src/Model/Category.php
 class Category extends AppModel
 {
@@ -170,7 +170,7 @@ class Category extends AppModel
 データであっても、通常は他のモデルとまったく同じ方法でデータを追加します。
 例は次の通りです。
 
-``` php
+```php
 // pseudo controller code
 $data['Category']['parent_id'] = 3;
 $data['Category']['name'] = 'スケート';
@@ -182,7 +182,7 @@ Tree ビヘイビアを用いる場合、親 ID (*parent_id*) をセットする
 もし parent_id をセットしない場合は、Tree ビヘイビアはツリーに、
 新たなトップレベルのエントリーを作成します。
 
-``` php
+```php
 // pseudo controller code
 $data = [];
 $data['Category']['name'] = '別の人たちのカテゴリ';
@@ -215,7 +215,7 @@ $this->Category->save($data);
 何かデータを変更したいが、 parent_id は変更しない場合、階層構造にかかわる箇所は
 何も変更されません。例は次の通りです。
 
-``` php
+```php
 // コントローラのコードの一部
 $this->Category->id = 5; // 「エクストリーム編み物」の ID
 $this->Category->save(['name' => 'Extreme fishing']);
@@ -247,7 +247,7 @@ $this->Category->save(['name' => 'Extreme fishing']);
 ツリーの中でデータを移動することも簡潔に行えます。エクストリームフィッシングは
 スポーツではないが、別の人たちのカテゴリに属するとする場合、次のようにします。
 
-``` php
+```php
 // コントローラのコードの一部
 $this->Category->id = 5; // 「エクストリームフィッシング」の ID
 $newParentId = $this->Category->field(
@@ -285,7 +285,7 @@ Tree ビヘイビアは、データの削除を管理するいくつかの方法
 delete() をコールします。例は次の通りです。
 :
 
-``` php
+```php
 // コントローラのコードの一部
 $this->Category->id = 10;
 $this->Category->delete();
@@ -337,7 +337,7 @@ Tree ビヘイビアはバックグラウンドだけで働くわけではあり
 次のものは、特定のノードの位置を下げる「Categories」という名の
 コントローラアクションの例です。
 
-``` php
+```php
 public function movedown($id = null, $delta = null)
 {
     $this->Category->id = $id;
@@ -369,7 +369,7 @@ public function movedown($id = null, $delta = null)
 以下は、ノードの位置を上げる「Categories」という名のコントローラアクションの
 例です。
 
-``` php
+```php
 public function moveup($id = null, $delta = null)
 {
     $this->Category->id = $id;
@@ -411,7 +411,7 @@ public function moveup($id = null, $delta = null)
 
 「スポーツ」の ID を指定して以下のコードを実行:
 
-``` php
+```php
 $this->Node->removeFromTree($id);
 ```
 
@@ -429,7 +429,7 @@ $this->Node->removeFromTree($id);
 
 一方、「スポーツ」の ID を指定して、以下のコードスニペットを使用した場合:
 
-``` php
+```php
 $this->Node->removeFromTree($id, true);
 ```
 
@@ -449,7 +449,7 @@ $this->Node->removeFromTree($id, true);
 ツリー構造のデータ中のノード (と子ノード) を、パラメータで定義されたフィールドと
 指示によって、もう一度並び替えます。このメソッドは、全てのノードの親を変更しません。
 
-``` php
+```php
 $model->reorder([
     // 並び替え時に頂点として使用するレコードの ID。デフォルト: $Model->id
     'id' => ,
@@ -500,7 +500,7 @@ $model->reorder([
 
 例:
 
-``` php
+```php
 // parent_id を元に全ての左右のフィールドを再構築します
 $this->Category->recover();
 // または
@@ -527,7 +527,7 @@ $this->Category->recover('tree');
 `$options` は、全ての追加パラメータの設定に使用され、デフォルトでは
 以下の利用可能なキーを持ち、それらは全てオプションです。
 
-``` text
+```text
 [
     'id' => null,
     'field' => $model->displayField,
@@ -549,13 +549,13 @@ $this->Category->recover('tree');
 
 使用例:
 
-``` php
+```php
 $this->Category->verify();
 ```
 
 出力結果:
 
-``` text
+```text
 Array
 (
     [0] => 
@@ -594,7 +594,7 @@ Array
 ノードを検索したい時に役に立ちます。 `level` オプションを使うことで、各ノードの
 レベルを保存するフィールドを指定することができます。
 
-``` php
+```php
 public $actsAs = ['Tree' => [
     'level' => 'level', // デフォルトは null で、レベルは保存しません
 ]];

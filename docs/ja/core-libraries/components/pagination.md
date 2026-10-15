@@ -29,7 +29,7 @@ CakePHP におけるページ制御機構は、
 URL から受け取った `page` パラメータなどを追加していきます。なお `order` キーを、
 以下の要領で配列として定義しておく必要があるので注意してください。
 
-``` php
+```php
 class PostsController extends AppController
 {
     public $components = ['Paginator'];
@@ -46,7 +46,7 @@ class PostsController extends AppController
 `fields` のような、上記以外の `Model::find()` のオプションを
 入れることもできます。
 
-``` php
+```php
 class PostsController extends AppController
 {
     public $components = ['Paginator'];
@@ -68,7 +68,7 @@ class PostsController extends AppController
 find() メソッドに渡されます。これにより、ページ制御に対してとても簡単に
 `ContainableBehavior` のようなビヘイビアを使えます。
 
-``` php
+```php
 class RecipesController extends AppController
 {
     public $components = ['Paginator'];
@@ -84,7 +84,7 @@ class RecipesController extends AppController
 コントローラの中でひとつ以上のページ制御用のデフォルト値を定義できます。
 単に設定したいモデルの後で、配列のキーに名前をつけるだけです。
 
-``` php
+```php
 class PostsController extends AppController
 {
     public $paginate = [
@@ -108,7 +108,7 @@ class PostsController extends AppController
 あなたのコントローラの中のヘルパーのリストに `PaginatorHelper`
 がまだ入っていなければ追加します。
 
-``` php
+```php
 public function list_recipes()
 {
     $this->Paginator->settings = $this->paginate;
@@ -122,7 +122,7 @@ public function list_recipes()
 `paginate()` 関数の第二パラメータとして検索条件を渡すことにより、
 結果をフィルターできます。
 
-``` php
+```php
 $data = $this->Paginator->paginate(
     'Recipe',
     ['Recipe.title LIKE' => 'a%'],
@@ -132,7 +132,7 @@ $data = $this->Paginator->paginate(
 あなたのアクションの中に、 `conditions`
 を始めとするページ制御用設定の配列をセットすることもできます。
 
-``` php
+```php
 public function list_recipes()
 {
     $this->Paginator->settings = [
@@ -156,7 +156,7 @@ public function list_recipes()
 後述するメソッドのシグネチャーを、
 通常の追加の先頭パラメータである `$model` を使って実装しなければなりません。
 
-``` php
+```php
 /**
  * ビヘイビア上に実装された paginate と paginateCount
  */
@@ -190,7 +190,7 @@ paginate() と paginateCount() を自前で実装しなければならないよ�
 カスタム find タイプでページ制御する場合、 `0` 番目の要素をセットするか、
 もしくは CakePHP 2.3 であれば `findType` キーを設定してください。
 
-``` php
+```php
 public $paginate = [
     'popular',
 ];
@@ -199,7 +199,7 @@ public $paginate = [
 0 番目のインデックスを管理するのは難しいため、2.3 では `findType`
 オプションが追加されました。
 
-``` php
+```php
 public $paginate = [
     'findType' => 'popular',
 ];
@@ -210,7 +210,7 @@ public $paginate = [
 データを取得したいモデルの中で、
 あなたのメソッドやロジックでこれをオーバーライドします。
 
-``` php
+```php
 /**
  * オーバーライドされた paginate メソッド
  *  - week, away_team_id, home_team_id でグルーピングしている
@@ -239,7 +239,7 @@ public function paginate(
 以下の例では PostgreSQL 固有の機能を利用していますので、
 お使いのデータベースに従って調整してください。
 
-``` php
+```php
 /**
  * オーバーライドされた paginateCount メソッド
  */
@@ -267,7 +267,7 @@ public function paginateCount(
 単にコントローラの `$paginate` クラス変数に、
 そのキーワードを追加してやるだけで OK です。
 
-``` php
+```php
 /**
  * GROUP BY 句を追加します
  */
@@ -308,7 +308,7 @@ CakePHP 2.0 では、グループ句を使う場合でも、もはや `paginateC
 `PaginatorComponent::paginate()` の第三パラメータを使って、
 ソート可能な列を制限することができます。
 
-``` php
+```php
 $this->Paginator->paginate('Post', [], ['title', 'slug']);
 ```
 
@@ -332,7 +332,7 @@ CakePHP のデフォルトでは、一度に取り出せる行数を 100 に制�
 ページ制御のオプションの一部としてこの値を調整できます。
 例えば、 `10` に制限する場合:
 
-``` php
+```php
 public $paginate = [
     // ここに他のキーもあります。
     'maxLimit' => 10,
@@ -354,7 +354,7 @@ CakePHP の過去のバージョンでは、ページ制御用リンクの生成
 `PaginatorHelper`
 が選択されたパラメータタイプでリンクを生成します。
 
-``` php
+```php
 public $paginate = [
     'paramType' => 'querystring',
 ];
@@ -363,7 +363,7 @@ public $paginate = [
 上記の例ではクエリ文字列によるパースとリンク生成を有効にします。
 PaginatorComponent の `$settings` プロパティで変更することもできます。
 
-``` php
+```php
 $this->Paginator->settings['paramType'] = 'querystring';
 ```
 
@@ -414,7 +414,7 @@ PaginatorComponent が `NotFoundException` を投げます。
 try ～ catch ブロックで `NotFoundException` を捕捉して、
 適切なアクションを起こさせることも可能です。
 
-``` php
+```php
 public function index()
 {
     try {

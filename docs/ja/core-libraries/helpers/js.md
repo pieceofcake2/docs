@@ -32,7 +32,7 @@ JavaScript ライブラリの種類に応じて、実際の JavaScript に変換
 それを全てのページに含めるためには、 `templates/Layouts/default.ctp`
 の \<head\> セクションに以下の行を追加してください。
 
-``` php
+```php
 echo $this->Html->script('jquery'); // Include jQuery library
 ```
 
@@ -43,7 +43,7 @@ echo $this->Html->script('jquery'); // Include jQuery library
 出力しなければなりません。各ページの最後でこれを行うためには、 `</body>`
 タグで閉じる直前に以下の行を含めて下さい。
 
-``` php
+```php
 echo $this->Js->writeBuffer(); // Write cached scripts
 ```
 
@@ -53,7 +53,7 @@ echo $this->Js->writeBuffer(); // Write cached scripts
 
 JavaScript エンジンの選択は、あなたのコントローラのヘルパーを含める際に宣言します。
 
-``` php
+```php
 public $helpers = ['Js' => ['Jquery']];
 ```
 
@@ -74,7 +74,7 @@ jQuery 名前空間の中に上手に格納されます。あなたは、jQuery 
 
 "\$" ショートカットを上書きするために、 jQueryObject 変数を使用します。
 
-``` php
+```php
 $this->Js->JqueryEngine->jQueryObject = '$j';
 echo $this->Html->scriptBlock(
     'var $j = jQuery.noConflict();',
@@ -88,7 +88,7 @@ echo $this->Html->scriptBlock(
 あなたの独自ヘルパーの中の `$helpers` 配列の中で
 JsHelper を宣言してください。
 
-``` php
+```php
 public $helpers = ['Js'];
 ```
 
@@ -99,7 +99,7 @@ public $helpers = ['Js'];
 もし、他の JavaScript エンジンを使いたい場合、以下のように
 コントローラの中でヘルパーを設定してください。
 
-``` php
+```php
 public $helpers = [
     'Js' => ['Prototype'],
     'CustomHelper',
@@ -142,13 +142,13 @@ JavaScript 内の多くのメソッドが DOM のエレメントのセレクタ�
 メソッドチェーンが利用できます。メソッドチェーンは、短く記述でき、
 コードの表現力が上がります。
 
-``` php
+```php
 $this->Js->get('#foo')->event('click', $eventCode);
 ```
 
 上記がメソッドチェーンの例です。これは、下記のサンプルと同じ意味になります。
 
-``` php
+```php
 $this->Js->get('#foo');
 $this->Js->event('click', $eventCode);
 ```
@@ -226,7 +226,7 @@ JavaScript ライブラリが変更可能な開発を簡素化する試みにお
 蓄積することを強制できます。例えば、 `each()` メソッドは、通常では
 バッファしません。
 
-``` php
+```php
 $this->Js->each('alert("whoa!");', true);
 ```
 
@@ -234,7 +234,7 @@ $this->Js->each('alert("whoa!");', true);
 逆に、バッファするメソッドでバッファしたくない場合、最後の引数に `false`
 を渡すことでできます。
 
-``` php
+```php
 $this->Js->event('click', 'alert("whoa!");', false);
 ```
 
@@ -303,7 +303,7 @@ jQuery を使用します。あなたのレイアウト内に jQuery
 `RequestHandlerComponent` をあなたのコンポーネントに含めて下さい。
 あなたのコントローラに以下を追加してください。
 
-``` php
+```php
 public $components = ['RequestHandler'];
 public $helpers = ['Js'];
 ```
@@ -311,7 +311,7 @@ public $helpers = ['Js'];
 以下は、あなたが使用したい JavaScript ライブラリ内にリンクします。
 この例では、 jQuery を使用しています。
 
-``` php
+```php
 echo $this->Html->script('jquery');
 ```
 
@@ -319,7 +319,7 @@ echo $this->Html->script('jquery');
 したいことを `PaginatorHelper` に伝える必要があります。
 そうするには、あなたのビューの先頭で `options()` を呼びます。
 
-``` php
+```php
 $this->Paginator->options([
     'update' => '#content',
     'evalScripts' => true,
@@ -341,7 +341,7 @@ true にセットすべきです。 `evalScripts` なしだと、これらのラ
 `<script>` タグの数を減らすためにバッファする時、バッファを
 書き出さなければなりません。ビューファイルの底に、以下を記述してください。
 
-``` php
+```php
 echo $this->Js->writeBuffer();
 ```
 
@@ -354,7 +354,7 @@ echo $this->Js->writeBuffer();
 `indicator` をもはや対応していないとき、indicator エフェクトを
 あなた自身が追加しなければなりません。
 
-``` php
+```php
 <!DOCTYPE html>
 <html>
     <head>
@@ -384,7 +384,7 @@ echo $this->Js->writeBuffer();
 画像ファイルが含まれています。それは、 `JsHelper` で表示、非表示します。
 そうするためには `options()` 関数を更新する必要があります。
 
-``` php
+```php
 $this->Paginator->options([
     'update' => '#content',
     'evalScripts' => true,

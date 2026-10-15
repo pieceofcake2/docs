@@ -28,7 +28,7 @@ you had a database logger as part of a plugin, it would be placed in
 `CakeLog` will attempt to load Configuring log streams, which is done by
 calling `CakeLog::config()`. Configuring our DatabaseLog would look like:
 
-``` php
+```php
 // for src/Lib
 CakeLog::config('otherFile', [
     'engine' => 'Database',
@@ -48,7 +48,7 @@ When configuring a log stream the `engine` parameter is used to
 locate and load the log handler. All of the other configuration
 properties are passed to the log stream's constructor as an array.
 
-``` php
+```php
 // src/Lib/Log/Engine/DatabaseLog.php
 
 class DatabaseLog extends BaseLog
@@ -146,7 +146,7 @@ which writes to the error log. The default log location is
 `logs/$type.log` (the directory in the `LOGS` constant). In the legacy
 `app/` layout, it is `app/tmp/logs/$type.log`:
 
-``` php
+```php
 // Executing this inside a CakePHP class
 $this->log("Something didn't work!");
 
@@ -158,7 +158,7 @@ You can specify a custom log name using the first parameter. The
 default built-in FileLog class will treat this log name as the file
 you wish to write logs to:
 
-``` php
+```php
 // called statically
 CakeLog::write('activity', 'A special message for activity logging');
 
@@ -173,7 +173,7 @@ You can configure additional/alternate FileLog locations using
 `CakeLog::config()`. FileLog accepts a `path` which allows for
 custom paths to be used:
 
-``` php
+```php
 CakeLog::config('custom_path', [
     'engine' => 'File',
     'path' => '/path/to/custom/place/',
@@ -198,7 +198,7 @@ to specify `Syslog` as the engine to be used for logging. The following
 configuration snippet will replace the default logger with syslog. This should
 be done in the `bootstrap.php` file:
 
-``` php
+```php
 CakeLog::config('default', [
     'engine' => 'Syslog',
 ]);
@@ -227,7 +227,7 @@ following keys:
 Writing to the log files can be done in 2 different ways. The first
 is to use the static `CakeLog::write()` method:
 
-``` php
+```php
 CakeLog::write('debug', 'Something did not work');
 ```
 
@@ -235,7 +235,7 @@ The second is to use the log() shortcut function available on any
 class that extends `Object`. Calling log() will internally call
 CakeLog::write():
 
-``` php
+```php
 // Executing this inside a CakePHP class:
 $this->log('Something did not work!', 'debug');
 ```
@@ -252,7 +252,7 @@ Make sure you have at least one `default` stream set up if you want to
 listen to all types and levels. Usually, you can just set the core `FileLog` class
 to output into `logs/`:
 
-``` php
+```php
 CakeLog::config('default', [
     'engine' => 'File',
 ]);
@@ -276,7 +276,7 @@ the log messages will be directed to those loggers. If a log message is written
 to an unknown scope, loggers that handle that level of message will log the
 message. For example:
 
-``` php
+```php
 // Configure logs/shop.log to receive the two configured types (log levels), but only
 // those with `orders` and `payments` as scope
 CakeLog::config('shop', [
@@ -352,7 +352,7 @@ obtain current level configuration.
 To append the additional levels 'user0' and 'user1' to the default
 log levels use:
 
-``` php
+```php
 CakeLog::levels(['user0', 'user1']);
 // or
 CakeLog::levels(['user0', 'user1'], true);
@@ -360,7 +360,7 @@ CakeLog::levels(['user0', 'user1'], true);
 
 Calling `CakeLog::levels()` will result in:
 
-``` text
+```text
 [
     0 => 'emergency',
     1 => 'alert',
@@ -373,13 +373,13 @@ Calling `CakeLog::levels()` will result in:
 To set/replace an existing configuration, pass an array with the second
 argument set to false:
 
-``` php
+```php
 CakeLog::levels(['user0', 'user1'], false);
 ```
 
 Calling `CakeLog::levels()` will result in:
 
-``` text
+```text
 [
     0 => 'user0',
     1 => 'user1',
@@ -392,7 +392,7 @@ Returns: An array of the default log levels values.
 
 Resets log levels to their original values:
 
-``` text
+```text
 [
     'emergency' => LOG_EMERG,
     'alert'     => LOG_ALERT,

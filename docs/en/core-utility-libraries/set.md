@@ -21,7 +21,7 @@ define a path.
 
 Usage example (using `Set::sort()`):
 
-``` php
+```php
 $a = [
     0 => ['Person' => ['name' => 'Jeff'], 'Friend' => [['name' => 'Nate']]],
     1 => ['Person' => ['name' => 'Tracy'],'Friend' => [['name' => 'Lindsay']]],
@@ -57,7 +57,7 @@ Return type: `mixed`
 Apply a callback to the elements of an array extracted
 by a Set::extract compatible path:
 
-``` php
+```php
 $data = [
     ['Movie' => ['id' => 1, 'title' => 'movie 3', 'rating' => 5]],
     ['Movie' => ['id' => 1, 'title' => 'movie 1', 'rating' => 1]],
@@ -79,7 +79,7 @@ Return type: `boolean/array`
 Checks if a particular path is set in an array. If \$path is empty,
 \$data will be returned instead of a boolean value:
 
-``` php
+```php
 $set = [
     'My Index 1' => ['First' => 'The first item'],
 ];
@@ -120,7 +120,7 @@ path using an array path syntax, i.e.:
 **Example 1**
 :
 
-``` php
+```php
 $a = [
     ['Article' => ['id' => 1, 'title' => 'Article 1']],
     ['Article' => ['id' => 2, 'title' => 'Article 2']],
@@ -152,7 +152,7 @@ $result = Set::classicExtract($a, '3.Article.title');
 **Example 2**
 :
 
-``` php
+```php
 $a = [
     0 => ['pages' => ['name' => 'page']],
     1 => ['fruites' => ['name' => 'fruit']],
@@ -286,7 +286,7 @@ its keys, and optionally \$path2 as path to get the values. If
 (useful for Set::merge). You can optionally group the values by
 what is obtained when following the path specified in \$groupPath.
 
-``` php
+```php
 $result = Set::combine([], '{n}.User.id', '{n}.User.Data');
 // $result == [];
 
@@ -463,7 +463,7 @@ Return type: `boolean`
 Determines if one Set or array contains the exact keys and values
 of another:
 
-``` php
+```php
 $a = [
     0 => ['name' => 'main'],
     1 => ['name' => 'about'],
@@ -491,7 +491,7 @@ Counts the dimensions of an array. If \$all is set to false (which
 is the default) it will only consider the dimension of the first
 element in the array:
 
-``` php
+```php
 $data = ['one', '2', 'three'];
 $result = Set::countDim($data);
 // $result == 1
@@ -547,7 +547,7 @@ Return type: `array`
 Computes the difference between a Set and an array, two Sets, or
 two arrays:
 
-``` php
+```php
 $a = [
     0 => ['name' => 'main'],
     1 => ['name' => 'about'],
@@ -623,7 +623,7 @@ If an array is used, keys can be strings example: array('no' =\> 0,
 
 \$list defaults to 0 = no 1 = yes if param is not passed:
 
-``` php
+```php
 $res = Set::enum(1, 'one, two');
 // $res is 'two'
 
@@ -647,7 +647,7 @@ dimensional arrays or traverse through tree structures.
 > If `$path` does not contain a '/' the call will be delegated to
 > `Set::classicExtract()`
 
-``` php
+```php
 // Common Usage:
 $users = $this->User->find('all');
 $results = Set::extract('/User/id', $users);
@@ -680,7 +680,7 @@ Return type: `array`
 
 Filters empty elements out of a route array, excluding '0':
 
-``` php
+```php
 $res = Set::filter(['0', false, true, 0, ['one thing', 'I can tell you', 'is you got to be', false]]);
 
 /* $res now looks like:
@@ -703,7 +703,7 @@ Return type: `array`
 
 Collapses a multi-dimensional array into a single dimension:
 
-``` php
+```php
 $arr = [
     [
         'Post' => ['id' => '1', 'title' => 'First Post'],
@@ -736,7 +736,7 @@ Return type: `array`
 Returns a series of values extracted from an array, formatted in a
 format string:
 
-``` php
+```php
 $data = [
     ['Person' => ['first_name' => 'Nate', 'last_name' => 'Abele', 'city' => 'Boston', 'state' => 'MA', 'something' => '42']],
     ['Person' => ['first_name' => 'Larry', 'last_name' => 'Masters', 'city' => 'Boondock', 'state' => 'TN', 'something' => '{0}']],
@@ -800,7 +800,7 @@ Return type: `array`
 
 Inserts \$data into an array as defined by \$path.
 
-``` php
+```php
 $a = [
     'pages' => ['name' => 'page'],
 ];
@@ -865,7 +865,7 @@ class objects. By default it turns an array into a stdClass Object,
 however you can map values into any type of class. Example:
 Set::map(\$array_of_values, 'nameOfYourClass');:
 
-``` php
+```php
 $data = [
     [
         'IndexedPage' => [
@@ -926,7 +926,7 @@ $mapped = Set::map($data);
 
 Using Set::map() with a custom class for second parameter:
 
-``` php
+```php
 class MyClass
 {
     public function sayHi()
@@ -948,7 +948,7 @@ Return type: `boolean`
 Set::matches can be used to see if a single item or a given xpath
 match certain conditions.
 
-``` php
+```php
 $a = [
     ['Article' => ['id' => 1, 'title' => 'Article 1']],
     ['Article' => ['id' => 2, 'title' => 'Article 2']],
@@ -1001,7 +1001,7 @@ test for more information.
 > This function will work with an unlimited amount of arguments and
 > typecasts non-array parameters into arrays.
 
-``` php
+```php
 $arry1 = [
     [
         'id' => '48c2570e-dfa8-4c32-a35e-0d71cbdd56cb',
@@ -1048,7 +1048,7 @@ Return type: `array`
 
 Takes in a flat array and returns a nested array:
 
-``` php
+```php
 $data = [
     ['ModelName' => ['id' => 1, 'parent_id' => null]],
     ['ModelName' => ['id' => 2, 'parent_id' => 1]],
@@ -1111,7 +1111,7 @@ Return type: `array`
 
 Normalizes a string or array list.
 
-``` php
+```php
 $a = [
     'Tree',
     'CounterCache',
@@ -1215,7 +1215,7 @@ Return type: `boolean`
 
 Checks to see if all the values in the array are numeric:
 
-``` php
+```php
 $data = ['one'];
 $res = Set::numeric(array_keys($data));
 
@@ -1277,7 +1277,7 @@ array2 to the bottom of the resultant array.
 **Example 1**
 :
 
-``` php
+```php
 $array1 = ['ModelOne' => ['id' => 1001, 'field_one' => 'a1.m1.f1', 'field_two' => 'a1.m1.f2']];
 $array2 = ['ModelOne' => ['id' => 1003, 'field_one' => 'a3.m1.f1', 'field_two' => 'a3.m1.f2', 'field_three' => 'a3.m1.f3']];
 $res = Set::pushDiff($array1, $array2);
@@ -1297,7 +1297,7 @@ $res = Set::pushDiff($array1, $array2);
 **Example 2**
 :
 
-``` php
+```php
 $array1 = ['a' => 'b', 1 => 20938, 'c' => 'string'];
 $array2 = ['b' => 'b', 3 => 238, 'c' => 'string', ['extra_field']];
 $res = Set::pushDiff($array1, $array2);
@@ -1321,7 +1321,7 @@ Return type: `array`
 
 Removes an element from a Set or array as defined by \$path:
 
-``` php
+```php
 $a = [
     'pages' => ['name' => 'page'],
     'files' => ['name' => 'files'],
@@ -1346,7 +1346,7 @@ Set::reverse is basically the opposite of `Set::map`. It converts an
 object into an array. If \$object is not an object, reverse will
 simply return \$object.
 
-``` php
+```php
 $result = Set::reverse(null);
 // Null
 $result = Set::reverse(false);
@@ -1441,7 +1441,7 @@ Return type: `array`
 
 Sorts an array by any value, determined by a Set-compatible path:
 
-``` php
+```php
 $a = [
     0 => ['Person' => ['name' => 'Jeff'], 'Friend' => [['name' => 'Nate']]],
     1 => ['Person' => ['name' => 'Tracy'],'Friend' => [['name' => 'Lindsay']]],

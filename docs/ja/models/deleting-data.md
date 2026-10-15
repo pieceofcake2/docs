@@ -24,7 +24,7 @@ CakePHP の Model クラスではデータベースからレコードを削除�
 `Model::delete()` のカスケード機能を使うメリットのひとつは、
 ビヘイビアやモデルのコールバックを利用できることです。
 
-``` php
+```php
 $this->Comment->delete($this->request->data('Comment.id'));
 ```
 
@@ -55,7 +55,7 @@ $this->Comment->delete($this->request->data('Comment.id'));
 
 例:
 
-``` php
+```php
 // find() と同様に、配列で与えられた条件で削除する
 $this->Comment->deleteAll(['Comment.spam' => true], false);
 ```

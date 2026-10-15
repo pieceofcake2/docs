@@ -41,7 +41,7 @@ parent class to all of your application's controllers.
 CakePHP core library. `AppController` is defined in
 `src/Controller/AppController.php` as follows:
 
-``` php
+```php
 // src/Controller/AppController.php
 class AppController extends Controller
 {
@@ -75,7 +75,7 @@ the `Controller::$helpers` property in your `AppController`.
 Also remember to call `AppController`'s callbacks within child
 controller callbacks for best results:
 
-``` php
+```php
 public function beforeFilter()
 {
     parent::beforeFilter();
@@ -91,7 +91,7 @@ own classes are autoloaded by Composer, and the application skeleton
 ([pieceofcake2/app](https://pieceofcake2.github.io/app/)) registers your
 application classes with a Composer classmap in `composer.json`:
 
-``` json
+```json
 "autoload": {
     "classmap": ["src/"]
 }
@@ -128,7 +128,7 @@ name. Returning to our online bakery example, our RecipesController might contai
 `view()`, `share()`, and `search()` actions. The controller would be found
 in `src/Controller/RecipesController.php` and contain:
 
-``` php
+```php
 // src/Controller/RecipesController.php
 
 class RecipesController extends AppController
@@ -175,7 +175,7 @@ you will often want to return data that isn't a string. If you have controller
 methods that are used for normal web requests + requestAction, you should check
 the request type before returning:
 
-``` php
+```php
 class RecipesController extends AppController
 {
     public function popular()
@@ -241,7 +241,7 @@ the conventional one. You can do this by calling
 `Controller::render()` directly. Once you have called `Controller::render()`, CakePHP
 will not try to re-render the view:
 
-``` php
+```php
 class PostsController extends AppController
 {
     public function my_action()
@@ -258,7 +258,7 @@ You can also render views inside plugins using the following syntax:
 `$this->render('PluginName.PluginController/custom_file')`.
 For example:
 
-``` php
+```php
 class PostsController extends AppController
 {
     public function my_action()

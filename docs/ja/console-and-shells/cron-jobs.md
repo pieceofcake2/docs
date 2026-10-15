@@ -5,7 +5,7 @@ cronjobとして実行します。
 
 このように簡単な設定で行えます。
 
-``` text
+```text
 */5  *    *    *    *  cd /full/path/to/my_app && bin/cake myshell myparam
 # *    *    *    *    *  実行するコマンド
 # │    │    │    │    │

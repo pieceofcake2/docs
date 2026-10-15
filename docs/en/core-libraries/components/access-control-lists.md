@@ -216,7 +216,7 @@ By default, CakePHP's ACL is database-driven. To enable INI-based
 ACL, you'll need to tell CakePHP what system you're using by
 updating the following lines in `config/core.php`:
 
-``` php
+```php
 // Change these lines:
 Configure::write('Acl.classname', 'DbAcl');
 Configure::write('Acl.database', 'default');
@@ -240,7 +240,7 @@ deny properties.
 As an example, let's see how the Fellowship ARO structure we've
 been crafting would look in INI syntax:
 
-``` text
+```text
 ;-------------------------------------
 ; AROs
 ;-------------------------------------
@@ -315,7 +315,7 @@ To get started, first you'll need to make sure your
 Once you've done that, use the CakePHP console to create your ACL
 database tables:
 
-``` bash
+```bash
 $ bin/cake schema create DbAcl
 ```
 
@@ -323,7 +323,7 @@ Running this command will drop and re-create the tables necessary
 to store ACO and ARO information in tree format. The output of the
 console application should look something like the following:
 
-``` text
+```text
 ---------------------------------------------------------------
 Cake Schema Shell
 ---------------------------------------------------------------
@@ -416,7 +416,7 @@ Before we can create new ACL objects, we'll need to load up their
 respective classes. The easiest way to do this is to include CakePHP's
 ACL Component in your controller's \$components array:
 
-``` php
+```php
 public $components = ['Acl'];
 ```
 
@@ -436,7 +436,7 @@ via a controller action, but we could do it elsewhere.
 Our approach shouldn't be drastically new - we're just using
 models to save data like we always do:
 
-``` php
+```php
 public function any_action()
 {
     $aro = $this->Acl->Aro;
@@ -473,7 +473,7 @@ public function any_action()
 Once we've got the groups, we can use the ACL console
 application to verify the tree structure:
 
-``` bash
+```bash
 $ bin/cake acl view aro
 
 Aro tree:
@@ -500,7 +500,7 @@ specific model records in our database.
 > When adding child nodes to a tree, make sure to use the ACL node
 > ID, rather than a foreign_key value.
 
-``` php
+```php
 public function any_action()
 {
     $aro = new Aro();
@@ -587,7 +587,7 @@ public function any_action()
 The output of that console application command should now be a
 little more interesting. Let's give it a try:
 
-``` bash
+```bash
 $ bin/cake acl view aro
 
 Aro tree:
@@ -662,7 +662,7 @@ Here we'll work with Acl permisions in the context of a controller
 action. Let's set up some basic permissions using the AclComponent in
 an action inside our controller:
 
-``` php
+```php
 class SomethingsController extends AppController
 {
     // You might want to place this in the AppController
@@ -704,7 +704,7 @@ delete Weapons records. We're using the alias syntax to address the
 AROs above, but you might want to use the model/foreign key syntax
 yourself. What we have above is equivalent to this:
 
-``` php
+```php
 // 6342 = Legolas
 // 1564 = Gimli
 
@@ -738,13 +738,13 @@ remove things from the armory. At this point, we should be able to
 use the AclComponent to make a check between the ACOs and AROs
 we've created. The basic syntax for making a permissions check is:
 
-``` php
+```php
 $this->Acl->check($aro, $aco, $action = '*');
 ```
 
 Let's give it a try inside a controller action:
 
-``` php
+```php
 public function index()
 {
     // These all return true:

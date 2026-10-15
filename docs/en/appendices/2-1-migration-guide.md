@@ -9,7 +9,7 @@ These classes are now required to be part of the app directory, as they were
 removed from the CakePHP core. If you do not already have these classes, you
 can use the following while upgrading:
 
-``` php
+```php
 // app/View/Helper/AppHelper.php
 App::uses('Helper', 'View');
 class AppHelper extends Helper
@@ -233,7 +233,7 @@ The old testsuite shell and its syntax are still available.
 
 - `$scripts_for_layout` is deprecated. Use the following instead:
 
-  ``` php
+  ```php
   echo $this->fetch('meta');
   echo $this->fetch('css');
   echo $this->fetch('script');

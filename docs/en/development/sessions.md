@@ -45,7 +45,7 @@ non-SSL protocols, then you might have problems with sessions being lost. If
 you need access to the session on both SSL and non-SSL domains you will want to
 disable this:
 
-``` php
+```php
 Configure::write('Session', [
     'defaults' => 'php',
     'ini' => [
@@ -58,7 +58,7 @@ Session cookie paths default to the application's base path (`/` when the
 application is served from the document root). To change this you can use the
 `session.cookie_path` ini flag to the directory path of your application:
 
-``` php
+```php
 Configure::write('Session', [
     'defaults' => 'php',
     'ini' => [
@@ -72,7 +72,7 @@ session.gc_maxlifetime can override your setting for timeout. The default is
 24 minutes. Change this in your ini settings to get it to match longer
 sessions:
 
-``` php
+```php
 Configure::write('Session', [
     'defaults' => 'php',
     'timeout' => 2160, // 36 hours
@@ -90,7 +90,7 @@ custom solution. To use defaults, simply set the 'defaults' key to the name of
 the default you want to use. You can then override any sub setting by declaring
 it in your Session config:
 
-``` php
+```php
 Configure::write('Session', [
     'defaults' => 'php',
 ]);
@@ -99,7 +99,7 @@ Configure::write('Session', [
 The above will use the built-in 'php' session configuration. You could augment
 part or all of it by doing the following:
 
-``` php
+```php
 Configure::write('Session', [
     'defaults' => 'php',
     'cookie' => 'my_app',
@@ -125,7 +125,7 @@ object you want to use for session saving. There are two ways to use the
 'handler'. The first is to provide an array with 6 callables. These callables
 are then applied to `session_set_save_handler`:
 
-``` php
+```php
 Configure::write('Session', [
     'checkAgent' => false,
     'cookie' => 'my_cookie',
@@ -191,7 +191,7 @@ The changes in session configuration change how you define database sessions.
 Most of the time you will only need to set `Session.handler.model` in your
 configuration as well as choose the database defaults:
 
-``` php
+```php
 Configure::write('Session', [
     'defaults' => 'database',
     'handler' => [
@@ -207,7 +207,7 @@ session information to the database.
 If you do not need a fully custom session handler, but still require
 database-backed session storage, you can simplify the above code to:
 
-``` php
+```php
 Configure::write('Session', [
     'defaults' => 'database',
 ]);
@@ -216,7 +216,7 @@ Configure::write('Session', [
 This configuration will require a database table to be added with
 at least these fields:
 
-``` sql
+```sql
 CREATE TABLE `cake_sessions` (
   `id` varchar(255) NOT NULL DEFAULT '',
   `data` text,
@@ -228,7 +228,7 @@ CREATE TABLE `cake_sessions` (
 You can also use the schema shell to create this table using the schema file
 `config/Schema/sessions.php` provided in the app skeleton:
 
-``` bash
+```bash
 $ bin/cake schema create sessions
 ```
 
@@ -241,7 +241,7 @@ start to expire as records are evicted.
 
 To use Cache based sessions you can configure you Session config like:
 
-``` php
+```php
 Configure::write('Session', [
     'defaults' => 'cache',
     'handler' => [
@@ -263,7 +263,7 @@ configurations, as well as custom ones. The `ini` key in the session settings,
 allows you to specify individual configuration values. For example you can use
 it to control settings like `session.gc_divisor`:
 
-``` php
+```php
 Configure::write('Session', [
     'defaults' => 'php',
     'ini' => [
@@ -284,7 +284,7 @@ First we'll need to create our custom class and put it in
 `src/Model/Datasource/Session/ComboSession.php`. The class should look
 something like:
 
-``` php
+```php
 // src/Model/Datasource/Session/ComboSession.php
 class ComboSession extends DatabaseSession implements CakeSessionHandlerInterface
 {
@@ -347,7 +347,7 @@ operation. This lets us fetch sessions from the fast cache, and not have to
 worry about what happens when we fill the cache. Using this session handler is
 also easy. In your `config/core.php` make the session block look like the following:
 
-``` php
+```php
 Configure::write('Session', [
     'defaults' => 'database',
     'handler' => [
@@ -380,7 +380,7 @@ session, `CakeSession` provides a simple CRUD interface.
 You can read values from the session using `Set::classicExtract()`
 compatible syntax:
 
-``` php
+```php
 CakeSession::read('Config.language');
 ```
 
@@ -388,7 +388,7 @@ CakeSession::read('Config.language');
 
 `$key` should be the dot separated path you wish to write `$value` to:
 
-``` php
+```php
 CakeSession::write('Config.language', 'eng');
 ```
 
@@ -396,7 +396,7 @@ CakeSession::write('Config.language', 'eng');
 
 When you need to delete data from the session, you can use delete:
 
-``` php
+```php
 CakeSession::delete('Config.language');
 ```
 

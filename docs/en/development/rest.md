@@ -23,7 +23,7 @@ and other routes which would override the routes.
 If we wanted to allow REST access to a recipe database, we'd do
 something like this:
 
-``` php
+```php
 // config/routes.php
 
 Router::mapResources('recipes');
@@ -61,7 +61,7 @@ controller actions, we can move on to creating the logic in our
 controller actions. A basic controller might look something like
 this:
 
-``` php
+```php
 // src/Controller/RecipesController.php
 class RecipesController extends AppController
 {
@@ -143,7 +143,7 @@ the REST views for our RecipesController inside `templates/Recipes/xml`. We can 
 the `Xml` for quick-and-easy XML output in those views. Here's what
 our index view might look like:
 
-``` php
+```php
 // templates/Recipes/xml/index.ctp
 // Do some formatting and manipulation on
 // the $recipes array.
@@ -159,7 +159,7 @@ for our use in those views.
 
 The rendered XML will end up looking something like this:
 
-``` html
+```html
 <recipes>
     <recipe id="234" created="2008-06-13" modified="2008-06-14">
         <author id="23423" first_name="Billy" last_name="Bob"></author>
@@ -203,7 +203,7 @@ using `Router::resourceMap()`. This method allows you to set the
 default routes that get set with `Router::mapResources()`. When using
 this method you need to set *all* the defaults you want to use:
 
-``` php
+```php
 Router::resourceMap([
     ['action' => 'index', 'method' => 'GET', 'id' => false],
     ['action' => 'view', 'method' => 'GET', 'id' => true],
@@ -233,7 +233,7 @@ You can provide `connectOptions` key in the `$options` array for
 `Router::mapResources()` to provide custom setting used by
 `Router::connect()`:
 
-``` php
+```php
 Router::mapResources('books', [
     'connectOptions' => [
         'routeClass' => 'ApiRoute',

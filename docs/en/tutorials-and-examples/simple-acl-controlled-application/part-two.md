@@ -13,7 +13,7 @@ We're going to briefly describe how to use it to generate all our ACO's.
 
 Install the plugin with Composer:
 
-``` bash
+```bash
 composer require pieceofcake2/acl_extras
 ```
 
@@ -22,7 +22,7 @@ Composer installs it into `plugins/AclExtras/`, because the skeleton's
 [Installing a plugin with Composer](/plugins/how-to-install-plugins#composer).
 Then activate the plugin in your `config/bootstrap.php` file as shown below:
 
-``` php
+```php
 // config/bootstrap.php
 // ...
 CakePlugin::load('AclExtras');
@@ -59,7 +59,7 @@ Note: \* needs to be quoted ('\*')
 In order to allow with the `AclComponent` we would use the
 following code syntax in a custom method:
 
-``` php
+```php
 $this->Acl->allow($aroAlias, $acoAlias);
 ```
 
@@ -71,7 +71,7 @@ visit the address in your browser to run them (e.g.
 -1's. Once you've confirmed your permissions are set, remove the
 function:
 
-``` php
+```php
 public function beforeFilter()
 {
     parent::beforeFilter();
@@ -132,7 +132,7 @@ Now we want to take out the references to `Auth->allowedActions`
 in your users and groups controllers. Then add the following to
 your posts and widgets controllers:
 
-``` php
+```php
 public function beforeFilter()
 {
     parent::beforeFilter();
@@ -145,7 +145,7 @@ groups controllers, and gives public access on the index and view
 actions in posts and widgets controllers. In
 `AppController::beforeFilter()` add the following:
 
-``` php
+```php
 $this->Auth->allow('display');
 ```
 
@@ -162,7 +162,7 @@ we will need to create a login view before anyone can login. Add
 the following to `templates/Users/login.ctp` if you haven't done
 so already:
 
-``` php
+```php
 <!-- templates/Users/login.ctp -->
 <h2>Login</h2>
 <?php
@@ -180,7 +180,7 @@ echo $this->Form->end('Login');
 If a user is already logged in, redirect him by updating the `login()`
 action of your UsersController:
 
-``` php
+```php
 public function login()
 {
     if ($this->Auth->user()) {
@@ -208,7 +208,7 @@ Now onto the logout. Earlier we left this function blank, now is
 the time to fill it. In `UsersController::logout()` add the
 following:
 
-``` php
+```php
 $this->Flash->success(__('Good-Bye'));
 
 return $this->redirect($this->Auth->logout());

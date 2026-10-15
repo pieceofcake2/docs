@@ -5,7 +5,7 @@
 If you need `TimeHelper` functionalities outside of a `View`,
 use the `CakeTime` class:
 
-``` php
+```php
 class UsersController extends AppController
 {
     public $components = ['Auth'];

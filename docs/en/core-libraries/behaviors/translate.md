@@ -32,7 +32,7 @@ i18n table already, and answer with yes again to create the table.
 Add it to your model by using the `$actsAs` property like in the
 following example.
 
-``` php
+```php
 class Post extends AppModel
 {
     public $actsAs = [
@@ -51,7 +51,7 @@ created in the first step.
 You can set the fields by simply extending the `'Translate'`
 value with another array, like so:
 
-``` php
+```php
 class Post extends AppModel
 {
     public $actsAs = [
@@ -66,7 +66,7 @@ After you have done that (for example putting "title" as one of the
 fields) you already finished the basic setup. Great! According to
 our current example the model should now look something like this:
 
-``` php
+```php
 class Post extends AppModel
 {
     public $actsAs = [
@@ -93,7 +93,7 @@ When defining the fields that are translated you can also load translations via
 `LEFT JOIN` instead of the standard `INNER JOIN`. Doing this will allow you
 to load partially translated records:
 
-``` php
+```php
 class Post extends AppModel
 {
     public $actsAs = [
@@ -128,7 +128,7 @@ default on the fly using `$Model->locale`.
 
 By setting `$Model->locale` you can read translations for a specific locale:
 
-``` php
+```php
 // Read the spanish locale data.
 $this->Post->locale = 'es';
 $results = $this->Post->find('first', [
@@ -143,7 +143,7 @@ If you want to have all translation records attached to the current
 model record you simply extend the **field array** in your behavior
 setup as shown below. The naming is completely up to you.
 
-``` php
+```php
 class Post extends AppModel
 {
     public $actsAs = [
@@ -157,7 +157,7 @@ class Post extends AppModel
 With this setup the result of `$this->Post->find()` should look
 something like this:
 
-``` text
+```text
 
 [
      [Post] => 
@@ -214,7 +214,7 @@ using the bindTranslation method
 where the key is the translatable field and the value is the fake
 association name.
 
-``` php
+```php
 $this->Post->bindTranslation(['title' => 'titleTranslation']);
 // need at least recursive 1 for this to work.
 $this->Post->find('all', ['recursive' => 1]);
@@ -223,7 +223,7 @@ $this->Post->find('all', ['recursive' => 1]);
 With this setup the result of your find() should look something
 like this:
 
-``` text
+```text
 
 [
      [Post] => 
@@ -272,7 +272,7 @@ your controller or you can define it directly in the model.
 
 **Example A:** In your controller:
 
-``` php
+```php
 class PostsController extends AppController
 {
     public function add()
@@ -291,7 +291,7 @@ class PostsController extends AppController
 
 **Example B:** In your model:
 
-``` php
+```php
 class Post extends AppModel
 {
     public $actsAs = [
@@ -326,7 +326,7 @@ Lets say we want to save our translations for all posts in the
 table "post_i18ns" instead of the default "i18n" table. To do so
 you need to setup your model like this:
 
-``` php
+```php
 class Post extends AppModel
 {
     public $actsAs = [
@@ -356,7 +356,7 @@ displayField directly in the model using this behavior yet.
 
 Make sure that you change the `$displayField` to `'field'`.
 
-``` php
+```php
 class PostI18n extends AppModel
 {
     public $displayField = 'field'; // important
@@ -374,7 +374,7 @@ optional `$translateTable` comes into play.
 If you want to change the name of the table you simply define
 \$translateTable in your model, like so:
 
-``` php
+```php
 class Post extends AppModel
 {
     public $actsAs = [
