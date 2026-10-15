@@ -40,6 +40,9 @@ CakePHP は次の PHP 拡張モジュールも使用します。
   `php81_bc/strftime` に依存しており、このパッケージが `intl` を必要とします。
 - `openssl` は任意ですが、SSL/TLS 接続と [Security](core-utility-libraries/security)
   による AES 暗号化には必要です。
+- `mcrypt` は任意で、従来の `Security::rijndael()` と Cookie の `'rijndael'` タイプにだけ
+  必要です。PHP 7.2 以降には同梱されていません。
+  [PHP 8 での暗号化](/ja/security/fixes#php-8-での暗号化)を参照してください。
 
 ::: pieceofcake2
 PHP 8.0 以上が必要です。CakePHP は Composer の
