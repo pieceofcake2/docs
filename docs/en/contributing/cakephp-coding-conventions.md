@@ -885,7 +885,7 @@ such as `*/Controller/*` and `*/Test/Case/*`, match both layouts.
 To add exceptions for your own files, put rules after `<rule ref="CakePHP2"/>`;
 see [Adding Exceptions](https://pieceofcake2.github.io/phpcs-cakephp2/#adding-exceptions).
 If your `phpcs.xml` still lists the exceptions after `<rule ref="CakePHP">`, see
-[Migrating from a CakePHP-Based phpcs.xml](https://pieceofcake2.github.io/phpcs-cakephp2/#migrating-from-a-cakephp-based-phpcs-xml).
+[Migrating from a CakePHP-Based phpcs.xml](https://pieceofcake2.github.io/phpcs-cakephp2/#migrating-from-a-cakephp-based-phpcsxml).
 
 To introduce the standard into an existing application, run `phpcbf` once
 and commit the result separately from other changes, then fix the remaining
