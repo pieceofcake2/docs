@@ -12,9 +12,11 @@ to CakePHP 5 needs fewer formatting changes.
 
 The standard is checked automatically by
 [PHP_CodeSniffer](https://github.com/PHPCSStandards/PHP_CodeSniffer) with the
-`CakePHP` ruleset of
+`CakePHP2` standard of [pieceofcake2/phpcs-cakephp2](https://pieceofcake2.github.io/phpcs-cakephp2/) and a project `phpcs.xml` file. The `CakePHP2`
+standard is the `CakePHP` ruleset of
 [cakephp/cakephp-codesniffer](https://github.com/cakephp/cakephp-codesniffer)
-5.x and a project `phpcs.xml` file. Where this page and the result of `phpcs`
+5.x with the exceptions that CakePHP 2 code needs (see
+[The Exclusions Used for CakePHP 2](#the-exclusions-used-for-cakephp-2)). Where this page and the result of `phpcs`
 disagree, `phpcs` is authoritative. Contributions to the `pieceofcake2/*`
 repositories must pass `vendor/bin/phpcs` with no errors and no warnings (see
 [Coding Standard](https://github.com/pieceofcake2/.github/blob/master/CONTRIBUTING.md#coding-standard)
@@ -25,15 +27,16 @@ original CakePHP 2 standard, see
 ## Checking Your Code
 
 The framework and the [pieceofcake2/app](https://pieceofcake2.github.io/app/)
-application skeleton install the sniffer as a development dependency. To add it to an
+application skeleton install the standard as a development dependency. To add it to an
 existing application, run:
 
 ```bash
-composer require --dev cakephp/cakephp-codesniffer:^5.0
+composer require --dev pieceofcake2/phpcs-cakephp2
 ```
 
-Composer asks whether to allow the `dealerdirect/phpcodesniffer-composer-installer`
-plugin, which registers the CakePHP ruleset with PHP_CodeSniffer. Allow it, or
+This also installs PHP_CodeSniffer and cakephp/cakephp-codesniffer. Composer asks
+whether to allow the `dealerdirect/phpcodesniffer-composer-installer` plugin,
+which registers the `CakePHP2` and `CakePHP` standards with PHP_CodeSniffer. Allow it, or
 add it to `composer.json` yourself:
 
 ```json
@@ -113,7 +116,7 @@ The sniffer also checks blank lines:
 
 ## Line Length
 
-Line length is not checked: the framework's `phpcs.xml` excludes the
+Line length is not checked: the `CakePHP2` standard excludes the
 `Generic.Files.LineLength` sniff because much of the CakePHP 2 code base has
 long lines. Keep lines readable anyway; around 120 characters is a good limit
 for new code.
@@ -374,14 +377,16 @@ $ids = array_map(fn($row) => $row['Article']['id'], $rows);
 ### Type Declarations
 
 CakePHP 2 APIs do not use native parameter, property or return type
-declarations, so they are not required. The framework's `phpcs.xml` excludes the
-type hint rules of the CakePHP 5 standard, and `declare(strict_types=1)` is not
-required either. Describe the types in the DocBlock instead.
+declarations, so they are not required: the `CakePHP2` standard excludes the
+rules of the CakePHP 5 standard that require them, and
+`declare(strict_types=1)` is not required either. Describe the types in the
+DocBlock instead. A method needs either a native return type or a `@return`
+annotation.
 
-The application `phpcs.xml` excludes only the parameter and property type
-rules. A method therefore needs either a native return type or a `@return`
-annotation, and test methods in `tests/TestCase/` need native return types,
-which PHPUnit 9 requires for methods such as `setUp(): void` anyway.
+Native return types are still allowed where no subclass depends on the
+signature. Test methods use them, and PHPUnit 9 requires them for methods such
+as `setUp(): void`. The framework's own `phpcs.xml` excludes all type hint
+rules.
 
 You can still type hint arguments that expect objects or arrays:
 
@@ -738,8 +743,8 @@ prevent extension or re-use. Private visibility also makes testing much more
 difficult.
 
 Controller actions with a routing prefix, such as `admin_index()`, are not in
-camelBack. The `phpcs.xml` files of the framework and the application skeleton allow
-these names in controllers.
+camelBack. The `CakePHP2` standard allows these names in controllers, and
+underscored method names in shells and behaviors.
 
 ### Example Addresses
 
@@ -819,33 +824,39 @@ violation. You can look up the sniff in the
 ## The Exclusions Used for CakePHP 2
 
 The CakePHP 5 standard assumes namespaced code with native type declarations.
-The framework's
-[`phpcs.xml`](https://github.com/pieceofcake2/cakephp/blob/2.x/phpcs.xml)
-therefore excludes these rules:
+The `CakePHP2` standard of [pieceofcake2/phpcs-cakephp2](https://pieceofcake2.github.io/phpcs-cakephp2/) therefore excludes these rules:
 
 | Rules | Why |
 |-------|-----|
 | `PSR1.Classes.ClassDeclaration.MissingNamespace`, `PSR1.Files.SideEffects.FoundWithSymbols`, `Squiz.Classes.ClassFileName.NoMatch` | Classes live in the global namespace and may be loaded with `App::uses()`, which PSR-1 sees as a side effect. File names follow CakePHP 2 conventions. |
 | `SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedNameWithoutNamespace`, `SlevomatCodingStandard.Namespaces.FullyQualifiedClassNameInAnnotation.NonFullyQualifiedClassName` | Without namespaces, `use` statements and fully qualified names in annotations are not needed. |
-| `SlevomatCodingStandard.TypeHints` | CakePHP 2 APIs do not use native type declarations. |
+| `SlevomatCodingStandard.TypeHints.PropertyTypeHint`, `SlevomatCodingStandard.TypeHints.ParameterTypeHint`, `SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint`, `SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing` | CakePHP 2 APIs do not use native type declarations. |
 | `Zend.NamingConventions.ValidVariableName.StringVarNotCamelCaps`, `Zend.NamingConventions.ValidVariableName.PublicHasUnderscore`, `Zend.NamingConventions.ValidVariableName.PublicVarHasUnderscore` | CakePHP 2 uses names such as `$Model` and `$_locale`, and public properties with an underscore prefix. |
 | `SlevomatCodingStandard.ControlStructures.AssignmentInCondition.AssignmentInCondition` | `while ($row = $result->fetch())` is a common CakePHP 2 pattern. |
 | `CakePHP.Commenting.FunctionComment.SpacingAfter`, `Generic.Files.LineLength` | Blank lines after doc comments are allowed, and line length is not checked. |
 
 It also adds `Generic.Formatting.MultipleStatementAlignment` with a
 `maxPadding` of 1, so that `=` signs of consecutive assignments are not padded
-with extra spaces for alignment, and relaxes some rules only for specific paths. For example,
-non-camelBack method names are allowed in controllers and shells (for
-prefixed actions such as `admin_index()`), several classes per file and
-missing doc comments are allowed in tests, and the `DATABASE_CONFIG` class name
-is allowed in `database.php`.
+with extra spaces for alignment, and relaxes some rules only for specific paths:
+non-camelBack method names are allowed in controllers, shells and behaviors
+(for prefixed actions such as `admin_index()`), several classes per file and
+missing doc comments are allowed in tests, the `DATABASE_CONFIG` class name is
+allowed in `database.php`, and the `exit;` at the top of `acl.ini.php` is
+allowed. The
+[phpcs-cakephp2 documentation](https://pieceofcake2.github.io/phpcs-cakephp2/#rules)
+lists every rule with the reason.
+
+The framework's own
+[`phpcs.xml`](https://github.com/pieceofcake2/cakephp/blob/2.x/phpcs.xml)
+uses the `CakePHP2` standard as well, and adds exceptions for some of its own
+files.
 
 ## A phpcs.xml for Your Application
 
 The [pieceofcake2/app](https://pieceofcake2.github.io/app/) skeleton ships the
-following `phpcs.xml` for the modern directory layout. It uses the same
-exclusions as the framework, except that it excludes only the parameter and
-property type rules and requires native return types in `tests/TestCase/`:
+following `phpcs.xml` for the modern directory layout. All the CakePHP 2
+exceptions come from the `CakePHP2` standard, so the file only says what to
+check:
 
 ```xml
 <?xml version="1.0"?>
@@ -862,89 +873,19 @@ property type rules and requires native return types in `tests/TestCase/`:
     <file>./src</file>
     <file>./tests</file>
 
-    <rule ref="CakePHP">
-        <!-- ===== Namespace and Class Rules ===== -->
-        <!-- CakePHP2 uses App::uses() instead of namespaces -->
-        <exclude name="PSR1.Classes.ClassDeclaration.MissingNamespace"/>
-        <!-- CakePHP2 uses App::uses() which PSR1 considers side effects -->
-        <exclude name="PSR1.Files.SideEffects.FoundWithSymbols"/>
-        <!-- Don't enforce filename matching class name (CakePHP2 has specific conventions) -->
-        <exclude name="Squiz.Classes.ClassFileName.NoMatch"/>
-
-        <!-- ===== Namespace/Import Rules ===== -->
-        <!-- Allow fully qualified class names without namespace (CakePHP2 uses global namespace) -->
-        <exclude name="SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedNameWithoutNamespace"/>
-        <!-- Don't require fully qualified class names in annotations (CakePHP2 has no namespaces) -->
-        <exclude name="SlevomatCodingStandard.Namespaces.FullyQualifiedClassNameInAnnotation.NonFullyQualifiedClassName"/>
-
-        <!-- ===== Type Hints Rules ===== -->
-        <!-- Exclude type hints rules as CakePHP2 doesn't support PHP 7+ type declarations -->
-        <exclude name="SlevomatCodingStandard.TypeHints.PropertyTypeHint"/>
-        <exclude name="SlevomatCodingStandard.TypeHints.ParameterTypeHint"/>
-        <exclude name="SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing"/>
-
-        <!-- ===== Variable Naming Rules ===== -->
-        <!-- Allow CakePHP2 style variable naming ($Model, $LinkModel, $_locale, etc.) -->
-        <exclude name="Zend.NamingConventions.ValidVariableName.StringVarNotCamelCaps"/>
-        <!-- Allow underscore in public properties (CakePHP2 convention) -->
-        <exclude name="Zend.NamingConventions.ValidVariableName.PublicHasUnderscore"/>
-        <!-- Allow double underscore public properties (CakePHP2 internal convention) -->
-        <exclude name="Zend.NamingConventions.ValidVariableName.PublicVarHasUnderscore"/>
-
-        <!-- ===== Control Structure Rules ===== -->
-        <!-- Allow assignment in conditions (common pattern in CakePHP2: while ($row = $result->fetch())) -->
-        <exclude name="SlevomatCodingStandard.ControlStructures.AssignmentInCondition.AssignmentInCondition"/>
-
-        <!-- ===== Formatting Rules ===== -->
-        <!-- Allow blank lines after function comments (CakePHP2 style) -->
-        <exclude name="CakePHP.Commenting.FunctionComment.SpacingAfter"/>
-        <!-- Exclude line length checks for CakePHP2 -->
-        <exclude name="Generic.Files.LineLength"/>
-    </rule>
-
-    <!-- Include additional whitespace checking rule -->
-    <rule ref="Generic.Formatting.MultipleStatementAlignment">
-        <properties>
-            <property name="maxPadding" value="1"/>
-        </properties>
-    </rule>
-
-    <rule ref="CakePHP.Commenting.FunctionComment.Missing">
-        <exclude-pattern>tests/TestCase/*</exclude-pattern>
-    </rule>
-
-    <!-- Allow multiple classes in test files only (CakePHP2 test pattern) -->
-    <rule ref="PSR1.Classes.ClassDeclaration.MultipleClasses">
-        <exclude-pattern>tests/TestCase/*</exclude-pattern>
-    </rule>
-
-    <!-- Allow non-camelCase method names in Controllers (CakePHP2 action naming convention) -->
-    <rule ref="PSR1.Methods.CamelCapsMethodName.NotCamelCaps">
-        <exclude-pattern>src/Controller/*</exclude-pattern>
-        <exclude-pattern>src/Console/Command/*</exclude-pattern>
-        <exclude-pattern>src/Model/Behavior/*</exclude-pattern>
-    </rule>
-
-    <!-- Require return type hints for Test/Case only -->
-    <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint">
-        <include-pattern>tests/TestCase/*</include-pattern>
-    </rule>
-
-    <rule ref="Squiz.Classes.ValidClassName.NotPascalCase">
-        <exclude-pattern>config/database.php</exclude-pattern>
-    </rule>
-
-    <rule ref="Squiz.PHP.NonExecutableCode.Unreachable">
-        <exclude-pattern>config/acl.ini.php</exclude-pattern>
-    </rule>
+    <rule ref="CakePHP2"/>
 </ruleset>
 ```
 
 If your application uses the legacy `app/` layout, change the `<file>`
-entries and the patterns to the legacy paths, for example `./app/Config`,
-`./app/Controller`, `./app/Model` and `./app/Test` instead of `./config`,
-`./src` and `./tests`, and `app/Controller/*` and `app/Test/Case/*` instead of
-`src/Controller/*` and `tests/TestCase/*`.
+entries to the legacy paths, for example `./app/Config`, `./app/Controller`,
+`./app/Model`, `./app/View` and `./app/Test`. The patterns in the standard,
+such as `*/Controller/*` and `*/Test/Case/*`, match both layouts.
+
+To add exceptions for your own files, put rules after `<rule ref="CakePHP2"/>`;
+see [Adding Exceptions](https://pieceofcake2.github.io/phpcs-cakephp2/#adding-exceptions).
+If your `phpcs.xml` still lists the exceptions after `<rule ref="CakePHP">`, see
+[Migrating from a CakePHP-Based phpcs.xml](https://pieceofcake2.github.io/phpcs-cakephp2/#migrating-from-a-cakephp-based-phpcs-xml).
 
 To introduce the standard into an existing application, run `phpcbf` once
 and commit the result separately from other changes, then fix the remaining
