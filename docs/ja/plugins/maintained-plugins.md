@@ -20,8 +20,8 @@ GitHub のリポジトリにリンクしています。
 - [PHPStan CakePHP](https://pieceofcake2.github.io/phpstan-cakephp2/) - 静的解析用の PHPStan 拡張
   ([静的解析](/ja/development/static-analysis) を参照してください)
 - [E2E Test](https://pieceofcake2.github.io/e2e-test/) - PHPUnit と Symfony Panther による
-  ブラウザでのエンドツーエンドテスト (Chrome、PC とスマートフォン)
-  ([エンドツーエンドテスト](/ja/development/e2e-testing) を参照してください)
+  ブラウザでのEnd-to-End テスト (Chrome、PC とスマートフォン)
+  ([End-to-End テスト](/ja/development/e2e-testing) を参照してください)
 
 ## メンテナンスしているプラグイン
 
