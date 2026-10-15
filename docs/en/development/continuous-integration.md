@@ -25,9 +25,9 @@ first three: `phpunit.xml.dist`, `phpcs.xml` and `phpstan.neon`, with PHPUnit,
 the CakePHP codesniffer, PHPStan and
 [pieceofcake2/phpstan-cakephp2](https://pieceofcake2.github.io/phpstan-cakephp2/)
 as development dependencies. Its `phpunit.xml.dist` also has an `EndToEnd` test
-suite next to the default `App` suite. End-to-End (E2E) tests need
-[pieceofcake2/e2e-test](https://pieceofcake2.github.io/e2e-test/) and a little
-setup; add that job when you have E2E tests.
+suite next to the default `App` suite. End-to-End tests need
+[pieceofcake2/panther](https://pieceofcake2.github.io/panther/) and a little
+setup; add that job when you have End-to-End tests.
 
 ## A GitHub Actions Workflow
 
@@ -260,28 +260,22 @@ jobs:
       - name: Create config/database.php
         run: cp config/database.php.default config/database.php
 
-      # Chrome for Testing and the matching chromedriver
-      - name: Setup Chrome
-        id: setup-chrome
-        uses: browser-actions/setup-chrome@v2
-        with:
-          chrome-version: stable
-          install-chromedriver: true
+      # The chromedriver that matches the Chrome of the runner
+      - name: Install chromedriver for the installed Chrome
+        run: vendor/bin/bdi detect drivers
 
       - name: Run End-to-End tests
         env:
-          PANTHER_CHROME_BINARY: ${{ steps.setup-chrome.outputs.chrome-path }}
-          PANTHER_CHROME_DRIVER_BINARY: ${{ steps.setup-chrome.outputs.chromedriver-path }}
           PANTHER_NO_SANDBOX: 1
         run: vendor/bin/phpunit --testsuite EndToEnd
 
-      # Screenshots, HTML and server logs of the failed tests
-      - name: Upload End-to-End artifacts
+      # Screenshots of the failed tests (PANTHER_ERROR_SCREENSHOT_DIR)
+      - name: Upload the error screenshots
         if: ${{ failure() }}
         uses: actions/upload-artifact@v7
         with:
-          name: e2e-artifacts
-          path: tmp/e2e-artifacts/
+          name: error-screenshots
+          path: tmp/error-screenshots/
           retention-days: 7
           if-no-files-found: ignore
 ```
@@ -414,23 +408,27 @@ configuration, the rule level and the baseline.
 ### End-to-End Tests {#e2e-tests}
 
 The `end-to-end` job runs the browser tests of
-[pieceofcake2/e2e-test](https://pieceofcake2.github.io/e2e-test/), the
+[pieceofcake2/panther](https://pieceofcake2.github.io/panther/), the
 `EndToEnd` suite of the same `phpunit.xml.dist`. It is a separate job, so the
 PHPUnit job keeps running only the `App` suite (`defaultTestSuite="App"`) and
 needs no browser. If you removed `defaultTestSuite`, run the PHPUnit job with
 `--testsuite App`. The `end-to-end` job needs the database, like the PHPUnit
-job: `E2E_SERVER_DATASOURCE=test` in `phpunit.xml.dist` passes the `DB_TEST_*`
-values to the application server. It also needs a Chrome that matches its
-chromedriver, which [setup-chrome](https://github.com/browser-actions/setup-chrome)
-installs. Run it on one PHP version: it is slower than the other jobs.
+job: `PANTHER_APP_ENV=test` in `phpunit.xml.dist` makes the web server use the
+test datasource, and the web server inherits the `DB_TEST_*` values. The
+`ubuntu-latest` runner has Chrome, and `vendor/bin/bdi detect drivers`
+([bdi](https://github.com/dbrekelmans/bdi), a development dependency) installs
+the matching chromedriver. `PANTHER_NO_SANDBOX=1` is needed on the GitHub
+runners. Run the job on one PHP version: it is slower than the other jobs.
 
-When a test fails, the tests save a screenshot, the page HTML and the server
-logs to `tmp/e2e-artifacts/`; the upload step keeps them as an artifact of the
-run for 7 days. If you set `E2E_ARTIFACTS_DIR`, make the `path` match. If your
-build creates CSS or JavaScript files, build them before the End-to-End tests.
+When a test fails, it saves a screenshot to `tmp/error-screenshots/`
+(`PANTHER_ERROR_SCREENSHOT_DIR`); the upload step keeps the screenshots as an
+artifact of the run for 7 days. If you set another directory, make the `path`
+match. If your build creates CSS or JavaScript files, build them before the
+End-to-End tests.
 
-See [End-to-End Testing](/development/e2e-testing#continuous-integration) and the
-[CI section of the e2e-test documentation](https://pieceofcake2.github.io/e2e-test/#ci-with-github-actions).
+See [End-to-End Testing](/development/e2e-testing#continuous-integration) and
+[CI with GitHub Actions](https://pieceofcake2.github.io/panther/ci) in the
+panther documentation.
 
 ## Job Summaries
 
@@ -508,15 +506,13 @@ The action also reads PHPStan's JSON output (`--error-format=json`).
 
 Write a JUnit report in the End-to-End step, and pass the name of the uploaded
 artifact as `artifact-name`. When tests failed, the summary adds a line that
-links to the artifacts of the run, where the screenshots and logs are:
+links to the artifacts of the run, where the screenshots are:
 
 ```yaml
 - name: Run End-to-End tests
   env:
-    PANTHER_CHROME_BINARY: ${{ steps.setup-chrome.outputs.chrome-path }}
-    PANTHER_CHROME_DRIVER_BINARY: ${{ steps.setup-chrome.outputs.chromedriver-path }}
     PANTHER_NO_SANDBOX: 1
-  run: vendor/bin/phpunit --testsuite EndToEnd --log-junit e2e-junit.xml
+  run: vendor/bin/phpunit --testsuite EndToEnd --log-junit end-to-end-junit.xml
 
 # ... the upload step
 
@@ -526,16 +522,14 @@ links to the artifacts of the run, where the screenshots and logs are:
   with:
     type: junit
     title: End-to-End
-    file: e2e-junit.xml
-    artifact-name: e2e-artifacts
-    artifact-note: Screenshots, page HTML and server logs of the failed tests are in the {artifact} artifact.
+    file: end-to-end-junit.xml
+    artifact-name: error-screenshots
+    artifact-note: Screenshots of the failed tests are in the {artifact} artifact.
 ```
-
-![Job summary of failed E2E tests with a link to the artifact](/ci-summary-e2e-failure.png)
 
 Use the same name as in the upload step. If the `end-to-end` job runs in a matrix,
 give each job its own artifact name, for example
-<code v-pre>e2e-artifacts-php${{ matrix.php-version }}</code>, in both steps.
+<code v-pre>error-screenshots-php${{ matrix.php-version }}</code>, in both steps.
 
 ### Versions
 

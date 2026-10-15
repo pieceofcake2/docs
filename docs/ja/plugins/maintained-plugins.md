@@ -20,8 +20,7 @@ AI ツールから直接読み込めます。
 
 - [PHPStan CakePHP](https://pieceofcake2.github.io/phpstan-cakephp2/) ([Markdown](https://github.com/pieceofcake2/phpstan-cakephp2/blob/main/docs/README.md)) - 静的解析用の PHPStan 拡張
   ([静的解析](/ja/development/static-analysis) を参照してください)
-- [E2E Test](https://pieceofcake2.github.io/e2e-test/) ([Markdown](https://github.com/pieceofcake2/e2e-test/blob/1.x/docs/README.md)) - PHPUnit と Symfony Panther による
-  ブラウザでの End-to-End テスト (Chrome、PC とスマートフォン)
+- [Panther](https://pieceofcake2.github.io/panther/) ([Markdown](https://github.com/pieceofcake2/panther/blob/1.x/docs/README.md)) - Symfony Panther による End-to-End テスト
   ([End-to-End テスト](/ja/development/e2e-testing) を参照してください)
 
 ## メンテナンスしているプラグイン
@@ -110,7 +109,7 @@ Composer のオートロードに対応していないプラグインでは、�
 | [pieceofcake2/bake](https://github.com/pieceofcake2/bake) | [cakephp/cakephp](https://github.com/cakephp/cakephp) がベース (BakeShell) | CakePHP コミュニティ (Cake Software Foundation, Inc.) | 2.10.24 |
 | [pieceofcake2/upgrade](https://github.com/pieceofcake2/upgrade) | [cakephp/cakephp](https://github.com/cakephp/cakephp) がベース (UpgradeShell) | CakePHP コミュニティ (Cake Software Foundation, Inc.) | 2.10.24 |
 | [pieceofcake2/phpstan-cakephp2](https://github.com/pieceofcake2/phpstan-cakephp2) | [sidz/phpstan-cakephp2](https://github.com/sidz/phpstan-cakephp2) のフォーク | Oleg Zhulnev | 0.2.0 |
-| [pieceofcake2/e2e-test](https://github.com/pieceofcake2/e2e-test) | オリジナル | - | - |
+| [pieceofcake2/panther](https://github.com/pieceofcake2/panther) | オリジナル | - | - |
 | [pieceofcake2/debug_kit](https://github.com/pieceofcake2/debug_kit) | [cakephp/debug_kit](https://github.com/cakephp/debug_kit) のフォーク | Mark Story、CakePHP コミュニティ (Cake Software Foundation、Inc.) | 2.2.9 |
 | [pieceofcake2/aws](https://github.com/pieceofcake2/aws) | オリジナル | - | - |
 | [pieceofcake2/async-aws](https://github.com/pieceofcake2/async-aws) | オリジナル | - | - |

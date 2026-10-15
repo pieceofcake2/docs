@@ -57,7 +57,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
 - [Output Escaping and HTML Sanitization](/security/escaping-and-sanitizing-html)
 - [Migrating Tests to PHPUnit 9.6](/appendices/phpunit-9-migration-hints)
 - [Integration Testing](/development/integration-testing)
-- [End-to-End Testing](/development/e2e-testing)
+- [End-to-End Testing](/development/e2e-testing) (pieceofcake2/panther)
 - [Maintained Plugins](/plugins/maintained-plugins)
 - [Static Analysis](/development/static-analysis)
 - [Continuous Integration](/development/continuous-integration) (the CI job summaries subsection moved here from Static Analysis)
@@ -352,7 +352,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - Test suites use TESTS . 'TestCase'; note that `phpunit.xml.dist` makes AllTests optional
   - Plugin tests in `plugins/<Name>/tests/TestCase` (`Test/Case` fallback)
   - Jenkins: moved to the end of the new Continuous Integration page (after the GitHub Actions workflow), with `composer install` step, `config/database.php`, `vendor/bin/phpunit` and jenkins.io links; ja: explicit test-database-setup and generating-code-coverage anchors
-  - New "Types of Tests" section: unit tests with fixtures, controller tests with testAction() and browser end-to-end (E2E) tests (links to End-to-End Testing); ja: explicit testing-controllers anchor
+  - New "Types of Tests" section: unit tests with fixtures, controller tests with testAction() and browser End-to-End tests (links to End-to-End Testing); ja: explicit testing-controllers anchor
   - "Types of Tests" also lists integration tests with `IntegrationTestTrait` (links to Integration Testing) and notes that `ControllerTestCase` remains supported; tip linking to Integration Testing in "Testing Controllers"
 - [REST](/development/rest)
   - Paths updated to `config/routes.php`, `src/Controller` and `templates/Recipes/xml`

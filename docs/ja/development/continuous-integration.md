@@ -24,9 +24,9 @@ CakePHP 2 のアプリケーションでは、通常、次のジョブを実行�
 `phpstan.neon` が含まれており、PHPUnit、CakePHP のコードスニファー、PHPStan、
 [pieceofcake2/phpstan-cakephp2](https://pieceofcake2.github.io/phpstan-cakephp2/) が開発用の
 依存パッケージになっています。`phpunit.xml.dist` には、デフォルトの `App` スイートのほかに
-`EndToEnd` テストスイートもあります。End-to-End (E2E) テストには
-[pieceofcake2/e2e-test](https://pieceofcake2.github.io/e2e-test/) と少しのセットアップが必要です。
-E2E テストを書いたら、このジョブを追加してください。
+`EndToEnd` テストスイートもあります。End-to-End テストには
+[pieceofcake2/panther](https://pieceofcake2.github.io/panther/) と少しのセットアップが必要です。
+End-to-End テストを書いたら、このジョブを追加してください。
 
 <a id="a-github-actions-workflow"></a>
 
@@ -260,28 +260,22 @@ jobs:
       - name: Create config/database.php
         run: cp config/database.php.default config/database.php
 
-      # Chrome for Testing and the matching chromedriver
-      - name: Setup Chrome
-        id: setup-chrome
-        uses: browser-actions/setup-chrome@v2
-        with:
-          chrome-version: stable
-          install-chromedriver: true
+      # The chromedriver that matches the Chrome of the runner
+      - name: Install chromedriver for the installed Chrome
+        run: vendor/bin/bdi detect drivers
 
       - name: Run End-to-End tests
         env:
-          PANTHER_CHROME_BINARY: ${{ steps.setup-chrome.outputs.chrome-path }}
-          PANTHER_CHROME_DRIVER_BINARY: ${{ steps.setup-chrome.outputs.chromedriver-path }}
           PANTHER_NO_SANDBOX: 1
         run: vendor/bin/phpunit --testsuite EndToEnd
 
-      # Screenshots, HTML and server logs of the failed tests
-      - name: Upload End-to-End artifacts
+      # Screenshots of the failed tests (PANTHER_ERROR_SCREENSHOT_DIR)
+      - name: Upload the error screenshots
         if: ${{ failure() }}
         uses: actions/upload-artifact@v7
         with:
-          name: e2e-artifacts
-          path: tmp/e2e-artifacts/
+          name: error-screenshots
+          path: tmp/error-screenshots/
           retention-days: 7
           if-no-files-found: ignore
 ```
@@ -411,23 +405,24 @@ PHPStan のジョブは、
 
 ### End-to-End テスト {#e2e-テスト}
 
-`end-to-end` ジョブは、[pieceofcake2/e2e-test](https://pieceofcake2.github.io/e2e-test/) の
+`end-to-end` ジョブは、[pieceofcake2/panther](https://pieceofcake2.github.io/panther/) の
 ブラウザーテスト、つまり同じ `phpunit.xml.dist` の `EndToEnd` スイートを実行します。別のジョブに
 するので、PHPUnit のジョブは引き続き `App` スイートだけを実行し (`defaultTestSuite="App"`)、
 ブラウザーは不要です。`defaultTestSuite` を削除した場合は、PHPUnit のジョブを `--testsuite App` で
 実行してください。`end-to-end` ジョブには PHPUnit のジョブと同じくデータベースが必要です。
-`phpunit.xml.dist` の `E2E_SERVER_DATASOURCE=test` が `DB_TEST_*` の値をアプリケーションの
-サーバーに渡します。さらに chromedriver とバージョンの合った Chrome が必要です。これは
-[setup-chrome](https://github.com/browser-actions/setup-chrome) がインストールします。
-ほかのジョブより時間がかかるので、1 つの PHP のバージョンで実行してください。
+`phpunit.xml.dist` の `PANTHER_APP_ENV=test` によって Web サーバーはテスト用データソースを使い、
+Web サーバーは `DB_TEST_*` の値を引き継ぎます。`ubuntu-latest` のランナーには Chrome があり、
+`vendor/bin/bdi detect drivers` (開発用の依存パッケージの [bdi](https://github.com/dbrekelmans/bdi))
+が対応する chromedriver をインストールします。GitHub のランナーでは `PANTHER_NO_SANDBOX=1` が
+必要です。ほかのジョブより時間がかかるので、1 つの PHP のバージョンで実行してください。
 
-テストが失敗すると、スクリーンショット、ページの HTML、サーバーのログが `tmp/e2e-artifacts/` に
-保存されます。アップロードのステップは、それらを実行結果のアーティファクトとして 7 日間保存します。
-`E2E_ARTIFACTS_DIR` を設定した場合は、`path` をそれに合わせてください。ビルドで CSS や JavaScript の
+テストが失敗すると、スクリーンショットが `tmp/error-screenshots/` (`PANTHER_ERROR_SCREENSHOT_DIR`)
+に保存されます。アップロードのステップは、それらを実行結果のアーティファクトとして 7 日間保存します。
+別のディレクトリを設定した場合は、`path` をそれに合わせてください。ビルドで CSS や JavaScript の
 ファイルを生成する場合は、End-to-End テストの前にビルドしてください。
 
-[End-to-End テスト](/ja/development/e2e-testing#continuous-integration) と
-[e2e-test のドキュメントの CI の節](https://pieceofcake2.github.io/e2e-test/#ci-with-github-actions)
+[End-to-End テスト](/ja/development/e2e-testing#continuous-integration) と、panther の
+ドキュメントの [CI with GitHub Actions](https://pieceofcake2.github.io/panther/ci)
 を参照してください。
 
 <a id="job-summaries"></a>
@@ -507,16 +502,14 @@ PHPStan のジョブは、
 ### End-to-End テスト {#e2e-テスト-1}
 
 End-to-End のステップで JUnit のレポートを書き出し、アップロードするアーティファクトの名前を
-`artifact-name` に渡します。テストが失敗した場合、サマリーには、スクリーンショットやログがある
+`artifact-name` に渡します。テストが失敗した場合、サマリーには、スクリーンショットがある
 実行結果のアーティファクトへのリンクの行が追加されます。
 
 ```yaml
 - name: Run End-to-End tests
   env:
-    PANTHER_CHROME_BINARY: ${{ steps.setup-chrome.outputs.chrome-path }}
-    PANTHER_CHROME_DRIVER_BINARY: ${{ steps.setup-chrome.outputs.chromedriver-path }}
     PANTHER_NO_SANDBOX: 1
-  run: vendor/bin/phpunit --testsuite EndToEnd --log-junit e2e-junit.xml
+  run: vendor/bin/phpunit --testsuite EndToEnd --log-junit end-to-end-junit.xml
 
 # ... the upload step
 
@@ -526,15 +519,13 @@ End-to-End のステップで JUnit のレポートを書き出し、アップ�
   with:
     type: junit
     title: End-to-End
-    file: e2e-junit.xml
-    artifact-name: e2e-artifacts
-    artifact-note: Screenshots, page HTML and server logs of the failed tests are in the {artifact} artifact.
+    file: end-to-end-junit.xml
+    artifact-name: error-screenshots
+    artifact-note: Screenshots of the failed tests are in the {artifact} artifact.
 ```
 
-![アーティファクトへのリンクがある、失敗した E2E テストのジョブサマリー](/ci-summary-e2e-failure.png)
-
 名前はアップロードのステップと同じにしてください。`end-to-end` ジョブをマトリックスで実行する場合は、
-両方のステップで、たとえば <code v-pre>e2e-artifacts-php${{ matrix.php-version }}</code> のように、ジョブごとに
+両方のステップで、たとえば <code v-pre>error-screenshots-php${{ matrix.php-version }}</code> のように、ジョブごとに
 別のアーティファクト名を付けてください。
 
 <a id="versions"></a>

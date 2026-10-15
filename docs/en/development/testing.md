@@ -23,7 +23,7 @@ A CakePHP application is usually tested on these levels:
   components, and check the response, the session, cookies, flash messages and
   the emails sent. They also run in the PHPUnit process without an HTTP server.
   See [Integration Testing](/development/integration-testing).
-- **Browser End-to-End (E2E) tests** start the application with a web server
+- **Browser End-to-End tests** start the application with a web server
   and use it through a real browser, including JavaScript, cookies, sessions
   and `SecurityComponent` tokens. They are slower, so keep them for the main
   user flows. They live in `tests/TestCase/EndToEnd/` and run as the
@@ -258,9 +258,9 @@ The recommended way to run tests is from the command line. The
          stderr="true"
          colors="true">
     <php>
-        <!-- Configuration of the End-to-End tests -->
-        <env name="E2E_SERVER_DATASOURCE" value="test"/>
-        <env name="E2E_SERVER_ENV_DEBUG" value="0"/>
+        <!-- Configuration of the End-to-End tests (pieceofcake2/panther) -->
+        <server name="PANTHER_APP_ENV" value="test"/>
+        <server name="PANTHER_ERROR_SCREENSHOT_DIR" value="./tmp/error-screenshots"/>
     </php>
     <listeners>
         <listener class="CakeFixtureInjector" file="./vendor/pieceofcake2/cakephp/src/Cake/TestSuite/Fixture/CakeFixtureInjector.php"/>
@@ -296,7 +296,7 @@ vendor/bin/phpunit --testsuite App,EndToEnd
 ```
 
 Delete the `defaultTestSuite` attribute to make `vendor/bin/phpunit` run every
-suite, as a Symfony application does. The `<env>` entries configure the
+suite, as a Symfony application does. The `PANTHER_*` entries configure the
 End-to-End tests and have no effect on the other tests.
 
 <a id="run-tests-from-command-line"></a>

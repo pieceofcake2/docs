@@ -21,8 +21,7 @@ directly.
 
 - [PHPStan CakePHP](https://pieceofcake2.github.io/phpstan-cakephp2/) ([Markdown](https://github.com/pieceofcake2/phpstan-cakephp2/blob/main/docs/README.md)) - PHPStan extension for static analysis
   (see [Static Analysis](/development/static-analysis))
-- [E2E Test](https://pieceofcake2.github.io/e2e-test/) ([Markdown](https://github.com/pieceofcake2/e2e-test/blob/1.x/docs/README.md)) - Browser end-to-end tests
-  with PHPUnit and Symfony Panther (Chrome, PC and mobile)
+- [Panther](https://pieceofcake2.github.io/panther/) ([Markdown](https://github.com/pieceofcake2/panther/blob/1.x/docs/README.md)) - End-to-End tests with Symfony Panther
   (see [End-to-End Testing](/development/e2e-testing))
 
 ## Maintained plugins
@@ -112,7 +111,7 @@ and its LICENSE file keeps the copyright notices of the original authors.
 | [pieceofcake2/bake](https://github.com/pieceofcake2/bake) | Based on [cakephp/cakephp](https://github.com/cakephp/cakephp) (BakeShell) | CakePHP community (Cake Software Foundation, Inc.) | 2.10.24 |
 | [pieceofcake2/upgrade](https://github.com/pieceofcake2/upgrade) | Based on [cakephp/cakephp](https://github.com/cakephp/cakephp) (UpgradeShell) | CakePHP community (Cake Software Foundation, Inc.) | 2.10.24 |
 | [pieceofcake2/phpstan-cakephp2](https://github.com/pieceofcake2/phpstan-cakephp2) | Fork of [sidz/phpstan-cakephp2](https://github.com/sidz/phpstan-cakephp2) | Oleg Zhulnev | 0.2.0 |
-| [pieceofcake2/e2e-test](https://github.com/pieceofcake2/e2e-test) | Original | - | - |
+| [pieceofcake2/panther](https://github.com/pieceofcake2/panther) | Original | - | - |
 | [pieceofcake2/debug_kit](https://github.com/pieceofcake2/debug_kit) | Fork of [cakephp/debug_kit](https://github.com/cakephp/debug_kit) | Mark Story and the CakePHP community (Cake Software Foundation, Inc.) | 2.2.9 |
 | [pieceofcake2/aws](https://github.com/pieceofcake2/aws) | Original | - | - |
 | [pieceofcake2/async-aws](https://github.com/pieceofcake2/async-aws) | Original | - | - |
