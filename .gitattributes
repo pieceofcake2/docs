@@ -1,0 +1,21 @@
+# Define the line ending behavior of the different file extensions
+# Set default behaviour, in case users don't have core.autocrlf set.
+* text=auto
+* text eol=lf
+
+# Denote all files that are truly binary and should not be modified.
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+
+# Exclude the site build tooling from Composer dist archives. The archive
+# keeps the Markdown pages (docs/en, docs/ja), the images they reference
+# (docs/public), the table of contents files, README and LICENSE.
+/.editorconfig export-ignore
+/.gitattributes export-ignore
+/.github export-ignore
+/.gitignore export-ignore
+/bin export-ignore
+/config.js export-ignore
+/Dockerfile export-ignore
