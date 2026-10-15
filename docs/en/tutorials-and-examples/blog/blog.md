@@ -170,7 +170,7 @@ file was found, and that CakePHP can successfully connect to the database.
 
 > [!NOTE]
 > Remember that you'll need to have PDO, and pdo_mysql enabled in
-> your php.ini.
+> your `php.ini`.
 
 ## Optional Configuration
 

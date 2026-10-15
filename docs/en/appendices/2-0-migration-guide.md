@@ -100,7 +100,7 @@ In your `app/webroot/.htaccess` replace line `RewriteRule ^(.*)$ index.php?url=$
 The `app/app_controller.php`, `app/app_model.php`, `app/app_helper.php` are now located and
 named as `app/Controller/AppController.php`, `app/Model/AppModel.php` and `app/View/Helper/AppHelper.php` respectively.
 
-Also all shell/task now extend AppShell. You can have your custom AppShell.php at `app/Console/Command/AppShell.php`
+Also all shell/task now extend AppShell. You can have your custom `AppShell.php` at `app/Console/Command/AppShell.php`
 
 ## Internationalization / Localization
 
@@ -200,7 +200,7 @@ change. See the CakeRequest new features for more information.
 CakePHP no longer uses `$_GET['url']` for handling application request paths.
 Instead it uses `$_SERVER['PATH_INFO']`. This provides a more uniform way of
 handling requests between servers with URL rewriting and those without. Because
-of these changes, you'll need to update your .htaccess files and
+of these changes, you'll need to update your `.htaccess` files and
 `app/webroot/index.php`, as these files were changed to accommodate the
 changes. Additionally `$this->params['url']['url']` no longer exists. Instead
 you should be using \$this-\>request-\>url to access the same value.
@@ -541,7 +541,7 @@ Cache::write('key', $value, 'something');
   `Router::DAY`, `Router::ID`, and `Router::UUID` instead.
 
 - `Router::defaults()` has been removed. Delete the core routes file
-  inclusion from your applications routes.php file to disable default routing.
+  inclusion from your applications `routes.php` file to disable default routing.
   Conversely if you want default routing, you will have to add an include to
   `Cake/Config/routes.php` in your routes file.
 
@@ -564,7 +564,7 @@ Cache::write('key', $value, 'something');
 
   To your routes file for each plugin you need short routes on.
 
-Your app/Config/routes.php file needs to be updated adding this line at the bottom of the file:
+Your `app/Config/routes.php` file needs to be updated adding this line at the bottom of the file:
 
 ``` text
 require CAKE . 'Config' . DS . 'routes.php';
@@ -1164,8 +1164,8 @@ and helpers you wish to use. In the past:
 public $components = ['Session', 'Comments'];
 ```
 
-Would look in the controller's plugin before checking app/core components. It
-will now only look in the app/core components. If you wish to use objects from a
+Would look in the controller's plugin before checking `app/core` components. It
+will now only look in the `app/core` components. If you wish to use objects from a
 plugin you must put the plugin name:
 
 ``` php

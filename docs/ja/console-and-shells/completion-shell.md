@@ -18,7 +18,9 @@ Completion シェルは、開発者が補完スクリプトの作成を支援す
 最初のステップは、利用可能なシェルコマンドをプラグイン名が必要な場合は付加して出力します。
 (出力結果は、このコマンド自身や他のサブコマンド全てがスペースで区切られています。) 例:
 
-    bin/cake Completion commands
+```bash
+bin/cake Completion commands
+```
 
 実行結果:
 
@@ -35,7 +37,9 @@ Completion シェルは、開発者が補完スクリプトの作成を支援す
 いったん気に入ったコマンドが選ばれると、次の段階として subCommands に入ります。そして、
 与えられたシェルコマンドのために利用可能なサブコマンドを出力します。例:
 
-    bin/cake Completion subcommands Bake.bake
+```bash
+bin/cake Completion subcommands Bake.bake
+```
 
 実行結果:
 
@@ -47,7 +51,9 @@ Completion シェルは、開発者が補完スクリプトの作成を支援す
 与えられた (サブ) コマンドのためのオプションを出力します。 (Shell から継承された
 デフォルトのオプションを含みます。) 例:
 
-    bin/cake Completion options Bake.bake
+```bash
+bin/cake Completion options Bake.bake
+```
 
 実行結果:
 

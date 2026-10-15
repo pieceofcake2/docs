@@ -123,7 +123,7 @@ Cache::config('custom', [
 
 > [!NOTE]
 > App and Plugin cache engines should be configured in
-> `config/bootstrap.php`. If you try to configure them in core.php
+> `config/bootstrap.php`. If you try to configure them in `core.php`
 > they will not work correctly.
 
 Custom Cache engines must extend `CacheEngine` which defines

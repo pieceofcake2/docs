@@ -147,7 +147,9 @@ This method is called when a shell is called with no additional commands. We'll 
 some more commands in a bit, but for now let's just run our shell. From your project
 root directory, run:
 
-    bin/cake hello
+```bash
+bin/cake hello
+```
 
 You should see the following output:
 
@@ -777,15 +779,19 @@ With the addition of ConsoleOptionParser getting help from shells is done
 in a consistent and uniform way. By using the `--help` or -`h` option you
 can view the help for any core shell, and any shell that implements a ConsoleOptionParser:
 
-    bin/cake bake --help
-    bin/cake bake -h
+```bash
+bin/cake bake --help
+bin/cake bake -h
+```
 
 Would both generate the help for the `bake` shell of the
 [Bake plugin](console-and-shells/code-generation-with-bake). If the shell supports subcommands
 you can get help for those in a similar fashion:
 
-    bin/cake bake model --help
-    bin/cake bake model -h
+```bash
+bin/cake bake model --help
+bin/cake bake model -h
+```
 
 This would get you the help specific to bake's model task.
 
@@ -796,8 +802,10 @@ with CakePHP shells, it's nice to have help available in a machine parse-able
 format. The ConsoleOptionParser can provide help in xml by setting an
 additional argument:
 
-    bin/cake bake --help xml
-    bin/cake bake -h xml
+```bash
+bin/cake bake --help xml
+bin/cake bake -h xml
+```
 
 The above would return an XML document with the generated help, options,
 arguments and subcommands for the selected shell. A sample XML document

@@ -50,7 +50,9 @@ You might need to update your test cases to reflect this change.
 
 - An option was added to overwrite existing POT files by default:
 
-      ./Console/cake i18n extract --overwrite
+  ```bash
+  ./Console/cake i18n extract --overwrite
+  ```
 
 ## Models
 

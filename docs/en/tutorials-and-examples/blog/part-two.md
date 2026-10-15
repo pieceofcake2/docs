@@ -26,8 +26,8 @@ in the PostsController, and will be tied to a database table called
 > [!NOTE]
 > CakePHP will dynamically create a model object for you if it
 > cannot find a corresponding file in `src/Model`. This also means
-> that if you accidentally name your file wrong (for example, post.php
-> or posts.php instead of Post.php), CakePHP will not recognize
+> that if you accidentally name your file wrong (for example, `post.php`
+> or `posts.php` instead of `Post.php`), CakePHP will not recognize
 > any of your settings and will use the defaults instead.
 
 For more on models, such as table prefixes, callbacks, and

@@ -242,7 +242,7 @@ As mentioned in the previous section, displaying localized content
 is done using the `__()` convenience function, or one of the other
 translation functions all of which are globally available, but
 probably be best utilized in your views. The first parameter of the
-function is used as the msgid defined in the .po files.
+function is used as the msgid defined in the `.po` files.
 
 CakePHP will automatically assume that all model validation error messages in
 your `$validate` array are intended to be localized. When running the i18n

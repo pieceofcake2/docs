@@ -369,7 +369,7 @@ the file name or does not contain classes. You can load those files using
 files from a number of path structures. These vendor files could be located in
 any of the vendor folders.
 
-To load **vendors/geshi.php**:
+To load `vendors/geshi.php`:
 
 ``` php
 App::import('Vendor', 'geshi');
@@ -379,19 +379,19 @@ App::import('Vendor', 'geshi');
 > The geshi file must be a lower-case file name as CakePHP will not
 > find it otherwise.
 
-To load **vendors/flickr/flickr.php**:
+To load `vendors/flickr/flickr.php`:
 
 ``` php
 App::import('Vendor', 'flickr', ['file' => 'flickr/flickr.php']);
 ```
 
-To load **vendors/some.name.php**:
+To load `vendors/some.name.php`:
 
 ``` php
 App::import('Vendor', 'SomeName', ['file' => 'some.name.php']);
 ```
 
-To load **vendors/services/well.named.php**:
+To load `vendors/services/well.named.php`:
 
 ``` php
 App::import(
@@ -401,7 +401,7 @@ App::import(
 );
 ```
 
-To load **plugins/Awesome/Vendor/services/well.named.php**:
+To load `plugins/Awesome/Vendor/services/well.named.php`:
 
 ``` php
 App::import(
@@ -411,7 +411,7 @@ App::import(
 );
 ```
 
-To load **plugins/Awesome/Vendor/Folder/Foo.php**:
+To load `plugins/Awesome/Vendor/Folder/Foo.php`:
 
 ``` php
 App::import(
@@ -423,7 +423,7 @@ App::import(
 
 Vendor files in `src/Vendor/` are found as well.
 
-To load **vendors/vendorName/libFile.php**:
+To load `vendors/vendorName/libFile.php`:
 
 ``` php
 App::import(

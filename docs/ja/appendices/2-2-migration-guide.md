@@ -45,7 +45,9 @@ define('LOG_ERROR', LOG_ERR);
 
 - デフォルトで既存のPOTファイルを上書きするオプションが追加されました:
 
-      ./Console/cake i18n extract --overwrite
+  ```bash
+  ./Console/cake i18n extract --overwrite
+  ```
 
 ## モデル
 

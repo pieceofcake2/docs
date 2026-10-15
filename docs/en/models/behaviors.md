@@ -181,7 +181,7 @@ automatically. The callbacks are similar to those found in Models:
 [Callback Methods](../models/callback-methods).
 
 Your behaviors should be placed in `src/Model/Behavior`. They are named in CamelCase and
-postfixed by `Behavior`, ex. NameBehavior.php.
+postfixed by `Behavior`, ex. `NameBehavior.php`.
 It's often helpful to use a core behavior as a template when creating
 your own. Find them in `vendor/pieceofcake2/cakephp/src/Cake/Model/Behavior/`.
 

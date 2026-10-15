@@ -69,7 +69,7 @@ $decrypted = Security::rijndael($encrypted, Configure::read('Security.key'), 'de
 
 - `string $plain`: 暗号化する値。
 - `string $key`: 暗号キーとして使用する 256 ビット (32 バイト) キー。
-- `string $hmacSalt`: HMAC 処理で使用するソルト。 null なら Security.salt を使用。
+- `string $hmacSalt`: HMAC 処理で使用するソルト。 null なら `Security.salt` を使用。
 
 AES-256 で `$text` を暗号化します。 `$key` は、適切なパスワードのように
 データの中の値はバラバラに分散した値にすべきです。戻り値は、HMAC チェックサムで
@@ -98,7 +98,7 @@ $result = Security::encrypt($value, $key);
 
 - `string $cipher`: 復号する暗号文字列。
 - `string $key`: 暗号キーとして使用する 256 ビット (32 バイト) キー。
-- `string $hmacSalt`: HMAC 処理で使用するソルト。 null なら Security.salt を使用。
+- `string $hmacSalt`: HMAC 処理で使用するソルト。 null なら `Security.salt` を使用。
 
 事前に暗号化された値を復号します。 `$key` と `$hmacSalt` パラメータは、
 暗号化に使用した値と一致しなければなりません。そうでなければ復号に失敗します。

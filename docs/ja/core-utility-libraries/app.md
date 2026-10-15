@@ -350,7 +350,7 @@ App::uses('ClassInSomePackage', 'Vendor');
 次の例では、いくつかのパス構造からベンダーファイルをロードする方法を示しています。
 これらのベンダーファイルは、ベンダーのフォルダのいずれかに配置することができます。
 
-**vendors/geshi.php** をロードする:
+`vendors/geshi.php` をロードする:
 
 ``` php
 App::import('Vendor', 'geshi');
@@ -359,19 +359,19 @@ App::import('Vendor', 'geshi');
 > [!NOTE]
 > CakePHP が他のファイルを見出してしまわないために、geshi のファイル名は、小文字でなくてはなりません。
 
-**vendors/flickr/flickr.php** をロードする:
+`vendors/flickr/flickr.php` をロードする:
 
 ``` php
 App::import('Vendor', 'flickr', ['file' => 'flickr/flickr.php']);
 ```
 
-**vendors/some.name.php** をロードする:
+`vendors/some.name.php` をロードする:
 
 ``` php
 App::import('Vendor', 'SomeName', ['file' => 'some.name.php']);
 ```
 
-**vendors/services/well.named.php** をロードする:
+`vendors/services/well.named.php` をロードする:
 
 ``` php
 App::import(
@@ -381,7 +381,7 @@ App::import(
 );
 ```
 
-**plugins/Awesome/Vendor/services/well.named.php** をロードする:
+`plugins/Awesome/Vendor/services/well.named.php` をロードする:
 
 ``` php
 App::import(
@@ -391,7 +391,7 @@ App::import(
 );
 ```
 
-**plugins/Awesome/Vendor/Folder/Foo.php** をロードする:
+`plugins/Awesome/Vendor/Folder/Foo.php` をロードする:
 
 ``` php
 App::import(
@@ -403,7 +403,7 @@ App::import(
 
 `src/Vendor/` にあるベンダーファイルも同様に見つけられます。
 
-**vendors/vendorName/libFile.php** をロードする:
+`vendors/vendorName/libFile.php` をロードする:
 
 ``` php
 App::import(

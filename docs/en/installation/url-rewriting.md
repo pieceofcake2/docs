@@ -138,7 +138,7 @@ request to `index.php`. It needs mod_rewrite and a virtual host that allows
     that already utilizes mod_rewrite, you'll need to add a `RewriteBase`
     statement to the `.htaccess` file in `webroot/`. This can be added to the
     same section with the RewriteEngine directive, so for example, your webroot
-    .htaccess file would look like:
+    `.htaccess` file would look like:
 
     ```apache
     <IfModule mod_rewrite.c>
@@ -167,7 +167,7 @@ request to `index.php`. It needs mod_rewrite and a virtual host that allows
     ```
 
 4.  (Optional) To improve production setup, you should prevent invalid assets
-    from being parsed by CakePHP. Modify your webroot .htaccess to something like:
+    from being parsed by CakePHP. Modify your webroot `.htaccess` to something like:
 
     ```apache
     <IfModule mod_rewrite.c>
@@ -180,7 +180,7 @@ request to `index.php`. It needs mod_rewrite and a virtual host that allows
     </IfModule>
     ```
 
-    The above will simply prevent incorrect assets from being sent to index.php
+    The above will simply prevent incorrect assets from being sent to `index.php`
     and instead display your webserver's 404 page.
 
     Additionally you can create a matching HTML 404 page, or use the default
@@ -282,7 +282,7 @@ which only Apache 2.4 has. This was tested on Apache 2.4 only:
 
 ## Pretty URLs on nginx
 
-nginx does not make use of .htaccess files like Apache, so it is necessary to
+nginx does not make use of `.htaccess` files like Apache, so it is necessary to
 create those rewritten URLs in the site configuration. Depending upon
 your setup, you will have to modify this, but at the very least,
 you will need PHP running with PHP-FPM.
@@ -376,7 +376,7 @@ use IIS, apply the same rules as for nginx and Apache: point the site to
 `webroot/` only, and do not let IIS run PHP files in upload directories.
 :::
 
-IIS does not natively support .htaccess files. Instead, you can use the
+IIS does not natively support `.htaccess` files. Instead, you can use the
 [URL Rewrite module](https://www.iis.net/downloads/microsoft/url-rewrite) to
 get the same rewrites. To do this, follow these steps:
 
@@ -419,7 +419,7 @@ This section is kept for reference only and is not tested by this project.
 For PHP applications, nginx or Apache is recommended.
 :::
 
-Lighttpd does not support .htaccess functions, so you can remove all .htaccess
+Lighttpd does not support `.htaccess` functions, so you can remove all `.htaccess`
 files. In the lighttpd configuration, set `server.document-root` to the
 `webroot/` directory, enable mod_access, mod_rewrite and mod_fastcgi, and pass
 only `index.php` to PHP. With lighttpd 1.4.50 or later:

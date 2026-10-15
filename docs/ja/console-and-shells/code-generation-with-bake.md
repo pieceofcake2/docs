@@ -157,7 +157,9 @@ bin/cake bake view Posts --theme myTheme
 
 <!-- -->
 
-    bin/cake bake project --skel src/Console/Templates/skel
+```bash
+bin/cake bake project --skel src/Console/Templates/skel
+```
 
 > [!NOTE]
 > - `bin/cake bake project` は、スケルトンのパスをパラメータで渡して

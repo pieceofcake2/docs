@@ -124,7 +124,7 @@ Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 163
 
 上記では、コントローラのアクション内で Debugger::trace() を呼ぶことで、スタックトレースを
 生成しています。スタックトレースは下から上へと読み、現在走っている関数（スタックフレーム）の
-順になっています。上記の例では、index.php が Dispatcher::dispatch() を呼び、それが今度は
+順になっています。上記の例では、`index.php` が Dispatcher::dispatch() を呼び、それが今度は
 Dispatcher::\_invoke() を呼んでいます。その後、\_invoke() メソッドは
 PostsController::index() を呼んでいます。この情報は再帰呼出やスタックが深い場合に、
 trace() の時点でどの関数が現在走っているのか特定できるので、役に立ちます。

@@ -467,7 +467,7 @@ CakePlugin::load('Upgrade');
 - New methods added to database drivers (may cause issues if you have custom
   driver implementations)
 
-**MySQL Driver (Mysql.php):**
+**MySQL Driver (`Mysql.php`):**
 
 - `getVersion(): string` - Returns MySQL/MariaDB/Aurora MySQL version
 - `getServerType(): string` - Returns 'MySQL', 'MariaDB', or 'Aurora MySQL'
@@ -475,7 +475,7 @@ CakePlugin::load('Upgrade');
 - `integerDisplayWidthDeprecated(): bool` - Checks if integer display width is
   deprecated (MySQL 8.0.17+)
 
-**PostgreSQL Driver (Postgres.php):**
+**PostgreSQL Driver (`Postgres.php`):**
 
 - `getVersion(): string` - Returns PostgreSQL version
 
@@ -672,7 +672,7 @@ strategy accordingly (e.g., support both types during transition period).
 
 ## Additional notes for PHP 8
 
-These points are not listed in UPGRADE.md but commonly affect applications
+These points are not listed in `UPGRADE.md` but commonly affect applications
 moving to PHP 8.
 
 ### Enable OpenSSL for `Security::encrypt()` and AES cookies {#enable-openssl}

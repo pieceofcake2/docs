@@ -154,7 +154,7 @@ bin/cake server
 表示されるはずです。
 
 > [!NOTE]
-> PDO と pdo_mysql が php.ini で有効になっている必要があることを覚えておいてください。
+> PDO と pdo_mysql が `php.ini` で有効になっている必要があることを覚えておいてください。
 
 ## 追加の設定
 

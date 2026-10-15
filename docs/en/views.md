@@ -22,7 +22,7 @@ but you might also need to reply to a remote application with JSON or XML,
 or output a CSV file for a user.
 
 By default CakePHP view files are written in plain PHP and have a default
-extension of .ctp (CakePHP Template). These files contain all the
+extension of `.ctp` (CakePHP Template). These files contain all the
 presentational logic needed to get the data it received from the
 controller in a format that is ready for the audience you're
 serving to. If you'd prefer using a templating language like
@@ -470,7 +470,7 @@ make a view more readable, placing the rendering of repeating
 elements in its own file. They can also help you re-use content
 fragments in your application.
 
-Elements live in the `templates/Elements/` folder, and have the .ctp
+Elements live in the `templates/Elements/` folder, and have the `.ctp`
 filename extension. They are output using the element method of the
 view:
 

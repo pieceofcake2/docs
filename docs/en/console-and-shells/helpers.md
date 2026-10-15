@@ -29,7 +29,7 @@ $progress->draw();
 While CakePHP comes with a few shell helpers you can create more in your
 application or plugins. As an example, we'll create a simple helper to generate
 fancy headings. Shell helper classes use the `ShellHelper` suffix. First create
-**src/Console/Helper/HeadingShellHelper.php** and put the following in it:
+`src/Console/Helper/HeadingShellHelper.php` and put the following in it:
 
 ``` php
 // src/Console/Helper/HeadingShellHelper.php

@@ -80,7 +80,7 @@ $this->Flash->success('The user has been saved', [
 $this->Flash->warning('My message', ['plugin' => 'PluginName']);
 ```
 
-上記のコードは、 `plugins/PluginName/View/Elements/Flash` 配下の warning.ctp
+上記のコードは、 `plugins/PluginName/View/Elements/Flash` 配下の `warning.ctp`
 エレメントを使用しています。
 
 > [!NOTE]

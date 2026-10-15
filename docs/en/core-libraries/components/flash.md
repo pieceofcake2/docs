@@ -82,7 +82,7 @@ should set the `plugin` parameter. For example:
 $this->Flash->warning('My message', ['plugin' => 'PluginName']);
 ```
 
-The code above will use the warning.ctp element under `plugins/PluginName/View/Elements/Flash`
+The code above will use the `warning.ctp` element under `plugins/PluginName/View/Elements/Flash`
 for rendering the flash message.
 
 > [!NOTE]

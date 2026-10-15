@@ -139,7 +139,9 @@ class HelloShell extends AppShell
 多少コマンドを追加していきますが、現時点では単にシェルを起動してみましょう。
 プロジェクトのルートディレクトリで、以下を実行します。
 
-    bin/cake hello
+```bash
+bin/cake hello
+```
 
 以下の出力が行われます。
 
@@ -760,14 +762,18 @@ ConsoleOptionParser を追加することにより、一貫性のある方法で
 シェルからも、 `--help` または -`h` オプションを使うことでヘルプを参照
 できます。:
 
-    bin/cake bake --help
-    bin/cake bake -h
+```bash
+bin/cake bake --help
+bin/cake bake -h
+```
 
 このいずれでも [Bake プラグイン](console-and-shells/code-generation-with-bake) の `bake` シェルのヘルプを生成します。シェルがサブコマンドをサポートしている
 場合は、それらに関するヘルプを同様の書式で取得可能です。
 
-    bin/cake bake model --help
-    bin/cake bake model -h
+```bash
+bin/cake bake model --help
+bin/cake bake model -h
+```
 
 これは bake の model タスクに関するヘルプを表示します。
 
@@ -777,8 +783,10 @@ ConsoleOptionParser を追加することにより、一貫性のある方法で
 ヘルプを機械がパースできる形式で取得できると便利です。ConsoleOptionParser
 に以下の引数を追加することで、ヘルプをxmlで出力できます。
 
-    bin/cake bake --help xml
-    bin/cake bake -h xml
+```bash
+bin/cake bake --help xml
+bin/cake bake -h xml
+```
 
 この例は生成されたヘルプ、オプション、引数そして選択されたシェルのサブコマンド
 に関するドキュメントを XML で返します。XML ドキュメントの例としては以下のように

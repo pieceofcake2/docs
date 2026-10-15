@@ -1029,7 +1029,7 @@ Generate a URL for the specified action.特定のアクションのためのURL�
 
 `static` Router::**parseExtensions**($types)
 
-routes.php でサポートする拡張子（ [File Extensions](#file-extensions) ）を宣言するために使われます。
+`routes.php` でサポートする拡張子（ [File Extensions](#file-extensions) ）を宣言するために使われます。
 引数を用意しないことで、すべての拡張子をサポートします。
 
 `static` Router::**setExtensions**($extensions, $merge = true)

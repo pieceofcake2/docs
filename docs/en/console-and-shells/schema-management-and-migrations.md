@@ -14,7 +14,7 @@ using:
 $ bin/cake schema generate
 ```
 
-This will generate a schema.php file in your `config/Schema`
+This will generate a `schema.php` file in your `config/Schema`
 directory (`app/Config/Schema` in the legacy layout).
 
 > [!NOTE]
@@ -23,14 +23,14 @@ directory (`app/Config/Schema` in the legacy layout).
 > tables, you must add the `-f` option in the command line.
 
 To later rebuild the database schema from your previously made
-schema.php file run:
+`schema.php` file run:
 
 ``` bash
 $ bin/cake schema create
 ```
 
 This will drop and create the tables based on the contents of the
-schema.php.
+`schema.php`.
 
 Schema files can also be used to generate sql dump files. To
 generate a sql file containing the `CREATE TABLE` statements,
@@ -40,8 +40,8 @@ run:
 $ bin/cake schema dump --write filename.sql
 ```
 
-Where filename.sql is the desired filename for the sql dump. If you
-omit filename.sql the sql dump will be output to the console but
+Where `filename.sql` is the desired filename for the sql dump. If you
+omit `filename.sql` the sql dump will be output to the console but
 not written to a file.
 
 ## CakeSchema callbacks
@@ -338,8 +338,8 @@ Schema file exists.
 Would you like to do? (o/s/q)
 ```
 
-Choosing \[s\] (snapshot) will create an incremented schema.php. So
-if you have schema.php, it will create schema_2.php and so on. You
+Choosing \[s\] (snapshot) will create an incremented `schema.php`. So
+if you have `schema.php`, it will create `schema_2.php` and so on. You
 can then restore to any of these schema files at any time by
 running:
 
@@ -362,15 +362,15 @@ You can perform a dry run by adding a `--dry` to your command.
 
 ### Create schema and commit
 
-On a project which use versioning, the usage of cake schema
+On a project which use versioning, the usage of `cake schema`
 would follow these steps:
 
 1.  Create or modify your database tables
 
-2.  Execute cake schema to export a full description of your
+2.  Execute `cake schema` to export a full description of your
     database
 
-3.  Commit the created or updated schema.php file:
+3.  Commit the created or updated `schema.php` file:
 
     ``` bash
     $ # once your database has been updated
@@ -389,7 +389,7 @@ When you pull the last changes of your repository, and discover
 changes in the structure of the database (possibly because
 of an error message saying you are missing a table):
 
-1.  Execute cake schema to update your database:
+1.  Execute `cake schema` to update your database:
 
     ``` bash
     $ git pull
@@ -403,7 +403,7 @@ All these operations can be done in dry-run mode with a `--dry` option.
 
 If at some point you need to revert and get back to the state in which you were
 before updating your database, you should be informed that this is currently not
-supported by cake schema.
+supported by `cake schema`.
 
 More specifically, you can't automatically drop your tables once they have
 been created.

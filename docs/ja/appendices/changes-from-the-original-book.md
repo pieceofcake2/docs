@@ -68,36 +68,36 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - 「CakePHP 2.10 との違い」: バックポートの項目のリンク先を、GitHub のアップグレードガイドから [統合テスト](/ja/development/integration-testing) に変更
 - [インストール](/ja/installation)
   - 動作要件: PHP 8.0〜8.5、Composer、MySQL 5.6 以上など対応 DB、mbstring/intl/openssl の説明
-  - `composer create-project pieceofcake2/app` による新規作成 (モダンな構成) と database.php、salt/cipherSeed の設定
+  - `composer create-project pieceofcake2/app` による新規作成 (モダンな構成) と `database.php`、salt/cipherSeed の設定
   - 既存アプリケーション: cakephp/cakephp を pieceofcake2/cakephp に置き換え、ディスパッチャファイルを更新
   - アーカイブ/git でのダウンロード、include_path によるコア共有、サブディレクトリでの開発用設定を削除
-  - パーミッションの対象を tmp/ と logs/ に変更、ビルトインサーバ (`bin/cake server`) と webroot/ 向けバーチャルホストの例を追加
+  - パーミッションの対象を `tmp/` と `logs/` に変更、ビルトインサーバ (`bin/cake server`) と `webroot/` 向けバーチャルホストの例を追加
   - ビルトインサーバのデフォルトポートは 8765 (v2.12.3 より前は 80 だったことを変更点として記載)
-  - 「composer.json の設定」を追加: 最小限の composer.json、cakephp-plugin パッケージのために composer/installers の allow-plugins と plugins/{$name}/ への installer-paths が必須であることを説明
+  - 「composer.json の設定」を追加: 最小限の `composer.json`、cakephp-plugin パッケージのために composer/installers の allow-plugins と `plugins/{$name}/` への installer-paths が必須であることを説明
   - 新規アプリケーション: デバッグレベル、ソルト、データベースの設定を環境変数 (`config/.env` またはプロジェクトルートの `.env`) でもセットできることを記載
   - 「既存のアプリケーションへの導入」を「新しいアプリケーションの作成」の前に移動。最後のリンクは「入門」ではなくブログチュートリアルを指すように変更
   - Apache のバーチャルホスト: `Options -Indexes -MultiViews +FollowSymLinks` を追加し、ドキュメントルートをプロジェクトのディレクトリにしないよう警告、Apache 2.2 の書き方へのリンクを追加
 - [応用インストール](/ja/installation/advanced-installation)
   - PEAR でのインストール、旧来の Composer/bake によるプロジェクト作成、CAKE_CORE_INCLUDE_PATH によるコア共有を削除
   - Composer 設定の詳細を追加: replace、プラグインの installer-paths、classmap オートロード、exclude-from-classmap
-  - パスの変更は config/define.php (ROOT、APP_DIR、WEBROOT_DIR、WWW_ROOT、VENDORS) で行う方法に書き換え、webroot を移動する例を追加
+  - パスの変更は `config/define.php` (ROOT、APP_DIR、WEBROOT_DIR、WWW_ROOT、VENDORS) で行う方法に書き換え、webroot を移動する例を追加
 - [Web サーバーの設定](/ja/installation/url-rewriting)
-  - 例はドキュメントルートを webroot/ とする前提に変更、.htaccess をスケルトンの内容に更新、従来の構成の .htaccess は簡単な説明のみに
-  - nginx の例を PHP-FPM ソケット向けに更新、IIS の web.config を webroot/ に配置、リンク切れ (Web Platform Installer、virtualhostx、Apache wiki) を削除
+  - 例はドキュメントルートを `webroot/` とする前提に変更、`.htaccess` をスケルトンの内容に更新、従来の構成の `.htaccess` は簡単な説明のみに
+  - nginx の例を PHP-FPM ソケット向けに更新、IIS の `web.config` を `webroot/` に配置、リンク切れ (Web Platform Installer、virtualhostx、Apache wiki) を削除
   - タイトルを「URLリライティング」から「Web サーバーの設定」に変更 (URL は変更なし)。プロジェクトのディレクトリを公開しないよう警告する「ドキュメントルート」の節を追加
-  - Apache: HTTP からリダイレクトする HTTPS のバーチャルホスト、`Options -Indexes -MultiViews +FollowSymLinks`、`AllowOverride` (2.3.9 以降のデフォルトは `None`)、`SymLinksIfOwnerMatch`、`+`/`-` を混在させた Options の注意、.well-known 以外の隠しファイルの拒否、アップロード用ディレクトリで PHP を拒否する手順 5、.htaccess での HTTPS へのリダイレクトを追加
-  - .htaccess を現在のスケルトンの内容に更新: Authorization ヘッダーはある場合だけ渡す (または `CGIPassAuth On`)、`!-d` の条件を削除してディレクトリの一覧を表示しないように
+  - Apache: HTTP からリダイレクトする HTTPS のバーチャルホスト、`Options -Indexes -MultiViews +FollowSymLinks`、`AllowOverride` (2.3.9 以降のデフォルトは `None`)、`SymLinksIfOwnerMatch`、`+`/`-` を混在させた Options の注意、`.well-known` 以外の隠しファイルの拒否、アップロード用ディレクトリで PHP を拒否する手順 5、`.htaccess` での HTTPS へのリダイレクトを追加
+  - `.htaccess` を現在のスケルトンの内容に更新: Authorization ヘッダーはある場合だけ渡す (または `CGIPassAuth On`)、`!-d` の条件を削除してディレクトリの一覧を表示しないように
   - mod_rewrite が無効なときに公開されるファイルを挙げた「従来のルートの .htaccess ファイル」の節を追加
   - Apache 2.2 の書き方 (`Order`/`Allow`/`Deny`) をレガシー/EOL の節に分離し、`<IfModule mod_authz_core.c>` で両対応する例を追加
-  - nginx: HTTP からリダイレクトする HTTPS のサーバ、PHP-FPM に渡すのは index.php だけ (PATH_INFO 付き)、.well-known 以外の隠しファイルを拒否
-  - IIS と lighttpd の節は参考として残し、警告ボックスを追加 (このプロジェクトではテストしていない)。lighttpd の例は `url=` のクエリパラメータを使わず、PHP には index.php だけを渡す形に書き換え
+  - nginx: HTTP からリダイレクトする HTTPS のサーバ、PHP-FPM に渡すのは `index.php` だけ (PATH_INFO 付き)、`.well-known` 以外の隠しファイルを拒否
+  - IIS と lighttpd の節は参考として残し、警告ボックスを追加 (このプロジェクトではテストしていない)。lighttpd の例は `url=` のクエリパラメータを使わず、PHP には `index.php` だけを渡す形に書き換え
   - Hiawatha の節を削除
 - [CakePHP のフォルダ構造](/ja/getting-started/cakephp-folder-structure)
-  - モダンな構成 (bin、config、logs、plugins、resources/locales、src、templates、tests、tmp、vendor、webroot) の説明に書き換え、従来の app/ との対応表を追加
-  - 従来の app/ 構成からモダンな構成へ移行する手順を追加
-  - 開発時も運用時も webroot/ だけをドキュメントルートにすることを明記
+  - モダンな構成 (`bin`、`config`、`logs`、`plugins`、`resources/locales`、`src`、`templates`、`tests`、`tmp`、`vendor`、`webroot`) の説明に書き換え、従来の `app/` との対応表を追加
+  - 従来の `app/` 構成からモダンな構成へ移行する手順を追加
+  - 開発時も運用時も `webroot/` だけをドキュメントルートにすることを明記
 - [CakePHP の規約](/ja/getting-started/cakephp-conventions)
-  - ファイルの場所を src/ と templates/ に変更、String::uuid を CakeText::uuid() に変更
+  - ファイルの場所を `src/` と `templates/` に変更、String::uuid を CakeText::uuid() に変更
 - [CakePHP の構造](/ja/getting-started/cakephp-structure)
   - AppController/AppHelper/AppModel、ルート、レイアウト、エレメントのパスをモダンな構成に変更
   - 例を非推奨の EmailComponent と JsHelper から AuthComponent と FormHelper に変更
@@ -112,31 +112,31 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
 ### コントローラー
 
 - [コントローラ](/ja/controllers)
-  - パスをモダンレイアウト (src/Controller、templates/、plugins/) に変更し、従来の app/ レイアウトは補足として記載
+  - パスをモダンレイアウト (`src/Controller`、`templates/`、`plugins/`) に変更し、従来の `app/` レイアウトは補足として記載
   - 「クラスの読み込み」節を追加: Composer の classmap オートロードにより App::uses() が不要になること、引き続き必要な場合
 - [リクエストとレスポンスオブジェクト](/ja/controllers/request-response)
-  - ディスパッチャのパスを webroot/index.php に変更し、レスポンスのモック例を PHPUnit 9 の getMockBuilder() に変更
+  - ディスパッチャのパスを `webroot/index.php` に変更し、レスポンスのモック例を PHPUnit 9 の getMockBuilder() に変更
 - [ページコントローラ](/ja/controllers/pages-controller)
-  - パスを src/Controller と templates/Pages に変更し、コピー元を lib/Cake から app スケルトンまたは Bake プラグインに変更
+  - パスを `src/Controller` と `templates/Pages` に変更し、コピー元を `lib/Cake` から app スケルトンまたは Bake プラグインに変更
 - [Scaffolding](/ja/controllers/scaffolding)
-  - パスを src/Model、config/core.php、templates/ に変更し、Bake をプラグインとして案内
+  - パスを `src/Model`、`config/core.php`、`templates/` に変更し、Bake をプラグインとして案内
 - [コンポーネント](/ja/controllers/components)
-  - コンポーネントのパスを src/Controller/Component に変更し、サンプルから App::uses() を削除、コードスタイルを修正
+  - コンポーネントのパスを `src/Controller/Component` に変更し、サンプルから App::uses() を削除、コードスタイルを修正
 
 ### ビュー
 
 - [ビュー](/ja/views)
-  - テンプレート、レイアウト、エレメントのパスを templates/ に、ビュークラスを src/View に変更し、従来の app/View との対応表を掲載
+  - テンプレート、レイアウト、エレメントのパスを `templates/` に、ビュークラスを `src/View` に変更し、従来の `app/View` との対応表を掲載
   - 冒頭の Flash/AMF や SOAP の例を削除し、TwigView プラグインへのリンクを追加
   - エレメントキャッシュの例の構文エラーを修正し、独自ビュークラスの例から App::uses() を削除
 - [メディアビュー](/ja/views/media-view)
   - サンプルのパスを ROOT と WWW_ROOT で指定するよう変更し、相対パスが webroot ではなく APP 基準で解決されることを訂正
 - [JSONとXMLビュー](/ja/views/json-and-xml-views)
-  - サンプルのビューファイルのパスを templates/Posts/json/index.ctp に変更
+  - サンプルのビューファイルのパスを `templates/Posts/json/index.ctp` に変更
 - [テーマ](/ja/views/themes)
-  - テーマのパスを templates/Themed と webroot/ に変更し、プラグインのアセットの例を plugins/ に変更
+  - テーマのパスを `templates/Themed` と `webroot/` に変更し、プラグインのアセットの例を `plugins/` に変更
 - [ヘルパー](/ja/views/helpers)
-  - ヘルパーのパスを src/View/Helper に変更し、サンプルから App::uses() を削除して classmap オートロードの説明を追加、Bakery への言及をプラグイン一覧へのリンクに変更
+  - ヘルパーのパスを `src/View/Helper` に変更し、サンプルから App::uses() を削除して classmap オートロードの説明を追加、Bakery への言及をプラグイン一覧へのリンクに変更
 
 ### モデル
 
@@ -145,98 +145,98 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
 - [データを取得する](/ja/models/retrieving-your-data)
   - 「並び順」の節を追加: `order` の書式、使用できるソート方向、ソート方向の検証 (v2.12.5) の変更点の注記、非推奨エラーが出るコードの直し方、ユーザーが並び順を選ぶ場合のホワイトリストの例
 - [アソシエーション: モデル同士を繋ぐ](/ja/models/associations-linking-models-together)
-  - モデルファイルのパスを src/Model/ に変更
+  - モデルファイルのパスを `src/Model/` に変更
 - [データを保存する](/ja/models/saving-your-data)
-  - 例のファイルコメントを src/Controller/ と templates/ に変更
+  - 例のファイルコメントを `src/Controller/` と `templates/` に変更
 - [データバリデーション](/ja/models/data-validation)
   - `utf8` ルールを追加 (v2.12.6、CakePHP 5 からのバックポート)
-  - ローカライズしたバリデーションクラスは src/Validation (classmap または App::uses() で読み込み)、Localized プラグインのリンクを pieceofcake2/localized に変更、Windows/mod_php の注記を削除
+  - ローカライズしたバリデーションクラスは `src/Validation` (classmap または App::uses() で読み込み)、Localized プラグインのリンクを pieceofcake2/localized に変更、Windows/mod_php の注記を削除
 - [コールバックメソッド](/ja/models/callback-methods)
-  - 例のパスを src/Model/ に変更
+  - 例のパスを `src/Model/` に変更
 - [ビヘイビア](/ja/models/behaviors)
-  - ビヘイビアは src/Model/Behavior、コアのビヘイビアは vendor/pieceofcake2/cakephp/src/Cake/Model/Behavior
+  - ビヘイビアは `src/Model/Behavior`、コアのビヘイビアは `vendor/pieceofcake2/cakephp/src/Cake/Model/Behavior`
   - コミュニティのビヘイビアは CakePHP Bakery ではなくメンテナンスされているプラグインへのリンクに変更
 - [データソース](/ja/models/datasources)
-  - 対応データベース・バージョン・PDO エクステンションの表、「接続設定」節を追加 (config/database.php、DSN での encoding、PostgreSQL の sslmode、PHP 8.1 のネイティブ型と ATTR_STRINGIFY_FETCHES)
+  - 対応データベース・バージョン・PDO エクステンションの表、「接続設定」節を追加 (`config/database.php`、DSN での encoding、PostgreSQL の sslmode、PHP 8.1 のネイティブ型と ATTR_STRINGIFY_FETCHES)
   - SQL Server: Windows 専用の Native Client ではなく ODBC ドライバ、port・schema (デフォルト dbo)・options・persistent の設定を説明
-  - データソースの例とプラグインのパスを src/Model/Datasource と plugins/ に変更
+  - データソースの例とプラグインのパスを `src/Model/Datasource` と `plugins/` に変更
   - 旧 cakephp/datasources リポジトリの代わりに pieceofcake2/datasources プラグインへリンク
 - [モデルの属性](/ja/models/model-attributes)
-  - データベース設定ファイルのパスを config/database.php に変更
+  - データベース設定ファイルのパスを `config/database.php` に変更
   - `order`: 使用できるソート方向と「並び順」へのリンクを追加
 
 ### コアライブラリ
 
 - [キャッシュ](/ja/core-libraries/caching)
   - エンジン一覧から Xcache と Wincache を削除 (変更点の注記あり)。Apc エンジンは APCu を使うと説明
-  - 設定ファイルのパスを config/bootstrap.php、config/core.php、src/Lib/Cache/Engine に変更。PHP 5.3 に関する記述を削除
+  - 設定ファイルのパスを `config/bootstrap.php`、`config/core.php`、`src/Lib/Cache/Engine` に変更。PHP 5.3 に関する記述を削除
 - [イベントシステム](/ja/core-libraries/events)
-  - 例のパスを src/Lib/Event、config/bootstrap.php、config/events.php に変更。App::uses と PHP 5.3 の記述を削除し、Composer のクラスマップによるオートロードを説明
+  - 例のパスを `src/Lib/Event`、`config/bootstrap.php`、`config/events.php` に変更。App::uses と PHP 5.3 の記述を削除し、Composer のクラスマップによるオートロードを説明
 - [グローバル定数およびグローバル関数](/ja/core-libraries/global-constants-and-functions)
-  - パス定数をモダンレイアウトの値で説明 (APP=src/、CONFIG=config/、TESTS=tests/、TMP=tmp/、LOGS=logs/、WWW_ROOT=webroot/)。レガシーの app/ の値は一度だけ言及
-  - CAKE、CAKE_CORE_INCLUDE_PATH、CORE_PATH は vendor/pieceofcake2/cakephp/src を指すと説明。新しい CORE_ROOT 定数を追加
+  - パス定数をモダンレイアウトの値で説明 (APP=`src/`、CONFIG=`config/`、TESTS=`tests/`、TMP=`tmp/`、LOGS=`logs/`、WWW_ROOT=`webroot/`)。レガシーの `app/` の値は一度だけ言及
+  - CAKE、CAKE_CORE_INCLUDE_PATH、CORE_PATH は `vendor/pieceofcake2/cakephp/src` を指すと説明。新しい CORE_ROOT 定数を追加
 - [国際化と地域化](/ja/core-libraries/internationalization-and-localization)
-  - ロケールファイルの場所を resources/locales に変更 (レガシーの app/Locale も検索される)。プラグインの翻訳は plugins/&lt;Plugin>/Locale
-  - モダンレイアウト向けの i18n extract の例を追加: bin/cake i18n extract --paths src,templates --output resources/locales
+  - ロケールファイルの場所を `resources/locales` に変更 (レガシーの `app/Locale` も検索される)。プラグインの翻訳は `plugins/<Plugin>/Locale`
+  - モダンレイアウト向けの i18n extract の例を追加: `bin/cake i18n extract --paths src,templates --output resources/locales`
 - [ロギング](/ja/core-libraries/logging)
-  - デフォルトのログディレクトリを logs/ (LOGS 定数) に変更。独自ログエンジンは src/Lib と plugins/ に配置。例から App::uses を削除
+  - デフォルトのログディレクトリを `logs/` (LOGS 定数) に変更。独自ログエンジンは `src/Lib` と `plugins/` に配置。例から App::uses を削除
 - [Translate](/ja/core-libraries/behaviors/translate)
-  - i18n テーブル初期化コマンドを bin/cake i18n に変更
+  - i18n テーブル初期化コマンドを `bin/cake i18n` に変更
 - [Tree](/ja/core-libraries/behaviors/tree)
-  - 例のパスを src/Model/Category.php に変更
+  - 例のパスを `src/Model/Category.php` に変更
 - [アクセス制御リスト](/ja/core-libraries/components/access-control-lists)
-  - パスを config/ (core.php、acl.ini.php、database.php、Schema/db_acl.sql) に変更。コマンドは bin/cake。コアのモデルは vendor/pieceofcake2/cakephp/src/Cake/Model
+  - パスを `config/` (`core.php`、`acl.ini.php`、`database.php`、`Schema/db_acl.sql`) に変更。コマンドは `bin/cake`。コアのモデルは `vendor/pieceofcake2/cakephp/src/Cake/Model`
 - [認証](/ja/core-libraries/components/authentication)
-  - 独自の認証・認可・ハッシャークラスを src/Controller/Component/Auth に配置。レイアウトは templates/Layouts。App::uses を削除
+  - 独自の認証・認可・ハッシャークラスを `src/Controller/Component/Auth` に配置。レイアウトは `templates/Layouts`。App::uses を削除
 - [Cookie](/ja/core-libraries/components/cookie)
-  - 例で type('aes') と Security.useOpenSsl を使用。デフォルトの 'cipher' は脆弱で 'rijndael' は mcrypt が必要という警告を追加
-  - タイプは `$components` の `'Cookie' => ['type' => 'aes']` で設定 (type() でも設定可能)。v2.12.3 より前はこの設定が無視されていたことを変更点として記載。pieceofcake2/app v2.3.1 のスケルトンでは Security.useOpenSsl が有効
+  - 例で type('aes') と `Security.useOpenSsl` を使用。デフォルトの 'cipher' は脆弱で 'rijndael' は mcrypt が必要という警告を追加
+  - タイプは `$components` の `'Cookie' => ['type' => 'aes']` で設定 (type() でも設定可能)。v2.12.3 より前はこの設定が無視されていたことを変更点として記載。pieceofcake2/app v2.3.1 のスケルトンでは `Security.useOpenSsl` が有効
 - [フラッシュ](/ja/core-libraries/components/flash)
-  - フラッシュ用エレメントの場所を templates/Elements/Flash に変更
+  - フラッシュ用エレメントの場所を `templates/Elements/Flash` に変更
 - [ページ制御](/ja/core-libraries/components/pagination)
   - PaginatorComponent が受け付けるソートのフィールドと方向、「並び順」へのリンクを追加
 - [セキュリティ](/ja/core-libraries/components/security-component)
   - 変更点の注記: CSRF トークンの HMAC 署名 (CVE-2020-15400) と _method で上書きしたリクエストの検証 (CVE-2015-8379)
 - [CacheHelper](/ja/core-libraries/helpers/cache)
-  - Cache.check の設定場所を config/core.php に変更
+  - `Cache.check` の設定場所を `config/core.php` に変更
 - [FlashHelper](/ja/core-libraries/helpers/flash)
-  - フラッシュ用エレメントは templates/Elements/Flash。コアの default/success/error エレメントはアプリケーション側で上書きできると説明
+  - フラッシュ用エレメントは `templates/Elements/Flash`。コアの default/success/error エレメントはアプリケーション側で上書きできると説明
 - [JsHelper](/ja/core-libraries/helpers/js)
-  - パスを webroot/js と templates/Layouts に変更。PHP4/PHP5 のメソッドチェーンに関する記述を削除
+  - パスを `webroot/js` と `templates/Layouts` に変更。PHP4/PHP5 のメソッドチェーンに関する記述を削除
 - [PaginatorHelper](/ja/core-libraries/helpers/paginator)
-  - 例のパスを templates/Posts/index.ctp に変更
+  - 例のパスを `templates/Posts/index.ctp` に変更
 - [RssHelper](/ja/core-libraries/helpers/rss)
-  - パスを config/routes.php、templates/Layouts/rss、templates/Posts/rss に変更
+  - パスを `config/routes.php`、`templates/Layouts/rss`、`templates/Posts/rss` に変更
 - [TextHelper](/ja/core-libraries/helpers/text)
   - String クラスへの言及を CakeText に変更
 - [TimeHelper](/ja/core-libraries/helpers/time)
-  - タイムゾーンの設定場所を config/core.php に変更
+  - タイムゾーンの設定場所を `config/core.php` に変更
 
 ### コアユーティリティライブラリ
 
 - [App クラス](/ja/core-utility-libraries/app)
   - クラスのローディングを Composer の classmap オートロード前提に書き直し、App::uses() は Composer が把握しないクラス (classmap なしのアプリケーションクラス、Composer 非対応プラグイン) にのみ必要
-  - コアクラスのオーバーライドは src/Lib に置き App::uses() で登録、exclude-from-classmap の注意を追加
-  - ベンダーファイル: Composer のライブラリは読み込み不要、手作業で置くファイルは vendors/、プラグインのパスは plugins/、CakePHP 1.3 から 2.0 への移行に関する記述を削除
+  - コアクラスのオーバーライドは `src/Lib` に置き App::uses() で登録、exclude-from-classmap の注意を追加
+  - ベンダーファイル: Composer のライブラリは読み込み不要、手作業で置くファイルは `vendors/`、プラグインのパスは `plugins/`、CakePHP 1.3 から 2.0 への移行に関する記述を削除
 - [CakeEmail](/ja/core-utility-libraries/email)
-  - 設定は config/email.php、テンプレートは templates/Emails と templates/Layouts/Emails、独自トランスポートは src/Lib/Network/Email、EmailComponent との比較と App::uses() を削除
+  - 設定は `config/email.php`、テンプレートは `templates/Emails` と `templates/Layouts/Emails`、独自トランスポートは `src/Lib/Network/Email`、EmailComponent との比較と App::uses() を削除
   - Gmail は廃止された「安全性の低いアプリ」設定の代わりにアプリパスワードを使用、STARTTLS の例はポート 587、MailTransport::_mail() の型付きシグネチャの変更点を注記
 - [Folder & File](/ja/core-utility-libraries/file-folder)
   - Folder と File はオートロードされるため App::uses() を削除
 - [Hash](/ja/core-utility-libraries/hash)
   - natural ソートの PHP 5.4 要件の記述を削除
 - [HttpSocket](/ja/core-utility-libraries/httpsocket)
-  - CA 証明書 (システムの CA バンドルと composer/ca-bundle へのフォールバック) を本文で説明、独自レスポンス・認証クラスは src/Lib/Network/Http に置き HttpSocketResponse を継承、App::uses() と Bakery の URL を削除
+  - CA 証明書 (システムの CA バンドルと composer/ca-bundle へのフォールバック) を本文で説明、独自レスポンス・認証クラスは `src/Lib/Network/Http` に置き HttpSocketResponse を継承、App::uses() と Bakery の URL を削除
 - [CakeNumber](/ja/core-utility-libraries/number)
   - 例から不要な App::uses() を削除
 - [データのサニタイズ](/ja/core-utility-libraries/sanitize)
   - Sanitize は CakePHP 3.0 以降に存在しないと記述 (「削除予定」から変更)
   - HTML データを受信: HTML Purifier だけを勧めるのではなく、新しい「出力時のエスケープと HTML の無害化」のページを案内
 - [Security](/ja/core-utility-libraries/security)
-  - mcrypt は PHP 7.2 以降同梱されないため config/core.php で Security.useOpenSsl を有効にすること (互換の形式)、rijndael() は PECL の mcrypt が必要、Cookie の 'cipher' タイプへの警告を本文で説明
-  - pieceofcake2/app のスケルトン (v2.3.1 以降) では Security.useOpenSsl が有効になっていることを追記
+  - mcrypt は PHP 7.2 以降同梱されないため `config/core.php` で `Security.useOpenSsl` を有効にすること (互換の形式)、rijndael() は PECL の mcrypt が必要、Cookie の 'cipher' タイプへの警告を本文で説明
+  - pieceofcake2/app のスケルトン (v2.3.1 以降) では `Security.useOpenSsl` が有効になっていることを追記
 - [Set](/ja/core-utility-libraries/set)
-  - テストファイルのパスを tests/TestCase/Utility/SetTest.php に変更
+  - テストファイルのパスを `tests/TestCase/Utility/SetTest.php` に変更
 - [CakeText](/ja/core-utility-libraries/string)
   - String クラスの非推奨の説明と例の App::uses() を削除し、String クラス削除の変更点を 1 つの注記にまとめた
 - [CakeTime](/ja/core-utility-libraries/time)
@@ -254,7 +254,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - タスクの動的ロードの例を、コアから削除された ProjectTask ではなくアプリケーションのタスクに変更
 - [Bakeでコード生成](/ja/console-and-shells/code-generation-with-bake)
   - pieceofcake2/bake プラグイン向けに書き直し: Composer でのインストール、`CakePlugin::load('Bake')`、`bin/cake bake` コマンド
-  - Bake がモデル、コントローラ、ビュー、テスト、フィクスチャを書き出す場所をモダンレイアウトとレガシーレイアウトについて記載 (pieceofcake2/bake 1.0.3 以降では templates/、tests/TestCase/、tests/Fixture/)
+  - Bake がモデル、コントローラ、ビュー、テスト、フィクスチャを書き出す場所をモダンレイアウトとレガシーレイアウトについて記載 (pieceofcake2/bake 1.0.3 以降では `templates/`、`tests/TestCase/`、`tests/Fixture/`)
   - bake テーマの場所を更新 (`plugins/Bake/Console/Templates/default`、`src/Console/Templates/[theme]`)。`lib/Cake/Console/Templates` の記述を削除
 - [スキーマの管理とマイグレーション](/ja/console-and-shells/schema-management-and-migrations)
   - コマンドを `bin/cake schema` に変更。スキーマファイルの場所を `config/Schema` に変更
@@ -281,18 +281,18 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - データベース: 組み込み PDO ドライバーを列挙、`encoding` は DSN で渡す、`flags` (PHP 8.1 の `ATTR_STRINGIFY_FETCHES`)、`schema` (PostgreSQL/SQL Server)、`sslmode`、`options` を追加、PHP 5.3.7 の記述を削除
   - 変更点: SQL Server ドライバーは SQL Server 2022 以降が対象、`port`/`schema`/`options` の扱い
   - クラスの読み込みを Composer classmap 前提で書き直し (`composer dump-autoload`、`App::uses()` はオートロード非対応プラグインのみ)。フレームワークの classmap 移行を変更点として記載
-  - コア設定: Session のサブキー `name` を `cookie` に修正、`cacheLimiter` を追加、ハンドラーとスキーマのパスと `bin/cake` をモダン構成に。App.baseUrl 用の .htaccess 削除を構成別に記載
+  - コア設定: Session のサブキー `name` を `cookie` に修正、`cacheLimiter` を追加、ハンドラーとスキーマのパスと `bin/cake` をモダン構成に。`App.baseUrl` 用の `.htaccess` 削除を構成別に記載
   - セキュリティ: `Security.salt` の用途を記載し、CSRF トークンの HMAC 署名を変更点として記載。`cipherSeed` は脆弱な Cookie 'cipher' 専用。`Security.useOpenSsl` を追加 (PHP 8 で encrypt()/Cookie 'aes' に必須。pieceofcake2/app v2.3.1 のスケルトンでは有効)
   - キャッシュ: 使用可能なエンジンを列挙 (File、Apc/APCu、Memcached、Memcache、Redis)。Xcache/Wincache の削除を変更点として記載
   - 設定リーダー: デフォルトの読み込み先は `CONFIG`。独自リーダーの例を `src/Lib/Configure` に移し、プロパティを宣言 (PHP 8.2)、`App::uses()` を削除。ja の例のクラス名を PHP の XMLReader と衝突する `XmlReader` から `MyXmlReader` に変更。ConfigReaderInterface/ConfigureException の説明を修正
   - Inflector のパス `src/Cake/Utility/Inflector.php` と `config/bootstrap.php` を本文に反映。古い IE/Chrome Frame や AMF/SOAP の例を更新。ja: `$merge` の説明を修正し `Configure::consume()` を追加
   - 「環境変数」の節を追加: pieceofcake2/app スケルトンが `config/core.php` の先頭で josegonzalez/dotenv により `config/.env` とプロジェクトルートの `.env` を読み込むこと (CakePHP 3〜5 のアプリケーションスケルトンの `.env` サポートのバックポート。変更点: app v2.4.0 で追加)、優先順位 (実際の環境変数 > `config/.env` > ルートの `.env`)、値のクォート、レガシー構成や以前のアプリケーションへの読み込み処理の追加方法、スケルトンが読み込む環境変数 (`DEBUG`、`SECURITY_SALT`、`SECURITY_CIPHER_SEED`、`DB_*`、`DB_TEST_*`)
-  - App.baseUrl: .htaccess ファイルを削除してもドキュメントルートは webroot/ のままにすることを追記
+  - `App.baseUrl`: `.htaccess` ファイルを削除してもドキュメントルートは `webroot/` のままにすることを追記
 - [ルーティング](/ja/development/routing)
-  - ルート設定ファイルのパスを config/routes.php に変更（従来の app/Config/routes.php はフォルダ構造ページへのリンク付きで併記）
-  - 組み込みルートの場所を vendor/pieceofcake2/cakephp/config/routes.php に修正し、無効化は config/routes.php の require 行を削除すると説明
-  - プレフィックスルーティング: Routing.prefixes は config/core.php、ビューは templates/Users/admin_edit.ctp
-  - カスタムルートクラスは src/Routing/Route に置き、App::uses() ではなく Composer の classmap（composer dump-autoload）でオートロード
+  - ルート設定ファイルのパスを `config/routes.php` に変更（従来の `app/Config/routes.php` はフォルダ構造ページへのリンク付きで併記）
+  - 組み込みルートの場所を `vendor/pieceofcake2/cakephp/config/routes.php` に修正し、無効化は `config/routes.php` の require 行を削除すると説明
+  - プレフィックスルーティング: `Routing.prefixes` は `config/core.php`、ビューは `templates/Users/admin_edit.ctp`
+  - カスタムルートクラスは `src/Routing/Route` に置き、App::uses() ではなく Composer の classmap（`composer dump-autoload`）でオートロード
   - コード例: パスのコメントを新レイアウトに統一し、渡された引数の例を正しい PHP クラスに修正
   - ja: 他のページからのリンクが機能するよう明示的なアンカー (routes-configuration、connecting-routes、route-elements、prefix-routing、route-conditions、passed-arguments、named-parameters) を追加
 - [セッション](/ja/development/sessions)
@@ -301,50 +301,50 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - 変更点: `SessionHandlerAdapter` によりハンドラーが `session.use_strict_mode` (PHP 8.6 でデフォルト) に対応。独自の `read()`/`destroy()` への要件を記載
   - キャッシュセッションの説明から Xcache を削除 (APCu、Memcached、Redis)。ComboSession の例は APCu を使い `App::uses()` を削除、モダン構成のパスに。コードブロックを PHP 指定に修正
 - [ディスパッチャー・フィルター](/ja/development/dispatch-filters)
-  - フィルターは config/bootstrap.php で設定し、アプリのフィルタークラスは src/Routing/Filter、プラグインのものは plugins/MyPlugin/Routing/Filter に配置
-  - フレームワーククラスの App::uses() と PHP 5.3 のクロージャに関する注記を削除し、composer dump-autoload と設定付き指定時の class_exists() 要件を追記
+  - フィルターは `config/bootstrap.php` で設定し、アプリのフィルタークラスは `src/Routing/Filter`、プラグインのものは `plugins/MyPlugin/Routing/Filter` に配置
+  - フレームワーククラスの App::uses() と PHP 5.3 のクロージャに関する注記を削除し、`composer dump-autoload` と設定付き指定時の class_exists() 要件を追記
   - 例の不正なクロージャ記述と崩れたマークアップを修正
   - （日本語版）優先度とプラグイン記法に関する誤訳を修正
 - [例外(Exception)](/ja/development/exceptions)
   - 組み込み例外の一覧で欠けていた例外クラス名を表形式で復元
-  - パスをモダン構成（templates/Errors、templates/Layouts、src/Lib/Error、config/core.php）に変更し、Exception.skipLog を追記
+  - パスをモダン構成（`templates/Errors`、`templates/Layouts`、`src/Lib/Error`、`config/core.php`）に変更し、`Exception.skipLog` を追記
   - 例外ハンドラはすべての Throwable を受け取ることを説明し、例を Throwable 型に変更、PHP 5.3 の注意書きとフレームワーククラスの App::uses() を削除
   - 変更点: Composer クラスマップのため、アプリでの CakeErrorController の上書きは確実ではない。_getController() を使う
 - [エラーハンドリング](/ja/development/errors)
-  - パスと例をモダン構成（config/core.php、config/bootstrap.php、src/Lib/AppError.php）に変更
-  - Error.extraFatalErrorMemory とエラーの出力先（logs/error.log、logs/debug.log）を追記
+  - パスと例をモダン構成（`config/core.php`、`config/bootstrap.php`、`src/Lib/AppError.php`）に変更
+  - `Error.extraFatalErrorMemory` とエラーの出力先（`logs/error.log`、`logs/debug.log`）を追記
   - 変更点: PHP 8 で @ 抑制を正しく扱うため、デフォルトハンドラは error_reporting() & $code で判定
   - PHP 7/8 の Error オブジェクト（TypeError など）は例外ハンドラに渡ること、PHP 8 では $context が渡されないことを説明
   - PHP 5.3 の注意書きを削除し、ハンドラの例を PHP 8 向けに更新
 - [デバッグ](/ja/development/debugging)
   - debug() のシグネチャを更新し、trace/excerpt の例をフォークのパスに変更、invoke() を getInstance() に置き換え
-  - ログの出力先を logs/（debug.log/error.log）に変更し、Object を CakeObject に、App::uses('CakeLog') を削除
-  - DebugKit: pieceofcake2/debug_kit を Composer でインストールし、config/bootstrap.php で読み込む。フォークの DebugKit のドキュメントへのリンクを追加
+  - ログの出力先を `logs/`（`debug.log`/`error.log`）に変更し、Object を CakeObject に、App::uses('CakeLog') を削除
+  - DebugKit: pieceofcake2/debug_kit を Composer でインストールし、`config/bootstrap.php` で読み込む。フォークの DebugKit のドキュメントへのリンクを追加
   - DebugKit: 現在のツールバー (右下の CakePHP アイコン、パネル、リクエスト履歴) の説明に更新
 - [テスト](/ja/development/testing)
   - PHPUnit 9.6 を Composer (require-dev) でインストール。PHPUnit 3.7/4.x/5.x、.phar、オートローダー回避策の手順を削除
-  - テストケースは tests/TestCase、フィクスチャは tests/Fixture、設定は config/ に変更。レガシーな app/Test 構成は代替として記載
-  - テストの実行: phpunit.xml.dist (tests/bootstrap.php、CakeFixtureInjector リスナー、stderr) を使う vendor/bin/phpunit と bin/cake test を説明。lib/Cake/Console/cake と --app の例を削除
-  - テストケースの一覧表示 (ケース指定なしの bin/cake test app、ウェブランナーの一覧) は tests/TestCase を探し、無ければ Test/Case を探す
-  - ウェブランナー: スケルトンの webroot/test.php、?case= でケースを指定して実行。コマンドラインでの実行を推奨
+  - テストケースは `tests/TestCase`、フィクスチャは `tests/Fixture`、設定は `config/` に変更。レガシーな `app/Test` 構成は代替として記載
+  - テストの実行: `phpunit.xml.dist` (`tests/bootstrap.php`、CakeFixtureInjector リスナー、stderr) を使う `vendor/bin/phpunit` と `bin/cake test` を説明。`lib/Cake/Console/cake` と `--app` の例を削除
+  - テストケースの一覧表示 (ケース指定なしの `bin/cake test app`、ウェブランナーの一覧) は `tests/TestCase` を探し、無ければ `Test/Case` を探す
+  - ウェブランナー: スケルトンの `webroot/test.php`、?case= でケースを指定して実行。コマンドラインでの実行を推奨
   - コード例を PHPUnit 9 向けに更新: setUp()/tearDown(): void、assertStringContainsString、assertIsArray、assertMatchesRegularExpression、willReturn()、PHPUnit\Framework\TestCase
   - createMock()/getMockBuilder()、非推奨の CakeTestCase::getMock()、getMockForModel() のシグネチャ、expectException() の節を追加
   - staticExpects() の例をセッションへの Auth.User 書き込みに置き換え
-  - カバレッジには Xdebug か PCOV が必要。出力先を tmp/coverage に変更
-  - テストスイートは TESTS . 'TestCase' を使用。phpunit.xml.dist を使う場合 AllTests は不要と記載
-  - プラグインのテストは plugins/&lt;Name>/tests/TestCase (Test/Case も可)
-  - Jenkins: 新しい継続的インテグレーションのページの最後 (GitHub Actions のワークフローの後) に移動。composer install の手順、config/database.php、vendor/bin/phpunit、jenkins.io へのリンク。test-database-setup と generating-code-coverage のアンカーを明示的に追加
+  - カバレッジには Xdebug か PCOV が必要。出力先を `tmp/coverage` に変更
+  - テストスイートは TESTS . 'TestCase' を使用。`phpunit.xml.dist` を使う場合 AllTests は不要と記載
+  - プラグインのテストは `plugins/<Name>/tests/TestCase` (`Test/Case` も可)
+  - Jenkins: 新しい継続的インテグレーションのページの最後 (GitHub Actions のワークフローの後) に移動。`composer install` の手順、`config/database.php`、`vendor/bin/phpunit`、jenkins.io へのリンク。test-database-setup と generating-code-coverage のアンカーを明示的に追加
   - 「テストの種類」の節を追加: フィクスチャを使うユニットテスト、testAction() によるコントローラーのテスト、ブラウザーによるエンドツーエンド (E2E) テスト (エンドツーエンドテストのページへのリンク)。testing-controllers のアンカーを明示的に追加
   - 「テストの種類」に `IntegrationTestTrait` による統合テストを追加 (統合テストのページへのリンク)。`ControllerTestCase` は引き続きサポートされていることを記載。「コントローラーのテスト」に統合テストのページへのリンクのヒントを追加。test-case-conventions のアンカーを明示的に追加
 - [REST](/ja/development/rest)
-  - パスを config/routes.php、src/Controller、templates/Recipes/xml に更新
+  - パスを `config/routes.php`、`src/Controller`、`templates/Recipes/xml` に更新
   - HTTP メソッド上書きの優先順位を修正（X-HTTP-Method-Override ヘッダが _method より優先）
   - ja: custom-rest-routing アンカーを明示的に追加
 
 ### デプロイ
 
 - [デプロイ](/ja/deployment)
-  - ドキュメントルート、core.php、プラグインのシンボリックリンクのパスをモダンな構成に変更
+  - ドキュメントルート、`core.php`、プラグインのシンボリックリンクのパスをモダンな構成に変更
   - `composer install --no-dev --optimize-autoloader` と開発用プラグインの条件付き読み込みを追加
   - デバッグレベルは独自の `CAKEPHP_DEBUG` ではなく、スケルトンの環境変数 `DEBUG` から読み込む例に変更。ほかの設定は環境変数の節へのリンクを追加
   - 新しいページへのリンクとして「AWS Lambda へのデプロイ」の節を追加
@@ -359,15 +359,15 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
 ### セキュリティ
 
 - [セキュリティ](/ja/security/)
-  - 新しいセクションと概要のページ: Organization の SECURITY.md に基づくサポートするバージョン (最新のリリースにセキュリティ修正を提供。これまではパッチリリースとして提供)、修正の告知 (GitHub のセキュリティアドバイザリ、CHANGELOG/UPGRADE.md、このドキュメント)
+  - 新しいセクションと概要のページ: Organization の `SECURITY.md` に基づくサポートするバージョン (最新のリリースにセキュリティ修正を提供。これまではパッチリリースとして提供)、修正の告知 (GitHub のセキュリティアドバイザリ、CHANGELOG/UPGRADE.md、このドキュメント)
 - [脆弱性の報告](/ja/security/reporting)
-  - 新しいページ: 非公開の脆弱性報告 (Security タブの Report a vulnerability)、報告に含める情報、SECURITY.md の公開までの流れ。脆弱性への対応の「脆弱性の報告」の節から移動
+  - 新しいページ: 非公開の脆弱性報告 (Security タブの Report a vulnerability)、報告に含める情報、`SECURITY.md` の公開までの流れ。脆弱性への対応の「脆弱性の報告」の節から移動
 - [脆弱性への対応](/ja/security/fixes)
   - `/ja/appendices/security-fixes` から移動 (古い URL はこのページにリダイレクト)。報告の節は脆弱性の報告に移動
-  - `'readFile' => false` を指定した `Xml::build()` の SSRF (2.12.3 で修正) を追加。Cookie のタイプを `$components` で設定。Security.useOpenSsl のスケルトンについての注記
+  - `'readFile' => false` を指定した `Xml::build()` の SSRF (2.12.3 で修正) を追加。Cookie のタイプを `$components` で設定。`Security.useOpenSsl` のスケルトンについての注記
   - SmtpTransport/MailTransport のメールヘッダーインジェクション (GHSA-4f9q-3c4x-52cv)、ビュー・レイアウト・エレメント名のパストラバーサル (GHSA-w2mh-x92p-5p95)、AuthComponent のログイン後のオープンリダイレクト (GHSA-x4p9-p4cx-gxwx) を追加 (いずれも 2.12.5 で修正)。表に GHSA の ID を記載。本家の CakePHP 2.x を使うアプリケーションは pieceofcake2/cakephp に切り替えると修正を適用できることを記載
 - [本家のアドバイザリ](/ja/security/upstream-advisories)
-  - 新しいページ: CakePHP 2.x に関係する本家 CakePHP のアドバイザリの対応状況 (フォークで修正済み、または対象外)。フォークの CHANGELOG、UPGRADE.md、アドバイザリに基づく
+  - 新しいページ: CakePHP 2.x に関係する本家 CakePHP のアドバイザリの対応状況 (フォークで修正済み、または対象外)。フォークの CHANGELOG、`UPGRADE.md`、アドバイザリに基づく
 - [セキュリティチェックリスト](/ja/security/hardening)
   - 新しいページ: debug 0、固有のソルトとシード値、Composer での更新、SecurityComponent/CSRF、クッキーとセッションのフラグ、ファイルのパーミッション、HTTPS、サポートされている PHP。各設定を説明しているページへのリンク
 - [出力時のエスケープと HTML の無害化](/ja/security/escaping-and-sanitizing-html)
@@ -402,15 +402,15 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
 - [プラグイン](/ja/plugins)
   - CakePHP 2 プラグインの PHP 8 対応状況を説明し、Piece of Cake 2 がメンテナンスするフォークへのリンクを追加
 - [プラグインの作成](/ja/plugins/how-to-create-plugins)
-  - プラグインのパスを plugins/ に、ビューの上書きを templates/Plugin に変更し、プラグイン内部の構成とテストディレクトリを説明、プラグインのコードで App::uses() を残す理由を記載
-  - Bake のコマンドを Bake プラグインの bin/cake に変更し、欠けていたアセットのプラグイン記法の例を追加、flash/ フォルダを削除
-  - 公開方法: plugins.cakephp.org と awesome-cakephp への言及を削除し、composer.json の例 (type cakephp-plugin、composer/installers、installer-name) を追加
+  - プラグインのパスを `plugins/` に、ビューの上書きを `templates/Plugin` に変更し、プラグイン内部の構成とテストディレクトリを説明、プラグインのコードで App::uses() を残す理由を記載
+  - Bake のコマンドを Bake プラグインの `bin/cake` に変更し、欠けていたアセットのプラグイン記法の例を追加、`flash/` フォルダを削除
+  - 公開方法: plugins.cakephp.org と awesome-cakephp への言及を削除し、`composer.json` の例 (type cakephp-plugin、composer/installers、installer-name) を追加
 - [プラグインのインストール](/ja/plugins/how-to-install-plugins)
-  - Composer を標準のインストール方法とし (pieceofcake2/debug_kit の例、plugins/ 用の composer/installers と installer-paths)、手動や Git でのインストールも plugins/ と https の URL に変更
-  - プラグインは config/bootstrap.php でロードすることと、プラグインのクラスに App::uses() が必要な場合を記載
-  - プラグインを plugins/&lt;Name>/ にインストールするために composer.json の installer-paths と allow-plugins (composer/installers、Composer 2.2 以降) の設定が必須であることを明記
+  - Composer を標準のインストール方法とし (pieceofcake2/debug_kit の例、`plugins/` 用の composer/installers と installer-paths)、手動や Git でのインストールも `plugins/` と https の URL に変更
+  - プラグインは `config/bootstrap.php` でロードすることと、プラグインのクラスに App::uses() が必要な場合を記載
+  - プラグインを `plugins/<Name>/` にインストールするために `composer.json` の installer-paths と allow-plugins (composer/installers、Composer 2.2 以降) の設定が必須であることを明記
 - [プラグインの使い方](/ja/plugins/how-to-use-plugins)
-  - プラグインのロードを config/bootstrap.php で行うことと、プラグインの Config/ 内のファイルの場所を記載し、schema コマンドを bin/cake に変更
+  - プラグインのロードを `config/bootstrap.php` で行うことと、プラグインの `Config/` 内のファイルの場所を記載し、schema コマンドを `bin/cake` に変更
 - [メンテナンスされているプラグイン](/ja/plugins/maintained-plugins)
   - AsyncAws プラグインを Aws プラグインより軽量な代替として紹介
 
@@ -418,26 +418,26 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
 
 - [貢献](/ja/contributing)
   - 貢献先は GitHub の pieceofcake2/* リポジトリ (フレームワーク、アプリケーションスケルトン、プラグイン、ドキュメント)
-  - 貢献の手順は Organization の CONTRIBUTING.md で説明し、この章のページは概要とその各セクションへのリンクを記載
+  - 貢献の手順は Organization の `CONTRIBUTING.md` で説明し、この章のページは概要とその各セクションへのリンクを記載
 - [ドキュメント](/ja/contributing/documentation)
-  - ドキュメントは pieceofcake2/docs (2.x)、Markdown と VitePress、GitHub Actions でデプロイ、bin/dev-server.sh でローカル確認。メンテナンスは en/ja のみ。Jenkins、IRC、ドキュメントチームのメールを削除
+  - ドキュメントは pieceofcake2/docs (2.x)、Markdown と VitePress、GitHub Actions でデプロイ、`bin/dev-server.sh` でローカル確認。メンテナンスは en/ja のみ。Jenkins、IRC、ドキュメントチームのメールを削除
   - reStructuredText/Sphinx のフォーマットガイドを Markdown/VitePress のガイドに置き換え (見出しとアンカー、リンク、コードブロック、アラート、info/pieceofcake2 コンテナ、取り込み)、pieceofcake2/docs の README に記載
 - [チケット](/ja/contributing/tickets)
   - Issue は pieceofcake2/* リポジトリへ。報告前に CHANGELOG と移行ガイドを確認。質問は Stack Overflow (IRC と Google グループを削除)
-  - セキュリティ問題は SECURITY.md に従い GitHub の非公開の脆弱性報告 (Security タブの Report a vulnerability) で報告。security@cakephp.org を削除
-  - 報告の詳細は CONTRIBUTING.md と SECURITY.md へのリンク
+  - セキュリティ問題は `SECURITY.md` に従い GitHub の非公開の脆弱性報告 (Security タブの Report a vulnerability) で報告。security@cakephp.org を削除
+  - 報告の詳細は `CONTRIBUTING.md` と `SECURITY.md` へのリンク
 - [コード](/ja/contributing/code)
   - セットアップ: PHP 8.0 以上と Composer。PHPUnit 9.6、PHP_CodeSniffer、PHPStan は開発用依存としてインストール。PHP 5.3、mcrypt、PHPUnit 3.7 の要件を削除
-  - 「テストの実行」を新設: tests/config/database.php を vendor/pieceofcake2/app/config にコピーし、DB 環境変数でデータベースを選んで vendor/bin/phpunit と vendor/bin/phpcs を実行
+  - 「テストの実行」を新設: `tests/config/database.php` を `vendor/pieceofcake2/app/config` にコピーし、`DB` 環境変数でデータベースを選んで `vendor/bin/phpunit` と `vendor/bin/phpcs` を実行
   - メンテナンスするブランチは 2.x のみ。upstream/2.x から作業し Pull Request も 2.x に送る。2.next/4.0 の説明と Cake Software Foundation への帰属の記述を削除
-  - セットアップ、テストの実行、Pull Request の手順は CONTRIBUTING.md へのリンク
+  - セットアップ、テストの実行、Pull Request の手順は `CONTRIBUTING.md` へのリンク
 - [コーディング規約](/ja/contributing/cakephp-coding-conventions)
   - CakePHP 5 ベースの規約 (cakephp/cakephp-codesniffer ^5.0、PSR-12) に書き直し: 4 スペース、配列の短縮構文、末尾カンマ、クラス/メソッドの中括弧は次の行、elseif、ヨーダ記法禁止、?? と ?:、定数のアクセス権、ドキュメントブロックのルール
-  - phpcs/phpcbf のインストールと実行方法、フレームワークの phpcs.xml にある CakePHP 2 用の除外、pieceofcake2/app のアプリケーション用 phpcs.xml (従来構成のパスも)、本家 CakePHP 2 の規約との違いの表を追加
+  - phpcs/phpcbf のインストールと実行方法、フレームワークの `phpcs.xml` にある CakePHP 2 用の除外、pieceofcake2/app のアプリケーション用 `phpcs.xml` (従来構成のパスも)、本家 CakePHP 2 の規約との違いの表を追加
 - [後方互換性ガイド](/ja/contributing/backwards-compatibility)
-  - 書き直し: フォークのリリースで変わること (キャッシュエンジン、ディレクトリ構成、オートロードなど互換性のない変更を含んだリリースもある)、移行ガイド。貢献者向けガイドラインは CONTRIBUTING.md へのリンク。本家のセマンティックバージョニングの表を削除
+  - 書き直し: フォークのリリースで変わること (キャッシュエンジン、ディレクトリ構成、オートロードなど互換性のない変更を含んだリリースもある)、移行ガイド。貢献者向けガイドラインは `CONTRIBUTING.md` へのリンク。本家のセマンティックバージョニングの表を削除
 - [CakePHP の開発プロセス](/ja/contributing/cakephp-development-process)
-  - フォークのメンテナンス中心のプロセスに書き直し: バージョン番号 (2.10.24.x、2.11.0、2.12.x)。目的、ブランチ、リリースは CONTRIBUTING.md へのリンク。IRC と本家のブランチモデルを削除
+  - フォークのメンテナンス中心のプロセスに書き直し: バージョン番号 (2.10.24.x、2.11.0、2.12.x)。目的、ブランチ、リリースは `CONTRIBUTING.md` へのリンク。IRC と本家のブランチモデルを削除
 
 ### 付録
 

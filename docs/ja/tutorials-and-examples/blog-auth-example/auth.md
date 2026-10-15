@@ -147,7 +147,7 @@ class UsersController extends AppController
 :::
 
 以前ビューを作成した方法と同様に、またはコード生成ツールを用いて、ビューを実装します。
-このチュートリアルの目的に沿って、add.ctp だけを示します:
+このチュートリアルの目的に沿って、`add.ctp` だけを示します:
 
 ``` php
 <!-- templates/Users/add.ctp -->

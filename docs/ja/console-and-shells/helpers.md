@@ -29,7 +29,7 @@ $progress->draw();
 CakePHP は、いくつかの Shell ヘルパーを用意していますが、あなたのアプリケーションや
 プラグインの中で、新たに作成することができます。例として、装飾的なヘッダーを生成するための
 単純なヘルパーを作成してみましょう。Shell ヘルパーのクラス名には `ShellHelper` という
-サフィックスを付けます。最初に **src/Console/Helper/HeadingShellHelper.php** を作成し、
+サフィックスを付けます。最初に `src/Console/Helper/HeadingShellHelper.php` を作成し、
 以下のように記述します。
 
 ``` php
