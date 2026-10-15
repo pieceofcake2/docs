@@ -426,7 +426,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - The contribution process is described in the organization's `CONTRIBUTING.md`; the pages of this chapter give an overview and link to its sections
 - [Documentation](/contributing/documentation)
   - Docs hosted at pieceofcake2/docs (2.x), Markdown + VitePress, deployed by GitHub Actions, local preview with `bin/dev-server.sh`; only en/ja maintained; Jenkins, IRC and docs mailing list removed
-  - reStructuredText/Sphinx formatting guide replaced by a Markdown/VitePress guide (headings and anchors, links, code blocks, alerts, info/pieceofcake2 containers, includes), kept in the README of pieceofcake2/docs
+  - Rewritten as the guide to editing this book: local development, repository layout, editing guidelines, translations, and a Markdown/VitePress formatting guide (headings and anchors, links, code blocks, alerts, info/pieceofcake2 containers, includes) that replaces the reStructuredText/Sphinx one
 - [Tickets](/contributing/tickets)
   - Issues go to pieceofcake2/* repositories; check CHANGELOG/upgrade guide before reporting; Stack Overflow for questions (IRC and Google Group removed)
   - Security issues reported via GitHub private vulnerability reporting (Security tab, Report a vulnerability) per `SECURITY.md`; security@cakephp.org removed
