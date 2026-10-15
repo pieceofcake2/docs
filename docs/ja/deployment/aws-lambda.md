@@ -229,6 +229,11 @@ if (getenv('LAMBDA_TASK_ROOT') !== false) {
 PHP 自身が報告するエラーも CloudWatch に書き込まれます。エラーを Sentry にも送るには
 [Sentry プラグイン](https://pieceofcake2.github.io/sentry/) を参照してください。
 
+ロググループを読める人は誰でもログを読めるので、秘密の情報をログに出力しないでください。
+`bref-ssm:` から解決された値を含む `$_SERVER`、`getenv()` や設定をダンプしたり、パスワード、トークン、
+`Authorization` ヘッダーを含むリクエストのデータをログに書いたりしないでください。エラーメッセージに
+設定や SQL クエリが含まれないように、`DEBUG` は `0` のままにします。
+
 <a id="configuration-files"></a>
 
 ### 設定ファイル
@@ -357,7 +362,7 @@ provider:
                     Resource: !Join ['', [!GetAtt UploadsBucket.Arn, '/*']]
                 -   Effect: Allow
                     Action: ses:SendEmail
-                    Resource: '*'
+                    Resource: arn:aws:ses:${aws:region}:${aws:accountId}:identity/example.com
 
 plugins:
     - ./vendor/bref/bref
@@ -411,6 +416,12 @@ resources:
                     Enabled: true
         UploadsBucket:
             Type: AWS::S3::Bucket
+            Properties:
+                PublicAccessBlockConfiguration:
+                    BlockPublicAcls: true
+                    BlockPublicPolicy: true
+                    IgnorePublicAcls: true
+                    RestrictPublicBuckets: true
 ```
 
 注意点:
@@ -506,6 +517,15 @@ Configure::write('Aws', [
 関数の IAM ロールには、`serverless.yml` の例の `iam` の節のように、アプリケーションが使う
 サービスごとに権限が必要です。
 
+::: tip
+[pieceofcake2/async-aws](https://pieceofcake2.github.io/async-aws/) は、同じ DynamoDB のセッションハンドラー、
+SES のメールトランスポート、DynamoDB のキャッシュエンジン、S3 ストリームラッパーを、
+より小さな依存関係で提供します。AWS SDK 全体ではなく、使う AWS のサービスだけをインストールする
+[AsyncAws](https://async-aws.com) を使うので、Lambda のパッケージを小さくできます。
+[Migrating from pieceofcake2/aws](https://pieceofcake2.github.io/async-aws/#migrating-from-pieceofcake2aws)
+を参照してください。
+:::
+
 <a id="sessions"></a>
 
 ### セッション
@@ -578,8 +598,9 @@ ElastiCache は VPC の中で動くので、関数も同じ VPC で実行する�
 かかります。`RedisEngine` には TLS のオプションがないので、プライベートな VPC の中で転送中の
 暗号化を使わないクラスターを使うか、PHP の Redis クライアントが `server` の `tls://`
 プレフィックスを受け付けることを確認してから使ってください。VPC なしでリクエストごとの料金に
-したい場合は DynamoDB にキャッシュするデータを保存できますが、CakePHP 2 には DynamoDB の
-キャッシュエンジンはありません。キャッシュエンジンについては [キャッシュ](/ja/core-libraries/caching)
+したい場合は、[pieceofcake2/async-aws](https://pieceofcake2.github.io/async-aws/#dynamodb-cache-engine)
+の `AsyncAws.DynamoDb` エンジンで、キャッシュするデータを DynamoDB に保存できます。
+キャッシュエンジンについては [キャッシュ](/ja/core-libraries/caching)
 を参照してください。
 
 <a id="email"></a>
@@ -604,7 +625,9 @@ class EmailConfig
 
 送信元のアドレスまたはそのドメインは SES で検証済みの ID である必要があります。また、新しい SES
 アカウントは、本番環境へのアクセスを申請するまで検証済みのアドレスにしか送信できません。関数には
-`ses:SendEmail` の権限が必要です。
+送信元の ID に対する `ses:SendEmail` の権限が必要です (`serverless.yml` の例の `iam` のセクションを参照)。
+アカウントがサンドボックスにある間は、SES が検証済みの送信先アドレスに対しても権限を確認することがあります。
+送信が拒否された場合は、それらの ID の ARN も追加してください。
 [Amazon SES Email Transport](https://pieceofcake2.github.io/aws/#amazon-ses-email-transport)
 と [メール](/ja/core-utility-libraries/email) を参照してください。
 
@@ -677,6 +700,7 @@ public function download($id)
     if (!$document) {
         throw new NotFoundException();
     }
+    // Check here that the current user may download this document.
     $s3 = $this->Aws->S3;
     $command = $s3->getCommand('GetObject', [
         'Bucket' => env('UPLOADS_BUCKET'),
@@ -694,6 +718,7 @@ public function download($id)
 なることを確認してください。AWS プラグインは
 [S3 ストリームラッパー](https://pieceofcake2.github.io/aws/#s3-stream-wrapper) を登録することも
 でき、PHP のファイル関数で `s3://bucket/key` のパスを使えるようになります。
+pieceofcake2/async-aws にも[同じラッパー](https://pieceofcake2.github.io/async-aws/#s3-stream-wrapper)があります。
 
 <a id="static-assets"></a>
 
@@ -709,7 +734,11 @@ Bref が PHP-FPM で実行するのはハンドラーのファイル `webroot/in
 の `server-side-website` は、S3 バケットと CloudFront ディストリビューションを作成します。
 CloudFront は `assets` に書いたパスをバケットに、それ以外のリクエストを API Gateway に送ります。
 Lift はデプロイのたびに、書いたファイルをアップロードします。アプリケーションが参照する
-`webroot/` のファイルやディレクトリはすべて追加してください。
+`webroot/` のファイルやディレクトリはすべて追加してください。ただし `index.php`、`test.php`、
+`.htaccess` は追加しません。Lift はバケットを非公開にし、CloudFront だけが読めるようにします。
+S3 と CloudFront を自分で設定する場合も同じようにしてください。バケットのパブリックアクセスをブロックし、
+バケットやそのウェブサイトエンドポイントを公開する代わりに、オリジンアクセスコントロール (OAC) で
+CloudFront にアクセスを許可します。
 
 プラグインやテーマのアセットは、CakePHP の `AssetDispatcher` フィルターが Lambda 関数から
 配信します。これでも動きますが、ファイルごとに関数の呼び出しが発生します。S3 から配信するには、
@@ -734,7 +763,7 @@ Amazon RDS と Aurora (MySQL または PostgreSQL) は、`config/database.php` �
   サービスの VPC エンドポイントがないと、SSM、DynamoDB、SES、S3 に接続できません。`bref-ssm:`
   の変数はインスタンスの起動時に解決されるので、経路がないとすべてのコールドスタートが失敗します。
   データベースをパブリックにアクセスできるようにすれば VPC は不要ですが、データベースが
-  インターネットに公開されます。Bref のドキュメントの
+  インターネットに公開されます。本番のデータではこの方法を使わないでください。Bref のドキュメントの
   [Using a database](https://bref.sh/docs/environment/database) を参照してください。
 - **接続数。** Lambda の各インスタンスは一度に 1 つのリクエストを処理し、それぞれが接続を開くので、
   接続数は関数の同時実行数とともに増えます。
@@ -871,12 +900,18 @@ GitHub Actions を使うと、AWS のアクセスキーを保存せずに、プ�
    }
    ```
 
+   `StringEquals` と正確な `sub` の値はそのままにしてください。`StringLike` で `repo:my-org/*` や
+   `repo:my-org/my-cake-app:*` のようなワイルドカードを使うと、ほかのリポジトリや、リポジトリのすべての
+   ブランチとプルリクエストから本番環境にデプロイできてしまいます。ジョブに `environment` がない場合、
+   `sub` の値は `repo:my-org/my-cake-app:ref:refs/heads/main` のようにブランチを表します。
+
 3. ロールにデプロイに必要な権限を与えます。CloudFormation、Lambda、関数の IAM ロール、ECR、
    デプロイ用の S3 バケット、API Gateway、CloudWatch Logs と、スタックのリソース (DynamoDB、S3、
    CloudFront) です。出発点として、Bref が
    [最小限のポリシー](https://bref.sh/docs/setup/minimal-aws-policy) を公開しています。
    `serverless.yml` で `${ssm:...}` を使う場合は、それらのパラメータに対する
-   `ssm:GetParameter` の権限も必要です。
+   `ssm:GetParameter` の権限も必要です。`AdministratorAccess` は付けず、サービスが対応していれば
+   `Resource` をそのサービスのスタック、関数、リポジトリ、バケットに限定してください。
 4. GitHub のリポジトリで `production` 環境を作成し、ロールの ARN を変数 `AWS_DEPLOY_ROLE_ARN`
    に設定します。
 

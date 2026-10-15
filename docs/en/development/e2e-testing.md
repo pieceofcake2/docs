@@ -1,4 +1,4 @@
-# E2E Testing
+# End-to-End Testing {#e2e-testing}
 
 End-to-end (E2E) tests open your application in a real browser and use it the
 way a user does: they click links, fill in forms, press buttons and check what
@@ -14,20 +14,20 @@ This page explains when E2E tests are useful, how to set them up and how to
 write them. The [package documentation](https://pieceofcake2.github.io/e2e-test/)
 is the full reference for every option and method.
 
-## When to Use E2E Tests
+## When to Use End-to-End Tests {#when-to-use-e2e-tests}
 
-CakePHP applications are usually tested on three levels (see
+CakePHP applications are usually tested on several levels (see
 [Types of Tests](/development/testing#types-of-tests)):
 
-| | Unit tests | Controller tests (`testAction()`) | E2E tests |
-| --- | --- | --- | --- |
-| Runs | In the PHPUnit process | In the PHPUnit process, no HTTP | A real HTTP server and a real Chrome |
-| Speed | Milliseconds | Milliseconds per request | Seconds per test |
-| JavaScript, CSS, layout | No | No | Yes |
-| Cookies, sessions, redirects | - | Simulated | Real |
-| `SecurityComponent` tokens | - | Usually disabled or mocked | Real tokens from the real form |
-| View variables, return values | Yes | Yes | No, only what a user sees |
-| Setup | None | None | Chrome, chromedriver, a test database for the server |
+| | Unit tests | Controller tests (`testAction()`) | [Integration tests](/development/integration-testing) | E2E tests |
+| --- | --- | --- | --- | --- |
+| Runs | In the PHPUnit process | In the PHPUnit process, no HTTP | In the PHPUnit process, no HTTP | A real HTTP server and a real Chrome |
+| Speed | Milliseconds | Milliseconds per request | Milliseconds per request | Seconds per test |
+| JavaScript, CSS, layout | No | No | No | Yes |
+| Cookies, sessions, redirects | - | Simulated | Simulated through the real dispatcher | Real |
+| `SecurityComponent` tokens | - | Usually disabled or mocked | Generated from the posted data | Real tokens from the real form |
+| View variables, return values | Yes | Yes | Yes | No, only what a user sees |
+| Setup | None | None | None | Chrome, chromedriver, a test database for the server |
 
 E2E tests are the right tool for:
 
@@ -36,11 +36,12 @@ E2E tests are the right tool for:
 - anything that depends on JavaScript, the layout, responsive design or the
   browser;
 - forms protected by `SecurityComponent` and the helpers used in templates:
-  controller tests usually bypass the token validation, so mistakes there only
-  show up in a browser.
+  controller tests usually bypass the token validation, and integration tests
+  compute the tokens from the posted data instead of the real form, so
+  mistakes in the form only show up in a browser.
 
 Test the logic of models, components and controllers, status codes and edge
-cases with unit and controller tests. Keep the E2E tests few and focused on the
+cases with unit and integration tests. Keep the E2E tests few and focused on the
 main flows: each of them runs the whole application in a browser and takes a
 few seconds.
 
@@ -643,6 +644,9 @@ The [complete workflow](https://github.com/pieceofcake2/e2e-test/blob/1.x/docs/e
 also sets up MySQL as the test database. If your build creates CSS or
 JavaScript files, build them before the E2E step:
 `assertStylesheetsLoaded()` fails when the stylesheets are missing.
+
+For the other jobs of a CI workflow and a job summary with a link to the
+artifacts, see [Continuous Integration](/development/continuous-integration).
 
 ## Tips
 

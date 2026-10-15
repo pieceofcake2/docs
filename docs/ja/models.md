@@ -30,7 +30,7 @@ Blog、Post、Comment はすべてモデルの例で、それぞれが互いに�
 
 以下は CakePHP におけるモデル定義の簡単な例です。
 
-``` php
+```php
 // src/Model/Ingredient.php
 class Ingredient extends AppModel
 {
@@ -73,7 +73,7 @@ Composer の classmap を使っている場合は、新しいクラスファイ�
 > CakePHP は対応するファイルが `src/Model/` に見つからない場合、
 > 動的にモデルオブジェクトを生成します。
 > モデルのファイルに正しい名前をつけなければ
-> (つまり ingredient.php や Ingredients.php などとしたら)
+> (つまり `ingredient.php` や `Ingredients.php` などとしたら)
 > CakePHP にとって見当たらないそのファイルではなく、
 > AppModel のインスタンスが使われることになります。
 > モデル内に自身で定義したメソッドやモデルに追加したビヘイビアを使おうとして、
@@ -92,7 +92,7 @@ CakePHP はそのモデルを自動的に呼び出し可能にします。
 自動で Ingredient モデルを初期化して、
 コントローラの `$this->Ingredient` に割り当てます。
 
-``` php
+```php
 class IngredientsController extends AppController
 {
     public function index()
@@ -107,7 +107,7 @@ class IngredientsController extends AppController
 関連モデルはメインのモデルを通じて利用できます。
 以下の例は、Recipe が Ingredient モデルと関連づけられている場合です。
 
-``` php
+```php
 class Recipe extends AppModel
 {
     public function steakRecipes()

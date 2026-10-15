@@ -16,7 +16,7 @@ Configure を使って、好きなメソッドをデフォルトのエラーハ�
 コールバックは PHP が呼ぶことができるものなら無名関数であってもかまいません。
 エラーをハンドルするデフォルトの設定は以下のようになっています。
 
-``` php
+```php
 // config/core.php
 Configure::write('Error', [
     'handler' => 'ErrorHandler::handleError',
@@ -83,7 +83,7 @@ PHP 7 以降、未定義のメソッドの呼び出しや型の合わない引�
 `AppError` というクラスをエラーをハンドルするのに使うことができます。
 その場合は次のようにすることになるでしょう。
 
-``` php
+```php
 // config/core.php
 Configure::write('Error.handler', 'AppError::handleError');
 
@@ -121,7 +121,7 @@ PHP 8 ではエラーハンドラに 5 番目の引数 `$context` が渡され�
 しておいてください。どのような種類のコールバックでも定義することができますので、
 無名関数を使用することもできます。
 
-``` php
+```php
 Configure::write('Error.handler', function ($code, $description, $file = null, $line = null) {
     echo 'おっと、良くない事態発生';
 
@@ -138,7 +138,7 @@ Configure::write('Error.handler', function ($code, $description, $file = null, $
 `Error.handler` は致命的 (fatal) なエラーコードも受け取ります。
 もしも cake のエラーページを表示させたくないのなら、次のように処理を上書くことができます。
 
-``` php
+```php
 // config/core.php
 Configure::write('Error.handler', 'AppError::handleError');
 

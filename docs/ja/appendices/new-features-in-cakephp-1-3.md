@@ -12,7 +12,7 @@ CakePHP 1.3 は数多くの機能を取り入れました。
 今や名前を指定する際に、引数一つ一つに文字列を渡すだけでなく、第一引数に単純な配列を
 渡すこともできるようになりました。
 
-``` php
+```php
 $this->Security->requirePost(['edit', 'update']);
 ```
 
@@ -21,7 +21,7 @@ $this->Security->requirePost(['edit', 'update']);
 全てのコアコンポーネントに対する設定は、 `$components` 配列から設定できるようになりました。
 ビヘイビアのように、コンポーネントを宣言する際、コンポーネントの設定を宣言することができます。
 
-``` php
+```php
 var $components = [
     'Cookie' => [
         'name' => 'MyCookie'
@@ -68,7 +68,7 @@ sort() の方向をセットすることができます。 `PaginatorHelper::nex
 伴って動作しますが、 Html ヘルパーと Javascript ヘルパーで使われていたこの機能は、
 全てのヘルパーで利用可能になりました。 `Asset.timestamp == force` と仮定すると、
 
-``` php
+```php
 $path = 'css/cake.generic.css'
 $stamped = $this->Html->assetTimestamp($path);
 
@@ -87,7 +87,7 @@ highlight() はハイライトするための単語の配列を受け入れる�
 新しいメソッド `addFormat()` が追加されました。このメソッドは currency パラメータの
 組み合わせを設定することを可能にし、同じものを何度も入力する必要がなくなりました。
 
-``` php
+```php
 $this->Number->addFormat('NOK', ['before' => 'Kr. ']);
 $formatted = $this->Number->currency(1000, 'NOK');
 ```
@@ -113,7 +113,7 @@ Cache アダプタは cache ディレクトリに置く必要があります。 
 `$plugin/libs/cache/my_custom_cache.php` のどちらかに置くことになります。
 プラグインのキャッシュ設定は、ドットを使った文法を使う必要があります。
 
-``` php
+```php
 Cache::config('custom', [
     'engine' => 'CachePack.MyCustomCache',
     ...
@@ -121,7 +121,7 @@ Cache::config('custom', [
 ```
 
 アプリケーションまたはプラグインのキャッシュエンジンは `app/bootstrap.php` で設定する
-必要があります。 core.php でこれらを設定しようとすると、正しく動作しないでしょう。
+必要があります。 `core.php` でこれらを設定しようとすると、正しく動作しないでしょう。
 
 **新しいキャッシュメソッド**
 
@@ -147,14 +147,14 @@ Cache::config('custom', [
 `App::import('Datasouce', 'MyPlugin.YourDatasource');`
 を用いてください。
 
-**database.php でプラグインのデータソースを使うには**
+**`database.php` でプラグインのデータソースを使うには**
 
 プラグイン名を用いた「datesource」キーを設定することによって、プラグインのデータソースを使うことが
 出来ます。例えば、LastFm データソースを含む WebservicePack プラグイン
-(plugin/webservice_pack/models/datasources/last_fm.php) があるとすると、
+(`plugin/webservice_pack/models/datasources/last_fm.php`) があるとすると、
 このようにできます。
 
-``` php
+```php
 var $lastFm = array(
     'datasource' => 'WebservicePack.LastFm'
     ...
@@ -210,7 +210,7 @@ MySQL は一番多くのテーブルパラメータをサポートしていま�
 スキーマファイルで他のキーを使うのと同様に、 `tableParameters` を使います。
 `indexes` とよく似ています:
 
-``` php
+```php
 var $comments => [
     'id' => [
       'type' => 'integer',
@@ -280,11 +280,11 @@ Schema シェルはプラグインのスキーマファイルと SQL ダンプ�
 **Router**
 
 新しいスタイルの prefix を用いたURL生成は、まさしく 1.2 での admin ルーティングと同じく振舞います。
-同じ文法を使い、同じ方法で持続的になり、同じ方法で振る舞います。core.php に
+同じ文法を使い、同じ方法で持続的になり、同じ方法で振る舞います。`core.php` に
 `Configure::write('Routing.prefixes', ['admin', 'member']);` となっていると
 仮定すると、prefix 無しの URL から次のようにすることができます:
 
-``` php
+```php
 $this->Html->link(
   'Go',
   ['controller' => 'posts', 'action' => 'index', 'member' => true]
@@ -297,7 +297,7 @@ $this->Html->link(
 
 同様に、prefix 有りの URL において、prefix 無しの URL に行きたい場合、次のようにします:
 
-``` php
+```php
 $this->Html->link(
   'Go',
   [
@@ -349,7 +349,7 @@ Set には新しく `Set::apply()` メソッドがあります。これは `Set:
 [コールバック](https://ca2.php.net/callback) を適用することができ、map や reduce
 として振舞うこともできます。
 
-``` css
+```css
 Set::apply('/Movie/rating', $data, 'array_sum');
 ```
 
@@ -381,13 +381,13 @@ Libs ディレクトリは、サードパーティ、外部ベンダからのラ
 分割することを可能にします。また、 `App::import()` は libs ディレクトリからもインポート
 できるように更新されました。
 
-``` php
+```php
 App::import('Lib', 'ImageManipulation'); // app/libs/image_manipulation.php をインポートする
 ```
 
 プラグインからも libs のファイルをインポートできます
 
-``` php
+```php
 App::import('Lib', 'Geocoding.Geocode'); // app/plugins/geocoding/libs/geocode.php をインポートする
 ```
 
@@ -398,22 +398,22 @@ App::import('Lib', 'Geocoding.Geocode'); // app/plugins/geocoding/libs/geocode.p
 **設定**
 
 - `Security.level` のデフォルトは 1.3 では **high** の代わりに **medium** になりました。
-- 新しい設定値 Security.cipherSeed があります。
+- 新しい設定値 `Security.cipherSeed` があります。
   この値はクッキーをよりセキュアに符号化するのを確実にするために独自のものに変更するべきでしょう。
   開発モードでは、この値がデフォルト値から変更されていない場合に警告が生成されます。
 
 **i18n**
 
 特定の言語の日時設定を検索するために、LC_TIME カテゴリのロケール定義ファイルを使うことが
-できるようになりました。POSIX に従ったロケール定義ファイルを使い、app/locale/\*language\*/
+できるようになりました。POSIX に従ったロケール定義ファイルを使い、`app/locale/*language*/`
 に保存してください（LC_TIME カテゴリのフォルダを作るのではなく、ファイルを作成してください）。
 
 例えば、debian か ubuntu が走ってるマシーンにアクセスすることができるなら、フランスの
 ロケールファイルを /usr/share/i18n/locales/fr_FR に見つけることができます。
-LC_TIME に該当する部分を app/locale/fr_fr/LC_TIME（ファイル）にコピーしてください。
+LC_TIME に該当する部分を `app/locale/fr_fr/LC_TIME`（ファイル）にコピーしてください。
 そうすると、このようにフランス語の時間設定にアクセスすることがきでます：
 
-``` php
+```php
 Configure::write('Config.language','fr-fr'); // 現在の言語をセットする
 $monthNames = __c('mon',LC_TIME,true); // フランス語の月の名前の配列を返す
 $dateFormat = __c('d_fmt',LC_TIME,true); // フランスで好まれる日にちのフォーマットを返す
@@ -438,7 +438,7 @@ error404 に独自のエラーメソッドを変換したいなら、手動で�
 `Routing.prefixes` が追加されたことに伴い、スキャフォールディングは prefix のいずれかの中での
 スキャフォールディングが可能になるように書き直されました。
 
-``` php
+```php
 <?php
 Configure::write('Routing.prefixes', ['admin', 'member']);
 
@@ -459,7 +459,7 @@ class PostsController extends AppController
 国識別子 (*country prefix*) を、適切な名称を持つ別のクラスに受け流して処理させます。
 例として、あなたがオランダに住んでいたとすると、以下のようなクラスを作ることになります。
 
-``` php
+```php
 class NlValidation
 {
     public function phone($check)
@@ -477,7 +477,7 @@ class NlValidation
 インポートされなければなりません。モデルのバリデーションにおいて、以下のようにして
 NlValidation クラスを使用します。
 
-``` php
+```php
 public $validate = [
     'phone_no' => ['rule' => ['phone', null, 'nl']],
     'postal_code' => ['rule' => ['postal', null, 'nl']]
@@ -495,7 +495,7 @@ public $validate = [
 IP アドレスのバリデーションは特定の IP バージョンの厳格なバリデーションができるように拡張されました。
 またこれは、もし利用可能なら、PHP ネイティブのバリデーション機構を利用します。
 
-``` css
+```css
 Validation::ip($someAddress);         // IPv4 と IPv6 両方を検証
 Validation::ip($someAddress, 'IPv4'); // IPv4 だけを検証
 Validation::ip($someAddress, 'IPv6'); // IPv6 だけを検証

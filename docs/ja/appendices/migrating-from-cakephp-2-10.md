@@ -33,7 +33,7 @@ v2.12.5 の変更のうち、すでにフォークで動いているアプリケ
 ### セキュリティ修正
 
 このリリースでは 3 件の脆弱性を修正しました。ほとんどのアプリケーションは更新するだけで対応できます。
-詳しくは [脆弱性への対応](/ja/appendices/security-fixes) を参照してください。
+詳しくは [脆弱性への対応](/ja/security/fixes) を参照してください。
 
 - **メールのヘッダー** ([GHSA-4f9q-3c4x-52cv](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-4f9q-3c4x-52cv)):
   `SmtpTransport` と `MailTransport` は、ヘッダーの名前と値から改行を取り除きます。
@@ -53,7 +53,8 @@ v2.12.5 の変更のうち、すでにフォークで動いているアプリケ
 - `order`（find のオプション、`Model::$order`、アソシエーションの `'order'` 設定、`DboSource::order()`）に指定する
   ソート方向は、`ASC` または `DESC` で、その後に `NULLS FIRST` か `NULLS LAST` を続けることもできます。
   大文字と小文字は区別せず、前後や途中の空白が多くてもかまいません。`'asc'`、`'Desc'`、`' DESC '`、
-  `'ASC NULLS FIRST'`、`'desc  nulls  last'` はいずれも有効です。
+  `'ASC NULLS FIRST'`、`'desc  nulls  last'` はいずれも有効です。`NULLS FIRST` / `NULLS LAST` はそのまま
+  データベースに渡され、MySQL、MariaDB、SQL Server では使えません。[並び順](/ja/models/retrieving-your-data#sort-order) を参照してください。
 - それ以外のソート方向を指定すると `E_USER_DEPRECATED` エラー（`Invalid ORDER BY direction "..."`）が発生します。
   対象は配列の値（`['Post.title' => $direction]`）、`DboSource::order()` の `$direction` 引数、文字列のキーで
   `ASC` / `DESC` の後に続くテキスト（`'Post.title DESC LIMIT 1'`。括弧の中やクォートしたリテラルの中の
@@ -93,7 +94,7 @@ v2.12.3 の変更のうち、すでにフォークで動いているアプリケ
 - **セキュリティ修正 (SSRF)**: `Xml::build($input, ['readFile' => false])` は、括弧が 1 組欠けていたため
   `https://` の URL を取得していました（本家の CakePHP 2.x から引き継いだ不具合です）。
   `'readFile' => false` を指定すると、`http://` と `https://` のどちらの URL も取得せず、`XmlException` を投げます。
-  [脆弱性への対応](/ja/appendices/security-fixes#xml-build-ssrf) も参照してください。
+  [脆弱性への対応](/ja/security/fixes#xml-build-ssrf) も参照してください。
 
 **移行:**
 
@@ -426,14 +427,14 @@ CakePlugin::load('Upgrade');
 
 - データベースドライバーに新しいメソッドを追加しました（独自のドライバー実装がある場合は問題になる可能性があります）
 
-**MySQL ドライバー（Mysql.php）:**
+**MySQL ドライバー（`Mysql.php`）:**
 
 - `getVersion(): string` - MySQL / MariaDB / Aurora MySQL のバージョンを返す
 - `getServerType(): string` - 'MySQL'、'MariaDB'、'Aurora MySQL' のいずれかを返す
 - `utf8mb4Supported(): bool` - utf8mb4 文字セットに対応しているかを調べる
 - `integerDisplayWidthDeprecated(): bool` - 整数型の表示幅が非推奨か（MySQL 8.0.17 以降）を調べる
 
-**PostgreSQL ドライバー（Postgres.php）:**
+**PostgreSQL ドライバー（`Postgres.php`）:**
 
 - `getVersion(): string` - PostgreSQL のバージョンを返す
 
@@ -518,7 +519,7 @@ CakePlugin::load('Upgrade');
 - 既存のトークンも引き続き有効です
 - 新しいトークンは強化された方式で生成されます
 
-詳しくは [セキュリティ](/ja/appendices/security-fixes) を参照してください。
+詳しくは [セキュリティ](/ja/security/fixes) を参照してください。
 
 ### strftime() の置き換え
 
@@ -628,7 +629,7 @@ PHP 8 では `'aes'` を使う場合も `Security.useOpenSsl` の設定が必要
 
 ## PHP 8 移行時の補足
 
-以下は UPGRADE.md には書かれていませんが、PHP 8 へ移行するアプリケーションでよく問題になる点です。
+以下は `UPGRADE.md` には書かれていませんが、PHP 8 へ移行するアプリケーションでよく問題になる点です。
 
 ### `Security::encrypt()` と AES クッキーで OpenSSL を有効にする {#enable-openssl}
 

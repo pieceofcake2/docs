@@ -10,7 +10,8 @@ walks you through a small application step by step.
 
 This book documents [pieceofcake2/cakephp](https://github.com/pieceofcake2/cakephp),
 a community-maintained fork of CakePHP 2.x. The fork is based on
-CakePHP 2.10.24 and runs on PHP 8.0 to 8.5. It is maintenance-focused: it
+[cakephp/cakephp](https://github.com/cakephp/cakephp/tree/2.10.24) 2.10.24
+and runs on PHP 8.0 to 8.5. It is maintenance-focused: it
 keeps CakePHP 2 compatible with current PHP versions and fixes bugs and
 security issues. It does not aim to add features; additions are limited to what
 helps maintenance and migration, such as backports from CakePHP 5.
@@ -24,7 +25,8 @@ Composer, PHP 8, and the modern directory layout used by
 [Changes from the Original Book](/appendices/changes-from-the-original-book)
 lists how it differs from the original CakePHP 2.x documentation. The
 [Piece of Cake 2 website](https://pieceofcake2.github.io/) links to the
-fork's other projects and resources.
+fork's other projects and resources. Where each of these packages comes from
+is listed in [Maintained Plugins](/plugins/maintained-plugins#origins).
 
 ## What's Different from CakePHP 2.10 {#whats-different}
 
@@ -59,13 +61,12 @@ the points that changed:
   [Static Analysis](development/static-analysis).
 - **Security fixes.** Known vulnerabilities of CakePHP 2.10.24 are fixed, for
   example CSRF tokens are now HMAC-signed. See
-  [Security Fixes](/appendices/security-fixes).
+  [Security Fixes](/security/fixes).
 - **Backports from CakePHP 5.** `IntegrationTestTrait` and `EmailTrait`
   (CakePHP 2.12.4) test controllers through the real dispatcher with the
-  CakePHP 5 method names, see the
-  [upgrade guide](https://github.com/pieceofcake2/cakephp/blob/2.x/UPGRADE.md#v2124)
-  of the fork. The application skeleton loads `.env` files (pieceofcake2/app
-  2.4.0), see [Environment Variables](development/configuration#environment-variables).
+  CakePHP 5 method names, see
+  [Integration Testing](development/integration-testing). The application
+  skeleton loads `.env` files (pieceofcake2/app 2.4.0), see [Environment Variables](development/configuration#environment-variables).
 - **Bake and plugins.** Bake and the upgrade shell moved out of the core into
   plugins, and the major CakePHP 2 plugins are maintained for PHP 8. See
   [Code Generation with Bake](console-and-shells/code-generation-with-bake) and
@@ -146,7 +147,7 @@ how these pieces work together.
 
 - [Installation](installation),
   [Advanced Installation](installation/advanced-installation) and
-  [URL Rewriting](installation/url-rewriting)
+  [Web Server Configuration](installation/url-rewriting)
 - [CakePHP Folder Structure](getting-started/cakephp-folder-structure)
 - [CakePHP Conventions](getting-started/cakephp-conventions)
 - [CakePHP Structure](getting-started/cakephp-structure)

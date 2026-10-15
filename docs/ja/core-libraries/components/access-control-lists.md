@@ -216,11 +216,11 @@ ACO と ARO をその場で作れるからです。INI ベースの ACL につ�
 いただければと思います。
 
 デフォルトでは、CakePHP の ACL はデータベース駆動型です。
-INI ベースの ACL を有効にする場合は、config/core.php にある
+INI ベースの ACL を有効にする場合は、`config/core.php` にある
 以下の行を更新することで、CakePHP にどのシステムを使っている
 のかを知らせてやる必要があります。
 
-``` php
+```php
 // これらの行を:
 Configure::write('Acl.classname', 'DbAcl');
 Configure::write('Acl.database', 'default');
@@ -230,7 +230,7 @@ Configure::write('Acl.classname', 'IniAcl');
 //Configure::write('Acl.database', 'default');
 ```
 
-ARO/ACO のパーミッションは **config/acl.ini.php** の中で
+ARO/ACO のパーミッションは `config/acl.ini.php` の中で
 指定されています。基本的な考え方として、ARO は INI セクション
 の中で指定され、groups, allow, deny という３つのプロパティ
 を持ちます。
@@ -245,7 +245,7 @@ ACO は INI セクションで指定され、プロパティは allow と deny
 例として、私たちが作ってきた 指輪の仲間 ARO 構造を見てみると、
 このような INI の書式になります:
 
-``` text
+```text
 ;-------------------------------------
 ; AROs
 ;-------------------------------------
@@ -322,7 +322,7 @@ ACO と ARO ツリーを使えるようにします。
 これが終わったら、CakePHP のコンソールを使ってあなたの ACL
 のデータベーステーブルを作ります:
 
-``` bash
+```bash
 $ bin/cake schema create DbAcl
 ```
 
@@ -330,7 +330,7 @@ $ bin/cake schema create DbAcl
 必要なテーブルを削除して再作成します。コンソール・アプリケーション
 の出力は以下のようになります:
 
-``` text
+```text
 ---------------------------------------------------------------
 Cake Schema Shell
 ---------------------------------------------------------------
@@ -429,7 +429,7 @@ ACL オブジェクトの `parent_id` を使ってツリー構造に書き込む
 \$components 配列で CakePHP の ACL コンポーネントをインクルード
 する方法です:
 
-``` php
+```php
 public $components = ['Acl'];
 ```
 
@@ -450,7 +450,7 @@ public $components = ['Acl'];
 私達のアプローチはそんなに新しいものではありません。いつもやって
 いるように、以下のような感じでモデルを使ってデータを保存します:
 
-``` php
+```php
 public function any_action()
 {
     $aro = $this->Acl->Aro;
@@ -487,7 +487,7 @@ public function any_action()
 グループができたら、ACL コンソールを使ってツリー構造を
 確かめてみます。
 
-``` bash
+```bash
 $ bin/cake acl view aro
 
 Aro tree:
@@ -514,7 +514,7 @@ Aro tree:
 > ツリーに子ノードを追加する際は、foreign_key 値ではなく
 > ACL ノードの ID を使うようにしてください。
 
-``` php
+```php
 public function any_action()
 {
     $aro = new Aro();
@@ -601,7 +601,7 @@ public function any_action()
 これでコンソール・アプリケーションコマンドの出力がちょっとおもしろい
 ものになります。早速見てみましょう:
 
-``` bash
+```bash
 $ bin/cake acl view aro
 
 Aro tree:
@@ -681,7 +681,7 @@ CakePHP のコア Acl コンポーネントによって行われます。
 次に、コントローラーの中のアクションで、AclComponent を使って
 いくつかの基本的なパーミッションを設定してみましょう。
 
-``` php
+```php
 class SomethingsController extends AppController
 {
     // これを AppController に置きたいと思うかもしれませんが、
@@ -723,7 +723,7 @@ ARO を特定しています。
 モデル／外部キー書式を使いたい場合もあるかもしれません。
 上記の指定は以下と同じ意味になります:
 
-``` php
+```php
 // 6342 = Legolas
 // 1564 = Gimli
 
@@ -758,13 +758,13 @@ AclComponent を使って自分たちで作った ACO や ARO の間でチェッ
 ができるようになっているはずです。パーミッションをチェックする
 ための基本的な文法は以下のようになります:
 
-``` php
+```php
 $this->Acl->check($aro, $aco, $action = '*');
 ```
 
 これをコントローラーのアクションの中で試してみましょう:
 
-``` php
+```php
 public function index()
 {
     // これらはどれも true を返します:

@@ -19,7 +19,7 @@ connection.
 
 Example usage:
 
-``` php
+```php
 class Example extends AppModel
 {
     public $useDbConfig = 'alternate';
@@ -36,7 +36,7 @@ table.
 
 Example usage:
 
-``` php
+```php
 class Example extends AppModel
 {
     public $useTable = false; // This model does not use a database table
@@ -45,7 +45,7 @@ class Example extends AppModel
 
 Alternatively:
 
-``` php
+```php
 class Example extends AppModel
 {
     public $useTable = 'exmp'; // This model uses a database table 'exmp'
@@ -62,7 +62,7 @@ the model.
 
 Example usage:
 
-``` php
+```php
 class Example extends AppModel
 {
     public $tablePrefix = 'alternate_'; // will look for 'alternate_examples'
@@ -79,7 +79,7 @@ setting CakePHP to use an existing database table.
 
 Example usage:
 
-``` php
+```php
 class Example extends AppModel
 {
     // example_id is the field name in the database
@@ -98,7 +98,7 @@ scaffolding and in `find('list')` calls. The model will use
 
 For example, to use the `username` field:
 
-``` php
+```php
 class User extends AppModel
 {
     public $displayField = 'username';
@@ -143,7 +143,7 @@ Raise it only when needed or use Containable behavior.
 
 You can achieve that by adding it to the AppModel:
 
-``` php
+```php
 public $recursive = -1;
 ```
 
@@ -156,7 +156,7 @@ no relations are created when the value is set to -1.
 The default ordering of data for any find operation. Possible
 values include:
 
-``` php
+```php
 $order = 'field';
 $order = 'Model.field';
 $order = 'Model.field asc';
@@ -166,7 +166,8 @@ $order = ['Model.field' => 'asc', 'Model.field2' => 'DESC'];
 ```
 
 The direction must be `ASC` or `DESC`, optionally followed by `NULLS FIRST` or
-`NULLS LAST`. See [Sort Order](/models/retrieving-your-data#sort-order).
+`NULLS LAST` (not supported by MySQL, MariaDB and SQL Server). See
+[Sort Order](/models/retrieving-your-data#sort-order).
 
 ## data
 
@@ -240,7 +241,7 @@ Maps to a TIME type in all databases.
 
 Example Usage:
 
-``` php
+```php
 protected $_schema = [
     'first_name' => [
         'type' => 'string',
@@ -283,7 +284,7 @@ other fields in a model but will not be saveable.
 
 Example usage for MySQL:
 
-``` php
+```php
 public $virtualFields = [
     'name' => "CONCAT(User.first_name, ' ', User.last_name)",
 ];
@@ -305,7 +306,7 @@ be set to the class name by constructor.
 
 Example usage:
 
-``` php
+```php
 class Example extends AppModel
 {
     public $name = 'Example';

@@ -37,7 +37,7 @@ First, let's create a new application with Composer. The
 [pieceofcake2/app](https://pieceofcake2.github.io/app/) application skeleton
 installs CakePHP for you:
 
-``` bash
+```bash
 composer create-project pieceofcake2/app blog
 cd blog
 ```
@@ -73,7 +73,7 @@ what user your webserver runs as and change the ownership of the
 directories to that user. The final command you run (in \*nix) might look
 something like this:
 
-``` bash
+```bash
 $ chown -R www-data tmp logs
 ```
 
@@ -89,7 +89,7 @@ a single table to store our posts. We'll also throw in a few posts
 right now to use for testing purposes. Execute the following SQL
 statements into your database:
 
-``` text
+```text
 /* First, create our posts table: */
 CREATE TABLE posts (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -131,7 +131,7 @@ A copy of CakePHP's database configuration file is found in
 `config/database.php.default`. Make a copy of this file in
 the same directory, but name it `database.php`:
 
-``` bash
+```bash
 cp config/database.php.default config/database.php
 ```
 
@@ -140,7 +140,7 @@ values in the `$default` array with those that apply to your
 setup. A sample completed configuration array might look something
 like the following:
 
-``` php
+```php
 // config/database.php
 public $default = [
     'datasource' => 'Database/Mysql',
@@ -160,7 +160,7 @@ of MySQL 8.0.
 Once you've saved your new `database.php` file, start the development server
 from the project root:
 
-``` bash
+```bash
 bin/cake server
 ```
 
@@ -170,7 +170,7 @@ file was found, and that CakePHP can successfully connect to the database.
 
 > [!NOTE]
 > Remember that you'll need to have PDO, and pdo_mysql enabled in
-> your php.ini.
+> your `php.ini`.
 
 ## Optional Configuration
 
@@ -191,7 +191,7 @@ php -r 'echo bin2hex(random_bytes(32)), PHP_EOL;'
 
 and paste the output into `config/core.php`:
 
-``` php
+```php
 /**
  * A random string used in security hashing methods.
  */
@@ -211,7 +211,7 @@ Generate one with:
 php -r 'echo random_int(1, 4294967295), PHP_EOL;'
 ```
 
-``` php
+```php
 /**
  * A random numeric string (digits only) used to encrypt/decrypt strings.
  */
@@ -229,7 +229,7 @@ with Apache, point the virtual host's `DocumentRoot` at the `webroot/`
 directory and make sure `mod_rewrite` is enabled; `webroot/.htaccess`
 contains the rewrite rules. If the CakePHP welcome page looks a little funny
 (no images or CSS styles), it probably means mod_rewrite is not functioning on
-your system. See [URL Rewriting](/installation/url-rewriting) for
+your system. See [Web Server Configuration](/installation/url-rewriting) for
 details and for other web servers.
 
 Now continue to [Blog Tutorial - Adding a layer](/tutorials-and-examples/blog/part-two) to start building your first CakePHP application.

@@ -42,7 +42,7 @@ application can, such as Config, Console, Lib, webroot, etc.
 > parent application's AppController and AppModel. Here's what they
 > should look like for our ContactManager example:
 
-``` php
+```php
 // In plugins/ContactManager/Controller/ContactManagerAppController.php
 App::uses('AppController', 'Controller');
 
@@ -51,7 +51,7 @@ class ContactManagerAppController extends AppController
 }
 ```
 
-``` php
+```php
 // In plugins/ContactManager/Model/ContactManagerAppModel.php
 App::uses('AppModel', 'Model');
 
@@ -74,14 +74,14 @@ simplified by using the [Bake plugin](https://pieceofcake2.github.io/bake/).
 
 In order to bake a plugin please use the following command:
 
-``` bash
+```bash
 bin/cake bake plugin ContactManager
 ```
 
 Now you can bake using the same conventions which apply to the rest
 of your app. For example - baking controllers:
 
-``` bash
+```bash
 bin/cake bake controller Contacts --plugin ContactManager
 ```
 
@@ -108,7 +108,7 @@ this plugin.
 So, we place our new ContactsController in
 `plugins/ContactManager/Controller` and it looks like so:
 
-``` php
+```php
 // In plugins/ContactManager/Controller/ContactsController.php
 
 class ContactsController extends ContactManagerAppController
@@ -148,7 +148,7 @@ Models for the plugin are stored in `plugins/ContactManager/Model`.
 We've already defined a ContactsController for this plugin, so let's
 create the model for that controller, called Contact:
 
-``` php
+```php
 // In plugins/ContactManager/Model/Contact.php
 
 class Contact extends ContactManagerAppModel
@@ -166,7 +166,7 @@ Let's create that next.
 
 For example:
 
-``` php
+```php
 // In plugins/ContactManager/Model/Contact.php
 
 class Contact extends ContactManagerAppModel
@@ -178,7 +178,7 @@ class Contact extends ContactManagerAppModel
 If you would prefer that the array keys for the association not
 have the plugin prefix on them, use the alternative syntax:
 
-``` php
+```php
 // In plugins/ContactManager/Model/Contact.php
 
 class Contact extends ContactManagerAppModel
@@ -199,7 +199,7 @@ folder. For our ContactManager plugin, we'll need a view for our
 ContactsController::index() action, so let's include that as
 well:
 
-``` html
+```html
 <!-- plugins/ContactManager/View/Contacts/index.ctp: -->
 <h1>Contacts</h1>
 <p>Following is a sortable list of your contacts</p>
@@ -246,7 +246,7 @@ and CSS files of plugins, through the Dispatcher is incredibly inefficient.
 It is strongly recommended to symlink them for production.
 For example like this:
 
-``` bash
+```bash
 ln -s ../../plugins/YourPlugin/webroot/css/yourplugin.css webroot/css/yourplugin.css
 ```
 
@@ -256,19 +256,19 @@ Simply prepend /plugin_name/ to the beginning of a request for an
 asset within that plugin, and it will work as if the asset were
 in your application's webroot.
 
-For example, linking to '/contact_manager/js/some_file.js'
+For example, linking to `/contact_manager/js/some_file.js`
 would serve the asset
 `plugins/ContactManager/webroot/js/some_file.js`.
 
 > [!NOTE]
-> It is important to note the **/your_plugin/** prefix before the
+> It is important to note the `/your_plugin/` prefix before the
 > asset path. That makes the magic happen!
 
 ::: info Changed in version 2.1
 Use `plugin syntax` to request assets. For example in your View:
 :::
 
-``` php
+```php
 echo $this->Html->css('ContactManager.style');
 ```
 
@@ -287,7 +287,7 @@ Referring to your component from inside or outside of your plugin
 requires only that you prefix the plugin name before the name of the
 component. For example:
 
-``` php
+```php
 // Component defined in 'ContactManager' plugin
 
 class ExampleComponent extends Component
@@ -362,7 +362,7 @@ This way it can easily be used through Composer. Set the package `type` to
 the application's plugin directory, and set `installer-name` to the plugin's
 folder name:
 
-``` json
+```json
 {
     "name": "foo-bar/cakephp-logging",
     "type": "cakephp-plugin",

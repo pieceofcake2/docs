@@ -21,7 +21,7 @@ It should be noted that Array structures can be created in the
 Session by using `dot notation`. So `User.username` would
 reference the following:
 
-``` text
+```text
 ['User' => [
     'username' => 'clark-kent@dailyplanet.com'
 ]];

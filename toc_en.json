@@ -17,7 +17,7 @@
           "link": "/installation/advanced-installation"
         },
         {
-          "text": "URL Rewriting",
+          "text": "Web Server Configuration",
           "link": "/installation/url-rewriting"
         },
         {
@@ -463,11 +463,25 @@
           "link": "/development/debugging"
         },
         {
+          "text": "REST",
+          "link": "/development/rest"
+        }
+      ]
+    },
+    {
+      "text": "Testing",
+      "collapsed": true,
+      "items": [
+        {
           "text": "Testing",
           "link": "/development/testing"
         },
         {
-          "text": "E2E Testing",
+          "text": "Integration Testing",
+          "link": "/development/integration-testing"
+        },
+        {
+          "text": "End-to-End Testing",
           "link": "/development/e2e-testing"
         },
         {
@@ -475,8 +489,52 @@
           "link": "/development/static-analysis"
         },
         {
-          "text": "REST",
-          "link": "/development/rest"
+          "text": "Continuous Integration",
+          "link": "/development/continuous-integration"
+        }
+      ]
+    },
+    {
+      "text": "Deployment",
+      "collapsed": true,
+      "items": [
+        {
+          "text": "Deployment",
+          "link": "/deployment"
+        },
+        {
+          "text": "Deploying to AWS Lambda",
+          "link": "/deployment/aws-lambda"
+        }
+      ]
+    },
+    {
+      "text": "Security",
+      "collapsed": true,
+      "items": [
+        {
+          "text": "Security",
+          "link": "/security/"
+        },
+        {
+          "text": "Reporting a Vulnerability",
+          "link": "/security/reporting"
+        },
+        {
+          "text": "Security Fixes",
+          "link": "/security/fixes"
+        },
+        {
+          "text": "Upstream Advisories",
+          "link": "/security/upstream-advisories"
+        },
+        {
+          "text": "Hardening Checklist",
+          "link": "/security/hardening"
+        },
+        {
+          "text": "Output Escaping and HTML Sanitization",
+          "link": "/security/escaping-and-sanitizing-html"
         }
       ]
     },
@@ -605,10 +663,6 @@
           "link": "/appendices/migrating-to-the-modern-layout"
         },
         {
-          "text": "Security Fixes",
-          "link": "/appendices/security-fixes"
-        },
-        {
           "text": "Changes from the Original Book",
           "link": "/appendices/changes-from-the-original-book"
         },
@@ -683,20 +737,6 @@
         {
           "text": "Glossary",
           "link": "/appendices/glossary"
-        }
-      ]
-    },
-    {
-      "text": "Additional Topics",
-      "collapsed": true,
-      "items": [
-        {
-          "text": "Deployment",
-          "link": "/deployment"
-        },
-        {
-          "text": "Deploying to AWS Lambda",
-          "link": "/deployment/aws-lambda"
         }
       ]
     }

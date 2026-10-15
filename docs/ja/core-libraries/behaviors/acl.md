@@ -9,7 +9,7 @@ Acl ビヘイビアは、ACL システムとモデルをシームレスに統合
 actsAs 配列にそれを追加した時、関連した Acl 入力を ARO または ACO にすることを
 選びます。 デフォルトでは、ACO を作成します。
 
-``` php
+```php
 class User extends AppModel
 {
     public $actsAs = ['Acl' => ['type' => 'requester']];
@@ -19,7 +19,7 @@ class User extends AppModel
 これは、ARO モードで Aclビヘイビアをアタッチします。ACO モードで ACL
 ビヘイビアを追加するには:
 
-``` php
+```php
 class Post extends AppModel
 {
     public $actsAs = ['Acl' => ['type' => 'controlled']];
@@ -28,7 +28,7 @@ class Post extends AppModel
 
 以下のようにすると User モデルは、ACO と ARO ノードの両方を持つことができます:
 
-``` php
+```php
 class User extends AppModel
 {
     public $actsAs = ['Acl' => ['type' => 'both']];
@@ -37,7 +37,7 @@ class User extends AppModel
 
 以下のようにビヘイビアを動的にアタッチできます。
 
-``` php
+```php
 $this->Post->Behaviors->load('Acl', ['type' => 'controlled']);
 ```
 
@@ -53,7 +53,7 @@ AppModel に AclBehavior を安全にアタッチできるようになりまし�
 モデルの parentNode() メソッドは、戻り値に null または、親モデルの参照を
 返さなければなりません。
 
-``` php
+```php
 public function parentNode()
 {
     return null;
@@ -63,7 +63,7 @@ public function parentNode()
 もし、モデルの親として ACO や ARO ノードを設定したい場合、parentNode() は、
 ACO や ARO ノードのエイリアスを返さなければなりません。
 
-``` php
+```php
 public function parentNode()
 {
     return 'root_node';
@@ -72,7 +72,7 @@ public function parentNode()
 
 より詳しい例。 「User belongsTo Group」の User モデルの例です。
 
-``` php
+```php
 public function parentNode()
 {
     if (!$this->id && empty($this->data)) {
@@ -102,7 +102,7 @@ AclBehavior は、モデルレコードと関連した Acl ノードを検索で
 
 データ配列を設定することによって、どのような列の Acl ノードでも取得できます。
 
-``` php
+```php
 $this->User->id = 1;
 $node = $this->User->node();
 
@@ -117,7 +117,7 @@ $node = $this->User->node($user);
 もし、ACO と ARO ノードの両方を作成するために AclBehavior を設定していた場合、
 どのノードタイプを取得したいのかを指定する必要があります。
 
-``` php
+```php
 $this->User->id = 1;
 $node = $this->User->node(null, 'Aro');
 

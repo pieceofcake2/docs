@@ -32,7 +32,7 @@ CakePHP ではクラスは遅延ロードされます。CakePHP 自身のクラ�
 オートローダで読み込まれるため、宣言する必要はありません。アプリケーションスケルトンのように
 `composer.json` でアプリケーションのクラスを classmap に指定している場合も同様です。
 
-``` json
+```json
 "autoload": {
     "classmap": ["src/"]
 }
@@ -99,7 +99,7 @@ Utilities
 プラグインからのクラスのローディングは、ロード元になるプラグインを指定する以外は、app や
 core のクラスのローディングとまったく同じように動作します:
 
-``` php
+```php
 // plugins/PluginName/Model/Comment.php にある Comment クラスをロードする
 App::uses('Comment', 'PluginName.Model');
 
@@ -116,7 +116,7 @@ App::uses('CommentComponent', 'PluginName.Controller/Component');
 
 保存されたパス情報を読み込むために用いる:
 
-``` php
+```php
 // アプリケーション内のモデルのパスが返る
 App::path('Model');
 ```
@@ -124,7 +124,7 @@ App::path('Model');
 アプリケーション内のすべてのパッケージに対してこれを実行できます。
 プラグインに対するパスを取得することもできます:
 
-``` php
+```php
 // DebugKit 内のコンポーネントのパスが返る
 App::path('Component', 'DebugKit');
 ```
@@ -143,7 +143,7 @@ App が把握している全てのパスを調べたり記憶したりするの�
 
 CakePHP 内部のパッケージのパスを見つけるために用いられます:
 
-``` php
+```php
 // Cache エンジンへのパスを取得する
 App::core('Cache/Engine');
 ```
@@ -169,7 +169,7 @@ App::core('Cache/Engine');
 
 使い方:
 
-``` php
+```php
 //Model パッケージのための新しい探索パスがセットアップされます
 App::build(['Model' => ['/a/full/path/to/models/']]);
 
@@ -193,7 +193,7 @@ reset が true に設定されている場合、ロードされたすべての�
 `App::build()` は新しいパッケージの場所を追加するために用いられます。
 アプリケーションに新しいトップレベルのパッケージや、サブパッケージを追加したい場合に便利です:
 
-``` php
+```php
 App::build([
     'Service' => ['%s' . 'Service' . DS],
 ], App::REGISTER);
@@ -218,7 +218,7 @@ App が把握しているアプリケーションのコントローラ、を見�
 
 使用例:
 
-``` php
+```php
 //returns ['DebugKit', 'Blog', 'User'];
 App::objects('plugin');
 
@@ -228,7 +228,7 @@ App::objects('Controller');
 
 プラグインドット記法を用いることで、そのプラグイン内においてのオブジェクトを探すこともできます:
 
-``` php
+```php
 // returns ['MyPluginPost', 'MyPluginComment'];
 App::objects('MyPlugin.Model');
 ```
@@ -245,7 +245,7 @@ App::objects('MyPlugin.Model');
 プラグインも同じように App で配置できます。例えば `App::pluginPath('DebugKit');`
 を用いることで DebugKit プラグインへのフルパスをあなたに与えます:
 
-``` php
+```php
 $path = App::pluginPath('DebugKit');
 ```
 
@@ -270,7 +270,7 @@ $path = App::pluginPath('DebugKit');
 > このメソッドはファイルを `require` することと同じです。
 > その後、クラスの初期化が必要だと理解しておくことは重要です。
 
-``` php
+```php
 // require('Controller/UsersController.php'); と同じ
 App::import('Controller', 'Users');
 
@@ -331,14 +331,14 @@ Composer が管理しないプロジェクトの `vendors/` ディレクトリ (
 `App::uses()` をベンダーのディレクトリ内のクラスをロードするのに使うことが出来ます。
 これは他のファイルを読み込むのと同じ規則に従います:
 
-``` php
+```php
 // vendors/Geshi.php 内の Geshi クラスをロードする
 App::uses('Geshi', 'Vendor');
 ```
 
 サブディレクトリ内のクラスをロードするには、それらのパスを `App::build()` で追加する必要があります:
 
-``` php
+```php
 // vendors/SomePackage/ClassInSomePackage.php 内の
 // ClassInSomePackage クラスをロードする
 App::build(['Vendor' => [ROOT . DS . 'vendors' . DS . 'SomePackage' . DS]]);
@@ -350,30 +350,30 @@ App::uses('ClassInSomePackage', 'Vendor');
 次の例では、いくつかのパス構造からベンダーファイルをロードする方法を示しています。
 これらのベンダーファイルは、ベンダーのフォルダのいずれかに配置することができます。
 
-**vendors/geshi.php** をロードする:
+`vendors/geshi.php` をロードする:
 
-``` php
+```php
 App::import('Vendor', 'geshi');
 ```
 
 > [!NOTE]
 > CakePHP が他のファイルを見出してしまわないために、geshi のファイル名は、小文字でなくてはなりません。
 
-**vendors/flickr/flickr.php** をロードする:
+`vendors/flickr/flickr.php` をロードする:
 
-``` php
+```php
 App::import('Vendor', 'flickr', ['file' => 'flickr/flickr.php']);
 ```
 
-**vendors/some.name.php** をロードする:
+`vendors/some.name.php` をロードする:
 
-``` php
+```php
 App::import('Vendor', 'SomeName', ['file' => 'some.name.php']);
 ```
 
-**vendors/services/well.named.php** をロードする:
+`vendors/services/well.named.php` をロードする:
 
-``` php
+```php
 App::import(
     'Vendor',
     'WellNamed',
@@ -381,9 +381,9 @@ App::import(
 );
 ```
 
-**plugins/Awesome/Vendor/services/well.named.php** をロードする:
+`plugins/Awesome/Vendor/services/well.named.php` をロードする:
 
-``` php
+```php
 App::import(
     'Vendor',
     'Awesome.WellNamed',
@@ -391,9 +391,9 @@ App::import(
 );
 ```
 
-**plugins/Awesome/Vendor/Folder/Foo.php** をロードする:
+`plugins/Awesome/Vendor/Folder/Foo.php` をロードする:
 
-``` php
+```php
 App::import(
     'Vendor',
     'Awesome.Foo',
@@ -403,9 +403,9 @@ App::import(
 
 `src/Vendor/` にあるベンダーファイルも同様に見つけられます。
 
-**vendors/vendorName/libFile.php** をロードする:
+`vendors/vendorName/libFile.php` をロードする:
 
-``` php
+```php
 App::import(
     'Vendor',
     'aUniqueIdentifier',

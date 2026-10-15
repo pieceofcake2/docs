@@ -21,7 +21,7 @@ you should refer to [Joining Tables](../../models/associations-linking-models-to
 To use the new behavior, you can add it to the \$actsAs property of
 your model:
 
-``` php
+```php
 class Post extends AppModel
 {
     public $actsAs = ['Containable'];
@@ -30,7 +30,7 @@ class Post extends AppModel
 
 You can also attach the behavior on the fly:
 
-``` php
+```php
 $this->Post->Behaviors->load('Containable');
 ```
 
@@ -44,7 +44,7 @@ that 'Post' hasMany 'Comment', and 'Post' hasAndBelongsToMany 'Tag'. The
 amount of data fetched in a normal `find()` call is rather
 extensive:
 
-``` php
+```php
 debug($this->Post->find('all'));
 
 [0] => 
@@ -64,7 +64,7 @@ debug($this->Post->find('all'));
                             [post_id] => 1
                             [author] => Daniel
                             [email] => dan@example.com
-                            [website] => http://example.com
+                            [website] => https://example.com
                             [comment] => First comment
                             [created] => 2008-05-18 00:00:00
                         ]
@@ -74,7 +74,7 @@ debug($this->Post->find('all'));
                             [post_id] => 1
                             [author] => Sam
                             [email] => sam@example.net
-                            [website] => http://example.net
+                            [website] => https://example.net
                             [comment] => Second comment
                             [created] => 2008-05-18 00:00:00
                         ]
@@ -107,7 +107,7 @@ returns.
 For example, to get only the post-related information, you can do
 the following:
 
-``` php
+```php
 $this->Post->contain();
 $this->Post->find('all');
 ```
@@ -115,13 +115,13 @@ $this->Post->find('all');
 You can also invoke Containable's magic from inside the find()
 call:
 
-``` php
+```php
 $this->Post->find('all', ['contain' => false]);
 ```
 
 Having done that, you end up with something a lot more concise:
 
-``` text
+```text
 [0] => 
         [
             [Post] => 
@@ -147,7 +147,7 @@ Having done that, you end up with something a lot more concise:
 This sort of help isn't new: in fact, you can do that without the
 `ContainableBehavior` doing something like this:
 
-``` php
+```php
 $this->Post->recursive = -1;
 $this->Post->find('all');
 ```
@@ -164,14 +164,14 @@ of names, of the models to keep in the find operation. If we wanted
 to fetch all posts and their related tags (without any comment
 information), we'd try something like this:
 
-``` php
+```php
 $this->Post->contain('Tag');
 $this->Post->find('all');
 ```
 
 Again, we can use the contain key inside a find() call:
 
-``` php
+```php
 $this->Post->find('all', ['contain' => 'Tag']);
 ```
 
@@ -188,7 +188,7 @@ find() call, notice the author field in the Comment model. If you
 are interested in the posts and the names of the comment authors —
 and nothing else — you could do something like the following:
 
-``` php
+```php
 $this->Post->contain('Comment.author');
 $this->Post->find('all');
 
@@ -201,7 +201,7 @@ Here, we've told Containable to give us our post information, and
 just the author field of the associated Comment model. The output
 of the find call might look something like this:
 
-``` text
+```text
 [0] => 
         [
             [Post] => 
@@ -235,7 +235,7 @@ As you can see, the Comment arrays only contain the author field
 You can also filter the associated Comment data by specifying a
 condition:
 
-``` php
+```php
 $this->Post->contain('Comment.author = "Daniel"');
 $this->Post->find('all');
 
@@ -247,7 +247,7 @@ $this->Post->find('all', ['contain' => 'Comment.author = "Daniel"']);
 This gives us a result that gives us posts with comments authored
 by Daniel:
 
-``` text
+```text
 [0] => 
         [
             [Post] => 
@@ -265,7 +265,7 @@ by Daniel:
                             [post_id] => 1
                             [author] => Daniel
                             [email] => dan@example.com
-                            [website] => http://example.com
+                            [website] => https://example.com
                             [comment] => First comment
                             [created] => 2008-05-18 00:00:00
                         ]
@@ -278,7 +278,7 @@ assume you had 3 posts in your database and Daniel had commented on 2 of those p
 \$this-\>Post-\>find('all', ['contain' =\> 'Comment.author = "Daniel"']); would return ALL 3 posts, not
 just the 2 posts that Daniel had commented on. It won't return all comments however, just comments by Daniel.
 
-``` text
+```text
 [0] => 
         [
             [Post] => 
@@ -296,7 +296,7 @@ just the 2 posts that Daniel had commented on. It won't return all comments howe
                             [post_id] => 1
                             [author] => Daniel
                             [email] => dan@example.com
-                            [website] => http://example.com
+                            [website] => https://example.com
                             [comment] => First comment
                             [created] => 2008-05-18 00:00:00
                         ]
@@ -332,7 +332,7 @@ just the 2 posts that Daniel had commented on. It won't return all comments howe
                             [post_id] => 3
                             [author] => Daniel
                             [email] => dan@example.com
-                            [website] => http://example.com
+                            [website] => https://example.com
                             [comment] => Another comment
                             [created] => 2008-05-18 00:00:00
                         ]
@@ -343,7 +343,7 @@ just the 2 posts that Daniel had commented on. It won't return all comments howe
 If you want to filter the posts by the comments, so that posts without a comment by Daniel won't be
 returned, the easiest way is to find all the comments by Daniel and contain the Posts.
 
-``` php
+```php
 $this->Comment->find('all', [
     'conditions' => 'Comment.author = "Daniel"',
     'contain' => 'Post',
@@ -352,7 +352,7 @@ $this->Comment->find('all', [
 
 Additional filtering can be performed by supplying the standard [Model Find](../../models/retrieving-your-data#model-find) options:
 
-``` php
+```php
 $this->Post->find('all', ['contain' => [
     'Comment' => [
         'conditions' => ['Comment.author =' => 'Daniel'],
@@ -366,7 +366,7 @@ got deep and complex model relationships.
 
 Let's consider the following model associations:
 
-``` text
+```text
 User->Profile
 User->Account->AccountSummary
 User->Post->PostAttachment->PostAttachmentHistory->HistoryNotes
@@ -375,7 +375,7 @@ User->Post->Tag
 
 This is how we retrieve the above associations with Containable:
 
-``` php
+```php
 $this->User->find('all', [
     'contain' => [
         'Profile',
@@ -434,7 +434,7 @@ more easily.
 From the previous example, this is an example of how to force the posts
 to be ordered by the date when they were last updated:
 
-``` php
+```php
 $this->User->find('all', [
     'contain' => [
         'Profile',
@@ -454,7 +454,7 @@ or queries that use aggregate functions and/or GROUP BY statements.
 If you get invalid SQL errors due to mixing of aggregate and
 non-aggregate fields, try disabling the `autoFields` setting.
 
-``` php
+```php
 $this->Post->Behaviors->load('Containable', ['autoFields' => false]);
 ```
 
@@ -468,7 +468,7 @@ See the section [Using Containable](#using-containable) for further details.
 
 Here's an example of how to contain associations when paginating:
 
-``` php
+```php
 $this->paginate['User'] = [
     'contain' => ['Profile', 'Account'],
     'order' => 'User.username',

@@ -21,7 +21,7 @@ find はデータ取得のための、非常に多機能でとても良く働い
 デフォルトでは以下のキーのパラメータを渡すことができます。これらキーの指定は
 任意です。
 
-``` text
+```text
 [
     'conditions' => ['Model.field' => $thisValue], // 検索条件の配列
     'recursive' => 1, // int
@@ -56,7 +56,7 @@ find はデータ取得のための、非常に多機能でとても良く働い
 `order` キー、アソシエーションの `order` 設定も同じ形式です。各項目はフィールド
 (または SQL 式) と、省略可能なソート方向からなります。
 
-``` php
+```php
 // フィールド => ソート方向 の組
 $this->Article->find('all', [
     'order' => ['Article.created' => 'DESC', 'Article.title' => 'asc'],
@@ -82,6 +82,21 @@ $this->Article->find('all', [
 続けることもできます。大文字と小文字は区別せず、余分な空白は無視されるので、
 `'asc'`、`' Desc '`、`'desc  nulls  last'` はいずれも有効です。
 
+::: warning NULLS FIRST / NULLS LAST の対応状況
+CakePHP は `NULLS FIRST` / `NULLS LAST` をそのままデータベースに渡しますが、
+すべてのデータベースが対応しているわけではありません。
+
+| データベース | `NULLS FIRST` / `NULLS LAST` | `ASC` での NULL の既定の位置 |
+|--------------|------------------------------|------------------------------|
+| PostgreSQL | 対応 | 最後 |
+| SQLite | 3.30.0 以降で対応 | 最初 |
+| MySQL / MariaDB | 非対応 (SQL の構文エラー) | 最初 |
+| SQL Server | 非対応 (SQL の構文エラー) | 最初 |
+
+MySQL、MariaDB、SQL Server では、代わりに式で先に並べ替えます。たとえば NULL を最後にするには
+`['Post.published IS NULL' => 'ASC', 'Post.published' => 'ASC']` のように指定します。
+:::
+
 ::: pieceofcake2
 v2.12.5 からソート方向を検証します。不正なソート方向を指定すると
 `E_USER_DEPRECATED` エラーが発生し、SQL はこれまでどおり生成されます。
@@ -91,7 +106,7 @@ v2.12.5 からソート方向を検証します。不正なソート方向を指
 不正なソート方向の多くは、式の一部をソート方向の側に書いているものです。
 式はキーに移すか、生の SQL をそのままキーとして指定してください。
 
-``` php
+```php
 // 変更前: 非推奨エラーが発生します
 $this->Article->find('all', [
     'order' => ['Article.status' => "= 'draft' DESC"],
@@ -112,7 +127,7 @@ $this->Article->find('all', [
 リクエストデータをそのまま渡さないでください。ユーザーが並び順を選べるようにする
 場合は、入力をフィールドとソート方向のホワイトリストに対応付けます。
 
-``` php
+```php
 // src/Controller/ArticlesController.php
 public function index()
 {
@@ -144,7 +159,7 @@ public function index()
 `find('first', $params)` は結果を1行返します。1行だけ取得したい時に使います。
 以下の例を見てください。
 
-``` php
+```php
 public function some_function()
 {
     // ...
@@ -162,7 +177,7 @@ public function some_function()
 1行目のサンプルは、パラメータを渡していません。すなわち、検索条件の指定もソートの指定も
 されないということです。 `find('first')` の戻り値はこのような形式になっています。
 
-``` text
+```text
 
 [
     [ModelName] => 
@@ -189,7 +204,7 @@ public function some_function()
 
 `find('count', $params)` は整数を返します。以下のサンプルを見てください。
 
-``` php
+```php
 public function some_function()
 {
     // ...
@@ -218,7 +233,7 @@ public function some_function()
 `find('all', $params)` は配列で結果を返します。 `find('all')` は、他のいろいろな
 `find()` や、 `paginate` でも使われています。以下のサンプルを見てください。
 
-``` php
+```php
 public function some_function()
 {
     // ...
@@ -240,7 +255,7 @@ public function some_function()
 
 `find('all')` を呼び出すと、その戻り値は以下のような形式となります。
 
-``` text
+```text
 
 [
     [0] => 
@@ -273,7 +288,7 @@ public function some_function()
 セレクトボックスを作るために、リストが欲しい場合などに使うと便利です。
 以下のサンプルを見てください。
 
-``` php
+```php
 public function some_function()
 {
     // ...
@@ -297,7 +312,7 @@ public function some_function()
 
 `find('list')` を呼び出すと、その戻り値は以下のような形式となります。
 
-``` text
+```text
 
 [
     //[id] => 'displayValue',
@@ -316,7 +331,7 @@ public function some_function()
 また、添字に対する値は value が使われます。(値については、モデルの属性
 [Model Displayfield](../models/model-attributes#model-displayField) で設定できます) 以下に例を示します。
 
-``` php
+```php
 public function some_function()
 {
     // ...
@@ -335,7 +350,7 @@ public function some_function()
 
 上記サンプルを実行した結果、それぞれの変数の中身は次のようになっています。
 
-``` php
+```php
 $justusernames = 
 [
     //[id] => 'username',
@@ -381,7 +396,7 @@ $usernameGroups =
 `find('threaded', $params)` は入れ子になった配列を返します。入れ子の構造を表現するために、
 `parent_id` フィールドがある場合に使います。以下のサンプルを見てください。
 
-``` php
+```php
 public function some_function()
 {
     // ...
@@ -400,7 +415,7 @@ public function some_function()
 上記サンプルでは、 `$allCategories` は全体のカテゴリ構造を表す、入れ子になった配列が
 格納されています。 `find('threaded')` を呼び出すと、戻り値は次のような形式となります。
 
-``` text
+```text
 
 [
     [0] => 
@@ -481,7 +496,7 @@ public function some_function()
 
 :
 
-``` php
+```php
 public function some_function()
 {
     $neighbors = $this->Article->find(
@@ -496,7 +511,7 @@ public function some_function()
 Containable ビヘイビアを利用していれば、 `$params` に 'contain' を指定できます。)
 `find('neighbors')` を呼び出すと、戻り値は以下の様な形式となります。
 
-``` text
+```text
 
 [
     [prev] => 
@@ -550,7 +565,7 @@ Containable ビヘイビアを利用していれば、 `$params` に 'contain' �
 
 モデルの find 種別は、find 操作へのショートカットとなります。例えば、以下の2つのコードは同じ意味です。
 
-``` php
+```php
 $this->User->find('first');
 $this->User->find('all', ['limit' => 1]);
 ```
@@ -568,7 +583,7 @@ $this->User->find('all', ['limit' => 1]);
 作ってみましょう。まず最初にやることは、モデルの `Model::$findMethods` 変数に find 種別を
 追加することです。
 
-``` php
+```php
 class Article extends AppModel
 {
     public $findMethods = ['available' => true];
@@ -579,7 +594,7 @@ class Article extends AppModel
 次に `_findAvailable` 関数を実装します。規約に従って、 `myFancySearch` という
 finder を実装したければ、その関数の名前は `_findMyFancySearch` となります。
 
-``` php
+```php
 class Article extends AppModel
 {
     public $findMethods = ['available' => true];
@@ -599,7 +614,7 @@ class Article extends AppModel
 
 次のようにして使えます。
 
-``` php
+```php
 class ArticlesController extends AppController
 {
     /**
@@ -637,7 +652,7 @@ class ArticlesController extends AppController
 
 :
 
-``` php
+```php
 class ArticlesController extends AppController
 {
     /**
@@ -658,7 +673,7 @@ class ArticlesController extends AppController
 ページネーションのページ数がおかしい時は、次のようなコードを `AppModel` に追加すると
 正しいページ数が取得できるでしょう。
 
-``` php
+```php
 class AppModel extends Model
 {
     /**
@@ -704,7 +719,7 @@ class AppModel extends Model
 必要であれば `'operation'` キーをチェックして、 関数から返された `$query` が違うかどうかを
 区別できます。
 
-``` php
+```php
 protected function _findAvailable($state, $query, $results = [])
 {
     if ($state == 'before') {
@@ -755,7 +770,7 @@ protected function _findAvailable($state, $query, $results = [])
 例えば、モデルに `published` finder を実装した場合、これらの finder はマジック
 `findBy` メソッドと共に利用できます。
 
-``` php
+```php
 $results = $this->Article->findPublishedByAuthorId(5);
 
 // 以下と同等です
@@ -804,13 +819,13 @@ findBy マジックメソッドも同じようにいくつかオプションの�
 
 `query()` はクエリ中のテーブル名を戻り値の配列のキーとして使います。
 
-``` php
+```php
 $this->Picture->query('SELECT * FROM pictures LIMIT 2;');
 ```
 
 これは、以下の様な配列を返します。
 
-``` text
+```text
 
 [
     [0] => 
@@ -836,13 +851,13 @@ $this->Picture->query('SELECT * FROM pictures LIMIT 2;');
 find メソッドと同じように、戻り値の配列のキーにモデル名を使うためには、
 次のようにクエリを書き換えます。
 
-``` php
+```php
 $this->Picture->query('SELECT * FROM pictures AS Picture LIMIT 2;');
 ```
 
 すると以下の様な配列となります。
 
-``` text
+```text
 
 [
     [0] => 
@@ -879,7 +894,7 @@ $this->Picture->query('SELECT * FROM pictures AS Picture LIMIT 2;');
 検索条件を渡さずにモデルに ID がセットされていれば、その ID の結果に対する
 フィールドの値を返します。マッチする行がなければ false を返します。
 
-``` php
+```php
 $this->Post->id = 22;
 echo $this->Post->field('name'); // ID が 22 の行の name フィールドを表示します
 
@@ -930,7 +945,7 @@ echo $this->Post->field(
 
 最も良く使われるのは、次のような配列ベースのクエリです。
 
-``` php
+```php
 $conditions = ['Post.title' => 'This is a post', 'Post.author_id' => 1];
 // モデルの使い方のサンプル
 $this->Post->find('first', ['conditions' => $conditions]);
@@ -946,7 +961,7 @@ $this->Post->find('first', ['conditions' => $conditions]);
 否定や比較などはどうするのでしょうか？とてもシンプルです。
 "This is a post" 以外の投稿データを取得したい場合は以下のようにします。
 
-``` text
+```text
 ["Post.title !=" => "This is a post"]
 ```
 
@@ -956,7 +971,7 @@ $this->Post->find('first', ['conditions' => $conditions]);
 ただ、例外として `IN` (...) の場合は違います。
 `IN` を使って、リストから投稿タイトルを検索したい場合は以下のようにします。
 
-``` text
+```text
 [
     "Post.title" => ["First post", "Second post", "Third post"]
 ]
@@ -964,7 +979,7 @@ $this->Post->find('first', ['conditions' => $conditions]);
 
 `NOT IN` (...) でリストに含まれない投稿タイトルを検索した場合は以下のようにします。
 
-``` text
+```text
 [
     "NOT" => [
         "Post.title" => ["First post", "Second post", "Third post"]
@@ -974,7 +989,7 @@ $this->Post->find('first', ['conditions' => $conditions]);
 
 検索条件に新しい条件を追加したければ、キーと値のペアを配列に追加するだけです。
 
-``` text
+```text
  [
     "Post.title" => ["First post", "Second post", "Third post"],
     "Post.created >" => date('Y-m-d', strtotime("-2 weeks"))
@@ -983,7 +998,7 @@ $this->Post->find('first', ['conditions' => $conditions]);
 
 データベースの2つのフィールドを比較する条件を指定することもできます。
 
-``` text
+```text
 ["Post.created = Post.modified"]
 ```
 
@@ -993,7 +1008,7 @@ $this->Post->find('first', ['conditions' => $conditions]);
 この方法で `WHERE` 句に指定できないようなものは、文字列で以下のようにして
 指定できます。
 
-``` text
+```text
 [
     'Model.field & 8 = 1',
     // キーと値のペアでは指定できないような条件
@@ -1005,7 +1020,7 @@ $this->Post->find('first', ['conditions' => $conditions]);
 指定されたリストに含まれるタイトルの投稿だけが取得されます。
 ただ、どちらかの条件にマッチする投稿を取得したいこともあるでしょう。
 
-``` text
+```text
 ["OR" => [
     "Post.title" => ["First post", "Second post", "Third post"],
     "Post.created >" => date('Y-m-d', strtotime("-2 weeks"))
@@ -1019,7 +1034,7 @@ CakePHP は `AND` 、 `OR` 、 `NOT` 、 `XOR` (大文字、小文字は区別�
 この時、特定のキーワード "magic" を含むか、もしくは過去2週間の間に投稿されて、かつ
 Bob が書いた投稿、に制限して取得したい場合、次のようにします。
 
-``` text
+```text
 [
     "Author.name" => "Bob",
     "OR" => [
@@ -1032,7 +1047,7 @@ Bob が書いた投稿、に制限して取得したい場合、次のように�
 同じフィールドに対して複数の `LIKE` 条件を指定したい場合は、
 同じように以下のように条件を指定します。
 
-``` text
+```text
 ['OR' => [
     ['Post.title LIKE' => '%one%'],
     ['Post.title LIKE' => '%two%']
@@ -1044,7 +1059,7 @@ Bob が書いた投稿、に制限して取得したい場合、次のように�
 CakePHP は null も受け入れることができます。次のクエリは、
 投稿のタイトルが NOT NULL である投稿を返します。
 
-``` text
+```text
 ["NOT" => [
         "Post.title" => null
     ]
@@ -1053,7 +1068,7 @@ CakePHP は null も受け入れることができます。次のクエリは、
 
 `BETWEEN` は、以下のように出来ます。
 
-``` text
+```text
 ['Post.read_count BETWEEN ? AND ?' => [1,10]]
 ```
 
@@ -1062,7 +1077,7 @@ CakePHP は null も受け入れることができます。次のクエリは、
 
 `GROUP BY` は？
 
-``` text
+```text
 [
     'fields' => [
         'Product.type',
@@ -1074,7 +1089,7 @@ CakePHP は null も受け入れることができます。次のクエリは、
 
 この時の戻り値の配列は、次のような形式です。
 
-``` text
+```text
 Array
 (
     [0] => 
@@ -1094,7 +1109,7 @@ Array
 
 以下は `DISTINCT` のサンプルです。他にも `MIN()` や `MAX()` なども同じように使えます。
 
-``` text
+```text
 [
     'fields' => ['DISTINCT (User.name) AS my_column_name'],
     'order' = >['User.id DESC']
@@ -1103,7 +1118,7 @@ Array
 
 とても複雑な検索条件も、複数の配列をネストすることで実現可能です。
 
-``` text
+```text
 [
     'OR' => [
         ['Company.name' => 'Future Holdings'],
@@ -1124,7 +1139,7 @@ Array
 
 上記サンプルは次のような SQL を生成します。
 
-``` sql
+```sql
 SELECT `Company`.`id`, `Company`.`name`,
 `Company`.`description`, `Company`.`location`,
 `Company`.`created`, `Company`.`status`, `Company`.`size`
@@ -1150,7 +1165,7 @@ AND
 find メソッドを呼ぶような感じですが、これは SQL 文字列を返します。
 その後、expression を呼び出し、その戻り値を conditions 配列に追加します。
 
-``` php
+```php
 $conditionsSubQuery['User2.status'] = 'B';
 
 $db = $this->User->getDataSource();
@@ -1178,7 +1193,7 @@ $this->User->find('all', compact('conditions'));
 
 このサンプルは以下のような SQL を生成します。
 
-``` sql
+```sql
 SELECT
     User.id AS "User__id",
     User.name AS "User__name",
@@ -1205,7 +1220,7 @@ WHERE
 よりクエリをコントロールするために、準備済みステートメントを使うことができます。
 これでデータベースドライバと直接やり取りができ、好きなようにクエリを送信することができます。
 
-``` php
+```php
 $db = $this->getDataSource();
 $db->fetchAll(
     'SELECT * from users where username = ? AND password = ?',

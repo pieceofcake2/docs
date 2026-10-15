@@ -17,7 +17,9 @@ i18n データベーステーブルは、CakePHP コンソールを使っても�
 あるかもしれませんので、コンソールを使うことをお勧めします。コンソールを
 ずっと使い続けていれば、レイアウトに変更が入っても問題はおきません。
 
-    bin/cake i18n
+```bash
+bin/cake i18n
+```
 
 i18n データベースを初期化するには、 `[I]` を選択してください。
 既存のテーブルをドロップし、新しく作成するかどうかを聞かれます。i18n
@@ -29,7 +31,7 @@ i18n データベースを初期化するには、 `[I]` を選択してくだ�
 次の例のように、 `$actAs` プロパティを使って、
 モデルに Translate ビヘイビアを追加します。
 
-``` php
+```php
 class Post extends AppModel
 {
     public $actsAs = [
@@ -47,7 +49,7 @@ Translate ビヘイビアは、動作する前に一組のオプションがあ�
 フィールドをセットするには、配列を使って、単純に `'Translate'`
 の値を拡張するだけです。次のようになります。
 
-``` php
+```php
 class Post extends AppModel
 {
     public $actsAs = [
@@ -62,7 +64,7 @@ class Post extends AppModel
 対象とするフィールドを「title」とします。さて、この例にならうなら、
 モデルの例は次のようになるはずです。
 
-``` php
+```php
 class Post extends AppModel
 {
     public $actsAs = [
@@ -100,7 +102,7 @@ TranslateBehavior のために翻訳するフィールドを定義するとき�
 
 `$Model->locale` の設定によって、指定したロケールの翻訳を読むことができます。
 
-``` php
+```php
 // Read the spanish locale data.
 $this->Post->locale = 'es';
 $results = $this->Post->find('first', [
@@ -115,7 +117,7 @@ $results = $this->Post->find('first', [
 ビヘイビアのセットアップにおける *フィールドの配列* を拡張します。
 名前は好きにつけてください。
 
-``` php
+```php
 class Post extends AppModel
 {
     public $actsAs = [
@@ -129,7 +131,7 @@ class Post extends AppModel
 このようにセットアップすると、 `$this->Post->find()` の結果は次のようになります。
 :
 
-``` text
+```text
 
 [
      [Post] => 
@@ -184,7 +186,7 @@ bindTranslation メソッドを使用することで、あなたが必要な時�
 `$fields` は、フィールドとアソシエーション名の連想配列です。
 キーは翻訳フィールドで、値は仮のアソシエーション名です。
 
-``` php
+```php
 $this->Post->bindTranslation(['title' => 'titleTranslation']);
 // 動作させるためには、少なくとも recursive は 1 が必要です。
 $this->Post->find('all', ['recursive' => 1]);
@@ -192,7 +194,7 @@ $this->Post->find('all', ['recursive' => 1]);
 
 このようにセットアップすると、find() の結果は次のようになります。
 
-``` text
+```text
 
 [
      [Post] => 
@@ -240,7 +242,7 @@ TranslateBehavior を使ったモデルが何かを保存する時に、検出�
 
 **例 A:** コントローラの中で:
 
-``` php
+```php
 class PostsController extends AppController
 {
     public function add()
@@ -259,7 +261,7 @@ class PostsController extends AppController
 
 **例 B:** モデルの中で:
 
-``` php
+```php
 class Post extends AppModel
 {
     public $actsAs = [
@@ -292,7 +294,7 @@ class Post extends AppModel
 全ての posts の翻訳を保存するテーブルとして、「i18n」の代わりに「post_i18ns」を
 使用するとしましょう。これには、モデルを次のようにセットアップします。
 
-``` php
+```php
 class Post extends AppModel
 {
     public $actsAs = [
@@ -320,7 +322,7 @@ TranslateModel を動作させるには、モデルのフォルダに実際に�
 
 `$displayField` を `'field'` に変更することを忘れないでください。
 
-``` php
+```php
 class PostI18n extends AppModel
 {
     public $displayField = 'field'; // 重要
@@ -337,7 +339,7 @@ class PostI18n extends AppModel
 テーブルの名前を変更したい場合は、次に示すように、ただ単純にモデル中の
 \$translateTable を定義します。
 
-``` php
+```php
 class Post extends AppModel
 {
     public $actsAs = [

@@ -22,7 +22,7 @@ but you might also need to reply to a remote application with JSON or XML,
 or output a CSV file for a user.
 
 By default CakePHP view files are written in plain PHP and have a default
-extension of .ctp (CakePHP Template). These files contain all the
+extension of `.ctp` (CakePHP Template). These files contain all the
 presentational logic needed to get the data it received from the
 controller in a format that is ready for the audience you're
 serving to. If you'd prefer using a templating language like
@@ -83,7 +83,7 @@ depending on the specific view being rendered. By extending a common view file,
 you can avoid repeating the common markup for your sidebar, and only define the
 parts that change:
 
-``` php
+```php
 // templates/Common/view.ctp
 <h1><?php echo $this->fetch('title'); ?></h1>
 <?php echo $this->fetch('content'); ?>
@@ -102,7 +102,7 @@ block is a special block that CakePHP creates. It will contain all the
 uncaptured content from the extending view. Assuming our view file has a
 `$post` variable with the data about our post, the view could look like:
 
-``` php
+```php
 <?php
 // templates/Posts/view.ctp
 $this->extend('/Common/view');
@@ -133,7 +133,7 @@ Once it is complete, the extended view will be rendered. Calling `extend()`
 more than once in a view file will override the parent view that will be
 processed next:
 
-``` php
+```php
 $this->extend('/Common/view');
 $this->extend('/Common/index');
 ```
@@ -164,7 +164,7 @@ Blocks can be defined in two ways: either as a capturing block, or by direct
 assignment. The `start()`, `append()` and `end()` methods allow you to
 work with capturing blocks:
 
-``` php
+```php
 // Create the sidebar block.
 $this->start('sidebar');
 echo $this->element('sidebar/recent_topics');
@@ -180,7 +180,7 @@ $this->end();
 You can also append into a block using `start()` multiple times. `assign()`
 can be used to clear or overwrite a block at any time:
 
-``` php
+```php
 // Clear the previous content from the sidebar block.
 $this->assign('sidebar', '');
 ```
@@ -188,7 +188,7 @@ $this->assign('sidebar', '');
 In 2.3, a few new methods were added for working with blocks. The `prepend()`
 method was added to prepend content to an existing block:
 
-``` php
+```php
 // Prepend to sidebar
 $this->prepend('sidebar', 'this content goes on top of sidebar');
 ```
@@ -198,7 +198,7 @@ empty or undefined. If the block already exists, the captured content will be
 discarded. This is useful when you want to conditionally define default content
 for a block if it does not already exist:
 
-``` php
+```php
 // In a view file.
 // Create a navbar block
 $this->startIfEmpty('navbar');
@@ -207,7 +207,7 @@ echo $this->element('notifications');
 $this->end();
 ```
 
-``` php
+```php
 // In a parent view/layout
 <?php $this->startIfEmpty('navbar'); ?>
 <p>If the block is not defined by now - show this instead</p>
@@ -237,7 +237,7 @@ default content with the `<p>` tag will be discarded.
 You can display blocks using the `fetch()` method. `fetch()` will safely
 output a block, returning '' if a block does not exist:
 
-``` php
+```php
 echo $this->fetch('sidebar');
 ```
 
@@ -245,7 +245,7 @@ You can also use fetch to conditionally show content that should surround a
 block should it exist. This is helpful in layouts, or extended views where you
 want to conditionally show headings or other markup:
 
-``` php
+```php
 // In templates/Layouts/default.ctp
 <?php if ($this->fetch('menu')): ?>
 <div class="menu">
@@ -259,7 +259,7 @@ As of 2.3.0, you can also provide a default value for a block should it not have
 any content. This allows you to easily add placeholder content for empty
 states. You can provide a default value using the second argument:
 
-``` php
+```php
 <div class="shopping-cart">
     <h3>Your Cart</h3>
     <?php echo $this->fetch('cart', 'Your cart is empty'); ?>
@@ -281,7 +281,7 @@ its `HtmlHelper::script()`, `HtmlHelper::css()`, and
 `HtmlHelper::meta()` methods each update a block with the same name
 when used with the `inline = false` option:
 
-``` php
+```php
 <?php
 // In your view file
 $this->Html->script('carousel', ['inline' => false]);
@@ -302,7 +302,7 @@ $this->Html->css('carousel', ['inline' => false]);
 The `HtmlHelper` also allows you to control which block the scripts
 and CSS go to:
 
-``` php
+```php
 // In your view
 $this->Html->script('carousel', ['block' => 'scriptBottom']);
 
@@ -329,7 +329,7 @@ the output of your views. To do so, make sure your layout includes a
 place for `$this->fetch('content')` Here's an example of what a default layout
 might look like:
 
-``` php
+```php
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -391,7 +391,7 @@ You can create as many layouts as you wish: just place them in the
 controller actions using the controller or view's
 `View::$layout` property:
 
-``` php
+```php
 // From a controller
 public function admin_view()
 {
@@ -408,7 +408,7 @@ space, I might create a new layout with the smaller advertising
 space and specify it as the layout for all controllers' actions
 using something like:
 
-``` php
+```php
 class UsersController extends AppController
 {
     public function view_active()
@@ -444,7 +444,7 @@ If you want to use a layout that exists in a plugin, you can use
 `plugin syntax`. For example, to use the contact layout from the
 Contacts plugin:
 
-``` php
+```php
 class UsersController extends AppController
 {
     public function view_active()
@@ -470,11 +470,11 @@ make a view more readable, placing the rendering of repeating
 elements in its own file. They can also help you re-use content
 fragments in your application.
 
-Elements live in the `templates/Elements/` folder, and have the .ctp
+Elements live in the `templates/Elements/` folder, and have the `.ctp`
 filename extension. They are output using the element method of the
 view:
 
-``` php
+```php
 echo $this->element('helpbox');
 ```
 
@@ -483,7 +483,7 @@ echo $this->element('helpbox');
 You can pass data to an element through the element's second
 argument:
 
-``` php
+```php
 echo $this->element('helpbox', [
     'helptext' => 'Oh, this text is very helpful.',
 ]);
@@ -495,7 +495,7 @@ members of the parameter array (in the same way that
 above example, the `templates/Elements/helpbox.ctp` file can use the
 `$helptext` variable:
 
-``` php
+```php
 // Inside templates/Elements/helpbox.ctp
 echo $helptext; // Outputs "Oh, this text is very helpful."
 ```
@@ -503,7 +503,7 @@ echo $helptext; // Outputs "Oh, this text is very helpful."
 The `View::element()` method also supports options for the element.
 The options supported are 'cache' and 'callbacks'. An example:
 
-``` php
+```php
 echo $this->element(
     'helpbox',
     [
@@ -525,7 +525,7 @@ gives you a great amount of flexibility to decide where and for how long
 elements are stored. To cache different versions of the same element in an
 application, provide a unique cache key value using the following format:
 
-``` php
+```php
 $this->element('helpbox', [], [
     'cache' => ['config' => 'short', 'key' => 'unique value'],
 ]);
@@ -543,7 +543,7 @@ controller.
 To do this, in your controller add something like the following for
 the Post example:
 
-``` php
+```php
 class PostsController extends AppController
 {
     // ...
@@ -562,7 +562,7 @@ And then in the element we can access the paginated posts model. To
 get the latest five posts in an ordered list, we would do something
 like the following:
 
-``` php
+```php
 <h2>Latest Posts</h2>
 <?php
 $posts = $this->requestAction(
@@ -585,7 +585,7 @@ should be used. See [Caching](core-libraries/caching) for more information on
 configuring `Cache`. A simple example of caching an element would
 be:
 
-``` php
+```php
 echo $this->element('helpbox', [], ['cache' => true]);
 ```
 
@@ -594,7 +594,7 @@ caching enabled, be sure to set the 'key' parameter to a different
 name each time. This will prevent each successive call from
 overwriting the previous element() call's cached result. For example:
 
-``` php
+```php
 echo $this->element(
     'helpbox',
     ['var' => $var],
@@ -621,7 +621,7 @@ is given.
 To load an element from a plugin, use the `plugin` option (moved out of the
 `data` option in 1.x):
 
-``` php
+```php
 echo $this->element('helpbox', [], ['plugin' => 'Contacts']);
 ```
 
@@ -634,14 +634,14 @@ be prefixed onto all elements used, unless another plugin name is present.
 If the element doesn't exist in the plugin, it will look in the main APP
 folder.
 
-``` php
+```php
 echo $this->element('Contacts.helpbox');
 ```
 
 If your view is a part of a plugin, you can omit the plugin name. For example,
 if you are in the `ContactsController` of the Contacts plugin, the following:
 
-``` php
+```php
 echo $this->element('helpbox');
 // and
 echo $this->element('Contacts.helpbox');
@@ -667,7 +667,7 @@ components of CakePHP, view classes have a few conventions:
 
 You'll also want to extend `View` to ensure things work correctly:
 
-``` php
+```php
 // In src/View/PdfView.php
 class PdfView extends View
 {

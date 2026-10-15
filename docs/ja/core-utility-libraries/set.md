@@ -18,7 +18,7 @@ Set クラスは `Hash` クラスにその役割を譲り2.2で非推奨とな�
 
 使い方の例（ `Set::sort()` を使っています）:
 
-``` php
+```php
 $a = [
     0 => ['Person' => ['name' => 'Jeff'], 'Friend' => [['name' => 'Nate']]],
     1 => ['Person' => ['name' => 'Tracy'],'Friend' => [['name' => 'Lindsay']]],
@@ -52,7 +52,7 @@ $result = Set::sort($a, '{n}.Person.name', 'asc');
 
 Set::extract互換のパスで展開された配列の要素にコールバックを適用します:
 
-``` php
+```php
 $data = [
     ['Movie' => ['id' => 1, 'title' => 'movie 3', 'rating' => 5]],
     ['Movie' => ['id' => 1, 'title' => 'movie 1', 'rating' => 1]],
@@ -74,7 +74,7 @@ $result = Set::apply('/Movie/title', $data, 'strtoupper', ['type' => 'map']);
 特定のパスが配列にセットされているかを調べます。
 もし\$pathが空なら、真偽(*boolean*)値の代わりに\$dataを返します:
 
-``` php
+```php
 $set = [
     'My Index 1' => ['First' => 'The first item'],
 ];
@@ -113,7 +113,7 @@ $result = Set::check($set, 'My Index 1.First.Seconds.Third.Fourth');
 **Example 1**
 :
 
-``` php
+```php
 $a = [
     ['Article' => ['id' => 1, 'title' => 'Article 1']],
     ['Article' => ['id' => 2, 'title' => 'Article 2']],
@@ -145,7 +145,7 @@ $result = Set::classicExtract($a, '3.Article.title');
 **Example 2**
 :
 
-``` php
+```php
 $a = [
     0 => ['pages' => ['name' => 'page']],
     1 => ['fruites' => ['name' => 'fruit']],
@@ -277,7 +277,7 @@ $result = Set::classicExtract($a, '{dot\.test}.{n}');
 もし \$path2 で指定されたパスが定義されていなかったら、全ての値は null として初期化されます(Set::merge で便利です)。
 これらのパスの後に、オプションで \$groupPath を設定すると、それが指定するパスの値でグループ化することができます。
 
-``` php
+```php
 $result = Set::combine([], '{n}.User.id', '{n}.User.Data');
 // $result == [];
 
@@ -453,7 +453,7 @@ $result = Set::combine($a, ['%2$d: %1$s', '{n}.User.Data.user', '{n}.User.id'], 
 
 一つの配列が、もう片方の配列のキーと値を正確に含んでいるかを確認します。:
 
-``` php
+```php
 $a = [
     0 => ['name' => 'main'],
     1 => ['name' => 'about'],
@@ -480,7 +480,7 @@ $result = Set::contains($b, $a);
 配列の次元の数を数えます。
 もし \$all を false (デフォルトの値です) に設定すると、配列の最初の要素を配列の次元の数とみなします。:
 
-``` php
+```php
 $data = ['one', '2', 'three'];
 $result = Set::countDim($data);
 // $result == 1
@@ -535,7 +535,7 @@ $result = Set::countDim($set, true);
 
 セットと配列、二つのセット、あるいは二つの配列の間の差分を計算します。
 
-``` php
+```php
 $a = [
     0 => ['name' => 'main'],
     1 => ['name' => 'about'],
@@ -610,7 +610,7 @@ enumメソッドは、HTMLのselect要素を使う時にうまく機能します
 
 もしパラメータが渡されなかった場合の \$list のデフォルトは 0 = no 1 = yes です。:
 
-``` php
+```php
 $res = Set::enum(1, 'one, two');
 // $res は「two」になる
 
@@ -631,7 +631,7 @@ Set::extract は、 find あるいは findAll で得られたデータのサブ�
 > [!NOTE]
 > もし `$path` が'/'を含まない場合は、 `Set::classicExtract()` に処理が委譲されます
 
-``` php
+```php
 // 一般的な使い方:
 $users = $this->User->find('all');
 $results = Set::extract('/User/id', $users);
@@ -664,7 +664,7 @@ $results = Set::extract('/User/id', $users);
 ルート配列から空の要素を除きます。
 「0」の要素は除きません:
 
-``` php
+```php
 $res = Set::filter(['0', false, true, 0, ['one thing', 'I can tell you', 'is you got to be', false]]);
 
 /* $res は現段階で次のようになります。:
@@ -687,7 +687,7 @@ $res = Set::filter(['0', false, true, 0, ['one thing', 'I can tell you', 'is you
 
 多次元配列を1次元配列に潰します:
 
-``` php
+```php
 $arr = [
     [
         'Post' => ['id' => '1', 'title' => 'First Post'],
@@ -719,7 +719,7 @@ $res = Set::flatten($arr);
 
 配列から、文字列にフォーマットしたものを抜粋して返します:
 
-``` php
+```php
 $data = [
     ['Person' => ['first_name' => 'Nate', 'last_name' => 'Abele', 'city' => 'Boston', 'state' => 'MA', 'something' => '42']],
     ['Person' => ['first_name' => 'Larry', 'last_name' => 'Masters', 'city' => 'Boondock', 'state' => 'TN', 'something' => '{0}']],
@@ -783,7 +783,7 @@ $res = Set::format($data, '%1$s, %2$d', ['{n}.Person.first_name', '{n}.Person.so
 
 \$path で定義された配列の中に \$data を挿入します。:
 
-``` php
+```php
 $a = [
     'pages' => ['name' => 'page'],
 ];
@@ -846,7 +846,7 @@ $result = Set::insert($a, 'pages.1.vars', ['title' => 'page title']);
 デフォルトでは、この関数は配列を stdClass オブジェクトに変換しますが、任意のタイプのクラスを指定することができます。
 例：Set::map(\$array_of_values, 'nameOfYourClass');:
 
-``` php
+```php
 $data = [
     [
         'IndexedPage' => [
@@ -907,7 +907,7 @@ $mapped = Set::map($data);
 
 2番目の引数で独自のクラスを用いたSet::map()の使用方法:
 
-``` php
+```php
 class MyClass
 {
     public function sayHi()
@@ -928,7 +928,7 @@ $mapped->[0]->sayHi();
 
 Set::matches は単一のアイテムあるいは与えられた XPath が、ある条件にマッチするかどうかを確認します:
 
-``` php
+```php
 $a = [
     ['Article' => ['id' => 1, 'title' => 'Article 1']],
     ['Article' => ['id' => 2, 'title' => 'Article 2']],
@@ -978,7 +978,7 @@ array_merge_recursive と異なる点は、キーが文字列に含まれてい�
 > [!NOTE]
 > この関数は引数を無制限に渡すことができ、配列でないパラメータは配列に型を変換します。
 
-``` php
+```php
 $arry1 = [
     [
         'id' => '48c2570e-dfa8-4c32-a35e-0d71cbdd56cb',
@@ -1025,7 +1025,7 @@ $res = Set::merge($arry1, $arry2, $arry3, $arry4);
 
 フラットな配列を引数にとり、ネストされた配列を返します:
 
-``` php
+```php
 $data = [
     ['ModelName' => ['id' => 1, 'parent_id' => null]],
     ['ModelName' => ['id' => 2, 'parent_id' => 1]],
@@ -1088,7 +1088,7 @@ $result = Set::nest($data, ['root' => 6]);
 
 文字列や配列のリストを正規化します。:
 
-``` php
+```php
 $a = [
     'Tree',
     'CounterCache',
@@ -1192,7 +1192,7 @@ $result = Set::normalize(Set::merge($a, $b)); // 2つをマージして正規化
 
 配列の全ての値が数字かどうかチェックします:
 
-``` php
+```php
 $data = ['one'];
 $res = Set::numeric(array_keys($data));
 
@@ -1253,7 +1253,7 @@ $res = Set::numeric(array_keys($data));
 **Example 1**
 :
 
-``` php
+```php
 $array1 = ['ModelOne' => ['id' => 1001, 'field_one' => 'a1.m1.f1', 'field_two' => 'a1.m1.f2']];
 $array2 = ['ModelOne' => ['id' => 1003, 'field_one' => 'a3.m1.f1', 'field_two' => 'a3.m1.f2', 'field_three' => 'a3.m1.f3']];
 $res = Set::pushDiff($array1, $array2);
@@ -1273,7 +1273,7 @@ $res = Set::pushDiff($array1, $array2);
 **Example 2**
 :
 
-``` php
+```php
 $array1 = ['a' => 'b', 1 => 20938, 'c' => 'string'];
 $array2 = ['b' => 'b', 3 => 238, 'c' => 'string', ['extra_field']];
 $res = Set::pushDiff($array1, $array2);
@@ -1297,7 +1297,7 @@ $res = Set::pushDiff($array1, $array2);
 
 セットや配列の中のから、\$pathで定義されたパスの要素を削除します。:
 
-``` php
+```php
 $a = [
     'pages' => ['name' => 'page'],
     'files' => ['name' => 'files'],
@@ -1322,7 +1322,7 @@ Set::reverse は基本的に `Set::map` の逆を行います。
 これは、オブジェクトを配列に変換します。
 もし \$object がオブジェクトでなかったら、単純に \$object を返します。:
 
-``` php
+```php
 $result = Set::reverse(null);
 // Null
 $result = Set::reverse(false);
@@ -1417,7 +1417,7 @@ $result = Set::reverse($a['Post']); // ただ配列を返します
 
 Set 互換のパスで確定したあらゆる値で配列をソートします。:
 
-``` php
+```php
 $a = [
     0 => ['Person' => ['name' => 'Jeff'], 'Friend' => [['name' => 'Nate']]],
     1 => ['Person' => ['name' => 'Tracy'],'Friend' => [['name' => 'Lindsay']]],

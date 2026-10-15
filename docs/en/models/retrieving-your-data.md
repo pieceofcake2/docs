@@ -20,7 +20,7 @@ Keep in mind that `$type` is case-sensitive. Using an upper case character
 and has the following possible keys by default, all of which are
 optional:
 
-``` text
+```text
 [
     'conditions' => ['Model.field' => $thisValue], // array of conditions
     'recursive' => 1, // int
@@ -54,7 +54,7 @@ The `order` option takes a string or an array. The same format is used by
 associations. Each item is a field (or SQL expression) followed by an
 optional sort direction:
 
-``` php
+```php
 // Field => direction pairs
 $this->Article->find('all', [
     'order' => ['Article.created' => 'DESC', 'Article.title' => 'asc'],
@@ -80,6 +80,22 @@ The direction must be `ASC` or `DESC`, optionally followed by `NULLS FIRST` or
 `NULLS LAST`. It is case-insensitive and extra whitespace is ignored, so
 `'asc'`, `' Desc '` and `'desc  nulls  last'` are all valid.
 
+::: warning NULLS FIRST / NULLS LAST support
+CakePHP passes `NULLS FIRST` / `NULLS LAST` to the database as written; not
+every database supports it:
+
+| Database | `NULLS FIRST` / `NULLS LAST` | NULLs with `ASC` by default |
+|----------|------------------------------|-----------------------------|
+| PostgreSQL | Supported | Last |
+| SQLite | Supported since 3.30.0 | First |
+| MySQL / MariaDB | Not supported (SQL syntax error) | First |
+| SQL Server | Not supported (SQL syntax error) | First |
+
+On MySQL, MariaDB and SQL Server, sort on an expression first instead, for
+example `['Post.published IS NULL' => 'ASC', 'Post.published' => 'ASC']` to put
+NULLs last.
+:::
+
 ::: pieceofcake2
 The sort direction is validated since v2.12.5. An invalid direction triggers
 an `E_USER_DEPRECATED` error and the SQL is generated as before; a future
@@ -90,7 +106,7 @@ An invalid direction is usually part of an expression written in the
 direction. Move the expression into the key, or pass raw SQL as the key on
 its own:
 
-``` php
+```php
 // Before: triggers the deprecation error
 $this->Article->find('all', [
     'order' => ['Article.status' => "= 'draft' DESC"],
@@ -111,7 +127,7 @@ escaped, so it must never contain request data. Do not pass request data as
 the direction either. When users choose the sort order, map their input onto
 a whitelist of fields and directions:
 
-``` php
+```php
 // src/Controller/ArticlesController.php
 public function index()
 {
@@ -143,7 +159,7 @@ public function index()
 where you expect only one result. Below are a couple of simple (controller code)
 examples:
 
-``` php
+```php
 public function some_function()
 {
     // ...
@@ -162,7 +178,7 @@ In the first example, no parameters at all are passed to find, so
 no conditions or sort order will be used. The format
 returned from `find('first')` call is of the form:
 
-``` text
+```text
 
 [
     [ModelName] => 
@@ -190,7 +206,7 @@ returned from `find('first')` call is of the form:
 `find('count', $params)` returns an integer value. Below are a
 couple of simple (controller code) examples:
 
-``` php
+```php
 public function some_function()
 {
     // ...
@@ -221,7 +237,7 @@ It is, in fact, the mechanism used by all `find()` variants, as
 well as `paginate`. Below are a couple of simple (controller
 code) examples:
 
-``` php
+```php
 public function some_function()
 {
     // ...
@@ -245,7 +261,7 @@ public function some_function()
 The results of a call to `find('all')` will be of the following
 form:
 
-``` text
+```text
 
 [
     [0] => 
@@ -278,7 +294,7 @@ form:
 place where you would want a list, such as for populating input select
 boxes. Below are a couple of simple (controller code) examples:
 
-``` php
+```php
 public function some_function()
 {
     // ...
@@ -304,7 +320,7 @@ public function some_function()
 The results of a call to `find('list')` will be in the following
 form:
 
-``` text
+```text
 
 [
     //[id] => 'displayValue',
@@ -325,7 +341,7 @@ be configured using the model attribute
 [Model Displayfield](../models/model-attributes#model-displayField)) is used for the value.
 Some further examples to clarify:
 
-``` php
+```php
 public function some_function()
 {
     // ...
@@ -345,7 +361,7 @@ public function some_function()
 With the above code example, the resultant vars would look
 something like this:
 
-``` php
+```php
 $justusernames = 
 [
     //[id] => 'username',
@@ -393,7 +409,7 @@ appropriate if you want to use the `parent_id` field of your
 model data to build nested results. Below are a couple of simple
 (controller code) examples:
 
-``` php
+```php
 public function some_function()
 {
     // ...
@@ -413,7 +429,7 @@ In the above code example, `$allCategories` will contain a nested
 array representing the whole category structure. The results of a
 call to `find('threaded')` will be of the following form:
 
-``` text
+```text
 
 [
     [0] => 
@@ -496,7 +512,7 @@ returned first.
 return the row before and after the one you request. Below is a simple
 (controller code) example:
 
-``` php
+```php
 public function some_function()
 {
     $neighbors = $this->Article->find(
@@ -512,7 +528,7 @@ allowed as with any other find. (For example: If your model acts as
 containable, then you can specify 'contain' in `$params`.) The
 result returned from a `find('neighbors')` call is in the form:
 
-``` text
+```text
 
 [
     [prev] => 
@@ -568,7 +584,7 @@ function in your model class.
 
 A Model Find Type is a shortcut to `find()` options. For example, the following two finds are equivalent
 
-``` php
+```php
 $this->User->find('first');
 $this->User->find('all', ['limit' => 1]);
 ```
@@ -585,7 +601,7 @@ The following are core find types:
 But what about other types? Let's say you want a finder for all published articles in your database. The first
 change you need to do is add your type to the `Model::$findMethods` variable in the model
 
-``` php
+```php
 class Article extends AppModel
 {
     public $findMethods = ['available' => true];
@@ -597,7 +613,7 @@ argument of the `find` function. The next step is to implement the function `_fi
 This is done by convention. If you wanted to implement a finder called `myFancySearch`, then
 the method to implement would be named `_findMyFancySearch`.
 
-``` php
+```php
 class Article extends AppModel
 {
     public $findMethods = ['available' => true];
@@ -617,7 +633,7 @@ class Article extends AppModel
 
 This all comes together in the following example (controller code):
 
-``` php
+```php
 class ArticlesController extends AppController
 {
     /**
@@ -651,7 +667,7 @@ your application across models.
 
 It is also possible to paginate via a custom find type using the 'findType' option as follows:
 
-``` php
+```php
 class ArticlesController extends AppController
 {
     /**
@@ -672,7 +688,7 @@ of the find becoming `available`, and will also allow you to continue to modify 
 To simply return the count of a custom find type, call `count` like you normally would, but pass in the
 find type in an array for the second argument.
 
-``` php
+```php
 class ArticlesController extends AppController
 {
     /**
@@ -690,7 +706,7 @@ class ArticlesController extends AppController
 If your pagination page count is becoming corrupt, it may be necessary to add the following code to
 your `AppModel`, which should fix the pagination count:
 
-``` php
+```php
 class AppModel extends Model
 {
     /**
@@ -736,7 +752,7 @@ The `'before'` state of your custom finder will now be called again with
 If necessary, you can distinguish by checking the `'operation'` key
 and return a different `$query`:
 
-``` php
+```php
 protected function _findAvailable($state, $query, $results = [])
 {
     if ($state === 'before') {
@@ -787,7 +803,7 @@ As of 2.8, you can use any custom finder method with the magic method interface.
 For example, if your model implements a `published` finder, you can use those
 finders with the magic `findBy` method:
 
-``` php
+```php
 $results = $this->Article->findPublishedByAuthorId(5);
 
 // Is equivalent to
@@ -840,13 +856,13 @@ will create SQL injection vulnerabilities.
 `query()` uses the table name in the query as the array key for
 the returned data, rather than the model name. For example:
 
-``` php
+```php
 $this->Picture->query('SELECT * FROM pictures LIMIT 2;');
 ```
 
 might return:
 
-``` text
+```text
 
 [
     [0] => 
@@ -873,13 +889,13 @@ To use the model name as the array key, and get a result consistent
 with that returned by the Find methods, the query can be
 rewritten:
 
-``` php
+```php
 $this->Picture->query('SELECT * FROM pictures AS Picture LIMIT 2;');
 ```
 
 which returns:
 
-``` text
+```text
 
 [
     [0] => 
@@ -917,7 +933,7 @@ conditions are passed and the model id is set, it will return the
 field value for the current model result. If no matching record is
 found, it returns false.
 
-``` php
+```php
 $this->Post->id = 22;
 echo $this->Post->field('name'); // echo the name for row id 22
 
@@ -978,7 +994,7 @@ also enables CakePHP to secure your queries against any SQL injection attack.
 
 At its most basic, an array-based query looks like this:
 
-``` php
+```php
 $conditions = ['Post.title' => 'This is a post', 'Post.author_id' => 1];
 // Example usage with a model:
 $this->Post->find('first', ['conditions' => $conditions]);
@@ -995,7 +1011,7 @@ What about other types of matches? These are equally simple. Let's
 say we wanted to find all the posts where the title is not "This is
 a post":
 
-``` text
+```text
 ["Post.title !=" => "This is a post"]
 ```
 
@@ -1006,7 +1022,7 @@ field name and the operator. The one exception here is `IN`
 (...)-style matches. Let's say you wanted to find posts where the
 title was in a given set of values:
 
-``` text
+```text
 [
     "Post.title" => ["First post", "Second post", "Third post"]
 ]
@@ -1015,7 +1031,7 @@ title was in a given set of values:
 To do a `NOT IN` (...) match to find posts where the title is not in
 the given set of values, do the following:
 
-``` text
+```text
 [
     "NOT" => [
         "Post.title" => ["First post", "Second post", "Third post"]
@@ -1026,7 +1042,7 @@ the given set of values, do the following:
 Adding additional filters to the conditions is as simple as adding
 additional key/value pairs to the array:
 
-``` text
+```text
  [
     "Post.title" => ["First post", "Second post", "Third post"],
     "Post.created >" => date('Y-m-d', strtotime("-2 weeks"))
@@ -1035,7 +1051,7 @@ additional key/value pairs to the array:
 
 You can also create finds that compare two fields in the database:
 
-``` text
+```text
 ["Post.created = Post.modified"]
 ```
 
@@ -1047,7 +1063,7 @@ Remember that if you find yourself unable to form a `WHERE` clause in
 this method (for example, boolean operations), you can always specify it as
 a string like:
 
-``` text
+```text
 [
     'Model.field & 8 = 1',
     // other conditions as usual
@@ -1060,7 +1076,7 @@ been created in the past two weeks, and have a title that matches
 one in the given set. However, we could just as easily find posts
 that match either condition:
 
-``` text
+```text
 ["OR" => [
     "Post.title" => ["First post", "Second post", "Third post"],
     "Post.created >" => date('Y-m-d', strtotime("-2 weeks"))
@@ -1075,7 +1091,7 @@ say you wanted to find all the posts that contained a certain
 keyword ("magic") or were created in the past two weeks, but you
 wanted to restrict your search to posts written by Bob:
 
-``` text
+```text
 [
     "Author.name" => "Bob",
     "OR" => [
@@ -1089,7 +1105,7 @@ If you need to set multiple conditions on the same field, like when
 you want to do a `LIKE` search with multiple terms, you can do so by
 using conditions similar to:
 
-``` text
+```text
 ['OR' => [
     ['Post.title LIKE' => '%one%'],
     ['Post.title LIKE' => '%two%']
@@ -1102,7 +1118,7 @@ also available.
 CakePHP can also check for null fields. In this example, the query
 will return records where the post title is not null:
 
-``` text
+```text
 ["NOT" => [
         "Post.title" => null
     ]
@@ -1111,7 +1127,7 @@ will return records where the post title is not null:
 
 To handle `BETWEEN` queries, you can use the following:
 
-``` text
+```text
 ['Post.read_count BETWEEN ? AND ?' => [1, 10]]
 ```
 
@@ -1121,7 +1137,7 @@ To handle `BETWEEN` queries, you can use the following:
 
 How about `GROUP BY`?:
 
-``` text
+```text
 [
     'fields' => [
         'Product.type',
@@ -1133,7 +1149,7 @@ How about `GROUP BY`?:
 
 The data returned for this would be in the following format:
 
-``` text
+```text
 Array
 (
     [0] => 
@@ -1154,7 +1170,7 @@ Array
 A quick example of doing a `DISTINCT` query. You can use other
 operators, such as `MIN()`, `MAX()`, etc., in a similar fashion:
 
-``` text
+```text
 [
     'fields' => ['DISTINCT (User.name) AS my_column_name'],
     'order' =>['User.id DESC']
@@ -1164,7 +1180,7 @@ operators, such as `MIN()`, `MAX()`, etc., in a similar fashion:
 You can create very complex conditions by nesting multiple
 condition arrays:
 
-``` text
+```text
 [
     'OR' => [
         ['Company.name' => 'Future Holdings'],
@@ -1185,7 +1201,7 @@ condition arrays:
 
 which produces the following SQL:
 
-``` sql
+```sql
 SELECT `Company`.`id`, `Company`.`name`,
 `Company`.`description`, `Company`.`location`,
 `Company`.`created`, `Company`.`status`, `Company`.`size`
@@ -1212,7 +1228,7 @@ and ask it to build the query as if we were calling a `find()` method,
 but it will just return the SQL statement. After that we make an
 expression and add it to the conditions array:
 
-``` php
+```php
 $conditionsSubQuery['User2.status'] = 'B';
 
 $db = $this->User->getDataSource();
@@ -1240,7 +1256,7 @@ $this->User->find('all', compact('conditions'));
 
 This should generate the following SQL:
 
-``` sql
+```sql
 SELECT
     User.id AS "User__id",
     User.name AS "User__name",
@@ -1270,7 +1286,7 @@ Should you need even more control over your queries, you can make use of prepare
 statements. This allows you to talk directly to the database driver and send any
 custom query you like:
 
-``` php
+```php
 $db = $this->getDataSource();
 $db->fetchAll(
     'SELECT * from users where username = ? AND password = ?',

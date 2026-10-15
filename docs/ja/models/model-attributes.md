@@ -17,7 +17,7 @@
 
 使用例:
 
-``` php
+```php
 class Example extends AppModel
 {
     public $useDbConfig = 'alternate';
@@ -34,7 +34,7 @@ class Example extends AppModel
 
 使用例:
 
-``` php
+```php
 class Example extends AppModel
 {
     public $useTable = false; // このモデルはデータベース・テーブルを使いません
@@ -43,7 +43,7 @@ class Example extends AppModel
 
 あるいは:
 
-``` php
+```php
 class Example extends AppModel
 {
     public $useTable = 'exmp'; // このモデルは「exmp」というデータベース・テーブルを使います
@@ -59,7 +59,7 @@ class Example extends AppModel
 
 使用例:
 
-``` php
+```php
 class Example extends AppModel
 {
     public $tablePrefix = 'alternate_'; // 「alternate_examples」を見に行く
@@ -76,7 +76,7 @@ class Example extends AppModel
 
 使用例:
 
-``` php
+```php
 class Example extends AppModel
 {
     // example_idは データベースのフィールド名
@@ -94,7 +94,7 @@ class Example extends AppModel
 
 例えば、 `username` フィールドを使うには以下のようにします:
 
-``` php
+```php
 class User extends AppModel
 {
     public $displayField = 'username';
@@ -148,7 +148,7 @@ recursive プロパティは CakePHP が `find()` 、 `read()`
 
 find 操作のデフォルトのデータの順番。下記のような設定が可能です。
 
-``` php
+```php
 $order = 'field';
 $order = 'Model.field';
 $order = 'Model.field asc';
@@ -158,7 +158,8 @@ $order = ['Model.field' => 'asc', 'Model.field2' => 'DESC'];
 ```
 
 ソート方向は `ASC` または `DESC` で、その後に `NULLS FIRST` または `NULLS LAST` を
-続けることもできます。[並び順](/ja/models/retrieving-your-data#sort-order) を参照してください。
+続けることもできます (MySQL、MariaDB、SQL Server は非対応です)。
+[並び順](/ja/models/retrieving-your-data#sort-order) を参照してください。
 
 ## data
 
@@ -230,7 +231,7 @@ time
 
 使用例:
 
-``` php
+```php
 protected $_schema = [
     'first_name' => [
         'type' => 'string',
@@ -273,7 +274,7 @@ protected $_schema = [
 
 MySQL での使用例:
 
-``` php
+```php
 public $virtualFields = [
     'name' => "CONCAT(User.first_name, ' ', User.last_name)",
 ];
@@ -292,7 +293,7 @@ public $virtualFields = [
 
 使用例:
 
-``` php
+```php
 class Example extends AppModel
 {
     public $name = 'Example';

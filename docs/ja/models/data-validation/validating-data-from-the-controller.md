@@ -8,14 +8,14 @@
 
 まず、データをモデルにセットします:
 
-``` php
+```php
 $this->ModelName->set($this->request->data);
 ```
 
 そしてバリデーションするにはモデルの validates メソッドを使います。
 これはデータが正しければ true 、エラーがあれば false を返します:
 
-``` php
+```php
 if ($this->ModelName->validates()) {
     // 正しい場合のロジック
 } else {
@@ -33,7 +33,7 @@ if ($this->ModelName->validates()) {
 これを行うには、チェックする項目を指定したオプション配列を渡して
 あげます:
 
-``` php
+```php
 if ($this->User->validates(['fieldList' => ['email', 'password']])) {
     // バリデーションOK
 } else {
@@ -45,7 +45,7 @@ validates メソッドは invalidFields メソッドを呼び出しますが、
 この中でモデルの validationErrors プロパティを設定します。
 invalidFields はまた、そのデータを結果として返します:
 
-``` php
+```php
 $errors = $this->ModelName->invalidFields(); // validationErrors 配列を返す
 ```
 
@@ -65,7 +65,7 @@ $errors = $this->ModelName->invalidFields(); // validationErrors 配列を返す
 
 複数のモデルのバリデーションを行うには次のアプローチを使います:
 
-``` php
+```php
 if (
     $this->ModelName->saveAll(
         $this->request->data,
@@ -81,7 +81,7 @@ if (
 もし save の前に妥当性チェックが終わっていれば、二度目のチェックを
 省略することができます:
 
-``` php
+```php
 if (
     $this->ModelName->saveAll(
         $this->request->data,

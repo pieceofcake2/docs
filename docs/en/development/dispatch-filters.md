@@ -24,7 +24,7 @@ special key `Dispatcher.filters`. By default CakePHP comes with a couple filter
 classes already enabled for all requests, let's take a look at how they are
 added:
 
-``` php
+```php
 // config/bootstrap.php
 Configure::write('Dispatcher.filters', [
     'AssetDispatcher',
@@ -50,7 +50,7 @@ You can add your own class names to the list of filters, and they will get
 executed in the order they were defined. There is also an alternative way for
 attaching filters that do not involve the special `DispatcherFilter` classes:
 
-``` php
+```php
 Configure::write('Dispatcher.filters', [
     'my-filter' => [
         'callable' => [$classInstance, 'methodName'],
@@ -65,7 +65,7 @@ type, as you may remember, a `callback` is anything that PHP can execute with
 be treated as a class name, not as a possible function name. This also lets
 you attach anonymous functions as filters:
 
-``` php
+```php
 Configure::write('Dispatcher.filters', [
     'my-filter' => [
         'callable' => function ($event) {
@@ -86,7 +86,7 @@ a default of `10` is selected for you
 As all filters will have default priority `10`, should you want to run a filter before
 any other in the list, select lower priority numbers as needed:
 
-``` php
+```php
 Configure::write('Dispatcher.filters', [
     'my-filter' => [
         'callable' => function ($event) {
@@ -111,7 +111,7 @@ Finally, CakePHP's plugin notation can be used to define filters located in
 plugins. The filter class is then loaded from the plugin's `Routing/Filter`
 directory, e.g. `plugins/MyPlugin/Routing/Filter/MyFilter.php`:
 
-``` php
+```php
 Configure::write('Dispatcher.filters', [
     'MyPlugin.MyFilter',
 ]);
@@ -124,7 +124,7 @@ use built-in full page caching, or just implement your own.
 If you need to pass constructor parameters or settings to you dispatch filter
 classes you can do that by providing an array of settings:
 
-``` php
+```php
 Configure::write('Dispatcher.filters', [
     'MyAssetFilter' => ['service' => 'google.com'],
 ]);
@@ -148,7 +148,7 @@ the class `DispatcherFilter` provided in the `Routing` CakePHP's directory.
 Let's create a simple filter to respond to a specific URL with a 'Hello World'
 text:
 
-``` php
+```php
 // src/Routing/Filter/HelloWorldFilter.php
 class HelloWorldFilter extends DispatcherFilter
 {
@@ -199,7 +199,7 @@ this one.
 Let's now create another filter for altering response headers in any public
 page, in our case it would be anything served from the `PagesController`:
 
-``` php
+```php
 // src/Routing/Filter/HttpCacheFilter.php
 class HttpCacheFilter extends DispatcherFilter
 {
@@ -233,7 +233,7 @@ serve a list of posts in JSON format, we encourage you to do so using
 controllers and the `JsonView` class, but let's imagine you need to save a
 few milliseconds for this mission-critical API endpoint:
 
-``` php
+```php
 // config/bootstrap.php
 $postsList = function ($event) {
     if ($event->data['request']->url !== 'posts/recent.json') {

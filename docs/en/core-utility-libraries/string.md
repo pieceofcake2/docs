@@ -15,7 +15,7 @@ has been removed because `String` is a reserved word since PHP 7. Replace
 If you need `TextHelper` functionalities outside of a `View`,
 use the `CakeText` class:
 
-``` php
+```php
 class UsersController extends AppController
 {
     public $components = ['Auth'];
@@ -42,7 +42,7 @@ The UUID method is used to generate unique identifiers as per
 128bit string in the format of
 485fc381-e790-47a3-9794-1337c0a8fe68.
 
-``` php
+```php
 CakeText::uuid(); // 485fc381-e790-47a3-9794-1337c0a8fe68
 ```
 
@@ -54,7 +54,7 @@ Tokenizes a string using `$separator`, ignoring any instance of
 This method can be useful when splitting up data in that has regular
 formatting such as tag lists:
 
-``` php
+```php
 $data = "cakephp 'great framework' php";
 $result = CakeText::tokenize($data, ' ', "'", "'");
 // result contains
@@ -66,7 +66,7 @@ $result = CakeText::tokenize($data, ' ', "'", "'");
 The insert method is used to create string templates and to allow
 for key/value replacements:
 
-``` php
+```php
 CakeText::insert('My name is :name and I am :age years old.', ['name' => 'Bob', 'age' => '65']);
 // generates: "My name is Bob and I am 65 years old."
 ```
@@ -81,7 +81,7 @@ did not get replaced by `CakeText::insert()`.
 
 You can use the following options in the options array:
 
-``` php
+```php
 $options = [
     'clean' => [
         'method' => 'text', // or html
@@ -96,7 +96,7 @@ $options = [
 Wraps a block of text to a set width, and indent blocks as well.
 Can intelligently wrap text so words are not sliced across lines:
 
-``` php
+```php
 $text = 'This is the song that never ends.';
 $result = CakeText::wrap($text, 22);
 

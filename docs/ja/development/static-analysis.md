@@ -155,6 +155,14 @@ vendor/bin/phpstan analyse
 PHPStan は、エラーごとにファイルと行を表示します。CI のジョブでは、`--no-progress` を付けると
 ログが短くなります。
 
+<a id="ci-job-summaries"></a>
+
+### CI のジョブサマリー
+
+PHPStan のエラーを GitHub Actions のジョブサマリーとして実行結果のページに表示する方法は、
+継続的インテグレーションのページの [ジョブサマリー](/ja/development/continuous-integration#job-summaries)
+を参照してください。PHPStan のジョブ全体の例もそのページにあります。
+
 <a id="what-the-extension-adds"></a>
 
 ## 拡張が追加する機能

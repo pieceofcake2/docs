@@ -22,7 +22,7 @@ and should be used instead of that method.
 To render a flash message, you can simply use FlashHelper's `render()`
 method:
 
-``` php
+```php
 <?php echo $this->Flash->render() ?>
 ```
 
@@ -31,13 +31,13 @@ you've specified a key when setting the flash message in
 [FlashComponent](../../core-libraries/components/flash), you can specify which
 flash key to render:
 
-``` php
+```php
 <?php echo $this->Flash->render('other') ?>
 ```
 
 You can also override any of the options that were set in FlashComponent:
 
-``` php
+```php
 // In your Controller
 $this->Flash->set('The user has been saved.', [
     'element' => 'success'

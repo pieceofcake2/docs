@@ -13,7 +13,7 @@ PHP 7 以降 `String` が予約語であるため削除されました。`String
 もし、 `View` 以外で `TextHelper` が必要な場合、
 `CakeText` クラスを使ってください。
 
-``` php
+```php
 class UsersController extends AppController
 {
     public $components = ['Auth'];
@@ -39,7 +39,7 @@ uuid メソッドは、`4122` で規定されているようなユニーク ID �
 UUID とは、485fc381-e790-47a3-9794-1337c0a8fe68 のようなフォーマットの
 128 ビットの文字列のことです。
 
-``` php
+```php
 CakeText::uuid(); // 485fc381-e790-47a3-9794-1337c0a8fe68
 ```
 
@@ -50,7 +50,7 @@ CakeText::uuid(); // 485fc381-e790-47a3-9794-1337c0a8fe68
 
 このメソッドは、タグリストのような定形フォーマットのデータを分割するのに便利です。
 
-``` php
+```php
 $data = "cakephp 'great framework' php";
 $result = CakeText::tokenize($data, ' ', "'", "'");
 // 結果
@@ -61,7 +61,7 @@ $result = CakeText::tokenize($data, ' ', "'", "'");
 
 insert メソッドは、テンプレートとキー・バリューの組み合わせから文字列を作成できます。
 
-``` php
+```php
 CakeText::insert('My name is :name and I am :age years old.', ['name' => 'Bob', 'age' => '65']);
 // 生成される文字列: "My name is Bob and I am 65 years old."
 ```
@@ -76,7 +76,7 @@ CakeText::insert('My name is :name and I am :age years old.', ['name' => 'Bob', 
 
 オプションは次のように指定します。
 
-``` php
+```php
 $options = [
     'clean' => [
         'method' => 'text', // or html
@@ -91,7 +91,7 @@ $options = [
 テキストのブロックを決められた幅や折り返し、インデントにも対応します。
 単語の途中で改行されたりしないように、賢く折り返しの処理を行います。
 
-``` php
+```php
 $text = 'This is the song that never ends.';
 $result = CakeText::wrap($text, 22);
 

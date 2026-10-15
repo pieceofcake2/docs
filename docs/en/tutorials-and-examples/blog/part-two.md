@@ -11,7 +11,7 @@ CakePHP's model class files go in `src/Model`, and the file
 we'll be creating will be saved to `src/Model/Post.php`. The
 completed file should look like this:
 
-``` php
+```php
 // src/Model/Post.php
 class Post extends AppModel
 {
@@ -26,8 +26,8 @@ in the PostsController, and will be tied to a database table called
 > [!NOTE]
 > CakePHP will dynamically create a model object for you if it
 > cannot find a corresponding file in `src/Model`. This also means
-> that if you accidentally name your file wrong (for example, post.php
-> or posts.php instead of Post.php), CakePHP will not recognize
+> that if you accidentally name your file wrong (for example, `post.php`
+> or `posts.php` instead of `Post.php`), CakePHP will not recognize
 > any of your settings and will use the defaults instead.
 
 For more on models, such as table prefixes, callbacks, and
@@ -43,7 +43,7 @@ post-related work done. We'll place this new controller in a file
 called `PostsController.php` inside the `src/Controller`
 directory. Here's what the basic controller should look like:
 
-``` php
+```php
 // src/Controller/PostsController.php
 class PostsController extends AppController
 {
@@ -57,7 +57,7 @@ users request www.example.com/posts/index (which is the same
 as www.example.com/posts/), they might expect to see a listing of
 posts. The code for that action would look something like this:
 
-``` php
+```php
 class PostsController extends AppController
 {
     public $helpers = ['Html', 'Form'];
@@ -110,7 +110,7 @@ Remember how in the last section we assigned the 'posts' variable
 to the view using the `set()` method? That would pass data
 to the view that would look something like this:
 
-``` text
+```text
 // print_r($posts) output:
 
 
@@ -156,7 +156,7 @@ named after the controller to which they correspond. (We'll have to create
 a folder named 'Posts' in this case.) To format this post data into a
 nice table, our view code might look something like this
 
-``` php
+```php
 <!-- File: templates/Posts/index.ctp -->
 
 <h1>Blog posts</h1>
@@ -213,7 +213,7 @@ gone wrong, or you actually did define it already, in which case
 you are very sneaky. Otherwise, we'll create it in the
 PostsController now:
 
-``` php
+```php
 // File: src/Controller/PostsController.php
 class PostsController extends AppController
 {
@@ -257,7 +257,7 @@ record that exists.
 Now let's create the view for our new 'view' action and place it in
 `templates/Posts/view.ctp`
 
-``` php
+```php
 <!-- File: templates/Posts/view.ctp -->
 
 <h1><?php echo h($post['Post']['title']); ?></h1>
@@ -278,7 +278,7 @@ start, but let's allow for adding new posts.
 First, start by creating an `add()` action in the
 PostsController:
 
-``` php
+```php
 class PostsController extends AppController
 {
     public $helpers = ['Html', 'Form', 'Flash'];
@@ -377,7 +377,7 @@ default to all views at `$this->Form`.
 
 Here's our add view:
 
-``` php
+```php
 <!-- File: templates/Posts/add.ctp -->
 
 <h1>Add Post</h1>
@@ -392,7 +392,7 @@ echo $this->Form->end('Save Post');
 We use the FormHelper to generate the opening tag for an HTML
 form. Here's the HTML that `$this->Form->create()` generates:
 
-``` html
+```html
 <form id="PostAddForm" method="post" action="/posts/add">
 ```
 
@@ -419,7 +419,7 @@ Now let's go back and update our `templates/Posts/index.ctp`
 view to include a new "Add Post" link. Before the `<table>`, add
 the following line:
 
-``` php
+```php
 <?php echo $this->Html->link(
     'Add Post',
     ['controller' => 'posts', 'action' => 'add'],
@@ -430,7 +430,7 @@ You may be wondering: how do I tell CakePHP about my validation
 requirements? Validation rules are defined in the model. Let's look
 back at our Post model and make a few adjustments:
 
-``` php
+```php
 class Post extends AppModel
 {
     public $validate = [
@@ -465,7 +465,7 @@ should have picked up a pattern. Make the action, then the view.
 Here's what the `edit()` action of the PostsController would look
 like:
 
-``` php
+```php
 public function edit($id = null)
 {
     if (!$id) {
@@ -506,7 +506,7 @@ previously retrieved post.
 
 The edit view might look something like this:
 
-``` php
+```php
 <!-- File: templates/Posts/edit.ctp -->
 
 <h1>Edit Post</h1>
@@ -530,7 +530,7 @@ inserting a new model when `save()` is called.
 You can now update your index view with links to edit specific
 posts:
 
-``` php
+```php
 <!-- File: templates/Posts/index.ctp  (edit links added) -->
 
 <h1>Blog posts</h1>
@@ -578,7 +578,7 @@ posts:
 Next, let's make a way for users to delete posts. Start with a
 `delete()` action in the PostsController:
 
-``` php
+```php
 public function delete($id = null)
 {
     if ($this->request->is('get')) {
@@ -612,7 +612,7 @@ Because we're just executing some logic and redirecting, this
 action has no view. You might want to update your index view with
 links that allow users to delete posts, however:
 
-``` php
+```php
 <!-- File: templates/Posts/index.ctp -->
 
 <h1>Blog posts</h1>
@@ -684,7 +684,7 @@ For more information on advanced routing techniques, see
 [Routes Configuration](/development/routing#routes-configuration).
 
 By default, CakePHP responds to a request for the root of your site
-(e.g., <http://www.example.com>) using its PagesController, rendering
+(e.g., <https://www.example.com>) using its PagesController, rendering
 a view called "home". Instead, we'll replace this with our
 PostsController by creating a routing rule.
 
@@ -692,7 +692,7 @@ CakePHP's routing is found in `config/routes.php`. You'll want
 to comment out or remove the line that defines the default root
 route. It looks like this:
 
-``` php
+```php
 Router::connect(
     '/',
     ['controller' => 'pages', 'action' => 'display', 'home'],
@@ -703,7 +703,7 @@ This line connects the URL '/' with the default CakePHP home page.
 We want it to connect with our own controller, so replace that line
 with this one:
 
-``` php
+```php
 Router::connect('/', ['controller' => 'posts', 'action' => 'index']);
 ```
 

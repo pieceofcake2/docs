@@ -13,7 +13,7 @@ Bake is provided by the [pieceofcake2/bake](https://pieceofcake2.github.io/bake/
 plugin. Applications created from the pieceofcake2/app skeleton already have it
 as a development dependency. Otherwise install it with Composer:
 
-``` bash
+```bash
 composer require --dev pieceofcake2/bake
 ```
 
@@ -23,7 +23,7 @@ Composer installs the plugin into `plugins/Bake/`. This relies on the
 pieceofcake2/app skeleton already has them. Load the plugin in your
 `config/bootstrap.php`:
 
-``` php
+```php
 // config/bootstrap.php
 CakePlugin::load('Bake');
 ```
@@ -54,7 +54,7 @@ a Database Configuration file, if you haven't created one already.
 After you've created a Database Configuration file, running Bake
 will present you with the following options:
 
-``` text
+```text
 ---------------------------------------------------------------
 App : src
 Path: /path-to/project/src/
@@ -76,7 +76,7 @@ What would you like to Bake? (D/M/V/C/P/F/T/Q)
 Alternatively, you can run any of these commands directly from the
 command line:
 
-``` bash
+```bash
 $ bin/cake bake db_config
 $ bin/cake bake model
 $ bin/cake bake view
@@ -151,7 +151,7 @@ theme that you are creating. Bake theme names need to be unique, so
 don't use 'default'. When more than one theme is available, Bake asks
 which one to use, or you can choose it with the `--theme` option:
 
-``` bash
+```bash
 bin/cake bake view Posts --theme myTheme
 ```
 
@@ -169,7 +169,9 @@ In the legacy layout, themes go into `app/Console/Templates/[themename]/`.
 
 <!-- -->
 
-    bin/cake bake project --skel src/Console/Templates/skel
+```bash
+bin/cake bake project --skel src/Console/Templates/skel
+```
 
 > [!NOTE]
 > - You must run the specific project task `bin/cake bake project` so

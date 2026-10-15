@@ -18,7 +18,7 @@ callback to be fired each time your application triggers any PHP error.
 The callback can be any PHP callable, including an anonymous function. The
 default error handling configuration looks like:
 
-``` php
+```php
 // config/core.php
 Configure::write('Error', [
     'handler' => 'ErrorHandler::handleError',
@@ -91,7 +91,7 @@ You can create an error handler out of any callback type. For example you could
 use a class called `AppError` to handle your errors. The following would
 need to be done:
 
-``` php
+```php
 // config/core.php
 Configure::write('Error.handler', 'AppError::handleError');
 
@@ -130,7 +130,7 @@ PHP 8 no longer passes the fifth `$context` argument to error handlers, so
 keep it optional. Since you can define an error handler as any callback type,
 you could also use an anonymous function:
 
-``` php
+```php
 Configure::write('Error.handler', function ($code, $description, $file = null, $line = null) {
     echo 'Oh no something bad happened';
 
@@ -147,7 +147,7 @@ errors, and that if you need custom error handling, you probably also want to co
 The `Error.handler` will receive the fatal error codes as well.
 If you do not want to show the cake error page, you can override it like:
 
-``` php
+```php
 // config/core.php
 Configure::write('Error.handler', 'AppError::handleError');
 

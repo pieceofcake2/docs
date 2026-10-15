@@ -75,7 +75,7 @@ a secure connection, is available on the path
 '/bakers/preferences/', expires in one hour, is HTTP only and is
 encrypted with AES:
 
-``` php
+```php
 // src/Controller/BakersController.php
 public $components = [
     'Cookie' => ['type' => 'aes'],
@@ -121,7 +121,7 @@ enable the OpenSSL implementation in `config/core.php`. Applications created
 from the `pieceofcake2/app` skeleton (v2.3.1 and later) already have this line;
 add it to existing applications:
 
-``` php
+```php
 Configure::write('Security.useOpenSsl', true);
 ```
 

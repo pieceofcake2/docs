@@ -33,7 +33,7 @@ Changes in v2.12.5 that may affect applications already running on the fork.
 ### Security fixes
 
 This release fixes three vulnerabilities. Most applications only need to
-update. See [Security Fixes](/appendices/security-fixes) for details.
+update. See [Security Fixes](/security/fixes) for details.
 
 - **Email headers** ([GHSA-4f9q-3c4x-52cv](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-4f9q-3c4x-52cv)):
   `SmtpTransport` and `MailTransport` remove line breaks from header names and
@@ -58,7 +58,9 @@ update. See [Security Fixes](/appendices/security-fixes) for details.
   `DESC`, optionally followed by `NULLS FIRST` or `NULLS LAST`. It is matched
   case-insensitively and surrounding / repeated whitespace is allowed, so
   `'asc'`, `'Desc'`, `' DESC '`, `'ASC NULLS FIRST'` and `'desc  nulls  last'`
-  are all valid.
+  are all valid. `NULLS FIRST` / `NULLS LAST` are passed to the database as
+  written and are not supported by MySQL, MariaDB and SQL Server; see
+  [Sort Order](/models/retrieving-your-data#sort-order).
 - Any other direction now triggers an `E_USER_DEPRECATED` error
   (`Invalid ORDER BY direction "..."`). This covers array values
   (`['Post.title' => $direction]`), the `$direction` argument of
@@ -107,7 +109,7 @@ Changes in v2.12.3 that may affect applications already running on the fork.
   `https://` URLs because of a missing pair of parentheses (inherited from the
   original CakePHP 2.x). With `'readFile' => false`, neither `http://` nor
   `https://` URLs are fetched now; an `XmlException` is thrown instead. See
-  [Security Fixes](/appendices/security-fixes#xml-build-ssrf).
+  [Security Fixes](/security/fixes#xml-build-ssrf).
 
 **Migration:**
 
@@ -465,7 +467,7 @@ CakePlugin::load('Upgrade');
 - New methods added to database drivers (may cause issues if you have custom
   driver implementations)
 
-**MySQL Driver (Mysql.php):**
+**MySQL Driver (`Mysql.php`):**
 
 - `getVersion(): string` - Returns MySQL/MariaDB/Aurora MySQL version
 - `getServerType(): string` - Returns 'MySQL', 'MariaDB', or 'Aurora MySQL'
@@ -473,7 +475,7 @@ CakePlugin::load('Upgrade');
 - `integerDisplayWidthDeprecated(): bool` - Checks if integer display width is
   deprecated (MySQL 8.0.17+)
 
-**PostgreSQL Driver (Postgres.php):**
+**PostgreSQL Driver (`Postgres.php`):**
 
 - `getVersion(): string` - Returns PostgreSQL version
 
@@ -561,7 +563,7 @@ CakePlugin::load('Upgrade');
 - Existing tokens continue to work
 - New tokens generated with enhanced security
 
-See [Security](/appendices/security-fixes) for details.
+See [Security](/security/fixes) for details.
 
 ### strftime() Replacement
 
@@ -670,7 +672,7 @@ strategy accordingly (e.g., support both types during transition period).
 
 ## Additional notes for PHP 8
 
-These points are not listed in UPGRADE.md but commonly affect applications
+These points are not listed in `UPGRADE.md` but commonly affect applications
 moving to PHP 8.
 
 ### Enable OpenSSL for `Security::encrypt()` and AES cookies {#enable-openssl}

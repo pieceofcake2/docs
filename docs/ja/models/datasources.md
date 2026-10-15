@@ -30,7 +30,7 @@ CakePHP にはデータベースごとのデータソースが同梱されてい
 これを `config/database.php` にコピーして接続設定を編集してください。
 接続ごとに `DATABASE_CONFIG` クラスの public プロパティを定義します。
 
-``` php
+```php
 // config/database.php
 class DATABASE_CONFIG
 {
@@ -61,7 +61,7 @@ PHP 8.1 以降の `pdo_mysql` と `pdo_sqlite` は、整数や浮動小数点数
 文字列との厳密な比較など、以前の動作に依存しているアプリケーションでは
 `PDO::ATTR_STRINGIFY_FETCHES` を指定してください。
 
-``` php
+```php
 public $default = [
     'datasource' => 'Database/Mysql',
     // ...
@@ -133,7 +133,7 @@ MySQL と PostgreSQL のドライバには `getVersion()` などのメソッド�
 データソースを書いてみましょう。 `FarAwaySource` という名前で
 `src/Model/Datasource/FarAwaySource.php` に置くことにします:
 
-``` php
+```php
 // src/Model/Datasource/FarAwaySource.php
 class FarAwaySource extends DataSource
 {
@@ -250,7 +250,7 @@ class FarAwaySource extends DataSource
          */
         $queryData['conditions']['apiKey'] = $this->config['apiKey'];
         $json = $this->Http->get(
-            'http://example.com/api/list.json',
+            'https://example.com/api/list.json',
             $queryData['conditions'],
         );
         $res = json_decode($json, true);
@@ -270,7 +270,7 @@ class FarAwaySource extends DataSource
     {
         $data = array_combine($fields, $values);
         $data['apiKey'] = $this->config['apiKey'];
-        $json = $this->Http->post('http://example.com/api/set.json', $data);
+        $json = $this->Http->post('https://example.com/api/set.json', $data);
         $res = json_decode($json, true);
         if (is_null($res)) {
             $error = json_last_error();
@@ -300,7 +300,7 @@ class FarAwaySource extends DataSource
      */
     public function delete(Model $model, $id = null)
     {
-        $json = $this->Http->get('http://example.com/api/remove.json', [
+        $json = $this->Http->get('https://example.com/api/remove.json', [
             'id' => $id[$model->alias . '.id'],
             'apiKey' => $this->config['apiKey'],
         ]);
@@ -318,7 +318,7 @@ class FarAwaySource extends DataSource
 データソースを構成するには `config/database.php`
 ファイルの中で以下のように追加します:
 
-``` php
+```php
 public $faraway = [
     'datasource' => 'FarAwaySource',
     'apiKey' => '1234abcd',
@@ -327,7 +327,7 @@ public $faraway = [
 
 そしてモデルの中でデータベースを以下のように使います:
 
-``` php
+```php
 class MyModel extends AppModel
 {
     public $useDbConfig = 'faraway';
@@ -337,7 +337,7 @@ class MyModel extends AppModel
 これで、使い慣れたモデルのメソッドを使ってリモートソースから
 データを取り出せるようになります:
 
-``` php
+```php
 // Get all messages from 'Some Person'
 $messages = $this->MyModel->find('all', [
     'conditions' => ['name' => 'Some Person'],
@@ -350,7 +350,7 @@ $messages = $this->MyModel->find('all', [
 
 同様に、新しいメッセージを保存できます:
 
-``` php
+```php
 $this->MyModel->save([
     'name' => 'Some Person',
     'message' => 'New Message',
@@ -359,7 +359,7 @@ $this->MyModel->save([
 
 以前のメッセージを更新します:
 
-``` php
+```php
 $this->MyModel->id = 42;
 $this->MyModel->save([
     'message' => 'Updated message',
@@ -368,7 +368,7 @@ $this->MyModel->save([
 
 そしてそのメッセージを削除します:
 
-``` php
+```php
 $this->MyModel->delete(42);
 ```
 
@@ -380,7 +380,7 @@ $this->MyModel->delete(42);
 `plugins/[YourPlugin]/Model/Datasource/[YourSource].php`
 に置いて、それをプラグイン記法で参照するだけです:
 
-``` php
+```php
 public $faraway = [
     'datasource' => 'MyPlugin.FarAwaySource',
     'apiKey' => 'abcd1234',
@@ -404,7 +404,7 @@ Microsoft ODBC Driver for SQL Server とあわせて別途インストールす�
 
 SQL Server への接続設定は次のようになります。
 
-``` php
+```php
 public $default = [
     'datasource' => 'Database/Sqlserver',
     'persistent' => false,

@@ -43,6 +43,9 @@ CakePHP also uses the following PHP extensions:
   the deprecated `strftime()` for date formatting and requires `intl`.
 - `openssl` is optional, but required for SSL/TLS connections and for AES
   encryption with [Security](core-utility-libraries/security).
+- `mcrypt` is optional and only needed for the legacy `Security::rijndael()`
+  and the `'rijndael'` cookie type. It is not bundled with PHP 7.2 and later;
+  see [Encryption on PHP 8](/security/fixes#encryption-on-php-8).
 
 ::: pieceofcake2
 PHP 8.0 or newer is required, and
@@ -255,7 +258,7 @@ server and the command line user. On a UNIX system, if your web server user is
 different from your command line user, you can run the following commands just
 once in your project to ensure that permissions will be setup properly:
 
-``` text
+```bash
 HTTPDUSER=`ps aux | grep -E '[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx' | grep -v root | head -1 | cut -d\  -f1`
 setfacl -R -m u:${HTTPDUSER}:rwx tmp logs
 setfacl -R -d -m u:${HTTPDUSER}:rwx tmp logs
@@ -294,25 +297,34 @@ are then reachable from the web, while your configuration, source code and
 Assuming you installed the application into `/var/www/my_app`, an Apache
 virtual host looks like this:
 
-``` text
+```text
 <VirtualHost *:80>
     ServerName www.example.com
     DocumentRoot /var/www/my_app/webroot
 
     <Directory /var/www/my_app/webroot>
+        Options -Indexes -MultiViews +FollowSymLinks
         AllowOverride All
         Require all granted
     </Directory>
 </VirtualHost>
 ```
 
+`Options -Indexes` turns off directory listings, which some distributions
+enable by default for `/var/www`. The example uses the access control syntax
+of Apache 2.4; for the legacy Apache 2.2 syntax, see
+[Apache 2.2 (legacy)](installation/url-rewriting#apache-2-2). Never point the
+document root to the project directory: `.env`, `config/`, `logs/`, `tmp/`,
+`vendor/` and `.git/` could then be downloaded.
+
 The `.htaccess` file in `webroot/` rewrites all requests to `index.php`, so
 mod_rewrite must be enabled and `AllowOverride` must allow it. If your web
 server is configured correctly, you should now find your CakePHP application
-accessible at <http://www.example.com>.
+accessible at <https://www.example.com>.
 
-For nginx, lighttpd, IIS and for troubleshooting mod_rewrite, see
-[URL Rewriting](installation/url-rewriting). If you need to place the
+For HTTPS, hidden files, upload directories, nginx, lighttpd, IIS and for
+troubleshooting mod_rewrite, see
+[Web Server Configuration](installation/url-rewriting). If you need to place the
 directories of your application in other locations, see
 [Advanced Installation](installation/advanced-installation).
 
@@ -322,7 +334,7 @@ Before you go live, also read [Deployment](deployment).
 
 Alright, let's see CakePHP in action. Point your browser to the URL of your
 application, for example <http://localhost:8765/> when you use the development
-server or <http://www.example.com/>. At this point, you'll be presented with
+server or <https://www.example.com/>. At this point, you'll be presented with
 CakePHP's default home, which tells you whether the `tmp/` directory is
 writable, whether caching works and whether CakePHP can connect to your
 database.
@@ -333,7 +345,7 @@ CakePHP 2, continue with the [Blog Tutorial](tutorials-and-examples/blog/blog).
 Not working? If you're getting timezone related errors from PHP uncomment one
 line in `config/core.php` and set your server's timezone:
 
-``` php
+```php
 /**
  * Uncomment this line and correct your server timezone to fix
  * any date & time related errors.

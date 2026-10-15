@@ -1,0 +1,23 @@
+{
+    "name": "pieceofcake2/docs",
+    "description": "Markdown documentation of pieceofcake2/cakephp (CakePHP 2 fork), for reading locally and by AI tools",
+    "type": "library",
+    "keywords": [
+        "cakephp",
+        "cakephp2",
+        "documentation",
+        "docs",
+        "markdown",
+        "ai"
+    ],
+    "homepage": "https://pieceofcake2.github.io/docs/",
+    "license": "CC-BY-NC-SA-4.0",
+    "require": {
+        "pieceofcake2/cakephp": "^2.12"
+    },
+    "support": {
+        "issues": "https://github.com/pieceofcake2/docs/issues",
+        "source": "https://github.com/pieceofcake2/docs",
+        "docs": "https://pieceofcake2.github.io/docs/"
+    }
+}

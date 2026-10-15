@@ -40,7 +40,7 @@ CakePHP のデフォルトは、アプリケーションが SSL プロトコル�
 SSL と SSL 以外のドメイン両方でセッションにアクセスする必要がある場合、
 これを無効にします:
 
-``` php
+```php
 Configure::write('Session', [
     'defaults' => 'php',
     'ini' => [
@@ -54,7 +54,7 @@ Configure::write('Session', [
 `session.cookie_path` ini フラグにアプリケーションのディレクトリパス
 を指定することが出来ます:
 
-``` php
+```php
 Configure::write('Session', [
     'defaults' => 'php',
     'ini' => [
@@ -67,7 +67,7 @@ Configure::write('Session', [
 タイムアウトの設定を上書きすることができます。デフォルトは、24 分です。
 より長いセッションに合わせるために ini 設定を変更してください:
 
-``` php
+```php
 Configure::write('Session', [
     'defaults' => 'php',
     'timeout' => 2160, // 36 hours
@@ -85,7 +85,7 @@ CakePHP にはいくつかビルトインなセッションの設定がありま
 'defaults' キーに使用したいデフォルト名をセットします。セッション
 config で宣言をすればサブセッティングだけを上書きすることも出来ます:
 
-``` php
+```php
 Configure::write('Session', [
     'defaults' => 'php',
 ]);
@@ -94,7 +94,7 @@ Configure::write('Session', [
 上記はビルトインの 'php' 設定を使用します。下記のように全てまたは部分的に
 設定を上書きすることも出来ます:
 
-``` php
+```php
 Configure::write('Session', [
     'defaults' => 'php',
     'cookie' => 'my_app',
@@ -104,7 +104,7 @@ Configure::write('Session', [
 
 上記は 'php' 設定のタイムアウトとクッキー名を上書きします。ビルトイン設定は:
 
-- `php` - php.ini ファイルの標準設定に沿ってセッションを保存します。
+- `php` - `php.ini` ファイルの標準設定に沿ってセッションを保存します。
 - `cake` - セッションをファイルとして `tmp/sessions` (レガシー構成では `app/tmp/sessions`)
   に保存します。PHP 全体のセッションディレクトリではなく、アプリケーションの中に
   セッションファイルを置きたい場合に便利です。
@@ -118,7 +118,7 @@ Configure::write('Session', [
 'handler' の使用には二つの方法があります。一つ目は 6 つの呼び出し可能な (callable) 配列を
 一つ用意する方法です。これは都度 `session_set_save_handler` に適用されます:
 
-``` php
+```php
 Configure::write('Session', [
     'checkAgent' => false,
     'cookie' => 'my_cookie',
@@ -184,7 +184,7 @@ CakePHP はハンドラーを `SessionHandlerAdapter` を介して PHP に登録
 変更しました。ここではデータベースのデフォルトを選ぶように、ほとんどは
 設定の中の `Session.handler.model` をセットするだけです:
 
-``` php
+```php
 Configure::write('Session', [
     'defaults' => 'database',
     'handler' => [
@@ -199,7 +199,7 @@ Configure::write('Session', [
 完全に独自のセッションハンドラーは必要ないけれど、データベースのセッションストレージが
 必要な場合、以下のコードのように単純化できます。
 
-``` php
+```php
 Configure::write('Session', [
     'defaults' => 'database',
 ]);
@@ -207,7 +207,7 @@ Configure::write('Session', [
 
 この設定では、少なくとも以下の項目を持つデータベーステーブルが必要です。
 
-``` sql
+```sql
 CREATE TABLE `cake_sessions` (
   `id` varchar(255) NOT NULL DEFAULT '',
   `data` text,
@@ -219,7 +219,7 @@ CREATE TABLE `cake_sessions` (
 アプリケーションのスケルトンに含まれているスキーマファイル `config/Schema/sessions.php`
 を元に schema シェルを実行して、このテーブルを作成することもできます。
 
-``` bash
+```bash
 $ bin/cake schema create sessions
 ```
 
@@ -232,7 +232,7 @@ Redis のようなキャッシュにセッションを格納できます。キ�
 
 セッションを元としたキャッシュを使うためセッション config を以下のように設定します:
 
-``` php
+```php
 Configure::write('Session', [
     'defaults' => 'cache',
     'handler' => [
@@ -254,7 +254,7 @@ Configure::write('Session', [
 することが可能です。例えば `session.gc_divisor` のような設定を
 コントロールするのに使えます:
 
-``` php
+```php
 Configure::write('Session', [
     'defaults' => 'php',
     'ini' => [
@@ -274,7 +274,7 @@ Configure::write('Session', [
 まずカスタムクラスを作成し `src/Model/Datasource/Session/ComboSession.php`
 として保存する必要があります。クラスは以下のようになります。
 
-``` php
+```php
 // src/Model/Datasource/Session/ComboSession.php
 class ComboSession extends DatabaseSession implements CakeSessionHandlerInterface
 {
@@ -337,7 +337,7 @@ class ComboSession extends DatabaseSession implements CakeSessionHandlerInterfac
 キャッシュ限度の考慮を不要にしています。このセッションハンドラーを使うのもまた簡単です。
 `config/core.php` のセッションブロックを以下のように設定します。
 
-``` php
+```php
 Configure::write('Session', [
     'defaults' => 'database',
     'handler' => [
@@ -367,7 +367,7 @@ Cache::config('apc', ['engine' => 'Apc']);
 
 `Set::classicExtract()` 互換記法を用いてセッションから値を読み込みます:
 
-``` php
+```php
 CakeSession::read('Config.language');
 ```
 
@@ -375,7 +375,7 @@ CakeSession::read('Config.language');
 
 `$key` はドット区切りで `$value` の書き込み先を指定します:
 
-``` php
+```php
 CakeSession::write('Config.language', 'eng');
 ```
 
@@ -383,7 +383,7 @@ CakeSession::write('Config.language', 'eng');
 
 セッションからデータ削除が必要なら削除も可能です:
 
-``` php
+```php
 CakeSession::delete('Config.language');
 ```
 

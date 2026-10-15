@@ -9,7 +9,7 @@ These classes are now required to be part of the app directory, as they were
 removed from the CakePHP core. If you do not already have these classes, you
 can use the following while upgrading:
 
-``` php
+```php
 // app/View/Helper/AppHelper.php
 App::uses('Helper', 'View');
 class AppHelper extends Helper
@@ -38,7 +38,7 @@ class AppShell extends Shell
 If your application already has these files/classes you don't need to do
 anything.
 Additionally if you were using the core PagesController, you would need to copy
-this to your app/Controller directory as well.
+this to your `app/Controller` directory as well.
 
 ## .htaccess files
 
@@ -126,9 +126,11 @@ with Debugger, and takes advantage of improvements made there.
 A new TestShell has been added. It reduces the typing required to run unit
 tests, and offers a file path based UI:
 
-    ./Console/cake test app Model/Post
-    ./Console/cake test app Controller/PostsController
-    ./Console/cake test Plugin View/Helper/MyHelper
+```bash
+./Console/cake test app Model/Post
+./Console/cake test app Controller/PostsController
+./Console/cake test Plugin View/Helper/MyHelper
+```
 
 The old testsuite shell and its syntax are still available.
 
@@ -231,7 +233,7 @@ The old testsuite shell and its syntax are still available.
 
 - `$scripts_for_layout` is deprecated. Use the following instead:
 
-  ``` php
+  ```php
   echo $this->fetch('meta');
   echo $this->fetch('css');
   echo $this->fetch('script');

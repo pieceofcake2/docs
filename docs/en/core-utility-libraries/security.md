@@ -39,7 +39,7 @@ Return type: `string`
 
 Encrypts/Decrypts text using the given key:
 
-``` php
+```php
 // Encrypt your text with my_key
 $secret = Security::cipher('hello world', 'my_key');
 
@@ -51,7 +51,7 @@ $nosecret = Security::cipher($secret, 'my_key');
 > `cipher()` uses a **weak** XOR cipher and should **not** be used.
 > It is only included for backwards compatibility. It is also used by the
 > default `'cipher'` encryption type of `CookieComponent`; use the `'aes'`
-> type instead (see [Security Fixes](/appendices/security-fixes)).
+> type instead (see [Security Fixes](/security/fixes)).
 
 > [!WARNING]
 > `cipher()` seeds `mt_srand()` with `Security.cipherSeed`, and only numbers
@@ -75,7 +75,7 @@ Encrypts/Decrypts text using the rijndael-256 cipher. This requires the
 PECL. For new code, prefer `Security::encrypt()` and `Security::decrypt()` with
 `Security.useOpenSsl` enabled. Usage looks like this:
 
-``` php
+```php
 // Encrypt some data.
 $encrypted = Security::rijndael('a secret', Configure::read('Security.key'), 'encrypt');
 
@@ -96,7 +96,7 @@ Instead you should use the one way hashing methods provided by
 
 - `string $plain`: The value to encrypt.
 - `string $key`: The 256 bit/32 byte key to use as a cipher key.
-- `string $hmacSalt`: The salt to use for the HMAC process. Leave null to use Security.salt.
+- `string $hmacSalt`: The salt to use for the HMAC process. Leave null to use `Security.salt`.
 
 Encrypt `$text` using AES-256. The `$key` should be a value with a
 lots of variance in the data, much like a good password. The returned result
@@ -106,7 +106,7 @@ This method should **never** be used to store passwords. Instead you should
 use the one way hashing methods provided by `Security::hash()`.
 An example use would be:
 
-``` php
+```php
 // Assuming key is stored somewhere it can be re-used for
 // decryption later.
 $key = 'wt1U5MACWJFTXGenFoZoiLwQGrLgdbHA';
@@ -126,13 +126,13 @@ Set `Security.useOpenSsl` to use OpenSSL instead of the `mcrypt` extension.
 
 - `string $cipher`: The ciphertext to decrypt.
 - `string $key`: The 256 bit/32 byte key to use as a cipher key.
-- `string $hmacSalt`: The salt to use for the HMAC process. Leave null to use Security.salt.
+- `string $hmacSalt`: The salt to use for the HMAC process. Leave null to use `Security.salt`.
 
 Decrypt a previously encrypted value. The `$key` and `$hmacSalt`
 parameters must match the values used to encrypt or decryption will fail. An
 example use would be:
 
-``` php
+```php
 // Assuming key is stored somewhere it can be re-used for
 // decryption later.
 $key = 'wt1U5MACWJFTXGenFoZoiLwQGrLgdbHA';
@@ -159,7 +159,7 @@ Create a hash from a string using given method or fallback to next
 available method. If `$salt` is set to true, the applications salt
 value will be used:
 
-``` php
+```php
 // Using the application's salt value
 $sha1 = Security::hash('CakePHP Framework', 'sha1', true);
 
@@ -174,7 +174,7 @@ $hash = Security::hash('CakePHP Framework');
 using bcrypt, you should be mindful of the slightly different usage.
 Creating an initial hash works the same as other algorithms:
 
-``` php
+```php
 // Create a hash using bcrypt
 Security::setHash('blowfish');
 $hash = Security::hash('CakePHP Framework');
@@ -183,7 +183,7 @@ $hash = Security::hash('CakePHP Framework');
 Unlike other hash types comparing plain text values to hashed values should
 be done as follows:
 
-``` php
+```php
 // $storedPassword, is a previously generated bcrypt hash.
 $newHash = Security::hash($newPassword, 'blowfish', $storedPassword);
 ```

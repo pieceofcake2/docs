@@ -31,7 +31,7 @@ CakePHP のスキャフォールディングはとても素晴らしいです。
 
 スキャフォールディングを追加するために、コントローラの中で、 `$scaffold` 変数を追加して下さい。
 
-``` php
+```php
 class CategoriesController extends AppController
 {
     public $scaffold;
@@ -40,7 +40,7 @@ class CategoriesController extends AppController
 
 (`src/Model/Category.php` に) 基本的な Category モデルクラスを既に作成していたとすると、
 準備は以上となります。
-新しい足場を見るために <http://example.com/categories> へアクセスしてみて下さい。
+新しい足場を見るために <https://example.com/categories> へアクセスしてみて下さい。
 
 > [!NOTE]
 > 足場が作られたコントローラにメソッドを作成した場合、思った通りの結果にならない時があります。
@@ -57,7 +57,7 @@ Category 一覧に関連している User の ID が表示されているでし�
 手動で追加しなければなりません。このコードを追加する前だと、
 User 追加フォームに Group のための select ボックスが空のまま表示されます。
 
-``` php
+```php
 // In Group.php
 public $hasMany = 'User';
 // In User.php
@@ -68,7 +68,7 @@ public $belongsTo = 'Group';
 モデルで設定して下さい。それでは、スキャフォールディングの中で ID ではなく名前によってカテゴリに
 関連したユーザが示されるように User クラスに `$displayField` を設定してみましょう。
 
-``` php
+```php
 class User extends AppModel
 {
     public $displayField = 'first_name';
@@ -83,23 +83,23 @@ class User extends AppModel
 
 一旦管理ルーティングを有効にしたら、スキャフォールディング変数に admin プレフィクスを設定して下さい。
 
-``` php
+```php
 public $scaffold = 'admin';
 ```
 
 以上で管理用の足場のアクションにアクセスできるようになります。
 
-    http://example.com/admin/controller/index
-    http://example.com/admin/controller/view
-    http://example.com/admin/controller/edit
-    http://example.com/admin/controller/add
-    http://example.com/admin/controller/delete
+    https://example.com/admin/controller/index
+    https://example.com/admin/controller/view
+    https://example.com/admin/controller/edit
+    https://example.com/admin/controller/add
+    https://example.com/admin/controller/delete
 
 これは単純なバックエンドインターフェイスを素早く作るための簡単な方法です。ただし、
 管理用と非管理用の足場のメソッドを同時に使うことはできないことを覚えておいて下さい。
 普通のスキャフォールディングでは個別のメソッドを上書きしたり、独自実装に置き換えることができます。
 
-``` php
+```php
 public function admin_view($id = null)
 {
     // custom code here

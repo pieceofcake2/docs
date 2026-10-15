@@ -33,7 +33,7 @@ CakePHP の動作に関してさらに学びたいと思っているからだと
 [pieceofcake2/app](https://pieceofcake2.github.io/app/) アプリケーションスケルトンが
 CakePHP もインストールしてくれます。
 
-``` bash
+```bash
 composer create-project pieceofcake2/app blog
 cd blog
 ```
@@ -67,7 +67,7 @@ CakePHP のディレクトリ構造について少し学んでおきましょう
 動作させているユーザーを調べ、そのユーザーにディレクトリの所有権を変更します。
 実行するコマンドは (\*nixで) このようになります:
 
-``` bash
+```bash
 $ chown -R www-data tmp logs
 ```
 
@@ -81,7 +81,7 @@ $ chown -R www-data tmp logs
 作成しておいてください。このページでは、投稿記事を保存するためのテーブルをひとつ作成します。
 次の SQL をデータベースで実行してください。
 
-``` text
+```text
 /* まず、posts テーブルを作成します: */
 CREATE TABLE posts (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -120,14 +120,14 @@ CakePHP のデータベース設定ファイルの元は、 `config/database.php
 あります。同一ディレクトリ上にこのファイルのコピーを作り、 `database.php`
 という名前にしてください。
 
-``` bash
+```bash
 cp config/database.php.default config/database.php
 ```
 
 この設定ファイルの中身は一目瞭然です。 `$default` 配列の値を自分のセットアップに合わせて
 変更するだけです。完全な設定の配列の例は次のようなものになるでしょう:
 
-``` php
+```php
 // config/database.php
 public $default = [
     'datasource' => 'Database/Mysql',
@@ -145,7 +145,7 @@ public $default = [
 
 新しくできた `database.php` ファイルを保存したら、プロジェクトルートで開発用サーバを起動します。
 
-``` bash
+```bash
 bin/cake server
 ```
 
@@ -154,7 +154,7 @@ bin/cake server
 表示されるはずです。
 
 > [!NOTE]
-> PDO と pdo_mysql が php.ini で有効になっている必要があることを覚えておいてください。
+> PDO と pdo_mysql が `php.ini` で有効になっている必要があることを覚えておいてください。
 
 ## 追加の設定
 
@@ -174,7 +174,7 @@ php -r 'echo bin2hex(random_bytes(32)), PHP_EOL;'
 
 出力された値を `config/core.php` に貼り付けます。
 
-``` php
+```php
 /**
  * A random string used in security hashing methods.
  */
@@ -193,7 +193,7 @@ Configure::write('Security.salt', 'paste-the-generated-salt-here');
 php -r 'echo random_int(1, 4294967295), PHP_EOL;'
 ```
 
-``` php
+```php
 /**
  * A random numeric string (digits only) used to encrypt/decrypt strings.
  */
@@ -211,7 +211,7 @@ Configure::write('Security.cipherSeed', 'paste-the-generated-seed-here');
 有効になっていることを確認してください。リライトルールは `webroot/.htaccess` にあります。
 CakePHP の welcome ページが少しおかしい (画像が表示されない、CSS が効いていない) 場合は、
 おそらくシステム上の mod_rewrite が機能していません。詳細や他のウェブサーバについては
-[URLリライティング](/ja/installation/url-rewriting) を参照してください。
+[Web サーバーの設定](/ja/installation/url-rewriting) を参照してください。
 
 はじめての CakePHP アプリケーションを構築しはじめるには、続けて
 [ブログチュートリアル - レイヤーの追加](/ja/tutorials-and-examples/blog/part-two)

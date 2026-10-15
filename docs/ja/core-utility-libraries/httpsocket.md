@@ -31,7 +31,7 @@ CakePHP には、リクエストを簡単に行える HttpSocket クラスがあ
 を実装していますので、 `$http->response` を配列として使用でき、リクエストメソッドの戻り値を
 文字列として使用できます。
 
-``` php
+```php
 $http = new HttpSocket();
 $response = $http->get('https://cakephp.org');
 
@@ -81,7 +81,7 @@ $code = $response->code;
 
 `getHeader()` で上記のヘッダーを取得できます。
 
-``` php
+```php
 // $response は HttpResponse のインスタンス。
 // Content-Type を取得
 $response->getHeader('Content-Type');
@@ -97,9 +97,9 @@ $response->getHeader('date');
 レスポンスがリダイレクトステータスコードの場合 (`HttpResponse::isRedirect` 参照)、
 受信した *Location* ヘッダーに従って、自動的に追加のリクエスを行うことができます。
 
-``` php
+```php
 $HttpSocket = new HttpSocket();
-$response = $HttpSocket->get('http://example.com/redirecting_url', [], ['redirect' => true]);
+$response = $HttpSocket->get('https://example.com/redirecting_url', [], ['redirect' => true]);
 ```
 
 *redirect* オプションは、以下の値を指定できます。
@@ -132,12 +132,12 @@ SSL のサービスへのリクエストを作成する場合、 HttpSocket は�
 ::: pieceofcake2
 2016 年に最終更新された同梱の `cacert.pem` は削除され、
 システムの CA 証明書と `composer/ca-bundle` を使うようになりました。
-詳しくは [脆弱性への対応](/ja/appendices/security-fixes) を参照してください。
+詳しくは [脆弱性への対応](/ja/security/fixes) を参照してください。
 :::
 
 これらのオプションは、コンストラクタの引数として指定します。
 
-``` php
+```php
 $socket = new HttpSocket([
     'ssl_allow_self_signed' => true,
 ]);
@@ -154,7 +154,7 @@ SSL 証明書の検証は、 2.3 で追加されました。
 HttpSocket で使用する独自のレスポンスクラスを作成することができます。以下の内容で
 `src/Lib/Network/Http/YourResponse.php` というファイルを作ることができます。
 
-``` php
+```php
 // src/Lib/Network/Http/YourResponse.php
 class YourResponse extends HttpSocketResponse
 {
@@ -168,7 +168,7 @@ class YourResponse extends HttpSocketResponse
 
 リクエストする前に、 responseClass プロパティを変更する必要があります。
 
-``` php
+```php
 $http = new HttpSocket();
 $http->responseClass = 'YourResponse';
 ```
@@ -187,7 +187,7 @@ HttpSocket は、 `setContentResponse()` と呼ばれる新しいメソッドを
 このメソッドでリソースをセットすることによって、 `fwrite()` を使ってこのリソースに
 内容を書き込ませられます。 ファイルをダウンロードするためには、以下のようにします。
 
-``` php
+```php
 $http = new HttpSocket();
 $f = fopen(TMP . 'comments.xml', 'w');
 $http->setContentResource($f);
@@ -206,7 +206,7 @@ HttpSocket は、 HTTP ベーシック認証とダイジェスト認証に対応
 また、OAuth のようなプロトコルに対応するために独自の認証オブジェクトを作成することができます。
 任意の認証システムを利用するためには、 `HttpSocket` インスタンスを設定する必要があります。
 
-``` php
+```php
 $http = new HttpSocket();
 $http->configAuth('Basic', 'user', 'password');
 ```
@@ -220,7 +220,7 @@ HttpSocket で利用するための独自の認証方法を作成することが
 以下の内容で、 `src/Lib/Network/Http/YourMethodAuthentication.php`
 ファイルを作成できました。
 
-``` php
+```php
 class YourMethodAuthentication
 {
     /**
@@ -239,7 +239,7 @@ class YourMethodAuthentication
 
 独自認証を HttpSocket に設定するためには、新しい `configAuth()` メソッドを使用します。
 
-``` php
+```php
 $http->configAuth('YourMethod', ['config1' => 'value1', 'config2' => 'value2']);
 $http->get('http://secure.your-site.com');
 ```
@@ -251,7 +251,7 @@ $http->get('http://secure.your-site.com');
 認証設定の一部で、プロクシ認証の設定ができます。同じ認証クラスの中で、プロクシ認証のための
 独自のメソッドを作成します。
 
-``` php
+```php
 class YourMethodAuthentication
 {
     /**

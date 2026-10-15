@@ -17,7 +17,7 @@ Containable が、存在しているリレーションを更新するだけの�
 新しいビヘイビアを使用する場合は、モデルの \$actsAs プロパティにビヘイビアの指定を
 追加します。
 
-``` php
+```php
 class Post extends AppModel
 {
     public $actsAs = ['Containable'];
@@ -26,7 +26,7 @@ class Post extends AppModel
 
 動的にビヘイビアを追加することもできます。
 
-``` php
+```php
 $this->Post->Behaviors->load('Containable');
 ```
 
@@ -38,7 +38,7 @@ Comment と hasMany 、 Tag と hasAndBelongsToMany のアソシエーション�
 持つものとします。普通に `find()` を実行した場合に取得できるデータ全体は、
 かなり大きな規模になります。
 
-``` php
+```php
 debug($this->Post->find('all'));
 
 [0] => 
@@ -58,7 +58,7 @@ debug($this->Post->find('all'));
                             [post_id] => 1
                             [author] => Daniel
                             [email] => dan@example.com
-                            [website] => http://example.com
+                            [website] => https://example.com
                             [comment] => First comment
                             [created] => 2008-05-18 00:00:00
                         ]
@@ -68,7 +68,7 @@ debug($this->Post->find('all'));
                             [post_id] => 1
                             [author] => Sam
                             [email] => sam@example.net
-                            [website] => http://example.net
+                            [website] => https://example.net
                             [comment] => Second comment
                             [created] => 2008-05-18 00:00:00
                         ]
@@ -99,20 +99,20 @@ debug($this->Post->find('all'));
 
 例えば、 Post に関連した情報だけを取得するには、次のようにします。
 
-``` php
+```php
 $this->Post->contain();
 $this->Post->find('all');
 ```
 
 find() の呼び出し中に Containable の機能の起動を含めることも出来ます。
 
-``` php
+```php
 $this->Post->find('all', ['contain' => false]);
 ```
 
 この実行結果として、より簡潔なデータを取得できます。
 
-``` text
+```text
 [0] => 
         [
             [Post] => 
@@ -138,7 +138,7 @@ $this->Post->find('all', ['contain' => false]);
 この類の呼び出しの補助機能は特に目新しいものではありません。実際のところ、これは
 `ContainableBehavior` を使わずとも次のようにすることで行うことができます。
 
-``` php
+```php
 $this->Post->recursive = -1;
 $this->Post->find('all');
 ```
@@ -154,14 +154,14 @@ contain メソッドの最初の引数には、 find() を行うにあたりデ�
 Post とそれに関連する Tag だけを取得し、 Comment の情報は取得しない場合、
 次のように行います。
 
-``` php
+```php
 $this->Post->contain('Tag');
 $this->Post->find('all');
 ```
 
 find() の呼び出しの中に contain キーを含める場合の記述を見てみましょう。
 
-``` php
+```php
 $this->Post->find('all', ['contain' => 'Tag']);
 ```
 
@@ -177,7 +177,7 @@ find() を呼び出した結果のうち、 Comment モデルの author フィ�
 注目してください。投稿 (*post*) のうち、コメントをした人の名前 (*author*)
 を取得し、他は取得したくない場合、次のようにします。
 
-``` php
+```php
 $this->Post->contain('Comment.author');
 $this->Post->find('all');
 
@@ -190,7 +190,7 @@ $this->Post->find('all', ['contain' => 'Comment.author']);
 関連付いた Comment モデルのうち author フィールドだけを取得する方法を説明しました。
 find() による出力は、次のようになるでしょう。
 
-``` text
+```text
 [0] => 
         [
             [Post] => 
@@ -224,7 +224,7 @@ Comment 配列に author フィールドだけが含まれていることが確�
 条件 (*condition*) を定義して、アソシエーションで関連付いた Comment
 のデータにフィルタをかけることもできます。
 
-``` php
+```php
 $this->Post->contain('Comment.author = "Daniel"');
 $this->Post->find('all');
 
@@ -235,7 +235,7 @@ $this->Post->find('all', ['contain' => 'Comment.author = "Daniel"']);
 
 これにより、投稿 (*post*) とダニエルによるコメントを取得できます。
 
-``` text
+```text
 [0] => 
         [
             [Post] => 
@@ -253,7 +253,7 @@ $this->Post->find('all', ['contain' => 'Comment.author = "Daniel"']);
                             [post_id] => 1
                             [author] => Daniel
                             [email] => dan@example.com
-                            [website] => http://example.com
+                            [website] => https://example.com
                             [comment] => First comment
                             [created] => 2008-05-18 00:00:00
                         ]
@@ -268,7 +268,7 @@ $this->Post->find('all', ['contain' => 'Comment.author = "Daniel"']);
 は、ダニエルがコメントした２つの投稿ではなく、全部で３つの投稿を返します。
 ダニエルによるコメントを返して欲しいのあって、全ての投稿を返したくはありません。
 
-``` text
+```text
 [0] => 
         [
             [Post] => 
@@ -286,7 +286,7 @@ $this->Post->find('all', ['contain' => 'Comment.author = "Daniel"']);
                             [post_id] => 1
                             [author] => Daniel
                             [email] => dan@example.com
-                            [website] => http://example.com
+                            [website] => https://example.com
                             [comment] => First comment
                             [created] => 2008-05-18 00:00:00
                         ]
@@ -322,7 +322,7 @@ $this->Post->find('all', ['contain' => 'Comment.author = "Daniel"']);
                             [post_id] => 3
                             [author] => Daniel
                             [email] => dan@example.com
-                            [website] => http://example.com
+                            [website] => https://example.com
                             [comment] => Another comment
                             [created] => 2008-05-18 00:00:00
                         ]
@@ -334,7 +334,7 @@ $this->Post->find('all', ['contain' => 'Comment.author = "Daniel"']);
 投稿のみを取得したいなら、最も簡単な方法は、ダニエルによってコメントされた全ての
 コメントとそれに含まれる投稿を検索することです。
 
-``` php
+```php
 $this->Comment->find('all', [
     'conditions' => 'Comment.author = "Daniel"',
     'contain' => 'Post',
@@ -344,7 +344,7 @@ $this->Comment->find('all', [
 標準の [Model Find](../../models/retrieving-your-data#model-find) オプションを指定することで、追加のフィルタリングは
 動作します。
 
-``` php
+```php
 $this->Post->find('all', ['contain' => [
     'Comment' => [
         'conditions' => ['Comment.author =' => 'Daniel'],
@@ -358,7 +358,7 @@ $this->Post->find('all', ['contain' => [
 
 モデル間のアソシエーションは次のようになっているとします。
 
-``` text
+```text
 User->Profile
 User->Account->AccountSummary
 User->Post->PostAttachment->PostAttachmentHistory->HistoryNotes
@@ -367,7 +367,7 @@ User->Post->Tag
 
 上記のアソシエーションにおいて Containable を使った検索は次のように行います。
 
-``` php
+```php
 $this->User->find('all', [
     'contain' => [
         'Profile',
@@ -421,7 +421,7 @@ $this->User->find('all', [
 
 以下は、投稿を最終更新日で並び替える例です。
 
-``` php
+```php
 $this->User->find('all', [
     'contain' => [
         'Profile',
@@ -441,7 +441,7 @@ ContainableBehavior は、他のビヘイビアや GROUP BY 構文などの集�
 そうでないフィールドが混在して不正な SQL エラーが起こった場合、
 `autoFields` 設定を無効化してみてください。
 
-``` php
+```php
 $this->Post->Behaviors->load('Containable', ['autoFields' => false]);
 ```
 
@@ -454,7 +454,7 @@ $this->Post->Behaviors->load('Containable', ['autoFields' => false]);
 
 以下は、ページネーション時にアソシエーションを行う方法の例です。
 
-``` php
+```php
 $this->paginate['User'] = [
     'contain' => ['Profile', 'Account'],
     'order' => 'User.username',

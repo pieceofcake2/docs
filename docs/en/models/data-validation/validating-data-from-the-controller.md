@@ -9,7 +9,7 @@ than just saving the data.
 
 First, set the data to the model:
 
-``` php
+```php
 $this->ModelName->set($this->request->data);
 ```
 
@@ -17,7 +17,7 @@ Then, to check if the data validates, use the validates method of
 the model, which will return true if it validates and false if it
 doesn't:
 
-``` php
+```php
 if ($this->ModelName->validates()) {
     // it validated logic
 } else {
@@ -34,7 +34,7 @@ would want to validate all 4 field rules. Yet when a user logs in
 you would validate just email and password rules. To do this you
 can pass an options array specifying the fields to validate:
 
-``` php
+```php
 if ($this->User->validates(['fieldList' => ['email', 'password']])) {
     // valid
 } else {
@@ -46,7 +46,7 @@ The validates method invokes the invalidFields method which
 populates the validationErrors property of the model. The
 invalidFields method also returns that data as the result:
 
-``` php
+```php
 $errors = $this->ModelName->invalidFields(); // contains validationErrors array
 ```
 
@@ -65,7 +65,7 @@ actually saving.
 To validate multiple models, the following approach should be
 used:
 
-``` php
+```php
 if (
     $this->ModelName->saveAll(
         $this->request->data,
@@ -81,7 +81,7 @@ if (
 If you have validated data before save, you can turn off validation
 to avoid second check:
 
-``` php
+```php
 if (
     $this->ModelName->saveAll(
         $this->request->data,

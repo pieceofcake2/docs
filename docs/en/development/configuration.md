@@ -45,7 +45,7 @@ CakePHP expects database configuration details to be in a file at
 be found at `config/database.php.default`. A finished
 configuration should look something like this:
 
-``` php
+```php
 // config/database.php
 class DATABASE_CONFIG
 {
@@ -245,22 +245,23 @@ always take precedence over the files.
 
 ### .env File Syntax
 
-A `.env` file contains one `NAME="value"` assignment per line. Lines starting
-with `#` are comments, and an `export ` prefix is allowed, so the file can
-also be read by a shell:
+A `.env` file contains one `NAME="value"` assignment per line, the common
+dotenv style also used by Symfony and Laravel. Lines starting with `#` are
+comments. The parser also accepts an `export ` prefix, but it is not needed:
 
-```bash
+```dotenv
 # config/.env
-export DEBUG="2"
-export SECURITY_SALT="a-long-random-string"
-export DB_HOST="127.0.0.1"
+DEBUG="2"
+SECURITY_SALT="a-long-random-string"
+DB_HOST="127.0.0.1"
 ```
 
 Always quote the values. josegonzalez/dotenv converts unquoted values to
 booleans, numbers or `null`: `007` becomes `7`, and a long digit string such
-as a cipher seed overflows to a different number. Quoted values are kept as
-they are. Inside double quotes, `${NAME}` is replaced with the value of a
-variable defined earlier in the file.
+as a cipher seed overflows to a different number, and in an unquoted value a
+`#` after a space starts a comment. Quoted values are kept as they are.
+Inside double quotes, `${NAME}` is replaced with the value of a variable
+defined earlier in the file.
 
 ### Adding .env Support to an Existing Application
 
@@ -333,13 +334,13 @@ copy the `__construct()` and `applyEnv()` methods from
 
 For example, a `config/.env` file for development:
 
-```bash
+```dotenv
 # config/.env
-export DEBUG="2"
-export DB_HOST="127.0.0.1"
-export DB_USERNAME="my_app"
-export DB_PASSWORD="secret"
-export DB_DATABASE="my_app"
+DEBUG="2"
+DB_HOST="127.0.0.1"
+DB_USERNAME="my_app"
+DB_PASSWORD="secret"
+DB_DATABASE="my_app"
 ```
 
 ## Class Loading and Additional Class Paths
@@ -349,7 +350,7 @@ need `App::uses()` for them. Your own classes can be autoloaded the same way by
 adding a classmap to your application's `composer.json`, as the
 [pieceofcake2/app](https://pieceofcake2.github.io/app/) skeleton does:
 
-``` json
+```json
 "autoload": {
     "classmap": ["src/"]
 }
@@ -380,7 +381,7 @@ these additional classes into view.
 By using `App::build()` in `config/bootstrap.php` we can define additional
 paths where CakePHP will look for classes:
 
-``` php
+```php
 App::build([
     'Model' => [
         '/path/to/models',
@@ -459,7 +460,7 @@ App::build([
 
 > [!NOTE]
 > All additional path configuration should be done at the top of your application's
-> bootstrap.php. This will ensure that the paths are available for the rest of your
+> `bootstrap.php`. This will ensure that the paths are available for the rest of your
 > application.
 
 <div class="index">
@@ -526,16 +527,21 @@ compatible module) up and running on your server, you'll need to
 use CakePHP's built-in pretty URLs. In `config/core.php`,
 uncomment the line that looks like:
 
-``` php
+```php
 Configure::write('App.baseUrl', env('SCRIPT_NAME'));
 ```
 
 Also remove the `webroot/.htaccess` file. In the legacy layout, remove
-these .htaccess files:
+these `.htaccess` files:
 
     /.htaccess
     /app/.htaccess
     /app/webroot/.htaccess
+
+Keep the document root set to `webroot/` (`app/webroot/`). Without the
+`.htaccess` files, a document root that points to the project directory
+exposes the configuration, logs and source code; see
+[Deployment](../deployment#set-document-root).
 
 This will make your URLs look like
 www.example.com/index.php/controllername/actionname/param rather
@@ -543,7 +549,7 @@ than www.example.com/controllername/actionname/param.
 
 If you are installing CakePHP on a webserver besides Apache, you
 can find instructions for getting URL rewriting working for other
-servers under the [URL Rewriting](../installation/url-rewriting) section.
+servers under the [Web Server Configuration](../installation/url-rewriting) section.
 
 App.fullBaseUrl  
 The fully qualified domain name (including protocol) to your application’s root.
@@ -609,7 +615,7 @@ Sub-keys
 
 The built-in defaults are:
 
-- 'php' - Uses settings defined in your php.ini.
+- 'php' - Uses settings defined in your `php.ini`.
 - 'cake' - Saves session files in CakePHP's `tmp/sessions` directory.
 - 'database' - Uses CakePHP's database sessions.
 - 'cache' - Use the Cache class to save sessions.
@@ -635,7 +641,7 @@ generate it and what changing it affects.
 ::: pieceofcake2
 CSRF tokens issued by `SecurityComponent`
 are signed with an HMAC using `Security.salt` (CVE-2020-15400). Changing the salt
-invalidates outstanding tokens. See [Security Fixes](/appendices/security-fixes).
+invalidates outstanding tokens. See [Security Fixes](/security/fixes).
 :::
 
 Security.cipherSeed  
@@ -656,7 +662,7 @@ When true, `Security::encrypt()` and `Security::decrypt()` (and therefore
 the `'aes'` cookie encryption type) use OpenSSL instead of mcrypt. The mcrypt
 extension is not bundled with PHP 7.2 and later, so enable it in `config/core.php`:
 
-``` php
+```php
 Configure::write('Security.useOpenSsl', true);
 ```
 
@@ -680,7 +686,7 @@ the Access Control Lists chapter for more information.
 </div>
 
 > [!NOTE]
-> Cache configuration is also found in core.php — We'll be covering
+> Cache configuration is also found in `core.php` — We'll be covering
 > that later on, so stay tuned.
 
 The `Configure` class can be used to read and write core
@@ -1092,7 +1098,7 @@ won't end up breaking the MVC structure we've set in place.
 This class can be called from
 anywhere within your application, in a static context:
 
-``` php
+```php
 Configure::read('debug');
 ```
 
@@ -1103,7 +1109,7 @@ Configure::read('debug');
 
 Use `write()` to store data in the application's configuration:
 
-``` php
+```php
 Configure::write('Company.name', 'Pizza, Inc.');
 Configure::write('Company.slogan', 'Pizza for your body and soul');
 ```
@@ -1114,7 +1120,7 @@ Configure::write('Company.slogan', 'Pizza for your body and soul');
 
 The above example could also be written in a single call:
 
-``` php
+```php
 Configure::write(
     'Company',
     [
@@ -1138,7 +1144,7 @@ CakePHP's important debug value. If a key is supplied, the data is
 returned. Using our examples from write() above, we can read that
 data back:
 
-``` php
+```php
 Configure::read('Company.name'); // yields: 'Pizza, Inc.'
 Configure::read('Company.slogan'); // yields: 'Pizza for your body and soul'
 
@@ -1175,7 +1181,7 @@ Used to check if a key/path exists and has not-null value.
 
 Used to delete information from the application's configuration:
 
-``` php
+```php
 Configure::delete('Company.name');
 ```
 
@@ -1214,7 +1220,7 @@ for more information on the specifics of ini files.
 To use a core config reader, you'll need to attach it to Configure
 using `Configure::config()`:
 
-``` php
+```php
 // Read config files from CONFIG (config/)
 Configure::config('default', new PhpReader());
 
@@ -1232,7 +1238,7 @@ different types of sources. You can interact with attached readers
 using a few other methods on Configure. To see which reader
 aliases are attached you can use `Configure::configured()`:
 
-``` php
+```php
 // Get the array of aliases for attached readers.
 Configure::configured();
 
@@ -1257,7 +1263,7 @@ files with that reader would fail.
 
 Once you've attached a config reader to Configure you can load configuration files:
 
-``` php
+```php
 // Load config/my_file.php using the 'default' reader object.
 Configure::load('my_file', 'default');
 ```
@@ -1285,13 +1291,13 @@ configuration file loadable by the `PhpReader`
 Given that the 'default' reader is an instance of PhpReader.
 Save all data in Configure to the file `my_config.php`:
 
-``` php
+```php
 Configure::dump('my_config.php', 'default');
 ```
 
 Save only the error handling configuration:
 
-``` php
+```php
 Configure::dump('error.php', 'default', ['Error', 'Exception']);
 ```
 
@@ -1317,7 +1323,7 @@ Since configure only remembers values for the current request, you will
 need to store any modified configuration information if you want to
 use it in subsequent requests:
 
-``` php
+```php
 // Store the current configuration in the 'user_1234' key in the 'default' cache.
 Configure::store('user_1234', 'default');
 ```
@@ -1335,7 +1341,7 @@ you to store Configuration information in any storage engine that `Cache` can ta
 Once you've stored runtime configuration, you'll probably need to restore it
 so you can access it again. `Configure::restore()` does exactly that:
 
-``` php
+```php
 // restore runtime configuration from the cache.
 Configure::restore('user_1234', 'default');
 ```
@@ -1353,7 +1359,7 @@ This interface defines a `read()` and a `dump()` method.
 If you really like XML files, you could create a simple Xml config
 reader for you application:
 
-``` php
+```php
 // src/Lib/Configure/MyXmlReader.php
 class MyXmlReader implements ConfigReaderInterface
 {
@@ -1386,7 +1392,7 @@ class MyXmlReader implements ConfigReaderInterface
 
 In your `config/bootstrap.php` you could attach this reader and use it:
 
-``` php
+```php
 Configure::config('xml', new MyXmlReader());
 // ...
 
@@ -1452,7 +1458,7 @@ special cases.
 You can use `Inflector::rules()` in the file
 `config/bootstrap.php` to load custom inflections:
 
-``` php
+```php
 Inflector::rules('singular', [
     'rules' => [
         '/^(bil)er$/i' => '\1',
@@ -1465,7 +1471,7 @@ Inflector::rules('singular', [
 
 or:
 
-``` php
+```php
 Inflector::rules('plural', ['irregular' => ['phylum' => 'phyla']]);
 ```
 

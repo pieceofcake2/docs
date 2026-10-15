@@ -17,14 +17,14 @@
 数ステップを踏むだけです。最初のステップは、 `__()` 関数をあなたのコードで
 使用することです。以下が単一言語アプリケーションのとあるコードの例です。
 
-``` html
+```html
 <h2>Posts</h2>
 ```
 
 あなたのコードを国際化するためには、以下のように `__()`
 で文字列を囲んでください。
 
-``` html
+```html
 <h2><?php echo __('Posts'); ?></h2>
 ```
 
@@ -44,7 +44,7 @@ pot ファイルを生成するためにしなければならないことは、
 モダンレイアウトではテンプレートが `src/` の外にあるため、プロジェクトのルートで実行するときは
 対象のディレクトリと出力先を明示してください。
 
-``` bash
+```bash
 bin/cake i18n extract --paths src,templates --output resources/locales
 ```
 
@@ -52,14 +52,14 @@ pot ファイル自身は、 CakePHP では使用しません。それらのフ�
 [po ファイル](https://en.wikipedia.org/wiki/Gettext) を作成したり更新するための
 テンプレートです。CakePHP は、以下の場所にある po ファイルを参照します。
 
-``` text
+```text
 resources/locales/<locale>/LC_MESSAGES/<domain>.po
 ```
 
 デフォルトのドメインは 'default' です。従って、あなたのロケールフォルダは、
 以下のようになります。
 
-``` text
+```text
 resources/locales/eng/LC_MESSAGES/default.po (英語)
 resources/locales/fra/LC_MESSAGES/default.po (フランス語)
 resources/locales/por/LC_MESSAGES/default.po (ポルトガル語)
@@ -90,7 +90,7 @@ CakePHP はそちらを使用します。
 po ファイルは、短いメッセージの翻訳には便利ですが、長い文章やページ全体を翻訳したい場合、
 他の方法で実装することを検討してください。例えば:
 
-``` php
+```php
 // src/Controller/AppController.php
 public function beforeFilter()
 {
@@ -104,7 +104,7 @@ public function beforeFilter()
 
 または:
 
-``` php
+```php
 // View code
 echo $this->element(Configure::read('Config.language') . '/tos');
 ```
@@ -119,7 +119,7 @@ LC_TIME ファイルを使用します。
 
 それぞれのロケールディレクトリ直下に LC_TIME ファイルを配置します。
 
-``` text
+```text
 resources/locales/fra/LC_TIME (フランス語)
 resources/locales/por/LC_TIME (ポルトガル語)
 ```
@@ -134,7 +134,7 @@ resources/locales/por/LC_TIME (ポルトガル語)
 `__()` や `__n()` の代わりに `__d()` や `__dn()` を使用してください。"d" はドメインを
 意味します。 'DebugKit' というプラグインを使う際、以下のように記述します。
 
-``` text
+```text
 __d('debug_kit', 'My example text');
 ```
 
@@ -143,13 +143,13 @@ CakePHP があなたの翻訳ファイルを見つけられません。
 
 上記の例のためのあなたの翻訳ファイルは、以下の様になります。
 
-``` text
+```text
 plugins/DebugKit/Locale/<locale>/LC_MESSAGES/<domain>.po
 ```
 
 そして、他の言語の場合は:
 
-``` text
+```text
 plugins/DebugKit/Locale/eng/LC_MESSAGES/debug_kit.po (英語)
 plugins/DebugKit/Locale/fra/LC_MESSAGES/debug_kit.po (フランス語)
 plugins/DebugKit/Locale/por/LC_MESSAGES/debug_kit.po (ポルトガル語)
@@ -165,7 +165,7 @@ CakePHP が翻訳ドメインと比較のためにプラグイン名を小文字
 Configure の `I18n.preferApp` 値は、翻訳の順番を制御するのに使用します。
 bootstrap で true にセットすると、プラグインの翻訳よりアプリケーションの翻訳を優先します。
 
-``` php
+```php
 Configure::write('I18n.preferApp', true);
 ```
 
@@ -178,7 +178,7 @@ Configure::write('I18n.preferApp', true);
 
 あなたのアプリケーションの言語の変更や設定をするために必要なことは、以下の通りです。
 
-``` php
+```php
 Configure::write('Config.language', 'fra');
 ```
 
@@ -190,14 +190,14 @@ Configure::write('Config.language', 'fra');
 したい時はいつでも変更できます。現在のユーザの言語をセットするために、
 以下の様に Session オブジェクトに設定を保存することができます。
 
-``` php
+```php
 $this->Session->write('Config.language', 'fra');
 ```
 
 各リクエストの始まるとき、コントローラの `beforeFilter` 内で `Configure` を
 設定してください。
 
-``` php
+```php
 class AppController extends Controller
 {
     public function beforeFilter()
@@ -220,7 +220,7 @@ fra.example.com など)、このアプリケーション上の URL にプレフ�
 
 前のセクションで言及したとおり、 `__()` 便利関数やその他のグローバルに利用できる
 翻訳関数を使って、地域化したコンテンツを表示します。しかし、あなたのビューの中で最適化します。
-関数の第一引数は、 .po ファイル内で定義された msgid として利用されます。
+関数の第一引数は、 `.po` ファイル内で定義された msgid として利用されます。
 
 CakePHP は、自動的に `$validate` 配列中のすべてのモデルのバリデーションエラーメッセージは
 地域化されます。i18n シェルを実行した時、これらの文字列が抽出されます。
@@ -241,7 +241,7 @@ CakePHP は、自動的に `$validate` 配列中のすべてのモデルのバ�
 これは、モデルの中の `$validationDomain` プロパティを設定することによって
 上書きすることができます。
 
-``` php
+```php
 class User extends AppModel
 {
     public $validationDomain = 'validation_errors';
@@ -251,7 +251,7 @@ class User extends AppModel
 バリデーションルールの中で定義された追加のパラメータは、翻訳関数で処理されます。
 これは、動的にバリデーションメッセージを作成することができます。
 
-``` php
+```php
 class User extends AppModel
 {
     public $validationDomain = 'validation';
@@ -269,6 +269,6 @@ class User extends AppModel
 
 以下のように内部的に呼びだされます。
 
-``` text
+```text
 __d('validation', 'Username should be between %d and %d characters', [2, 10]);
 ```

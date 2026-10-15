@@ -17,7 +17,7 @@ POST した場合、自動的に解析され `$this->request->data` 配列に割
 モデルデータとして保存可能です。 RequestHandler を利用するためには \$components 配列に
 含めてください。
 
-``` php
+```php
 class WidgetController extends AppController
 {
     public $components = ['RequestHandler'];
@@ -50,7 +50,7 @@ RequestHandler はクライアントやリクエストについての情報を�
 無効にしたいでしょう。ただし、非 AJAX リクエストのときは反対にキャッシュを許可したいと思います。
 そのようなときは次のようにします。
 
-``` php
+```php
 if ($this->request->is('ajax')) {
     $this->disableCache();
 }
@@ -101,7 +101,7 @@ CPU の処理を節約することができます。
 自動的なチェックは、 `checkHttpCache` を false にすることで行わないように
 することができます。
 
-``` php
+```php
 public $components = [
     'RequestHandler' => [
         'checkHttpCache' => false,
@@ -123,7 +123,7 @@ JsonView/XmlView を利用する場合、カスタムビュークラスでデフ
 
 `viewClassMap` を使って、自動的にセットすることも可能です。
 
-``` php
+```php
 public $components = [
     'RequestHandler' => [
         'viewClassMap' => [

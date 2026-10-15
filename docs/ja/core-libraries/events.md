@@ -48,7 +48,7 @@ CakePHP は、jQuery などの一般的な JavaScript フレームワークに�
 このアプリケーションで注文が作成される合間に通知したい。そんな時、 Order モデルを
 綺麗に保つためにイベントを使用できます。
 
-``` php
+```php
 // plugins/Cart/Model/Order.php
 class Order extends AppModel
 {
@@ -78,7 +78,7 @@ class Order extends AppModel
 CakePHP の中でイベントはイベントマネージャに対して動作します。イベントマネージャーは、
 全てのモデル、ビュー、コントローラの中で `getEventManager()` を使用して取得されます。
 
-``` php
+```php
 $events = $this->getEventManager();
 ```
 
@@ -95,7 +95,7 @@ $events = $this->getEventManager();
 イベントがディスパッチされた時、優先順位に従ってグローバルとインスタンスの両方のレベルのリスナーに
 ディスパッチされます。あなたは、スタティックメソッドを使用してグローバルマネージャーにアクセスできます。
 
-``` php
+```php
 // In any configuration file or piece of code that executes before the event
 CakeEventManager::instance()->attach(
     $aCallback,
@@ -118,7 +118,7 @@ CakeEventManager::instance()->attach(
 メソッドを使ってイベントをディスパッチできます。このメソッドは `CakeEvent` クラスの
 インスタンスを受け取ります。さぁ、イベントをディスパッチしてみましょう。
 
-``` php
+```php
 // Create a new event and dispatch it.
 $event = new CakeEvent('Model.Order.afterPlace', $this, [
     'order' => $order,
@@ -161,7 +161,7 @@ UserStatistic クラスがあると仮定しましょう。これは、リスナ
 一ヶ所に統計ロジックを集中することでき、イベントに対して必要な反応ができます。
 `UserStatistics` リスナーは以下のように開始します。
 
-``` php
+```php
 // In src/Lib/Event/UserStatistic.php
 class UserStatistic implements CakeEventListener
 {
@@ -195,7 +195,7 @@ $this->Order->getEventManager()->attach($statistics);
 クラスマップでオートロードされるため、リスナークラスを追加したら `composer dump-autoload` を実行してください。また、アプリケーションの
 ブートストラッププロセスの間にグローバルリスナーのアタッチを推奨します。
 
-``` php
+```php
 // In config/bootstrap.php
 
 // Load the global event listeners.
@@ -204,7 +204,7 @@ require_once CONFIG . 'events.php';
 
 カートアプリのイベントのブートストラップファイルの例は以下の通りです。
 
-``` php
+```php
 // In config/events.php
 
 // Attach listeners.
@@ -219,7 +219,7 @@ CakeEventManager::instance()->attach(new ProductStatistic());
 イベントリスナーとして任意の `callable` をバインドすることもできます。例えば、
 ログファイルに注文を書き込みたかったとすると、そのためには無名関数が使えました。
 
-``` php
+```php
 $this->Order->getEventManager()->attach(function ($event) {
     CakeLog::write(
         'info',
@@ -230,7 +230,7 @@ $this->Order->getEventManager()->attach(function ($event) {
 
 無名関数に加えてその他の PHP がサポートする呼び出し可能な形式を使用することもできます。
 
-``` php
+```php
 $events = [
     'email-sending' => 'EmailSender::sendBuyEmail',
     'inventory' => [$this->InventoryManager, 'decrement'],
@@ -260,7 +260,7 @@ foreach ($events as $callable) {
 実行されます。コールバックのプライオリティを設定するためには `attach` メソッドを用い、
 リスナーのプライオリティを設定するためには `implementedEvent` 関数内での宣言を行います:
 
-``` php
+```php
 // Setting priority for a callback
 $callback = [$this, 'doSomething'];
 $this->getEventManager()->attach(
@@ -300,7 +300,7 @@ class UserStatistic implements CakeEventListener
 3番目の引数に `passParams` オプションを追加するか `implementedEvents` が返す配列に
 それを宣言する必要があります:
 
-``` php
+```php
 // Enabling passed parameters mode for an anonymous listener
 $callback = [$this, 'doSomething'];
 $this->getEventManager()->attach(
@@ -333,7 +333,7 @@ class UserStatistic implements CakeEventListener
 の代わりに `$orderData` を受け取ることになります。これは、先ほどの例において、
 いくつかのデータを伴って `Model.Order.afterPlace` イベントをトリガするからです:
 
-``` php
+```php
 $event = new CakeEvent('Model.Order.afterPlace', $this, [
     'order' => $order,
 ]);
@@ -354,7 +354,7 @@ DOM イベントのように、追加のリスナーへ通知されることを�
 イベントを中止するためには、コールバックで `false` を返すか、またはイベントオブジェクトで
 `stopPropagation` メソッドを呼び出すかのいずれかを行うことができます:
 
-``` php
+```php
 public function doSomething($event)
 {
     // ...
@@ -376,7 +376,7 @@ public function updateBuyStatistic($event)
 イベントが中止されたかどうかを確認するには、イベントオブジェクトの `isStopped()`
 メソッドを呼び出します:
 
-``` php
+```php
 public function place($order)
 {
     $event = new CakeEvent(
@@ -406,7 +406,7 @@ public function place($order)
 イベントの結果は、イベントオブジェクトの result プロパティを直接用いるか、
 またはコールバック自体の値を返すことで変更できます:
 
-``` php
+```php
 /**
  * A listener callback
  */
@@ -460,7 +460,7 @@ public function place($order)
 `CakeEventManager::detach()` を引数の最初の2つの変数を attach のときと
 同様の用い方で呼び出すだけで良いです:
 
-``` php
+```php
 // Attaching a function
 $this->getEventManager()->attach([$this, 'doSomething'], 'My.event');
 

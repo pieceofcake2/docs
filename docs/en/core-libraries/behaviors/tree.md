@@ -45,7 +45,7 @@ The tree behavior has a lot packed into it, but let's start with a
 simple example - create the following database table and put some
 data in it:
 
-``` sql
+```sql
 CREATE TABLE categories (
     id INTEGER(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     parent_id INTEGER(10) DEFAULT NULL,
@@ -121,7 +121,7 @@ For the purpose of checking that everything is setup correctly, we
 can create a test method and output the contents of our category
 tree to see what it looks like. With a simple controller:
 
-``` php
+```php
 class CategoriesController extends AppController
 {
     public function index()
@@ -140,7 +140,7 @@ class CategoriesController extends AppController
 
 and an even simpler model definition:
 
-``` php
+```php
 // src/Model/Category.php
 class Category extends AppModel
 {
@@ -174,7 +174,7 @@ looked hierarchal via the method `generateTreeList`. However,
 usually you would add your data in exactly the same way as you
 would for any model. For example:
 
-``` php
+```php
 // pseudo controller code
 $data['Category']['parent_id'] = 3;
 $data['Category']['name'] = 'Skating';
@@ -186,7 +186,7 @@ set the parent_id, and the tree behavior will take care of the
 rest. If you don't set the parent_id, the tree behavior will add
 to the tree making your new addition a new top level entry:
 
-``` php
+```php
 // pseudo controller code
 $data = [];
 $data['Category']['name'] = 'Other People\'s Categories';
@@ -220,7 +220,7 @@ Modifying data is as transparent as adding new data. If you modify
 something, but do not change the parent_id field - the structure
 of your data will remain unchanged. For example:
 
-``` php
+```php
 // pseudo controller code
 $this->Category->id = 5; // id of Extreme knitting
 $this->Category->save(['name' => 'Extreme fishing']);
@@ -254,7 +254,7 @@ that Extreme fishing does not belong under Sport, but instead
 should be located under Other People's Categories. With the
 following code:
 
-``` php
+```php
 // pseudo controller code
 $this->Category->id = 5; // id of Extreme fishing
 $newParentId = $this->Category->field(
@@ -292,7 +292,7 @@ reports category is no longer useful. To remove it
 *and any children it may have* just call delete as you would for
 any model. For example with the following code:
 
-``` php
+```php
 // pseudo controller code
 $this->Category->id = 10;
 $this->Category->delete();
@@ -346,7 +346,7 @@ specified node will also be moved.
 Here is an example of a controller action (in a controller named
 Categories) that moves a specified node down the tree:
 
-``` php
+```php
 public function movedown($id = null, $delta = null)
 {
     $this->Category->id = $id;
@@ -380,7 +380,7 @@ moved.
 Here's an example of a controller action (in a controller named
 Categories) that moves a node up the tree:
 
-``` php
+```php
 public function moveup($id = null, $delta = null)
 {
     $this->Category->id = $id;
@@ -424,7 +424,7 @@ Taking the following tree as a starting point:
 
 Running the following code with the id for 'Sport':
 
-``` php
+```php
 $this->Node->removeFromTree($id);
 ```
 
@@ -443,7 +443,7 @@ moving the node to have no parent, and re-parenting all children.
 If however the following code snippet was used with the id for
 'Sport':
 
-``` php
+```php
 $this->Node->removeFromTree($id, true);
 ```
 
@@ -464,7 +464,7 @@ Reorders the nodes (and child nodes) of the tree according to the
 field and direction specified in the parameters. This method does
 not change the parent of any node.
 
-``` php
+```php
 $model->reorder([
     //id of record to use as top node for reordering, default: $Model->id
     'id' => ,
@@ -519,7 +519,7 @@ Available `missingParentActions` options when using
 
 Example:
 
-``` php
+```php
 // Rebuild all the left and right fields based on the parent_id
 $this->Category->recover();
 // or
@@ -549,7 +549,7 @@ following options can affect the process:
 `$options` is used to pass all extra parameters, and has the
 following possible keys by default, all of which are optional:
 
-``` text
+```text
 [
     'id' => null,
     'field' => $model->displayField,
@@ -572,13 +572,13 @@ message)
 
 Example Use:
 
-``` php
+```php
 $this->Category->verify();
 ```
 
 Example output:
 
-``` text
+```text
 Array
 (
     [0] => 
@@ -617,7 +617,7 @@ Knowing the depth of tree nodes can be useful when you want to retrieve nodes
 only upto a certain level for e.g. when generating menus. You can use the
 `level` option to specify the field that will save level of each node:
 
-``` php
+```php
 public $actsAs = ['Tree' => [
     'level' => 'level', // Defaults to null, i.e. no level saving
 ]];

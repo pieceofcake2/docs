@@ -40,6 +40,9 @@ CakePHP は次の PHP 拡張モジュールも使用します。
   `php81_bc/strftime` に依存しており、このパッケージが `intl` を必要とします。
 - `openssl` は任意ですが、SSL/TLS 接続と [Security](core-utility-libraries/security)
   による AES 暗号化には必要です。
+- `mcrypt` は任意で、従来の `Security::rijndael()` と Cookie の `'rijndael'` タイプにだけ
+  必要です。PHP 7.2 以降には同梱されていません。
+  [PHP 8 での暗号化](/ja/security/fixes#php-8-での暗号化)を参照してください。
 
 ::: pieceofcake2
 PHP 8.0 以上が必要です。CakePHP は Composer の
@@ -213,6 +216,8 @@ CakePHP は `src/Plugin/` または `app/Plugin/` と、プロジェクト直下
 クラスを `App::uses()` で読み込むアプリケーションでは省略できます。
 詳しくは [応用インストール](installation/advanced-installation) を参照してください。
 
+<a id="permissions"></a>
+
 ## パーミッション
 
 CakePHP は、幾つかの操作のために `tmp/` ディレクトリを使用します。
@@ -225,7 +230,7 @@ CakePHP は、幾つかの操作のために `tmp/` ディレクトリを使用�
 一般的な課題として、これらのディレクトリは、ウェブサーバとコマンドラインユーザの両方で書き込み権限が必要なことがあります。
 UNIXシステム上で ウェブサーバユーザとコマンドラインユーザが異なる場合、パーミッションのプロパティ設定を確保するために、あなたのプロジェクト内で一度だけ以下のコマンドを実行してください。
 
-``` text
+```bash
 HTTPDUSER=`ps aux | grep -E '[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx' | grep -v root | head -1 | cut -d\  -f1`
 setfacl -R -m u:${HTTPDUSER}:rwx tmp logs
 setfacl -R -d -m u:${HTTPDUSER}:rwx tmp logs
@@ -250,6 +255,8 @@ v2.12.3 からデフォルトのポートは 8765 です。それより前のバ
 > [!WARNING]
 > ビルトインサーバは開発専用です。運用環境では決して使わないでください。
 
+<a id="configuring-the-web-server"></a>
+
 ## ウェブサーバの設定
 
 運用環境では (開発時でも Apache などのウェブサーバを使う場合は)、ウェブサーバのドキュメントルートを
@@ -259,24 +266,31 @@ v2.12.3 からデフォルトのポートは 8765 です。それより前のバ
 
 アプリケーションを `/var/www/my_app` にインストールした場合、Apache のバーチャルホストは次のようになります。
 
-``` text
+```text
 <VirtualHost *:80>
     ServerName www.example.com
     DocumentRoot /var/www/my_app/webroot
 
     <Directory /var/www/my_app/webroot>
+        Options -Indexes -MultiViews +FollowSymLinks
         AllowOverride All
         Require all granted
     </Directory>
 </VirtualHost>
 ```
 
+`Options -Indexes` は、ディストリビューションによっては `/var/www` でデフォルトで有効になっている
+ディレクトリの一覧表示を無効にします。この例は Apache 2.4 のアクセス制御の書き方を使っています。
+レガシーな Apache 2.2 の書き方については [Apache 2.2 (レガシー)](installation/url-rewriting#apache-2-2) を参照してください。
+ドキュメントルートをプロジェクトのディレクトリに設定しないでください。`.env`、`config/`、`logs/`、`tmp/`、
+`vendor/`、`.git/` がダウンロードできてしまいます。
+
 `webroot/` の `.htaccess` がすべてのリクエストを `index.php` に書き換えるので、
 mod_rewrite を有効にし、`AllowOverride` でそれを許可しておく必要があります。
-もしウェブサーバが適切に設定されていれば、 <http://www.example.com> で CakePHP アプリケーションがアクセス可能になっているはずです。
+もしウェブサーバが適切に設定されていれば、 <https://www.example.com> で CakePHP アプリケーションがアクセス可能になっているはずです。
 
-nginx、lighttpd、IIS での設定や mod_rewrite のトラブルシューティングについては
-[URLリライティング](installation/url-rewriting) を参照してください。
+HTTPS、隠しファイル、アップロード用のディレクトリ、nginx、lighttpd、IIS での設定や
+mod_rewrite のトラブルシューティングについては [Web サーバーの設定](installation/url-rewriting) を参照してください。
 アプリケーションのディレクトリを別の場所に配置したい場合は [応用インストール](installation/advanced-installation) を参照してください。
 
 公開する前には [デプロイ](deployment) も読んでおいてください。
@@ -285,7 +299,7 @@ nginx、lighttpd、IIS での設定や mod_rewrite のトラブルシューテ�
 
 それでは、実際に CakePHP を動作させてみましょう。
 アプリケーションの URL、たとえば開発用サーバなら <http://localhost:8765/>、
-あるいは <http://www.example.com/> をブラウザで開いてみましょう。
+あるいは <https://www.example.com/> をブラウザで開いてみましょう。
 この時点では、CakePHP のデフォルトのホーム画面が表示され、`tmp/` ディレクトリに書き込めるか、
 キャッシュが動作しているか、データベースに接続できるかが確認できます。
 
@@ -296,7 +310,7 @@ CakePHP 2 を初めて使う場合は、続けて [ブログチュートリア�
 もし PHP のタイムゾーンに関連するエラーが出るなら、 `config/core.php` の中のとある一行のコメントを外し、
 サーバのタイムゾーンを設定してください。
 
-``` php
+```php
 /**
  * Uncomment this line and correct your server timezone to fix
  * any date & time related errors.

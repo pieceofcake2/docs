@@ -9,7 +9,7 @@ CakePHP 2 を初めて使う場合は、[ブログチュートリアル](tutoria
 ## このフォークについて {#about-this-fork}
 
 このドキュメントは、CakePHP 2.x のコミュニティによるフォーク [pieceofcake2/cakephp](https://github.com/pieceofcake2/cakephp)
-について説明しています。このフォークは CakePHP 2.10.24 をベースにしており、PHP 8.0 から 8.5 で動作します。
+について説明しています。このフォークは [cakephp/cakephp](https://github.com/cakephp/cakephp/tree/2.10.24) の 2.10.24 をベースにしており、PHP 8.0 から 8.5 で動作します。
 保守を目的としたフォークで、CakePHP 2 を現在の PHP に対応させ、バグとセキュリティの問題を修正します。
 機能の追加は目的としておらず、追加するのは CakePHP 5 からのバックポートなど、保守と移行に役立つものに限っています。
 
@@ -21,6 +21,7 @@ CakePHP プロジェクトによる CakePHP 2.x のサポートは
 本家の CakePHP 2.x のドキュメントとの違いは [本家ドキュメントからの変更点](/ja/appendices/changes-from-the-original-book)
 にまとめています。フォークのほかのプロジェクトやリソースは
 [Piece of Cake 2 のサイト](https://pieceofcake2.github.io/) から参照できます。
+各パッケージがどのプロジェクトから来ているかは [メンテナンスされているプラグイン](/ja/plugins/maintained-plugins#origins) にまとめています。
 
 ## CakePHP 2.10 との違い {#whats-different}
 
@@ -49,11 +50,11 @@ CakePHP 2.10 を知っていれば、その知識のほとんどはそのまま�
   拡張を使うと、PHPStan がモデル、コンポーネント、ビヘイビアを理解できるようになります。
   [静的解析](development/static-analysis) を参照してください。
 - **セキュリティ修正。** CakePHP 2.10.24 の既知の脆弱性を修正しています。たとえば CSRF トークンは
-  HMAC で署名されるようになりました。[脆弱性への対応](/ja/appendices/security-fixes) を参照してください。
+  HMAC で署名されるようになりました。[脆弱性への対応](/ja/security/fixes) を参照してください。
 - **CakePHP 5 からのバックポート。** `IntegrationTestTrait` と `EmailTrait` (CakePHP 2.12.4) を使うと、
-  実際のディスパッチャを通してコントローラを CakePHP 5 と同じメソッド名でテストできます。フォークの
-  [アップグレードガイド](https://github.com/pieceofcake2/cakephp/blob/2.x/UPGRADE.md#v2124) (英語)
-  を参照してください。アプリケーションスケルトンは `.env` ファイルを読み込みます (pieceofcake2/app 2.4.0)。
+  実際のディスパッチャを通してコントローラを CakePHP 5 と同じメソッド名でテストできます。
+  [統合テスト](development/integration-testing) を参照してください。アプリケーションスケルトンは
+  `.env` ファイルを読み込みます (pieceofcake2/app 2.4.0)。
   [環境変数](development/configuration#environment-variables) を参照してください。
 - **Bake とプラグイン。** Bake とアップグレード用のシェルはコアからプラグインに移りました。
   また、主要な CakePHP 2 のプラグインも PHP 8 対応版がメンテナンスされています。
@@ -125,7 +126,7 @@ CakePHP 2 は PHP 5.2 と 5.3 の時代に設計されました。CakePHP 5、La
 ## このセクションのページ {#in-this-section}
 
 - [インストール](installation)、[応用インストール](installation/advanced-installation)、
-  [URL リライト](installation/url-rewriting)
+  [Web サーバーの設定](installation/url-rewriting)
 - [CakePHP のフォルダ構造](getting-started/cakephp-folder-structure)
 - [CakePHP の規約](getting-started/cakephp-conventions)
 - [CakePHP の構造](getting-started/cakephp-structure)

@@ -18,7 +18,7 @@ FlashComponent は、フラッシュメッセージの設定に２つの方法�
 デフォルトのフラッシュメッセージハンドラを使用するために、 `set()` メソッドが
 使用できます。
 
-``` php
+```php
 $this->Flash->set('This is a message');
 ```
 
@@ -31,7 +31,7 @@ $this->Flash->set('This is a message');
 メソッド名を関連づけることができます。規約により、キャメルケース形式のメソッドは、
 小文字でアンダースコア区切りのエレメント名に置き換えられます。
 
-``` php
+```php
 // templates/Elements/Flash/success.ctp を使用
 $this->Flash->success('This was successful');
 
@@ -51,7 +51,7 @@ FlashComponent の `__call` や `set()` メソッドは、第２引数にオプ�
 
 オプションの使用例:
 
-``` php
+```php
 // コントローラの中で
 $this->Flash->success('The user has been saved', [
     'key' => 'positive',
@@ -75,12 +75,12 @@ $this->Flash->success('The user has been saved', [
 `plugin` パラメータをセットしてください。
 例:
 
-``` php
+```php
 // コントローラの中で
 $this->Flash->warning('My message', ['plugin' => 'PluginName']);
 ```
 
-上記のコードは、 `plugins/PluginName/View/Elements/Flash` 配下の warning.ctp
+上記のコードは、 `plugins/PluginName/View/Elements/Flash` 配下の `warning.ctp`
 エレメントを使用しています。
 
 > [!NOTE]

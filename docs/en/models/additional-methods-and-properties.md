@@ -8,7 +8,7 @@ Any operation that handles the saving and fetching of data is best
 housed in your model classes. This concept is often referred to as
 the fat model.
 
-``` php
+```php
 class Example extends AppModel
 {
     public function getRecent()
@@ -25,7 +25,7 @@ class Example extends AppModel
 
 This `getRecent()` method can now be used within the controller.
 
-``` php
+```php
 $recent = $this->Example->getRecent();
 ```
 
@@ -33,7 +33,7 @@ $recent = $this->Example->getRecent();
 
 Get associations:
 
-``` php
+```php
 $result = $this->Example->associations();
 // $result equals ['belongsTo', 'hasOne', 'hasMany', 'hasAndBelongsToMany']
 ```
@@ -62,7 +62,7 @@ ascertain the existence of the record in persistent storage.
 
 > Parameter \$id was added in 2.1. Prior to that it does not take any parameter.
 
-``` php
+```php
 $this->Example->id = 9;
 if ($this->Example->exists()) {
     // ...

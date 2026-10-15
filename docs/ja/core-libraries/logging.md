@@ -22,7 +22,7 @@ CakePHP でデータのロギングは簡単です。 log() 関数が Object ク
 に配置されます。 `CakeLog` は `CakeLog::config()` を呼ぶことで、ログストリームを
 設定するためにロードを試みます。 DatabaseLog を設定するためには、以下のようにします。
 
-``` php
+```php
 // src/Lib 用
 CakeLog::config('otherFile', [
     'engine' => 'Database',
@@ -42,7 +42,7 @@ CakeLog::config('otherFile', [
 ロードするために使用され、その他の設定プロパティの全ては、ログストリームの
 コンストラクタに配列として渡されます。
 
-``` php
+```php
 // src/Lib/Log/Engine/DatabaseLog.php
 
 class DatabaseLog extends BaseLog
@@ -100,7 +100,7 @@ CakePHP は、ログストリームに対して、 `write` メソッドだけを
 
 > [!NOTE]
 > 必ず `config/bootstrap.php` 内でロガーを設定してください。
-> core.php 内でアプリケーションやプラグインのロガーを使用しようとすると、
+> `core.php` 内でアプリケーションやプラグインのロガーを使用しようとすると、
 > 問題が起こります。アプリケーションのパスがまだ設定されていないからです。
 >
 > 2.4 では新たに、デバッグモード中では、FileEngine 使用時に無用なエラーの発生を避けるため、
@@ -108,7 +108,7 @@ CakePHP は、ログストリームに対して、 `write` メソッドだけを
 
 ## ロギングのエラーと例外
 
-エラーと例外は、 core.php ファイル内に関連する値を設定することで
+エラーと例外は、 `core.php` ファイル内に関連する値を設定することで
 ログに記録することができます。エラーは debug \> 0 で表示され、 debug == 0 で
 ログに記録されます。 捕捉できなかった例外をログに記録する場合、 `Exception.log` を
 true にセットしてください。詳しくは、 [構成設定](../development/configuration) をご覧ください。
@@ -133,7 +133,7 @@ true にセットしてください。詳しくは、 [構成設定](../developm
 デフォルトのログの場所は、`LOGS` 定数が指す `logs/$type.log` です。
 レガシーレイアウト (`app/`) では `app/tmp/logs/$type.log` になります。
 
-``` php
+```php
 // CakePHP クラスの中でこれを実行
 $this->log('何か動かないよ！');
 
@@ -144,7 +144,7 @@ $this->log('何か動かないよ！');
 第一引数に独自のログ名を指定できます。デフォルトの組み込み FileLog クラスは、
 このログ名を書き込みたいログファイルとして扱います。
 
-``` php
+```php
 // 静的に呼び出し
 CakeLog::write('activity', '活動記録としての特別なメッセージ');
 
@@ -158,7 +158,7 @@ CakeLog::write('activity', '活動記録としての特別なメッセージ');
 `CakeLog::config()` を使うと別の FileLog 出力先を設定できます。
 FileLog は、独自のパスを使用するために `path` を設定できます。
 
-``` php
+```php
 CakeLog::config('custom_path', [
     'engine' => 'File',
     'path' => '/path/to/custom/place/',
@@ -182,7 +182,7 @@ syslog を使うためには、デフォルトの FileLog エンジンを使う�
 デフォルトのロガーを syslog に置き換えるものです。これは、 `bootstrap.php` ファイルで
 設定します。
 
-``` php
+```php
 CakeLog::config('default', [
     'engine' => 'Syslog',
 ]);
@@ -206,14 +206,14 @@ Syslog ロギングエンジンのための設定配列は、以下のキーを�
 ログファイルへの書き込みは、２つの方法があります。１つは、
 静的な `CakeLog::write()` メソッドを使用することです。
 
-``` php
+```php
 CakeLog::write('debug', '何か動作しなかった');
 ```
 
 ２つ目は、 `Object` を継承するクラスに用意された log() ショートカット関数を
 使用することです。 log() を呼ぶと、内部的に CakeLog::write() が呼ばれます。
 
-``` php
+```php
 // CakePHP クラス内でこれを実行:
 $this->log('何か動作しなかったよ！', 'debug');
 ```
@@ -229,7 +229,7 @@ CakeLog は、自身では何も自動設定されません。結果として、
 最低限一つ、 `default` のストリームを用意してください。通常、 `logs/`
 に出力するためには、コアの `FileLog` クラスをセットするだけで可能です。
 
-``` php
+```php
 CakeLog::config('default', [
     'engine' => 'File',
 ]);
@@ -249,7 +249,7 @@ CakePHP は、このコンセプトをロギングスコープで実現します
 これらのロガーに向けられます。ログメッセージが未設定のスコープへ書かれた場合、
 そのメッセージのレベルを制御するロガーがメッセージを記録します。 例:
 
-``` php
+```php
 // ２つの設定されたタイプ(ログレベル) を受け取るように、 logs/shop.log を設定。
 // スコープは `orders` と `payments`
 CakeLog::config('shop', [
@@ -323,7 +323,7 @@ CakeLog と新しいロガーに接続します。接続されたロガーの各
 デフォルトで 'user0' と 'user1' という追加のレベルを追加するために、
 ログレベルを使用します。
 
-``` php
+```php
 CakeLog::levels(['user0', 'user1']);
 // または
 CakeLog::levels(['user0', 'user1'], true);
@@ -331,7 +331,7 @@ CakeLog::levels(['user0', 'user1'], true);
 
 `CakeLog::levels()` を呼ぶと結果は:
 
-``` text
+```text
 [
     0 => 'emergency',
     1 => 'alert',
@@ -343,13 +343,13 @@ CakeLog::levels(['user0', 'user1'], true);
 
 既存の設定を置き換えるために、第二引数に false をセットしてください。
 
-``` php
+```php
 CakeLog::levels(['user0', 'user1'], false);
 ```
 
 `CakeLog::levels()` を呼ぶと結果は:
 
-``` text
+```text
 [
     0 => 'user0',
     1 => 'user1',
@@ -362,7 +362,7 @@ CakeLog::levels(['user0', 'user1'], false);
 
 独自の値にログレベルをリセットします。
 
-``` text
+```text
 [
     'emergency' => LOG_EMERG,
     'alert'     => LOG_ALERT,

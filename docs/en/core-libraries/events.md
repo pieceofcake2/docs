@@ -50,7 +50,7 @@ For example in your Cart plugin you have an Order model that deals with creating
 orders. You'd like to notify the rest of the application that an order has been
 created. To keep your Order model clean you could use events:
 
-``` php
+```php
 // plugins/Cart/Model/Order.php
 class Order extends AppModel
 {
@@ -81,7 +81,7 @@ objects that focus on those concerns.
 In CakePHP events are triggered against event managers. Event managers are
 available in every Model, View and Controller using `getEventManager()`:
 
-``` php
+```php
 $events = $this->getEventManager();
 ```
 
@@ -99,7 +99,7 @@ difficult. The global manager is a singleton instance of
 dispatched, it will be dispatched both to the global and to the instance level
 listeners in priority order. You can access the global manager using a static method:
 
-``` php
+```php
 // In any configuration file or piece of code that executes before the event
 CakeEventManager::instance()->attach(
     $aCallback,
@@ -123,7 +123,7 @@ Once you have obtained an instance of an event manager you can dispatch events
 using `CakeEventManager::dispatch()`. This method takes an instance
 of the `CakeEvent` class. Let's look at dispatching an event:
 
-``` php
+```php
 // Create a new event and dispatch it.
 $event = new CakeEvent('Model.Order.afterPlace', $this, [
     'order' => $order,
@@ -167,7 +167,7 @@ global site statistics. This is a great place to use a listener class. Doing so
 allows you concentrate the statistics logic in one place and react to events as
 necessary. Our `UserStatistics` listener might start out like:
 
-``` php
+```php
 // In src/Lib/Event/UserStatistic.php
 class UserStatistic implements CakeEventListener
 {
@@ -202,7 +202,7 @@ listener classes. Classes under `src/` are autoloaded by Composer's classmap,
 so run `composer dump-autoload` after adding a new listener class. It is also recommended that you attach global listeners during
 your application bootstrap process:
 
-``` php
+```php
 // In config/bootstrap.php
 
 // Load the global event listeners.
@@ -211,7 +211,7 @@ require_once CONFIG . 'events.php';
 
 An example events bootstrap file for our cart application could look like:
 
-``` php
+```php
 // In config/events.php
 
 // Attach listeners.
@@ -227,7 +227,7 @@ you can also bind any `callable` as an event listener. For example if we
 wanted to put any orders into the log files, we could use a simple anonymous
 function to do so:
 
-``` php
+```php
 $this->Order->getEventManager()->attach(function ($event) {
     CakeLog::write(
         'info',
@@ -239,7 +239,7 @@ $this->Order->getEventManager()->attach(function ($event) {
 In addition to anonymous functions you can use any other callable type that PHP
 supports:
 
-``` php
+```php
 $events = [
     'email-sending' => 'EmailSender::sendBuyEmail',
     'inventory' => [$this->InventoryManager, 'decrement'],
@@ -272,7 +272,7 @@ with a the order they were attached. You set priorities using the `attach`
 method for callbacks, and declaring it in the `implementedEvents` function for
 event listeners:
 
-``` php
+```php
 // Setting priority for a callback
 $callback = [$this, 'doSomething'];
 $this->getEventManager()->attach(
@@ -312,7 +312,7 @@ If you want to enable this feature, you have to add the `passParams` option to t
 third argument of the `attach` method, or declare it in the `implementedEvents`
 returned array similar to what you do with priorities:
 
-``` php
+```php
 // Enabling passed parameters mode for an anonymous listener
 $callback = [$this, 'doSomething'];
 $this->getEventManager()->attach(
@@ -345,7 +345,7 @@ In the above code the `doSomething` function and `updateBuyStatistic` method wil
 receive `$orderData` instead of the `$event` object. This is so, because in our
 previous example we trigger the `Model.Order.afterPlace` event with some data:
 
-``` php
+```php
 $event = new CakeEvent('Model.Order.afterPlace', $this, [
     'order' => $order,
 ]);
@@ -367,7 +367,7 @@ the code detects it cannot proceed any further.
 In order to stop events you can either return `false` in your callbacks or call
 the `stopPropagation` method on the event object:
 
-``` php
+```php
 public function doSomething($event)
 {
     // ...
@@ -389,7 +389,7 @@ operation from occurring.
 
 To check if an event was stopped, you call the `isStopped()` method in the event object:
 
-``` php
+```php
 public function place($order)
 {
     $event = new CakeEvent(
@@ -421,7 +421,7 @@ callbacks modify the \$order data.
 Event results can be altered either using the event object result property
 directly or returning the value in the callback itself:
 
-``` php
+```php
 /**
  * A listener callback
  */
@@ -474,7 +474,7 @@ If for any reason you want to remove any callback from the event manager just ca
 the `CakeEventManager::detach()` method using as arguments the first two
 params you used for attaching it:
 
-``` php
+```php
 // Attaching a function
 $this->getEventManager()->attach([$this, 'doSomething'], 'My.event');
 

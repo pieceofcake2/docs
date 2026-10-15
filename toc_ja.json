@@ -17,7 +17,7 @@
           "link": "/ja/installation/advanced-installation"
         },
         {
-          "text": "URL リライト",
+          "text": "Web サーバーの設定",
           "link": "/ja/installation/url-rewriting"
         },
         {
@@ -463,11 +463,25 @@
           "link": "/ja/development/debugging"
         },
         {
+          "text": "REST",
+          "link": "/ja/development/rest"
+        }
+      ]
+    },
+    {
+      "text": "テスト",
+      "collapsed": true,
+      "items": [
+        {
           "text": "テスト",
           "link": "/ja/development/testing"
         },
         {
-          "text": "E2E テスト",
+          "text": "統合テスト",
+          "link": "/ja/development/integration-testing"
+        },
+        {
+          "text": "End-to-End テスト",
           "link": "/ja/development/e2e-testing"
         },
         {
@@ -475,8 +489,52 @@
           "link": "/ja/development/static-analysis"
         },
         {
-          "text": "REST",
-          "link": "/ja/development/rest"
+          "text": "継続的インテグレーション",
+          "link": "/ja/development/continuous-integration"
+        }
+      ]
+    },
+    {
+      "text": "デプロイ",
+      "collapsed": true,
+      "items": [
+        {
+          "text": "デプロイ",
+          "link": "/ja/deployment"
+        },
+        {
+          "text": "AWS Lambda へのデプロイ",
+          "link": "/ja/deployment/aws-lambda"
+        }
+      ]
+    },
+    {
+      "text": "セキュリティ",
+      "collapsed": true,
+      "items": [
+        {
+          "text": "セキュリティ",
+          "link": "/ja/security/"
+        },
+        {
+          "text": "脆弱性の報告",
+          "link": "/ja/security/reporting"
+        },
+        {
+          "text": "脆弱性への対応",
+          "link": "/ja/security/fixes"
+        },
+        {
+          "text": "本家のアドバイザリ",
+          "link": "/ja/security/upstream-advisories"
+        },
+        {
+          "text": "セキュリティチェックリスト",
+          "link": "/ja/security/hardening"
+        },
+        {
+          "text": "出力時のエスケープと HTML の無害化",
+          "link": "/ja/security/escaping-and-sanitizing-html"
         }
       ]
     },
@@ -605,10 +663,6 @@
           "link": "/ja/appendices/migrating-to-the-modern-layout"
         },
         {
-          "text": "脆弱性への対応",
-          "link": "/ja/appendices/security-fixes"
-        },
-        {
           "text": "本家ドキュメントからの変更点",
           "link": "/ja/appendices/changes-from-the-original-book"
         },
@@ -683,20 +737,6 @@
         {
           "text": "用語集",
           "link": "/ja/appendices/glossary"
-        }
-      ]
-    },
-    {
-      "text": "追加トピック",
-      "collapsed": true,
-      "items": [
-        {
-          "text": "デプロイメント",
-          "link": "/ja/deployment"
-        },
-        {
-          "text": "AWS Lambda へのデプロイ",
-          "link": "/ja/deployment/aws-lambda"
         }
       ]
     }

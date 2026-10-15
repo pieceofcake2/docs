@@ -26,7 +26,7 @@ Cache ヘルパーを使用する前に2つのステップをこなさなけれ�
 `Cache.check` のコメントを外したならば controller の `$helpers` 配列にヘルパーを
 追加しなければなりません。
 
-``` php
+```php
 class PostsController extends AppController
 {
     public $helpers = ['Cache'];
@@ -35,7 +35,7 @@ class PostsController extends AppController
 
 また、 bootstrap に CacheDispatcher をディスパッチャフィルタへ追加する必要があります。
 
-``` php
+```php
 Configure::write('Dispatcher.filters', [
     'CacheDispatcher',
 ]);
@@ -55,7 +55,7 @@ Cache ヘルパーはいくつかの環境設定オプションを持ってい�
 
 ArticlesController の例を使用して、キャッシュする必要のある多くのトラフィックを受け取ります。
 
-``` php
+```php
 public $cacheAction = [
     'view' => 36000,
     'index' => 48000,
@@ -66,7 +66,7 @@ public $cacheAction = [
 コントローラーのどのアクションにでもキャッシュできます。どのコントローラーでも `$cacheAction` の
 `strtotime()` の書き方を下記のように親しみやすい記述にすることができます。
 
-``` php
+```php
 public $cacheAction = '1 hour';
 ```
 
@@ -74,7 +74,7 @@ public $cacheAction = '1 hour';
 キャッシュされたビューのために使用可能です。
 ただし、追加するときは `$cacheAction` で配列を使って、以下のように記述してください。
 
-``` php
+```php
 public $cacheAction = [
     'view' => ['callbacks' => true, 'duration' => 21600],
     'add' => ['callbacks' => true, 'duration' => 36000],
@@ -99,7 +99,7 @@ beforFilter が読まれ、最後にコンポーネントの callbacks が呼ば
 キャッシュ *されない* コンテンツのブロックを表示するためには、その部分を次のように
 `<!--nocache--> <!--/nocache-->` で囲みます:
 
-``` php
+```php
 <!--nocache-->
 <?php if ($this->Session->check('User.name')): ?>
     Welcome, <?php echo h($this->Session->read('User.name')); ?>.

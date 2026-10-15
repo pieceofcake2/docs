@@ -145,6 +145,12 @@ vendor/bin/phpstan analyse
 PHPStan lists the errors with the file and the line of each. In a CI job, add
 `--no-progress` to keep the log short.
 
+### CI Job Summaries
+
+To show the PHPStan errors as a GitHub Actions job summary on the run page, see
+[Job Summaries](/development/continuous-integration#job-summaries) on the
+Continuous Integration page, which also shows a complete PHPStan job.
+
 ## What the Extension Adds
 
 The extension adds the following to PHPStan:
