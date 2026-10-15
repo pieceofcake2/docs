@@ -264,6 +264,10 @@ jobs:
       - name: Install chromedriver for the installed Chrome
         run: vendor/bin/bdi detect drivers
 
+      # The runners have no Japanese fonts; without them Japanese text is drawn as boxes in the screenshots
+      - name: Install Japanese fonts
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq fonts-noto-cjk
+
       - name: Run End-to-End tests
         env:
           PANTHER_NO_SANDBOX: 1
