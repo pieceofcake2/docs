@@ -439,12 +439,6 @@ use Symfony\Component\Dotenv\Dotenv;
 Configure::write('debug', env('APP_DEBUG') ?? 0);
 ```
 
-::: pieceofcake2
-以前のスケルトンから作成したアプリケーションは、環境変数 `DEBUG` を読み込みます。デバッグレベルの行を
-`Configure::write('debug', env('APP_DEBUG') ?? 0);` に置き換え、`.env` ファイルと環境変数の `DEBUG` を
-`APP_DEBUG` に変更してください。
-:::
-
 以前のスケルトンから `config/database.php` や `config/email.php` を作成した場合は、
 `config/database.php.default` や `config/email.php.default` の `__construct()` メソッドを
 コピーし、`test` 接続を `default` として使う `APP_ENV` の分岐があれば削除してください

@@ -459,12 +459,6 @@ The skeleton reads the debug level in one line, and uses debug level 0 when
 Configure::write('debug', env('APP_DEBUG') ?? 0);
 ```
 
-::: pieceofcake2
-Applications created from an earlier skeleton read a `DEBUG` variable. Replace
-their debug line with `Configure::write('debug', env('APP_DEBUG') ?? 0);`, and
-rename `DEBUG` to `APP_DEBUG` in their `.env` files and environment.
-:::
-
 If your `config/database.php` or `config/email.php` was created from an
 earlier skeleton, copy the `__construct()` method of
 `config/database.php.default` or `config/email.php.default` into it, and
