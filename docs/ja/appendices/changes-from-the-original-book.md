@@ -298,7 +298,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - キャッシュ: 使用可能なエンジンを列挙 (File、Apc/APCu、Memcached、Memcache、Redis)。Xcache/Wincache の削除を変更点として記載
   - 設定リーダー: デフォルトの読み込み先は `CONFIG`。独自リーダーの例を `src/Lib/Configure` に移し、プロパティを宣言 (PHP 8.2)、`App::uses()` を削除。ja の例のクラス名を PHP の XMLReader と衝突する `XmlReader` から `MyXmlReader` に変更。ConfigReaderInterface/ConfigureException の説明を修正
   - Inflector のパス `src/Cake/Utility/Inflector.php` と `config/bootstrap.php` を本文に反映。古い IE/Chrome Frame や AMF/SOAP の例を更新。ja: `$merge` の説明を修正し `Configure::consume()` を追加
-  - 「環境変数」の節を追加: pieceofcake2/app スケルトンが `config/core.php` の先頭で josegonzalez/dotenv により `config/.env` とプロジェクトルートの `.env` を読み込むこと (CakePHP 3〜5 のアプリケーションスケルトンの `.env` サポートのバックポート。変更点: app v2.4.0 で追加)、app v2.5.0 からの symfony/dotenv と `loadEnv()` による読み込み (`config/.env`、`config/.env.local`、`config/.env.{APP_ENV}`、`config/.env.{APP_ENV}.local` をマージし、後のファイルと実際の環境変数が優先。`APP_ENV` のデフォルトは `dev` で本番環境では `prod`、Git で無視するのは `.local` ファイルだけ。v2.4.0〜v2.4.2 の読み込み方を変更点として記載)、symfony/dotenv の書式、レガシー構成や以前のアプリケーションへの 1 行の読み込み処理の追加方法、スケルトンが読み込む環境変数 (`APP_ENV`、セットされていないとデバッグレベル 0 になる `APP_DEBUG`、`SECURITY_SALT`、`SECURITY_CIPHER_SEED`、`COOKIE_KEY`、`DATABASE_URL`、`MAILER_DSN`。以前のスケルトンの `DEBUG`、`DB_*`、`APP_ENV` の分岐、その置き換え方)
+  - 「環境変数」の節を追加: pieceofcake2/app スケルトンが `config/core.php` の先頭で josegonzalez/dotenv により `config/.env` とプロジェクトルートの `.env` を読み込むこと (CakePHP 3〜5 のアプリケーションスケルトンの `.env` サポートのバックポート。変更点: app v2.4.0 で追加)、app v2.5.0 からの symfony/dotenv と `loadEnv()` による読み込み (`config/.env`、`config/.env.local`、`config/.env.{APP_ENV}`、`config/.env.{APP_ENV}.local` をマージし、後のファイルと実際の環境変数が優先。`APP_ENV` のデフォルトは `dev` で本番環境では `prod`、Git で無視するのは `.local` ファイルだけ。v2.4.0〜v2.4.2 の読み込み方を変更点として記載)、symfony/dotenv の書式、レガシー構成や以前のアプリケーションへの 1 行の読み込み処理の追加方法、スケルトンが読み込む環境変数 (`APP_ENV`、セットされていないとデバッグレベル 0 になる `APP_DEBUG`、`SECURITY_SALT`、`SECURITY_CIPHER_SEED`、`COOKIE_KEY`、`DATABASE_URL`、`MAILER_DSN`。以前のスケルトンの `DB_*` と `APP_ENV` の分岐、その置き換え方)
   - `App.baseUrl`: `.htaccess` ファイルを削除してもドキュメントルートは `webroot/` のままにすることを追記
   - 「セキュリティ用のソルトの生成」の節を追加: 安全な生成コマンド (PHP とシェル)、それぞれの値に依存するもの (Cookie の 'aes' タイプは専用のキーを設定しても `Security.salt` を組み合わせる)、値の変更手順
   - 「cipherSeed と Cookie の 'cipher' タイプ」の節を追加: `Security::cipher()` でのシードの使われ方、意味があるのは 1〜4294967295 だけで、27 桁以上の値 (本家の `config/core.php` のデフォルト値、ブログチュートリアルのサンプル値、以前の `.env.example` の生成コマンド) はシード 0 になること、範囲内のシードでも安全ではないこと、影響、どうすればよいか、`COOKIE_KEY` から `Cookie.key` に読み込む 32 バイトのキー、'aes' にした `Cookie.type`、`Security.useOpenSsl` を使った 'aes' への移行 (v2.12.6 以降は `Cookie.type` と `Cookie.key` を設定で指定できること、v2.12.5 以前でのコントローラーでの設定、代わりのキーの `Security.salt` が 32 バイト未満のときの例外)、警告
@@ -376,7 +376,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - ヒント: pieceofcake2/async-aws が同じセッションハンドラー、SES トランスポート、キャッシュエンジン、S3 ストリームラッパーをより小さな依存関係 (AsyncAws) で提供することを追加。キャッシュの節で `AsyncAws.DynamoDb` エンジンを、S3 の節でそのストリームラッパーを紹介
   - SES の権限を送信元の ID に限定、アップロード用バケットに S3 のパブリックアクセスブロックを設定、ダウンロードの例に権限の確認を明記、本番のデータベースを公開しないよう注意、ログに秘密の情報を出力しない、アセット用バケットを非公開にして CloudFront の OAC を使う、OIDC の `sub` の条件は正確な値にする (ワイルドカードを使わない)、デプロイ用のロールに `AdministratorAccess` を付けないことを追加
   - `DB_*` の代わりに SSM の `SecureString` パラメータから `DATABASE_URL` を読み込む。SES API トランスポートの代わりに、SSM の `MAILER_DSN` で SES の SMTP インターフェイスを使う方法
-  - `DEBUG: '0'` の代わりに `APP_ENV: prod` を設定し、コミットされた `config/.env` をイメージに含める (app v2.5.0)
+  - `APP_ENV: prod` を設定し、コミットされた `config/.env` をイメージに含める (app v2.5.0)
 
 ### セキュリティ
 
