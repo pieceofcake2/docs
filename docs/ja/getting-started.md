@@ -60,6 +60,8 @@ CakePHP 2.10 を知っていれば、その知識のほとんどはそのまま�
   レイアウトで表示されます。[デバッグ用のエラーページ](development/debugging#debug-error-pages)
   を参照してください。また、`utf8` バリデーションルールで不正な UTF-8 を拒否できます。
   [データバリデーション](models/data-validation) を参照してください (どちらも CakePHP 2.12.6)。
+  データソースとメールのプロファイルは、`DATABASE_URL` と `MAILER_DSN` の DSN で設定できます。
+  [データベースの DSN](development/configuration#database-url) をご覧ください (CakePHP 2.12.7)。
 - **Bake とプラグイン。** Bake とアップグレード用のシェルはコアからプラグインに移りました。
   また、主要な CakePHP 2 のプラグインも PHP 8 対応版がメンテナンスされています。
   [Bakeでコード生成](console-and-shells/code-generation-with-bake) と

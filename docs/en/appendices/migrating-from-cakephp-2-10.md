@@ -26,6 +26,58 @@ Before migrating to this fork, ensure:
 4. **Upgrade PHP**: Update your PHP version to 8.0 or newer
 5. **Test Thoroughly**: Run your application's test suite to ensure compatibility
 
+## v2.12.7
+
+Changes in v2.12.7 that may affect applications already running on the fork.
+
+### DSN configuration: `DATABASE_URL` and `MAILER_DSN` ([PR #69](https://github.com/pieceofcake2/cakephp/pull/69)) {#dsn-configuration}
+
+- A datasource in `DATABASE_CONFIG` and a profile in `EmailConfig` can set the
+  whole connection with a DSN in a new `'dsn'` key, read from the environment
+  variables Symfony uses:
+
+  ```php
+  // config/database.php
+  public $default = [
+      'datasource' => 'Database/Mysql',
+      'encoding' => 'utf8mb4',
+  ];
+
+  public function __construct()
+  {
+      $this->default['dsn'] = env('DATABASE_URL');
+  }
+  ```
+
+  ```php
+  // config/email.php
+  public $default = [
+      'from' => 'app@example.com',
+  ];
+
+  public function __construct()
+  {
+      $this->default['dsn'] = env('MAILER_DSN');
+  }
+  ```
+
+  `DATABASE_URL` is a DSN such as `mysql://user:secret@localhost:3306/app`, and
+  `MAILER_DSN` uses the Symfony Mailer format, such as
+  `smtp://user:secret@smtp.example.com:587` or `null://null`.
+- The keys parsed from the DSN replace the same keys of the array, and the
+  other keys stay. An empty `'dsn'` is ignored, so configurations without it
+  work exactly as before.
+- Plugins can add DSN schemes, or replace built-in ones, with
+  `ConnectionManager::setDsnClassMap()` and `CakeEmail::setDsnClassMap()`.
+  pieceofcake2/aws and pieceofcake2/async-aws register the Amazon SES schemes
+  (`ses+api://`, `ses+smtp://`, ...).
+- The application skeleton (pieceofcake2/app) reads `DATABASE_URL` and
+  `MAILER_DSN`, and loads `config/.env.test` in the tests.
+
+See [Database DSNs](/development/configuration#database-url),
+[Mailer DSN](/core-utility-libraries/email#mailer-dsn) and
+[Registering DSN Schemes](/plugins/how-to-create-plugins#registering-dsn-schemes).
+
 ## v2.12.6
 
 Changes in v2.12.6 that may affect applications already running on the fork.

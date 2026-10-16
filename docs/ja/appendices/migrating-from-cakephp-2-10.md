@@ -24,6 +24,54 @@
 4. **PHP をアップグレードする**: PHP 8.0 以降に更新します
 5. **十分にテストする**: アプリケーションのテストスイートを実行し、互換性を確認します
 
+## v2.12.7
+
+v2.12.7 の変更のうち、すでにフォークで動いているアプリケーションに影響する可能性があるものです。
+
+### DSN による設定: `DATABASE_URL` と `MAILER_DSN` ([PR #69](https://github.com/pieceofcake2/cakephp/pull/69)) {#dsn-configuration}
+
+- `DATABASE_CONFIG` のデータソースと `EmailConfig` のプロファイルは、新しい `'dsn'` キーに DSN を書いて
+  接続全体を設定できます。値は Symfony と同じ環境変数から読み込みます。
+
+  ```php
+  // config/database.php
+  public $default = [
+      'datasource' => 'Database/Mysql',
+      'encoding' => 'utf8mb4',
+  ];
+
+  public function __construct()
+  {
+      $this->default['dsn'] = env('DATABASE_URL');
+  }
+  ```
+
+  ```php
+  // config/email.php
+  public $default = [
+      'from' => 'app@example.com',
+  ];
+
+  public function __construct()
+  {
+      $this->default['dsn'] = env('MAILER_DSN');
+  }
+  ```
+
+  `DATABASE_URL` は `mysql://user:secret@localhost:3306/app` のような DSN で、`MAILER_DSN` は
+  `smtp://user:secret@smtp.example.com:587` や `null://null` のような Symfony Mailer の形式です。
+- DSN から読み取ったキーは配列の同じキーを置き換え、ほかのキーはそのまま残ります。`'dsn'` が空なら
+  無視されるので、このキーを使わない設定はこれまでどおりに動きます。
+- プラグインは `ConnectionManager::setDsnClassMap()` と `CakeEmail::setDsnClassMap()` で DSN のスキームを
+  追加したり、組み込みのスキームを置き換えたりできます。pieceofcake2/aws と pieceofcake2/async-aws は
+  Amazon SES のスキーム (`ses+api://`、`ses+smtp://` など) を登録します。
+- アプリケーションスケルトン (pieceofcake2/app) は `DATABASE_URL` と `MAILER_DSN` を読み込み、テストでは
+  `config/.env.test` を読み込みます。
+
+[データベースの DSN](/ja/development/configuration#database-url)、
+[メーラー DSN](/ja/core-utility-libraries/email#mailer-dsn)、
+[DSN スキームの登録](/ja/plugins/how-to-create-plugins#registering-dsn-schemes) をご覧ください。
+
 ## v2.12.6
 
 v2.12.6 の変更のうち、すでにフォークで動いているアプリケーションに影響する可能性があるものです。
