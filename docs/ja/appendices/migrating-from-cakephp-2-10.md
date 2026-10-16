@@ -66,7 +66,8 @@ v2.12.7 の変更のうち、すでにフォークで動いているアプリケ
   追加したり、組み込みのスキームを置き換えたりできます。pieceofcake2/aws と pieceofcake2/async-aws は
   Amazon SES のスキーム (`ses+api://`、`ses+smtp://` など) を登録します。
 - アプリケーションスケルトン (pieceofcake2/app) は `DATABASE_URL` と `MAILER_DSN` を読み込み、テストでは
-  `config/.env.test` を読み込みます。
+  `config/.env.test` を読み込みます。app v2.4.3 からは、Symfony と同じように symfony/dotenv で `.env` ファイルを
+  読み込みます ([.env ファイルの読み込み](/ja/development/configuration#loading-env-files) を参照)。
 
 [データベースの DSN](/ja/development/configuration#database-url)、
 [メーラー DSN](/ja/core-utility-libraries/email#mailer-dsn)、

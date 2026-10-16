@@ -229,8 +229,9 @@ written to CloudWatch. To report errors to Sentry as well, see the
 Everyone who can read the log group can read the logs, so do not log secrets:
 do not dump `$_SERVER`, `getenv()` or the configuration, which contain the
 values resolved from `bref-ssm:`, and do not log request data that contains
-passwords, tokens or the `Authorization` header. Keep `DEBUG` at `0`, so that
-error messages do not include the configuration or SQL queries.
+passwords, tokens or the `Authorization` header. Keep the debug level at `0`
+(`APP_ENV=prod`), so that error messages do not include the configuration or
+SQL queries.
 
 ### Configuration Files
 
@@ -246,8 +247,9 @@ repository, so:
 - Commit `composer.lock`, so that the deployed dependencies are the ones you
   tested.
 
-Do not commit or copy `.env` files into the image. On Lambda, settings come
-from environment variables; see
+Do not commit or copy the `.local` `.env` files into the image. The committed
+`config/.env`, with the defaults, is required and goes into the image. On
+Lambda, settings come from environment variables; see
 [Configuration and Secrets](#configuration-and-secrets).
 
 ## Building the Image
@@ -276,8 +278,8 @@ Keep development files, local settings and logs out of the image with a
 .git
 .github
 .serverless
-.env
-config/.env
+config/.env.local
+config/.env.*.local
 logs
 node_modules
 tests
@@ -330,7 +332,7 @@ provider:
                 platform: linux/amd64
                 provenance: false
     environment:
-        DEBUG: '0'
+        APP_ENV: prod
         APP_FULL_BASE_URL: https://www.example.com
         SECURITY_SALT: bref-ssm:/my-cake-app/${sls:stage}/security-salt
         SECURITY_CIPHER_SEED: bref-ssm:/my-cake-app/${sls:stage}/security-cipher-seed
@@ -445,13 +447,14 @@ Notes:
 
 ## Configuration and Secrets
 
-The skeleton reads its settings from environment variables: `DEBUG`,
-`SECURITY_SALT`, `SECURITY_CIPHER_SEED`, `DATABASE_URL` and `MAILER_DSN` (see
+The skeleton reads its settings from environment variables: `APP_ENV`,
+`DEBUG`, `SECURITY_SALT`, `SECURITY_CIPHER_SEED`, `DATABASE_URL` and
+`MAILER_DSN` (see
 [Environment Variables](/development/configuration#environment-variables)). On
 Lambda, define them in the `environment` sections of `serverless.yml`, for all
-functions (`provider.environment`) or for one function. The skeleton loads
-`.env` files only for variables that are not set, and real environment
-variables always take precedence; do not deploy `.env` files.
+functions (`provider.environment`) or for one function. `APP_ENV: prod` gives
+debug level 0. Real environment variables always take precedence over the
+committed `config/.env`; do not deploy `.local` `.env` files.
 
 Store secrets, such as the salts and the database URL, which contains the
 password, in
@@ -876,7 +879,7 @@ image as Lambda would, with a read-only filesystem:
 ```bash
 docker build --platform linux/amd64 -t my-cake-app .
 docker run --rm --platform linux/amd64 --read-only --tmpfs /tmp:exec,mode=1777 \
-    -p 9000:8080 -e BREF_RUNTIME=fpm -e DEBUG=0 my-cake-app webroot/index.php
+    -p 9000:8080 -e BREF_RUNTIME=fpm -e APP_ENV=prod my-cake-app webroot/index.php
 ```
 
 In another terminal, send an API Gateway event to the emulator:

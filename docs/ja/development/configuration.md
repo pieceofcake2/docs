@@ -216,7 +216,7 @@ class DATABASE_CONFIG
 ```
 
 ```dotenv
-# config/.env
+# config/.env.local
 DATABASE_URL="mysql://my_app:secret@127.0.0.1:3306/my_app?encoding=utf8mb4"
 ```
 
@@ -299,158 +299,155 @@ ConnectionManager::parseDsn('postgres://user:secret@db:5432/app');
 ### .env ファイルの読み込み
 
 [pieceofcake2/app](https://pieceofcake2.github.io/app/ja/) スケルトンから作成したアプリケーションは、
-`config/core.php` の先頭で [josegonzalez/dotenv](https://github.com/josegonzalez/php-dotenv)
-を使って `.env` ファイルから環境変数を読み込みます。`config/core.php` は最初に読み込まれるので、
+Symfony のアプリケーションと同じように、`config/core.php` の先頭で
+[symfony/dotenv](https://symfony.com/doc/current/configuration.html#configuring-environment-variables-in-env-files)
+を使って `config/` の `.env` ファイルから環境変数を読み込みます。`config/core.php` は最初に読み込まれるので、
 残りの設定、コンソール、テストで環境変数を使えます。
 
-これは CakePHP 3〜5 のアプリケーションスケルトンにある `.env` サポートを CakePHP 2 に
-バックポートしたものです。[cakephp/app](https://github.com/cakephp/app) は、同じライブラリを使って
-`config/bootstrap.php` で `config/.env` を読み込みます。CakePHP 5 と同じく、フレームワーク自体は
-`.env` ファイルを読み込まず、アプリケーションが読み込みます。
+```php
+// config/core.php
+
+use Symfony\Component\Dotenv\Dotenv;
+
+(new Dotenv())->usePutenv()->bootEnv(CONFIG . '.env');
+```
+
+CakePHP 3〜5 のアプリケーションスケルトン ([cakephp/app](https://github.com/cakephp/app)) も、
+フレームワークではなくアプリケーションで `config/.env` を読み込みます。CakePHP 5 と同じく、フレームワーク
+自体は `.env` ファイルを読み込みません。
 
 ::: pieceofcake2
-`.env` の読み込みは v2.4.0 から `pieceofcake2/app` スケルトンに含まれています。ほかの
-アプリケーションについては、[既存のアプリケーションに .env サポートを追加する](#adding-env-support-to-an-existing-application)
+`.env` の読み込みは v2.4.0 から `pieceofcake2/app` スケルトンに含まれています。v2.4.3 からは
+symfony/dotenv を使い、ここで説明するファイルを読み込みます。それより前のバージョンは josegonzalez/dotenv を使い、
+プロジェクトルートの `.env` ファイルも読み込みます。v2.4.2 は最初に見つかったファイルだけを読み込み、v2.4.1 は
+先のファイルを優先してファイルをマージし、v2.4.0 は `config/.env` とルートの `.env` を読み込みます。切り替える
+方法は [以前のスケルトンからの移行](https://pieceofcake2.github.io/app/ja/#migrating-from-an-earlier-skeleton)
+を参照してください。ほかのアプリケーションについては、
+[既存のアプリケーションに .env サポートを追加する](#adding-env-support-to-an-existing-application)
 を参照してください。
 :::
 
-スケルトンは、以下のファイルが存在すれば、Symfony の `.env` ファイルと同じ順に読み込みます。
+`bootEnv()` は以下のファイルをこの順に読み込んでマージするので、後のファイルが前のファイルより優先されます。
 
 | ファイル | 読み込まれるとき | Git |
 |----------|------------------|-----|
-| `config/.env.{APP_ENV}.local` | `APP_ENV` がセットされているとき | 無視 |
-| `config/.env.{APP_ENV}` (例: `config/.env.test`) | `APP_ENV` がセットされているとき | コミット |
-| `config/.env.local` | 常に | 無視 |
-| `config/.env`。CakePHP 3〜5 のアプリケーションスケルトンが使う場所です | 常に | 無視 |
-| プロジェクトルートの `.env` | 常に | 無視 |
+| `config/.env` | 常に (必須) | コミット: アプリケーションのデフォルト |
+| `config/.env.local` | `APP_ENV` が `test` のとき以外 | 無視: 自分のマシンの値 |
+| `config/.env.{APP_ENV}` (例: `config/.env.test`) | 常に | コミット: 環境ごとのデフォルト |
+| `config/.env.{APP_ENV}.local` | 常に | 無視: その環境での自分のマシンの値 |
 
-すでにセットされている環境変数は上書きされないので、先に読み込むファイルが後のファイルより
-優先され、実際の環境変数 (Web サーバー、シェル、コンテナ、CI) はすべてのファイルより優先されます。
-`APP_ENV` は実際の環境変数から読み込まれます。`vendor/bin/phpunit` と `bin/cake test` はデフォルトで `APP_ENV=test` で動くので、
-コミットされている `config/.env.test` が読み込まれます。このファイルは `DATABASE_URL` を
-テスト用データベースに設定します
-([スケルトンのテスト用データベース](/ja/development/testing#the-test-database-of-the-skeleton) を参照)。
-自分のマシンだけで使う値は `config/.env.local` や `config/.env.test.local` に書いてください。
+- 実際の環境変数 (Web サーバー、シェル、コンテナ、CI) にセットされている変数は上書きされないので、
+  実際の環境変数はすべてのファイルより優先されます。
+- `APP_ENV` は実際の環境変数から、無ければファイルから読み込まれます。スケルトンの `config/.env` は
+  `APP_ENV=dev` を設定します。`vendor/bin/phpunit`、`bin/cake test`、`webroot/test.php` は、`APP_ENV` が
+  セットされていなければ `APP_ENV=test` をセットするので、テストでは `config/.env.test` が読み込まれます。
+  このファイルは `DATABASE_URL` をテスト用データベースに設定します
+  ([スケルトンのテスト用データベース](/ja/development/testing#the-test-database-of-the-skeleton) を参照)。
+  本番環境では、`APP_ENV=prod` を実際の環境変数としてセットしてください。
+- `bootEnv()` は `APP_DEBUG` もセットします。`APP_ENV` が `prod` なら `0`、それ以外は `1` です。
+  スケルトンはこれをデバッグレベルのデフォルトに使います。
+- `config/.env` は必須です。スケルトンには開発用のデフォルトを書いたこのファイルが含まれているので、
+  コミットしてください。`.local` ファイルには、データベースやソルトなど、自分のマシンで異なる値だけを書きます。
+- `config/.env.local.php` (Symfony の `composer dump-env prod` が書き出す、変数の配列を返す PHP ファイル) が
+  あれば、`.env` ファイルの代わりにそれが読み込まれます。スケルトンにはこのコマンド (symfony/flex) は
+  入っていませんが、デプロイの中でファイルを書き出せます。
 
-::: pieceofcake2
-以前のスケルトンは `config/.env` とルートの `.env` だけを読み込みます。
-:::
-
-読み込んだ値は文字列として `putenv()`、`$_ENV`、`$_SERVER` に書き込まれるので、`env()`、
-`getenv()`、`$_ENV`、`$_SERVER` のどれでも読み出せます。
+読み込んだ値は文字列として `$_SERVER`、`$_ENV`、`putenv()` に書き込まれるので、`env()`、
+`getenv()`、`$_SERVER`、`$_ENV` のどれでも読み出せます。
 
 ```php
 // config/core.php
 Configure::write('Security.salt', env('SECURITY_SALT') ?: 'a-default-salt');
 ```
 
-まず、スケルトンに含まれるサンプルファイルをコピーして編集します。
+Symfony と同じように、スケルトンの `.gitignore` に記載されているのは `.local` ファイル
+(`config/.env.local`、`config/.env.*.local`、`config/.env.local.php`) だけです。`config/.env` と
+`config/.env.test` はコミットします。本当の秘密の情報はコミットするファイルに書かず、`.local` ファイルか
+実際の環境変数に置いてください。
 
-```bash
-cp config/.env.example config/.env
-```
-
-`config/.env`、`config/.env.local`、`config/.env.*.local`、`/.env` は、スケルトンの `.gitignore`
-に記載されています。認証情報を含む `.env` ファイルはバージョン管理に含めず、代わりに
-`config/.env.example` のようなサンプルファイルをコミットしてください。`config/.env.test` は
-テストの設定だけを含むので、Symfony と同じようにコミットします。
-
-`.env` ファイルは開発用です。本番環境では、Web サーバー、コンテナ、プロセスマネージャーなどの
-設定で実際の環境変数をセットしてください。実際の環境変数は常にファイルより優先されます。
+`.env` ファイルは開発とテスト用です。本番環境では、Web サーバー、コンテナ、プロセスマネージャーなどの
+設定で `APP_ENV=prod` とほかの設定を実際の環境変数としてセットしてください。実際の環境変数は常にファイル
+より優先されます。
 
 <a id="env-file-syntax"></a>
 
 ### .env ファイルの書式
 
-`.env` ファイルには、1 行に 1 つずつ `NAME="value"` の形式で値を書きます。Symfony や Laravel
-でも使われている一般的な dotenv の書式です。`#` で始まる行はコメントです。パーサーは前に付けた
-`export ` も受け付けますが、付ける必要はありません。
+`.env` ファイルには、1 行に 1 つずつ `NAME=value` の形式で値を書きます。Symfony や Laravel
+でも使われている一般的な dotenv の書式です。`#` で始まる行はコメントで、前に付けた `export ` も
+受け付けます。
 
 ```dotenv
-# config/.env
-DEBUG="2"
-SECURITY_SALT="a-long-random-string"
+# config/.env.local
+DEBUG=2
+SECURITY_SALT=a-long-random-string
 DATABASE_URL="mysql://my_app:secret@127.0.0.1:3306/my_app"
 ```
 
-値は必ずクォートしてください。josegonzalez/dotenv は、クォートしない値を真偽値、数値、`null`
-に変換します。`007` は `7` になり、暗号化シードのような長い数字の列はオーバーフローして別の数値に
-なります。クォートしない値では、空白の後の `#` 以降がコメントになります。クォートした値はそのまま
-使われます。ダブルクォートの中の `${NAME}` は、ファイル内でそれより前に定義された変数の値に置き換え
-られます。
+symfony/dotenv は値をすべて文字列のまま扱います。空白を含む値はクォートしてください。クォートしない値と
+ダブルクォートの中では、`$NAME` と `${NAME}` が変数の値に置き換えられます (`${NAME:-default}` でデフォルトを
+指定できます)。シングルクォートの値はそのまま使われるので、`$` を含むパスワードはシングルクォートで囲んで
+ください。
 
 <a id="adding-env-support-to-an-existing-application"></a>
 
 ### 既存のアプリケーションに .env サポートを追加する
 
 レガシーの `app/` 構成のアプリケーションや、以前のバージョンのスケルトンから作成した
-アプリケーションにも、同じ読み込み処理を追加できます。まずライブラリをインストールします。
+アプリケーションも、同じ方法で `.env` ファイルを読み込めます。まずライブラリをインストールします。
 
 ```bash
-composer require josegonzalez/dotenv
+composer require symfony/dotenv
 ```
 
 次に、`app/Config/core.php` (モダン構成では `config/core.php`) の先頭に以下のコードを
-追加します。`use` 文はファイル冒頭のコメントの後に、ループは最初の `Configure::write()`
-の前に置きます。レガシー構成では `CONFIG` は `app/Config/`、`ROOT` は `app/` を含む
-ディレクトリなので、読み込むファイルは `app/Config/.env` とプロジェクトルートの `.env` です。
+追加します。`use` 文はファイル冒頭のコメントの後に、`bootEnv()` の呼び出しは最初の `Configure::write()`
+の前に置きます。レガシー構成では `CONFIG` は `app/Config/` なので、読み込むファイルは `app/Config/.env`、
+`app/Config/.env.local` などです。
 
 ```php
 // app/Config/core.php
 
-use josegonzalez\Dotenv\Loader;
+use Symfony\Component\Dotenv\Dotenv;
 
-$appEnv = (string)env('APP_ENV');
-$dotenvFiles = [CONFIG . '.env.local', CONFIG . '.env', ROOT . DS . '.env'];
-if ($appEnv !== '') {
-    array_unshift($dotenvFiles, CONFIG . ".env.{$appEnv}.local", CONFIG . ".env.{$appEnv}");
-}
-foreach ($dotenvFiles as $dotenvFile) {
-    if (!is_file($dotenvFile)) {
-        continue;
-    }
-    $dotenv = new Loader([$dotenvFile]);
-    foreach ($dotenv->parse()->toArray() as $key => $value) {
-        if (getenv($key) !== false || isset($_ENV[$key]) || isset($_SERVER[$key])) {
-            continue;
-        }
-        // The parser converts some values to booleans, numbers or null; keep them as strings.
-        if (is_bool($value)) {
-            $value = $value ? 'true' : 'false';
-        }
-        $value = (string)$value;
-        putenv($key . '=' . $value);
-        $_ENV[$key] = $value;
-        $_SERVER[$key] = $value;
-    }
-    unset($dotenv, $key, $value);
-}
-unset($appEnv, $dotenvFiles, $dotenvFile);
+(new Dotenv())->usePutenv()->bootEnv(CONFIG . '.env');
 ```
 
-`.env` ファイルを `.gitignore` に追加し、次の節のように設定の中で `env()` を使って
-環境変数を読み込んでください。
+デフォルトを書いた `app/Config/.env` を作成して (必須です。空でもかまいません) コミットし、`.local`
+ファイルを `.gitignore` に追加して、次の節のように設定の中で `env()` を使って環境変数を読み込んでください。
+`usePutenv()` は値を `putenv()` にも書き込むので、`getenv()` でも値を読み出せます。
 
 <a id="environment-variables-of-the-application-skeleton"></a>
 
 ### アプリケーションスケルトンの環境変数
 
 `pieceofcake2/app` スケルトンの `config/core.php`、`config/bootstrap.php`、
-`config/database.php.default`、`config/email.php.default` は、以下の環境変数を読み込みます。これらは `config/.env.example` に記載されています。
+`config/database.php.default`、`config/email.php.default` は、以下の環境変数を読み込みます。これらは `config/.env` に記載されています。
 
 | 環境変数 | 設定 | セットされていない場合 |
 |----------|------|------------------------|
-| `DEBUG` | `debug`: `0`、`1`、`2` (`true` は 2、`false` は 0) | `2` |
+| `APP_ENV` | 環境 (`dev`、`test`、`prod`)。`config/.env.{APP_ENV}` を選びます。`vendor/bin/phpunit`、`bin/cake test`、`webroot/test.php` ではデフォルトで `test` | `config/.env` の `dev` |
+| `DEBUG` | `debug`: `0`、`1`、`2` | `2`。`APP_ENV` が `prod` のときは `0` |
 | `SECURITY_SALT` | `Security.salt` | `config/core.php` の値 |
 | `SECURITY_CIPHER_SEED` | `Security.cipherSeed` (1〜4294967295。[cipherSeed](#cipher-seed) を参照) | `config/core.php` の値 |
 | `COOKIE_KEY` | `Cookie.key`。`'aes'` タイプの `CookieComponent` のキー ([`'aes'` への移行](#migrating-to-aes) を参照) | `null`。`CookieComponent` は `Security.salt` を使います |
 | `DATABASE_URL` | `default` 接続と `test` 接続の `'dsn'` ([データベースの DSN](#database-url) を参照) | `config/database.php` の値 |
 | `MAILER_DSN` | `default` メールプロファイルの `'dsn'` ([メーラー DSN](../core-utility-libraries/email#mailer-dsn) を参照) | `config/email.php` の値 |
-| `APP_ENV` | `config/.env.{APP_ENV}` と `config/.env.{APP_ENV}.local` を読み込みます。`vendor/bin/phpunit` と `bin/cake test` ではデフォルトで `test` | ほかの `.env` ファイルだけが読み込まれます |
 
-空の環境変数はセットされていないものとして扱われます。`.env` ファイルも環境変数も無い場合、
-アプリケーションは設定ファイルの値を使います。DSN のキーは設定の同じキーを置き換え、それ以外の
+空の環境変数はセットされていないものとして扱われます。DSN のキーは設定の同じキーを置き換え、それ以外の
 キーはデフォルトとして残ります。`'dsn'` キーには、`pieceofcake2/cakephp` 2.12.7 以降が必要です。
+
+スケルトンは、`bootEnv()` の `APP_DEBUG` をデフォルトにして、デバッグレベルを 1 行で読み込みます。
+
+```php
+// config/core.php
+Configure::write('debug', env('DEBUG') ?? (env('APP_DEBUG') ? 2 : 0));
+```
+
+::: pieceofcake2
+スケルトンの v2.4.2 は、`DEBUG` がセットされていないとデバッグレベル 0 を使い、それより前のバージョンは
+デバッグレベル 2 を使います。
+:::
 
 以前のスケルトンから `config/database.php` や `config/email.php` を作成した場合は、
 `config/database.php.default` や `config/email.php.default` の `__construct()` メソッドを
@@ -470,17 +467,16 @@ DB_DATABASE="my_app"
 DATABASE_URL="mysql://my_app:secret@127.0.0.1/my_app"
 ```
 
-たとえば、開発用の `config/.env` は次のようになります。
+たとえば、自分のマシンの設定を書く `config/.env.local` は次のようになります。
 
 ```dotenv
-# config/.env
-DEBUG="2"
+# config/.env.local
 DATABASE_URL="mysql://my_app:secret@127.0.0.1:3306/my_app?encoding=utf8mb4"
 MAILER_DSN="smtp://127.0.0.1:1025"
 ```
 
 自分のマシンのテスト用データベースは `config/.env.test.local` に書きます。テストでは
-`config/.env.test` と `config/.env` より優先されます。
+`config/.env.test` の後に読み込まれます。
 
 ```dotenv
 # config/.env.test.local
@@ -875,17 +871,17 @@ Windows では、コマンドプロンプトや PowerShell で PHP のコマン�
 
 `pieceofcake2/app` のスケルトンから作成したアプリケーションでは、これらの値を
 [環境変数](#environment-variables) `SECURITY_SALT` と `SECURITY_CIPHER_SEED` で設定します。
-開発環境では、次のコマンドでソルトと範囲内のシードを `config/.env` に追記できます (先に `config/.env.example` を
-コピーしておいてください。同じ変数が 2 回設定されている場合は、後の行が有効になります)。
+開発環境では、次のコマンドでソルトと範囲内のシードを Git で無視される `config/.env.local` に追記できます
+(同じ変数が 2 回設定されている場合は、後の行が有効になります)。
 
 ::: code-group
 
 ```bash [PHP]
-php -r 'printf("SECURITY_SALT=\"%s\"\nSECURITY_CIPHER_SEED=\"%d\"\n", bin2hex(random_bytes(32)), random_int(1, 4294967295));' >> config/.env
+php -r 'printf("SECURITY_SALT=\"%s\"\nSECURITY_CIPHER_SEED=\"%d\"\n", bin2hex(random_bytes(32)), random_int(1, 4294967295));' >> config/.env.local
 ```
 
 ```bash [Shell]
-printf 'SECURITY_SALT="%s"\nSECURITY_CIPHER_SEED="%s"\n' "$(openssl rand -hex 32)" "$(od -An -N4 -tu4 /dev/urandom | tr -dc 0-9)" >> config/.env
+printf 'SECURITY_SALT="%s"\nSECURITY_CIPHER_SEED="%s"\n' "$(openssl rand -hex 32)" "$(od -An -N4 -tu4 /dev/urandom | tr -dc 0-9)" >> config/.env.local
 ```
 
 :::
@@ -893,7 +889,7 @@ printf 'SECURITY_SALT="%s"\nSECURITY_CIPHER_SEED="%s"\n' "$(openssl rand -hex 32
 値は秘密にし、環境ごとに分けてください。
 
 - 環境 (開発、ステージング、本番) ごと、アプリケーションごとに異なる値を使います。
-- 値をコミットしないでください。スケルトンでは `config/.env` と `.env` は Git で無視されます。
+- 値をコミットしないでください。スケルトンでは `config/.env.local` は Git で無視されますが、`config/.env` はコミットされます。
   本番環境では `.env` ファイルではなく、実際の環境変数を設定してください。値を `config/core.php`
   に書く場合は、そのファイルを公開リポジトリに置かないでください。
 - ソルトが漏れた場合 (コミットした、共有した、サンプル値のままだった場合など) は、値を変更してください。
@@ -1040,7 +1036,7 @@ printf 'SECURITY_SALT="%s"\nSECURITY_CIPHER_SEED="%s"\n' "$(openssl rand -hex 32
 
    :::
 
-   生成した値を環境変数 `COOKIE_KEY` に設定します。開発環境では `config/.env` に書き、
+   生成した値を環境変数 `COOKIE_KEY` に設定します。開発環境では `config/.env.local` に書き、
    本番環境では実際の環境変数として設定してください。
 
 2. `Security.useOpenSsl` が `true` になっていることを確認します (app スケルトンでは設定済みです)。
