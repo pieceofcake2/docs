@@ -11,7 +11,7 @@ Chrome を操作し、テストケースは `CakeTestCase` なので、`$fixture
 
 このページはセットアップの簡単なガイドです。設定、クライアント、アサーションの詳細は
 パッケージのドキュメント ([Web サイト](https://pieceofcake2.github.io/panther/ja/)、
-[Markdown](https://github.com/pieceofcake2/panther/blob/1.x/docs/ja/README.md)、英語) を
+[Markdown](https://github.com/pieceofcake2/panther/blob/1.x/docs/ja/README.md)) を
 参照してください。[Symfony のドキュメント](https://symfony.com/doc/current/testing/end_to_end.html)
 もそのまま当てはまります。
 
