@@ -8,8 +8,8 @@ item links to the page of this book that describes the setting.
 Set `debug` to `0` in production. With a higher debug level, error messages,
 stack traces and SQL queries are shown to visitors. Applications created from
 the `pieceofcake2/app` skeleton read the level from the `DEBUG` environment
-variable and use level 2 when it is not set, so set `DEBUG=0` on the
-production server. See [Update core.php](/deployment#update-core-php).
+variable and use level 2 when it is not set, unless `APP_ENV` is `prod`, so set
+`APP_ENV=prod` (or `DEBUG=0`) on the production server. See [Update core.php](/deployment#update-core-php).
 
 ## Use Your Own Salt and Cipher Seed {#salt}
 

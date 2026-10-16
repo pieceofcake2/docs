@@ -232,7 +232,7 @@ PHP 自身が報告するエラーも CloudWatch に書き込まれます。エ�
 ロググループを読める人は誰でもログを読めるので、秘密の情報をログに出力しないでください。
 `bref-ssm:` から解決された値を含む `$_SERVER`、`getenv()` や設定をダンプしたり、パスワード、トークン、
 `Authorization` ヘッダーを含むリクエストのデータをログに書いたりしないでください。エラーメッセージに
-設定や SQL クエリが含まれないように、`DEBUG` は `0` のままにします。
+設定や SQL クエリが含まれないように、デバッグレベルは `0` (`APP_ENV=prod`) のままにします。
 
 <a id="configuration-files"></a>
 
@@ -248,7 +248,8 @@ PHP 自身が報告するエラーも CloudWatch に書き込まれます。エ�
   IAM ロールを使うので、こちらにも認証情報は含まれません。
 - テストした依存パッケージがそのままデプロイされるように、`composer.lock` をコミットします。
 
-`.env` ファイルはコミットせず、イメージにもコピーしないでください。Lambda では設定を環境変数から
+`.local` の `.env` ファイルはコミットせず、イメージにもコピーしないでください。デフォルトを書いた
+コミット済みの `config/.env` は必須なので、イメージに含めます。Lambda では設定を環境変数から
 読み込みます。[設定と秘密の情報](#configuration-and-secrets) を参照してください。
 
 <a id="building-the-image"></a>
@@ -278,8 +279,8 @@ COPY . /var/task
 .git
 .github
 .serverless
-.env
-config/.env
+config/.env.local
+config/.env.*.local
 logs
 node_modules
 tests
@@ -330,7 +331,7 @@ provider:
                 platform: linux/amd64
                 provenance: false
     environment:
-        DEBUG: '0'
+        APP_ENV: prod
         APP_FULL_BASE_URL: https://www.example.com
         SECURITY_SALT: bref-ssm:/my-cake-app/${sls:stage}/security-salt
         SECURITY_CIPHER_SEED: bref-ssm:/my-cake-app/${sls:stage}/security-cipher-seed
@@ -445,12 +446,12 @@ resources:
 
 ## 設定と秘密の情報
 
-スケルトンは設定を環境変数 `DEBUG`、`SECURITY_SALT`、`SECURITY_CIPHER_SEED`、`DATABASE_URL`、`MAILER_DSN` から
+スケルトンは設定を環境変数 `APP_ENV`、`DEBUG`、`SECURITY_SALT`、`SECURITY_CIPHER_SEED`、`DATABASE_URL`、`MAILER_DSN` から
 読み込みます ([環境変数](/ja/development/configuration#environment-variables) を参照してください)。
 Lambda では、これらを `serverless.yml` の `environment` で、すべての関数
-(`provider.environment`) または関数ごとに定義します。スケルトンは、セットされていない変数だけを
-`.env` ファイルから読み込み、実際の環境変数が常に優先されます。`.env` ファイルはデプロイしないで
-ください。
+(`provider.environment`) または関数ごとに定義します。`APP_ENV: prod` でデバッグレベルは 0 になります。
+実際の環境変数は、コミットされている `config/.env` より常に優先されます。`.local` の `.env` ファイルは
+デプロイしないでください。
 
 ソルトや、パスワードを含むデータベースの URL などの秘密の情報は、
 [AWS Systems Manager パラメータストア](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html)
@@ -869,7 +870,7 @@ Bref のイメージには Lambda Runtime Interface Emulator が含まれてい�
 ```bash
 docker build --platform linux/amd64 -t my-cake-app .
 docker run --rm --platform linux/amd64 --read-only --tmpfs /tmp:exec,mode=1777 \
-    -p 9000:8080 -e BREF_RUNTIME=fpm -e DEBUG=0 my-cake-app webroot/index.php
+    -p 9000:8080 -e BREF_RUNTIME=fpm -e APP_ENV=prod my-cake-app webroot/index.php
 ```
 
 別の端末から、エミュレーターに API Gateway のイベントを送ります。

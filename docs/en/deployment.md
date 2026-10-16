@@ -101,11 +101,13 @@ time before deploying to a production environment.
 
 Applications created from the `pieceofcake2/app` skeleton read the debug level
 from the `DEBUG` environment variable, and use debug level 2 when it is not
-set. Set it to `0` on the production server, for example in your Apache
+set, unless the `APP_ENV` environment variable is `prod` (see
+[Loading .env Files](development/configuration#loading-env-files)). Set
+`APP_ENV` to `prod` on the production server, for example in your Apache
 configuration:
 
 ```apache
-SetEnv DEBUG 0
+SetEnv APP_ENV prod
 ```
 
 With nginx and PHP-FPM, set it in the `location` block that passes
@@ -113,19 +115,19 @@ With nginx and PHP-FPM, set it in the `location` block that passes
 not pass the environment of the server to PHP unless `clear_env` is `no`:
 
 ```nginx
-fastcgi_param DEBUG 0;
+fastcgi_param APP_ENV prod;
 ```
 
 ```ini
 ; PHP-FPM pool, for example /etc/php/8.3/fpm/pool.d/www.conf
-env[DEBUG] = 0
+env[APP_ENV] = prod
 ```
 
 > [!WARNING]
-> If `DEBUG` is not set, the skeleton runs with debug level 2, which shows
-> stack traces, SQL queries and configuration details, and enables the web
-> test runner `webroot/test.php`. Check that `DEBUG` is `0` on every
-> production server.
+> If neither `APP_ENV=prod` nor `DEBUG` is set, the skeleton runs with debug
+> level 2, which shows stack traces, SQL queries and configuration details, and
+> enables the web test runner `webroot/test.php`. Check that `APP_ENV` is
+> `prod` (or `DEBUG` is `0`) on every production server.
 
 In other applications, read the variable in `config/core.php`:
 
@@ -144,16 +146,17 @@ Set them as real environment variables in production rather than in a `.env`
 file, or load them from a secret store such as AWS Systems Manager Parameter
 Store (see [Configuration and Secrets](deployment/aws-lambda#configuration-and-secrets)).
 Real environment variables always take precedence over the `.env` files
-that the skeleton loads in development. Do not commit secrets to the
+that the skeleton loads. Do not commit secrets to the
 repository, and do not write them to logs.
 
 ## Deploy only what you need
 
-Deploy the application without the `.git/` directory, `.env` files, `tests/`
-and other development files, and delete `webroot/test.php`, which is only
-needed to run tests in the browser. Even outside the document root, these
-files are not needed on the server, and `.git/` and `.env` can contain
-secrets.
+Deploy the application without the `.git/` directory, the `.local` `.env`
+files of your machine, `tests/` and other development files, and delete
+`webroot/test.php`, which is only needed to run tests in the browser. Even
+outside the document root, these files are not needed on the server, and
+`.git/` and the `.local` files can contain secrets. Keep the committed
+`config/.env`, which the skeleton requires.
 
 ## Set file permissions
 

@@ -52,7 +52,7 @@ permissions:
   contents: read
 
 env:
-  # Test values. The real salts are not in the repository (config/.env is ignored by git).
+  # Test values. The real salts are not in the repository (config/.env.local is ignored by git).
   SECURITY_SALT: ci-salt-for-tests-only-0123456789abcdef
   SECURITY_CIPHER_SEED: '1234567890'
 

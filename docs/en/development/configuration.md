@@ -224,7 +224,7 @@ class DATABASE_CONFIG
 ```
 
 ```dotenv
-# config/.env
+# config/.env.local
 DATABASE_URL="mysql://my_app:secret@127.0.0.1:3306/my_app?encoding=utf8mb4"
 ```
 
@@ -312,164 +312,164 @@ skeleton can load them from a `.env` file.
 
 Applications created from the
 [pieceofcake2/app](https://pieceofcake2.github.io/app/) skeleton load
-environment variables from `.env` files at the top of `config/core.php`, using
-[josegonzalez/dotenv](https://github.com/josegonzalez/php-dotenv). Because
-`config/core.php` is read first, the variables are available to the rest of
-the configuration, the console and the tests.
+environment variables from `.env` files in `config/` at the top of
+`config/core.php`, with
+[symfony/dotenv](https://symfony.com/doc/current/configuration.html#configuring-environment-variables-in-env-files),
+as a Symfony application does. Because `config/core.php` is read first, the
+variables are available to the rest of the configuration, the console and the
+tests:
 
-This follows the `.env` support of the CakePHP 3+/5 application skeleton,
-backported for CakePHP 2: [cakephp/app](https://github.com/cakephp/app) loads
-`config/.env` with the same library in `config/bootstrap.php`. As in CakePHP 5,
-the framework itself does not load `.env` files; the application does.
+```php
+// config/core.php
+
+use Symfony\Component\Dotenv\Dotenv;
+
+(new Dotenv())->usePutenv()->bootEnv(CONFIG . '.env');
+```
+
+The CakePHP 3+/5 application skeleton ([cakephp/app](https://github.com/cakephp/app))
+also loads `config/.env` in the application, not in the framework. As in
+CakePHP 5, the framework itself does not load `.env` files.
 
 ::: pieceofcake2
-`.env` loading is part of the `pieceofcake2/app` skeleton since v2.4.0. For
-other applications, see
+`.env` loading is part of the `pieceofcake2/app` skeleton since v2.4.0. Since
+v2.5.0, it uses symfony/dotenv and the files described here. Earlier versions
+use josegonzalez/dotenv and also read `.env` files in the project root: v2.4.2
+loads only the first file that exists, v2.4.1 merges the files with the earlier
+file winning, and v2.4.0 loads `config/.env` and the root `.env`. See
+[Migrating from an Earlier Skeleton](https://pieceofcake2.github.io/app/#migrating-from-an-earlier-skeleton)
+to switch. For other applications, see
 [Adding .env Support to an Existing Application](#adding-env-support-to-an-existing-application).
 :::
 
-The skeleton loads these files if they exist, in the order of Symfony's
-`.env` files:
+`bootEnv()` loads these files in this order and merges them, so a later file
+wins over an earlier one:
 
 | File | Loaded | In Git |
 |------|--------|--------|
-| `config/.env.{APP_ENV}.local` | when `APP_ENV` is set | ignored |
-| `config/.env.{APP_ENV}`, e.g. `config/.env.test` | when `APP_ENV` is set | committed |
-| `config/.env.local` | always | ignored |
-| `config/.env`, the location used by the CakePHP 3+/5 application skeleton | always | ignored |
-| `.env` in the project root | always | ignored |
+| `config/.env` | always (required) | committed: the defaults of the application |
+| `config/.env.local` | except when `APP_ENV` is `test` | ignored: the values of your machine |
+| `config/.env.{APP_ENV}`, e.g. `config/.env.test` | always | committed: the defaults of an environment |
+| `config/.env.{APP_ENV}.local` | always | ignored: the values of your machine for that environment |
 
-A variable that is already set is never overwritten, so an earlier file wins
-over a later one, and real environment variables (web server, shell,
-container, CI) win over all files. `APP_ENV` is read from the real
-environment. `vendor/bin/phpunit` and `bin/cake test` run with `APP_ENV=test`
-by default, so the tests load
-`config/.env.test`, which is committed and points `DATABASE_URL` to the test
-database (see
-[Testing](/development/testing#the-test-database-of-the-skeleton)).
-Put values for your machine only in `config/.env.local` or
-`config/.env.test.local`.
+- A variable that is set in the real environment (web server, shell,
+  container, CI) is never overwritten, so real environment variables win over
+  all files.
+- `APP_ENV` is read from the real environment, otherwise from the files:
+  the skeleton's `config/.env` sets `APP_ENV=dev`. `vendor/bin/phpunit`,
+  `bin/cake test` and `webroot/test.php` set `APP_ENV=test` when it is not
+  set, so the tests load `config/.env.test`, which points `DATABASE_URL` to the
+  test database (see
+  [Testing](/development/testing#the-test-database-of-the-skeleton)). In
+  production, set `APP_ENV=prod` as a real environment variable.
+- `bootEnv()` also sets `APP_DEBUG`: `0` when `APP_ENV` is `prod`, otherwise
+  `1`. The skeleton uses it as the default of the debug level.
+- `config/.env` must exist. The skeleton ships it, with the defaults for
+  development; commit it. The `.local` files hold only what differs on your
+  machine, such as your database and the salts.
+- If `config/.env.local.php` exists (a PHP file that returns an array of the
+  variables, as written by Symfony's `composer dump-env prod`), it is loaded
+  instead of the `.env` files. The skeleton does not install that command
+  (symfony/flex), but a deployment can write the file.
 
-::: pieceofcake2
-Earlier skeletons load only `config/.env` and the root `.env`.
-:::
-
-The loaded values are written to `putenv()`, `$_ENV` and `$_SERVER` as
-strings, so you can read them with `env()`, `getenv()`, `$_ENV` or `$_SERVER`:
+The loaded values are written to `$_SERVER`, `$_ENV` and `putenv()` as
+strings, so you can read them with `env()`, `getenv()`, `$_SERVER` or `$_ENV`:
 
 ```php
 // config/core.php
 Configure::write('Security.salt', env('SECURITY_SALT') ?: 'a-default-salt');
 ```
 
-To start, copy the example file that ships with the skeleton and edit it:
+As in Symfony, only the `.local` files are listed in the skeleton's
+`.gitignore`: `config/.env.local`, `config/.env.*.local` and
+`config/.env.local.php`. `config/.env` and `config/.env.test` are committed.
+Never put real secrets in a committed file: keep them in a `.local` file or
+in real environment variables.
 
-```bash
-cp config/.env.example config/.env
-```
-
-`config/.env`, `config/.env.local`, `config/.env.*.local` and `/.env` are
-listed in the skeleton's `.gitignore`. Keep `.env` files with credentials out
-of version control and commit an example file, such as `config/.env.example`,
-instead. `config/.env.test` holds only the settings of the tests and is
-committed, as in Symfony.
-
-A `.env` file is meant for development. In production, set real environment
-variables in the web server, container or process manager configuration; they
-always take precedence over the files.
+A `.env` file is meant for development and tests. In production, set
+`APP_ENV=prod` and the other settings as real environment variables in the web
+server, container or process manager configuration; they always take
+precedence over the files.
 
 ### .env File Syntax
 
-A `.env` file contains one `NAME="value"` assignment per line, the common
+A `.env` file contains one `NAME=value` assignment per line, the common
 dotenv style also used by Symfony and Laravel. Lines starting with `#` are
-comments. The parser also accepts an `export ` prefix, but it is not needed:
+comments, and an `export ` prefix is accepted:
 
 ```dotenv
-# config/.env
-DEBUG="2"
-SECURITY_SALT="a-long-random-string"
+# config/.env.local
+DEBUG=2
+SECURITY_SALT=a-long-random-string
 DATABASE_URL="mysql://my_app:secret@127.0.0.1:3306/my_app"
 ```
 
-Always quote the values. josegonzalez/dotenv converts unquoted values to
-booleans, numbers or `null`: `007` becomes `7`, and a long digit string such
-as a cipher seed overflows to a different number, and in an unquoted value a
-`#` after a space starts a comment. Quoted values are kept as they are.
-Inside double quotes, `${NAME}` is replaced with the value of a variable
-defined earlier in the file.
+symfony/dotenv keeps all values as strings. Quote a value that contains spaces.
+In unquoted and double-quoted values, `$NAME` and `${NAME}` are replaced with
+the value of a variable (`${NAME:-default}` gives a default); single-quoted
+values are kept as they are, so single-quote a password that contains `$`.
 
 ### Adding .env Support to an Existing Application
 
 Applications that use the legacy `app/` layout, or that were created from an
-earlier version of the skeleton, can add the same loader. Install the library:
+earlier version of the skeleton, can load `.env` files the same way. Install
+the library:
 
 ```bash
-composer require josegonzalez/dotenv
+composer require symfony/dotenv
 ```
 
 Then add the following code at the top of `app/Config/core.php`
 (`config/core.php` in the modern layout): the `use` statement after the
-opening file comment, and the loop before the first `Configure::write()` call.
-In the legacy layout, `CONFIG` is `app/Config/` and `ROOT` is the directory
-that contains `app/`, so the files are `app/Config/.env` and `.env` in the
-project root.
+opening file comment, and the `bootEnv()` call before the first
+`Configure::write()` call. In the legacy layout, `CONFIG` is `app/Config/`, so
+the files are `app/Config/.env`, `app/Config/.env.local` and so on.
 
 ```php
 // app/Config/core.php
 
-use josegonzalez\Dotenv\Loader;
+use Symfony\Component\Dotenv\Dotenv;
 
-$appEnv = (string)env('APP_ENV');
-$dotenvFiles = [CONFIG . '.env.local', CONFIG . '.env', ROOT . DS . '.env'];
-if ($appEnv !== '') {
-    array_unshift($dotenvFiles, CONFIG . ".env.{$appEnv}.local", CONFIG . ".env.{$appEnv}");
-}
-foreach ($dotenvFiles as $dotenvFile) {
-    if (!is_file($dotenvFile)) {
-        continue;
-    }
-    $dotenv = new Loader([$dotenvFile]);
-    foreach ($dotenv->parse()->toArray() as $key => $value) {
-        if (getenv($key) !== false || isset($_ENV[$key]) || isset($_SERVER[$key])) {
-            continue;
-        }
-        // The parser converts some values to booleans, numbers or null; keep them as strings.
-        if (is_bool($value)) {
-            $value = $value ? 'true' : 'false';
-        }
-        $value = (string)$value;
-        putenv($key . '=' . $value);
-        $_ENV[$key] = $value;
-        $_SERVER[$key] = $value;
-    }
-    unset($dotenv, $key, $value);
-}
-unset($appEnv, $dotenvFiles, $dotenvFile);
+(new Dotenv())->usePutenv()->bootEnv(CONFIG . '.env');
 ```
 
-Add the `.env` files to `.gitignore`, and read the variables in your
-configuration with `env()`, as shown in the next section.
+Create `app/Config/.env` with the defaults (it is required, and can be empty)
+and commit it, add the `.local` files to `.gitignore`, and read the variables in
+your configuration with `env()`, as shown in the next section. `usePutenv()`
+also writes the values with `putenv()`, so that `getenv()` returns them.
 
 ### Environment Variables of the Application Skeleton
 
 The `config/core.php`, `config/bootstrap.php`, `config/database.php.default`
 and `config/email.php.default` files of the `pieceofcake2/app` skeleton read
-the following variables. Its `config/.env.example` file lists them.
+the following variables. Its `config/.env` file lists them.
 
 | Variable | Setting | When not set |
 |----------|---------|--------------|
-| `DEBUG` | `debug`: `0`, `1` or `2` (`true` is 2, `false` is 0) | `2` |
+| `APP_ENV` | the environment (`dev`, `test` or `prod`): selects `config/.env.{APP_ENV}`; `test` by default for `vendor/bin/phpunit`, `bin/cake test` and `webroot/test.php` | `dev`, from `config/.env` |
+| `DEBUG` | `debug`: `0`, `1` or `2` | `2`, or `0` when `APP_ENV` is `prod` |
 | `SECURITY_SALT` | `Security.salt` | the value in `config/core.php` |
 | `SECURITY_CIPHER_SEED` | `Security.cipherSeed` (1 to 4294967295; see [cipherSeed](#cipher-seed)) | the value in `config/core.php` |
 | `COOKIE_KEY` | `Cookie.key`, the `CookieComponent` key for the `'aes'` type (see [Migrating to 'aes'](#migrating-to-aes)) | `null`: `CookieComponent` uses `Security.salt` |
 | `DATABASE_URL` | the `'dsn'` of the `default` and `test` connections (see [Database DSNs](#database-url)) | the values in `config/database.php` |
 | `MAILER_DSN` | the `'dsn'` of the `default` email profile (see [Mailer DSN](../core-utility-libraries/email#mailer-dsn)) | the values in `config/email.php` |
-| `APP_ENV` | loads `config/.env.{APP_ENV}` and `config/.env.{APP_ENV}.local`; `test` by default for `vendor/bin/phpunit` and `bin/cake test` | only the other `.env` files are loaded |
 
-Empty variables are treated as not set. Without any `.env` file or environment
-variable, the application uses the values in the configuration files. The keys
-of a DSN replace the same keys of the configuration, and the other keys are
-kept as defaults. The `'dsn'` key needs `pieceofcake2/cakephp` 2.12.7 or later.
+Empty variables are treated as not set. The keys of a DSN replace the same keys
+of the configuration, and the other keys are kept as defaults. The `'dsn'` key
+needs `pieceofcake2/cakephp` 2.12.7 or later.
+
+The skeleton reads the debug level in one line, with `APP_DEBUG` of
+`bootEnv()` as the default:
+
+```php
+// config/core.php
+Configure::write('debug', env('DEBUG') ?? (env('APP_DEBUG') ? 2 : 0));
+```
+
+::: pieceofcake2
+v2.4.2 of the skeleton uses debug level 0 when `DEBUG` is not set, and
+earlier versions use debug level 2.
+:::
 
 If your `config/database.php` or `config/email.php` was created from an
 earlier skeleton, copy the `__construct()` method of
@@ -492,17 +492,16 @@ DB_DATABASE="my_app"
 DATABASE_URL="mysql://my_app:secret@127.0.0.1/my_app"
 ```
 
-For example, a `config/.env` file for development:
+For example, a `config/.env.local` file with the settings of your machine:
 
 ```dotenv
-# config/.env
-DEBUG="2"
+# config/.env.local
 DATABASE_URL="mysql://my_app:secret@127.0.0.1:3306/my_app?encoding=utf8mb4"
 MAILER_DSN="smtp://127.0.0.1:1025"
 ```
 
 and a `config/.env.test.local` file with the test database of your machine,
-which wins over `config/.env.test` and `config/.env` in the tests:
+which is loaded after `config/.env.test` in the tests:
 
 ```dotenv
 # config/.env.test.local
@@ -898,18 +897,17 @@ quotes instead of single quotes, for example
 In an application created from the `pieceofcake2/app` skeleton, set the
 values as the `SECURITY_SALT` and `SECURITY_CIPHER_SEED`
 [environment variables](#environment-variables). For development, this
-appends a salt and an in-range seed to `config/.env` (copy
-`config/.env.example` first; when a variable is set twice, the last line
-wins):
+appends a salt and an in-range seed to `config/.env.local`, which is ignored
+by Git (when a variable is set twice, the last line wins):
 
 ::: code-group
 
 ```bash [PHP]
-php -r 'printf("SECURITY_SALT=\"%s\"\nSECURITY_CIPHER_SEED=\"%d\"\n", bin2hex(random_bytes(32)), random_int(1, 4294967295));' >> config/.env
+php -r 'printf("SECURITY_SALT=\"%s\"\nSECURITY_CIPHER_SEED=\"%d\"\n", bin2hex(random_bytes(32)), random_int(1, 4294967295));' >> config/.env.local
 ```
 
 ```bash [Shell]
-printf 'SECURITY_SALT="%s"\nSECURITY_CIPHER_SEED="%s"\n' "$(openssl rand -hex 32)" "$(od -An -N4 -tu4 /dev/urandom | tr -dc 0-9)" >> config/.env
+printf 'SECURITY_SALT="%s"\nSECURITY_CIPHER_SEED="%s"\n' "$(openssl rand -hex 32)" "$(od -An -N4 -tu4 /dev/urandom | tr -dc 0-9)" >> config/.env.local
 ```
 
 :::
@@ -918,9 +916,9 @@ Keep the values secret and separate:
 
 - Use different values in each environment (development, staging,
   production) and in each application.
-- Do not commit them. `config/.env` and `.env` are ignored by Git in the
-  skeleton; in production, set real environment variables instead of using a
-  `.env` file. If you write the values in `config/core.php`, keep that file out
+- Do not commit them. In the skeleton, `config/.env.local` is ignored by Git,
+  but `config/.env` is committed; in production, set real environment
+  variables instead of using a `.env` file. If you write the values in `config/core.php`, keep that file out
   of public repositories.
 - If a salt has been exposed (committed, shared, or left at the example
   value), replace it.
@@ -1091,7 +1089,7 @@ Do not rely on `'cipher'` to keep a value secret, whatever the seed.
 
    :::
 
-   Set it as the `COOKIE_KEY` environment variable: in `config/.env`
+   Set it as the `COOKIE_KEY` environment variable: in `config/.env.local`
    for development, and as a real environment variable in production.
 
 2. Make sure `Security.useOpenSsl` is `true` (the app skeleton sets it). The

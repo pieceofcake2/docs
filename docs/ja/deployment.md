@@ -91,29 +91,30 @@ debug の無効化は以下の種々のものごとに変更を与えます。
 デプロイのたびにデバッグレベルを変更する手間も省けます。
 
 `pieceofcake2/app` スケルトンから作成したアプリケーションは、デバッグレベルを環境変数 `DEBUG`
-から読み込み、セットされていない場合はデバッグレベル 2 を使います。本番サーバーでは、
-たとえば Apache の設定で `0` にセットします。
+から読み込み、セットされていない場合は、環境変数 `APP_ENV` が `prod` でない限りデバッグレベル 2 を
+使います ([.env ファイルの読み込み](development/configuration#loading-env-files) を参照)。本番サーバーでは、
+たとえば Apache の設定で `APP_ENV` を `prod` にセットします。
 
 ```apache
-SetEnv DEBUG 0
+SetEnv APP_ENV prod
 ```
 
 nginx と PHP-FPM では、`index.php` を PHP-FPM に渡す `location` ブロックか、PHP-FPM のプールの設定でセットします。
 `clear_env` が `no` でない限り、PHP-FPM はサーバの環境変数を PHP に渡しません。
 
 ```nginx
-fastcgi_param DEBUG 0;
+fastcgi_param APP_ENV prod;
 ```
 
 ```ini
 ; PHP-FPM のプール。たとえば /etc/php/8.3/fpm/pool.d/www.conf
-env[DEBUG] = 0
+env[APP_ENV] = prod
 ```
 
 > [!WARNING]
-> `DEBUG` がセットされていないと、スケルトンはデバッグレベル 2 で動作します。スタックトレースや SQL クエリ、
-> 設定の詳細が表示され、ブラウザ用のテストランナー `webroot/test.php` も有効になります。
-> すべての本番サーバで `DEBUG` が `0` になっていることを確認してください。
+> `APP_ENV=prod` も `DEBUG` もセットされていないと、スケルトンはデバッグレベル 2 で動作します。スタックトレースや
+> SQL クエリ、設定の詳細が表示され、ブラウザ用のテストランナー `webroot/test.php` も有効になります。
+> すべての本番サーバで `APP_ENV` が `prod` (または `DEBUG` が `0`) になっていることを確認してください。
 
 ほかのアプリケーションでは、`config/core.php` で環境変数を読み込みます。
 
@@ -129,14 +130,15 @@ Configure::write('debug', (int)env('DEBUG'));
 扱ってください。本番環境では、
 `.env` ファイルではなく実際の環境変数としてセットするか、AWS Systems Manager パラメータストアなどの
 シークレットストアから読み込んでください ([設定と秘密の情報](deployment/aws-lambda#configuration-and-secrets) を参照)。
-実際の環境変数は、スケルトンが開発時に読み込む `.env` ファイルより常に優先されます。
+実際の環境変数は、スケルトンが読み込む `.env` ファイルより常に優先されます。
 秘密の情報はリポジトリにコミットせず、ログにも出力しないでください。
 
 ## 必要なものだけをデプロイする
 
-`.git/` ディレクトリや `.env` ファイル、`tests/` などの開発用のファイルを除いてアプリケーションをデプロイし、
-ブラウザでテストを実行するためだけに使う `webroot/test.php` は削除します。ドキュメントルートの外にあっても
-これらのファイルはサーバに必要なく、`.git/` や `.env` には秘密の情報が含まれていることがあります。
+`.git/` ディレクトリや手元のマシンの `.local` の `.env` ファイル、`tests/` などの開発用のファイルを除いて
+アプリケーションをデプロイし、ブラウザでテストを実行するためだけに使う `webroot/test.php` は削除します。
+ドキュメントルートの外にあってもこれらのファイルはサーバに必要なく、`.git/` や `.local` ファイルには秘密の情報が
+含まれていることがあります。スケルトンが必要とする、コミットされた `config/.env` は残してください。
 
 <a id="set-file-permissions"></a>
 

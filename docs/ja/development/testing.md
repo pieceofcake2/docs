@@ -104,10 +104,11 @@ public function __construct()
 `vendor/bin/phpunit` と `bin/cake test` は、デフォルトで `APP_ENV=test` で動きます。`APP_ENV` が
 設定されていなければ、CakePHP が `.env` ファイルを読み込む前にスケルトンの `tests/bootstrap.php` と
 `bin/cake` (`test` シェルのとき) がこれを設定します。ブラウザーのテストランナー `webroot/test.php` も同じです。
-そのため、テストではコミットされている `config/.env.test` が読み込まれ
-([.env ファイルの読み込み](configuration#loading-env-files) を参照)、このファイルの `DATABASE_URL` が
-テスト用データベースになります。自分のマシンのテスト用データベースは、Git で無視される
-`config/.env.test.local` か、ファイルより優先される実際の環境変数 (CI はこの方法です) で設定してください。
+そのため、テストでは `config/.env` の後に、コミットされている `config/.env.test` が読み込まれ、
+`config/.env.local` は読み込まれません ([.env ファイルの読み込み](configuration#loading-env-files) を参照)。
+このファイルの `DATABASE_URL` がテスト用データベースになります。自分のマシンのテスト用データベースは、
+Git で無視され `config/.env.test` の後に読み込まれる `config/.env.test.local` か、ファイルより優先される
+実際の環境変数 (CI はこの方法です) で設定してください。
 
 ```dotenv
 # config/.env.test.local

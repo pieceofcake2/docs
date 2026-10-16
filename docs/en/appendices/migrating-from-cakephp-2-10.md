@@ -72,7 +72,9 @@ Changes in v2.12.7 that may affect applications already running on the fork.
   pieceofcake2/aws and pieceofcake2/async-aws register the Amazon SES schemes
   (`ses+api://`, `ses+smtp://`, ...).
 - The application skeleton (pieceofcake2/app) reads `DATABASE_URL` and
-  `MAILER_DSN`, and loads `config/.env.test` in the tests.
+  `MAILER_DSN`, and loads `config/.env.test` in the tests. Since app v2.5.0 it
+  loads the `.env` files with symfony/dotenv as Symfony does (see
+  [Loading .env Files](/development/configuration#loading-env-files)).
 
 See [Database DSNs](/development/configuration#database-url),
 [Mailer DSN](/core-utility-libraries/email#mailer-dsn) and

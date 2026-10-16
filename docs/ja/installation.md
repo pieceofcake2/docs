@@ -136,7 +136,7 @@ my_app/
 続いて設定を済ませます。
 
 1. `config/database.php.default` を `config/database.php` にコピーします。接続は環境変数
-   `DATABASE_URL` でセットするか (たとえば `config/.env` に
+   `DATABASE_URL` でセットするか (たとえば `config/.env.local` に
    `DATABASE_URL="mysql://user:password@localhost/my_app?encoding=utf8mb4"` と書きます)、
    ファイルに記入します。テストは `APP_ENV=test` で動き、コミットされている `config/.env.test` から
    `DATABASE_URL` を読み込むので、自分のテスト用データベースは `config/.env.test.local` で設定します
@@ -160,9 +160,9 @@ my_app/
 
 ファイルを編集する代わりに、デバッグレベル、セキュリティ用のソルト、データベースの接続
 (`DATABASE_URL`)、メールのトランスポート (`MAILER_DSN`) を
-環境変数でセットすることもできます。開発環境では、`config/.env.example` を `config/.env`
-(またはプロジェクトルートの `.env`) にコピーして編集します。スケルトンは `config/core.php` の先頭で
-このファイルを読み込みます。[環境変数](development/configuration#environment-variables) を参照してください。
+環境変数でセットすることもできます。スケルトンには開発用のデフォルトを書いた `config/.env` が含まれていて、
+`config/core.php` の先頭で読み込まれます。自分のマシンの値は、Git で無視される `config/.env.local` に
+書きます。[環境変数](development/configuration#environment-variables) を参照してください。
 
 スケルトンの `composer.json` には、[composer.json の設定](#configuring-composer-json) で説明するプラグイン用の設定が
 すでに含まれています。ファイルを編集するときも、この設定は残しておいてください。

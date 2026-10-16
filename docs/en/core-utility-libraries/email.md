@@ -178,7 +178,7 @@ class EmailConfig
 ```
 
 ```dotenv
-# config/.env
+# config/.env.local
 MAILER_DSN="smtp://my@example.com:app-password@smtp.example.com:587"
 ```
 

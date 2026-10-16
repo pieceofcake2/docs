@@ -104,10 +104,12 @@ public function __construct()
 when `APP_ENV` is not set, the skeleton's `tests/bootstrap.php` and `bin/cake`
 (for the `test` shell) set it before CakePHP loads the `.env` files, and so does
 `webroot/test.php`, the browser test runner. So the tests load the committed
-`config/.env.test` (see [Loading .env Files](configuration#loading-env-files)),
-where `DATABASE_URL` is the test database. Set the test database of your
-machine in `config/.env.test.local`, which is ignored by Git, or as a real
-environment variable, which wins over the files (CI sets it this way):
+`config/.env.test` after `config/.env`, without `config/.env.local` (see
+[Loading .env Files](configuration#loading-env-files)); there `DATABASE_URL` is
+the test database. Set the test database of your machine in
+`config/.env.test.local`, which is ignored by Git and loaded after
+`config/.env.test`, or as a real environment variable, which wins over the
+files (CI sets it this way):
 
 ```dotenv
 # config/.env.test.local
