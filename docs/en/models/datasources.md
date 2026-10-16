@@ -119,8 +119,7 @@ yourself. A plugin can register more schemes with
 [Registering DSN Schemes](../plugins/how-to-create-plugins#registering-dsn-schemes)).
 
 ::: pieceofcake2
-The `'dsn'` key is added in the release of `pieceofcake2/cakephp` that follows
-v2.12.6.
+The `'dsn'` key was added in v2.12.7.
 :::
 
 All of the above sources derive from a base `DboSource` class, which

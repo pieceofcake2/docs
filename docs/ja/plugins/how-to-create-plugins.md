@@ -307,7 +307,7 @@ DSN で設定できます ([データベースの DSN](/ja/development/configura
 | `parseDsn($dsn, $config = [])` | DSN の設定のキーを返します |
 
 ::: pieceofcake2
-DSN クラスマップは v2.12.6 の次の `pieceofcake2/cakephp` のリリースで追加されます。
+DSN クラスマップは v2.12.7 で追加されます。
 :::
 
 スキームはプラグインの `Config/bootstrap.php` で登録します。アプリケーションはこのファイルを

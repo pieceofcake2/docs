@@ -33,7 +33,7 @@ and lists the pages of this book that were changed from the original.
 | `'cipher'` encryption (default `CookieComponent` type) | Default type, insecure, no warning | Deprecated with a logged warning; out-of-range `Security.cipherSeed` reported; `Cookie.type` / `Cookie.key` set the defaults (v2.12.6) | [Security Fixes](/security/fixes#cipher) |
 | Error pages in debug mode | CakePHP 2 layout | CakePHP 5 style `dev_error` layout with code excerpts and editor links (v2.12.6) | [Debugging](/development/debugging#debug-error-pages) |
 | `.env` files | Not supported | Loaded by the `pieceofcake2/app` skeleton (v2.4.0) with josegonzalez/dotenv, not by the framework | [Environment Variables](/development/configuration#environment-variables) |
-| Configuration with a DSN | Not supported (added in CakePHP 3.0 as the `url` key) | `'dsn'` key in datasource, email, cache and log configurations; plugins register schemes with `setDsnClassMap()`; the skeleton reads `DATABASE_URL`, `DATABASE_TEST_URL`, `MAILER_DSN` and the `CACHE_*_URL` / `LOG_*_URL` variables (release after v2.12.6) | [Database DSNs](/development/configuration#database-url) |
+| Configuration with a DSN | Not supported (added in CakePHP 3.0 as the `url` key) | `'dsn'` key in datasource, email, cache and log configurations; plugins register schemes with `setDsnClassMap()`; the skeleton reads `DATABASE_URL`, `DATABASE_TEST_URL`, `MAILER_DSN` and the `CACHE_*_URL` / `LOG_*_URL` variables (v2.12.7) | [Database DSNs](/development/configuration#database-url) |
 
 For the complete list of breaking changes, see
 [Migrating from CakePHP 2.10](/appendices/migrating-from-cakephp-2-10) and the
@@ -169,7 +169,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - SQL Server: ODBC driver on any OS instead of Windows-only Native Client; port, schema (default dbo), options, persistent settings
   - Datasource example and plugin paths moved to `src/Model/Datasource` and `plugins/`
   - Link to the pieceofcake2/datasources plugin instead of the old cakephp/datasources repository
-  - New "Connection DSN" subsection with the scheme table, and the SQL Server connection as a DSN (release after v2.12.6); plugin datasources can register a DSN scheme
+  - New "Connection DSN" subsection with the scheme table, and the SQL Server connection as a DSN (v2.12.7); plugin datasources can register a DSN scheme
 - [Model Attributes](/models/model-attributes)
   - Database configuration file path is `config/database.php`
   - `order`: allowed sort directions, link to Sort Order
@@ -179,7 +179,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
 - [Caching](/core-libraries/caching)
   - Xcache and Wincache engines removed from the engine list (change note); Apc engine documented as APCu
   - Configuration paths changed to `config/bootstrap.php`, `config/core.php` and `src/Lib/Cache/Engine`; PHP 5.3 remarks removed
-  - New "Configuring Cache Engines with a DSN" section (release after v2.12.6): the `'dsn'` key with the `file`, `apcu`/`apc`, `memcached`, `memcache` and `redis` schemes, the skeleton's `CACHE_*_URL` variables, and when plugin schemes can be used
+  - New "Configuring Cache Engines with a DSN" section (v2.12.7): the `'dsn'` key with the `file`, `apcu`/`apc`, `memcached`, `memcache` and `redis` schemes, the skeleton's `CACHE_*_URL` variables, and when plugin schemes can be used
 - [Events System](/core-libraries/events)
   - Examples use `src/Lib/Event`, `config/bootstrap.php` and `config/events.php`; App::uses and PHP 5.3 remarks removed; Composer classmap autoloading noted
 - [Global Constants and Functions](/core-libraries/global-constants-and-functions)
@@ -190,7 +190,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - i18n extract example for the modern layout: `bin/cake i18n extract --paths src,templates --output resources/locales`
 - [Logging](/core-libraries/logging)
   - Default log directory is `logs/` (LOGS constant); custom log engines in `src/Lib` and `plugins/`; App::uses removed from examples
-  - New "Configuring Log Streams with a DSN" section (release after v2.12.6): the `'dsn'` key with the `file`, `console` and `syslog` schemes and the skeleton's `LOG_DEBUG_URL` / `LOG_ERROR_URL`
+  - New "Configuring Log Streams with a DSN" section (v2.12.7): the `'dsn'` key with the `file`, `console` and `syslog` schemes and the skeleton's `LOG_DEBUG_URL` / `LOG_ERROR_URL`
 - [Welcome](/index)
   - Unsupported-version warning reworded for the fork (CakePHP 2 EOL upstream, use CakePHP 5 for new projects)
   - Removed the PDF/EPUB download block; added the book source link and an Installation entry
@@ -236,7 +236,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
 - [CakeEmail](/core-utility-libraries/email)
   - Config in `config/email.php`, templates in `templates/Emails` and `templates/Layouts/Emails`, custom transports in `src/Lib/Network/Email`; removed EmailComponent comparisons and App::uses()
   - Gmail: app password instead of the defunct "less secure apps" setting; STARTTLS example uses port 587; change note for the typed MailTransport::_mail() signature
-  - New "Mailer DSN" section (release after v2.12.6): the `'dsn'` key of a profile in the Symfony `MAILER_DSN` format (`smtp`, `smtps`, `sendmail`, `native`, `null`), query parameters, precedence, empty values, errors, schemes of plugins and `CakeEmail::parseDsn()`; `'dsn'` added to the configuration keys
+  - New "Mailer DSN" section (v2.12.7): the `'dsn'` key of a profile in the Symfony `MAILER_DSN` format (`smtp`, `smtps`, `sendmail`, `native`, `null`), query parameters, precedence, empty values, errors, schemes of plugins and `CakeEmail::parseDsn()`; `'dsn'` added to the configuration keys
 - [Folder & File](/core-utility-libraries/file-folder)
   - Folder and File are autoloaded; removed App::uses()
 - [Hash](/core-utility-libraries/hash)
@@ -311,7 +311,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - New "cipherSeed and the 'cipher' Cookie Type" section: how `Security::cipher()` uses the seed, only 1-4294967295 meaningful, values with 27 or more digits (the default of the original `config/core.php`, the blog tutorial example and the old `.env.example` generator) end up as seed 0, in-range seeds are still not secure, impact, which action to take, migrating to 'aes' with a 32-byte key in `Cookie.key` (from `COOKIE_KEY`), `Cookie.type` set to 'aes' and `Security.useOpenSsl` set to true (`Cookie.type` and `Cookie.key` can be set in configuration from v2.12.6; controller form for v2.12.5 and earlier; exception when the fallback key `Security.salt` is shorter than 32 bytes), and the warnings
   - `Security.cipherSeed` entry: only 1-4294967295 is meaningful and no value makes 'cipher' secure, with a link to the new section
   - "Planned for v2.12.6" replaced by "Warnings Since v2.12.6": the deprecation warning for 'cipher' (once per process, `E_USER_DEPRECATED` in debug mode), the seed range warning and notice, the in-range default seed `'2659758734'` of the core's fallback `config/core.php`, and `Cookie.type` / `Cookie.key`; the former default seed is noted as the default up to v2.12.5
-  - New "Database DSNs" section (release after v2.12.6): the `'dsn'` key of a connection, scheme to datasource mapping, DSN parts to keys, SQLite paths, precedence of the DSN over the array keys, empty values, encoding, query parameters, IPv6, errors, schemes of plugins, `ConnectionManager::create()` and `ConnectionManager::parseDsn()`; `dsn` added to the list of connection keys; the skeleton's `CACHE_DEFAULT_URL`, `CACHE_CAKECORE_URL`, `CACHE_CAKEMODEL_URL`, `LOG_DEBUG_URL` and `LOG_ERROR_URL` added to its environment variables
+  - New "Database DSNs" section (v2.12.7): the `'dsn'` key of a connection, scheme to datasource mapping, DSN parts to keys, SQLite paths, precedence of the DSN over the array keys, empty values, encoding, query parameters, IPv6, errors, schemes of plugins, `ConnectionManager::create()` and `ConnectionManager::parseDsn()`; `dsn` added to the list of connection keys; the skeleton's `CACHE_DEFAULT_URL`, `CACHE_CAKECORE_URL`, `CACHE_CAKEMODEL_URL`, `LOG_DEBUG_URL` and `LOG_ERROR_URL` added to its environment variables
 - [Routing](/development/routing)
   - Routes file path changed to `config/routes.php` (legacy `app/Config/routes.php` noted with link to the folder structure page)
   - Built-in routes located in `vendor/pieceofcake2/cakephp/config/routes.php`; disabling them means removing the require line from `config/routes.php`
@@ -361,7 +361,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - Jenkins: moved to the end of the new Continuous Integration page (after the GitHub Actions workflow), with `composer install` step, `config/database.php`, `vendor/bin/phpunit` and jenkins.io links; ja: explicit test-database-setup and generating-code-coverage anchors
   - New "Types of Tests" section: unit tests with fixtures, controller tests with testAction() and browser End-to-End tests (links to End-to-End Testing); ja: explicit testing-controllers anchor
   - "Types of Tests" also lists integration tests with `IntegrationTestTrait` (links to Integration Testing) and notes that `ControllerTestCase` remains supported; tip linking to Integration Testing in "Testing Controllers"
-  - Test database from `DATABASE_TEST_URL` (release after v2.12.6)
+  - Test database from `DATABASE_TEST_URL` (v2.12.7)
 - [REST](/development/rest)
   - Paths updated to `config/routes.php`, `src/Controller` and `templates/Recipes/xml`
   - Corrected HTTP method override precedence (X-HTTP-Method-Override header before _method)
@@ -436,7 +436,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - Plugin paths use `plugins/` and `templates/Plugin` overrides; internal plugin structure and test directories explained; App::uses() kept in plugin code with the reason
   - Bake commands use `bin/cake` with the Bake plugin; added the missing asset plugin-syntax example; removed `flash/` asset folder
   - Publishing: removed plugins.cakephp.org/awesome-cakephp; added a `composer.json` example (type cakephp-plugin, composer/installers, installer-name)
-  - New "Registering DSN Schemes" section (release after v2.12.6): `setDsnClassMap()` / `getDsnClassMap()` of `ConnectionManager`, `CakeEmail`, `Cache` and `CakeLog` in the plugin bootstrap, class names and callables, `null` removal, the `method_exists()` guard and when the maps are read
+  - New "Registering DSN Schemes" section (v2.12.7): `setDsnClassMap()` / `getDsnClassMap()` of `ConnectionManager`, `CakeEmail`, `Cache` and `CakeLog` in the plugin bootstrap, class names and callables, `null` removal, the `method_exists()` guard and when the maps are read
 - [How To Install Plugins](/plugins/how-to-install-plugins)
   - Composer is the primary method (pieceofcake2/debug_kit example, composer/installers and installer-paths for `plugins/`); manual and Git installs use `plugins/` and https URLs
   - Plugins are loaded in `config/bootstrap.php`; when App::uses() is still needed for plugin classes

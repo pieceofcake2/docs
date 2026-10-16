@@ -132,8 +132,7 @@ application skeleton; see
 [Environment Variables of the Application Skeleton](/development/configuration#environment-variables-of-the-application-skeleton)).
 
 ::: pieceofcake2
-The `'dsn'` key is added in the release of `pieceofcake2/cakephp` that follows
-v2.12.6.
+The `'dsn'` key was added in v2.12.7.
 :::
 
 | DSN | Configuration |

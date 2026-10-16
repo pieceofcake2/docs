@@ -231,7 +231,7 @@ CakeLog::config('debug', [
 を参照してください)。
 
 ::: pieceofcake2
-`'dsn'` キーは v2.12.6 の次の `pieceofcake2/cakephp` のリリースで追加されます。
+`'dsn'` キーは v2.12.7 で追加されます。
 :::
 
 | DSN | 設定 |

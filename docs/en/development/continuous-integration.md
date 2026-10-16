@@ -293,7 +293,7 @@ The parts that every job shares:
   `config/database.php.default`, which reads the `test` connection from the
   `DATABASE_TEST_URL` environment variable (see
   [Database DSNs](/development/configuration#database-url); the `'dsn'`
-  key needs the release of pieceofcake2/cakephp that follows v2.12.6).
+  key needs pieceofcake2/cakephp 2.12.7 or later).
   Skeletons created before read the `DB_TEST_DATASOURCE`, `DB_TEST_HOST`, `DB_TEST_PORT`,
   `DB_TEST_USERNAME`, `DB_TEST_PASSWORD` and `DB_TEST_DATABASE` variables
   instead.

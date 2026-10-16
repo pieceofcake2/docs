@@ -78,8 +78,7 @@ class DATABASE_CONFIG
 dsn (*オプション*)  
 `mysql://user:password@localhost/my_app?encoding=utf8mb4` のような DSN です。
 データソースと接続のキーを 1 つの文字列で設定します。
-[データベースの DSN](#database-url) を参照してください。v2.12.6 の次の `pieceofcake2/cakephp`
-のリリースで追加されます。
+[データベースの DSN](#database-url) を参照してください。v2.12.7 で追加されます。
 
 datasource  
 この設定配列が使うデータソースの名前。
@@ -186,7 +185,7 @@ settings
 ### データベースの DSN {#database-url}
 
 ::: pieceofcake2
-`'dsn'` キーは v2.12.6 の次の `pieceofcake2/cakephp` のリリースで追加されます。それより前の
+`'dsn'` キーは v2.12.7 で追加されます。それより前の
 リリースでは、このキーは何も言わずに無視されます。CakePHP 3.x 以降の DSN サポート (キーの名前は
 `url`) のバックポートで、CakePHP、Doctrine、Symfony の `DATABASE_URL` の書式を使います。
 :::
@@ -436,8 +435,7 @@ unset($dotenvFile);
 空の環境変数はセットされていないものとして扱われます。`.env` ファイルも環境変数も無い場合、
 アプリケーションは設定ファイルの値を使います。DSN のキーは設定の同じキーを置き換え、それ以外の
 キーはデフォルトとして残ります。キャッシュとログの環境変数の名前は CakePHP 5 のアプリケーション
-スケルトンと同じです。`'dsn'` キーには、v2.12.6 の次の `pieceofcake2/cakephp` のリリースが
-必要です。
+スケルトンと同じです。`'dsn'` キーには、`pieceofcake2/cakephp` 2.12.7 以降が必要です。
 
 たとえば、キャッシュを Redis に置き、ログをコンテナの標準出力と標準エラー出力に書くには、
 次のようにします。

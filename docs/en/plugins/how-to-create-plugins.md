@@ -329,8 +329,7 @@ with its own schemes, as with `setDsnClassMap()` in CakePHP 3.x and later.
 | `parseDsn($dsn, $config = [])` | Returns the configuration keys of a DSN |
 
 ::: pieceofcake2
-The DSN class maps are added in the release of `pieceofcake2/cakephp` that
-follows v2.12.6.
+The DSN class maps were added in v2.12.7.
 :::
 
 Register the schemes in the plugin's `Config/bootstrap.php`, which the

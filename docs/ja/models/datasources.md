@@ -117,7 +117,7 @@ DSN のキーは配列の同じキーを置き換え、それ以外のキーは�
 ([DSN スキームの登録](../plugins/how-to-create-plugins#registering-dsn-schemes) を参照)。
 
 ::: pieceofcake2
-`'dsn'` キーは v2.12.6 の次の `pieceofcake2/cakephp` のリリースで追加されます。
+`'dsn'` キーは v2.12.7 で追加されます。
 :::
 
 前述のソースはどれも `DboSource` から派生したもので、これにより

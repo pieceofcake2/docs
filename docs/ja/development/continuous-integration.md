@@ -291,7 +291,7 @@ jobs:
   として起動します。スケルトンでは `config/database.php` をコミットしないので、ジョブは
   `config/database.php.default` をコピーします。このファイルは `test` 接続を環境変数
   `DATABASE_TEST_URL` から読み込みます ([データベースの DSN](/ja/development/configuration#database-url)
-  を参照。`'dsn'` キーには v2.12.6 の次の pieceofcake2/cakephp のリリースが必要です)。以前のスケルトンでは、
+  を参照。`'dsn'` キーには pieceofcake2/cakephp 2.12.7 以降が必要です)。以前のスケルトンでは、
   代わりに `DB_TEST_DATASOURCE`、`DB_TEST_HOST`、`DB_TEST_PORT`、`DB_TEST_USERNAME`、
   `DB_TEST_PASSWORD`、`DB_TEST_DATABASE` を読み込みます。フィクスチャはこのデータベースに
   作られるので、事前にテーブルを用意する必要はありません。

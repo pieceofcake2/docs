@@ -81,8 +81,7 @@ of the application skeleton reads `DATABASE_URL` and `DATABASE_TEST_URL`. See
 dsn (*optional*)  
 A DSN such as `mysql://user:password@localhost/my_app?encoding=utf8mb4`
 that sets the datasource and the connection keys in one string. See
-[Database DSNs](#database-url). Added in the release of `pieceofcake2/cakephp`
-that follows v2.12.6.
+[Database DSNs](#database-url). Added in v2.12.7.
 
 datasource  
 The name of the datasource this configuration array is for.
@@ -193,10 +192,9 @@ bakers, pastry_stores, and savory_cakes.
 ### Database DSNs {#database-url}
 
 ::: pieceofcake2
-The `'dsn'` key is added in the release of `pieceofcake2/cakephp` that follows
-v2.12.6; earlier releases ignore it silently. It is a backport of the DSN
-support of CakePHP 3.x and later, where the key is called `url`, and uses the
-`DATABASE_URL` format of CakePHP, Doctrine and Symfony.
+The `'dsn'` key was added in v2.12.7; earlier releases ignore it silently. It
+is a backport of the DSN support of CakePHP 3.x and later, where the key is
+called `url`, and uses the `DATABASE_URL` format of CakePHP, Doctrine and Symfony.
 :::
 
 A connection can be set with one DSN in the `'dsn'` key. This keeps the
@@ -451,8 +449,8 @@ Empty variables are treated as not set. Without any `.env` file or environment
 variable, the application uses the values in the configuration files. The keys
 of a DSN replace the same keys of the configuration, and the other keys are
 kept as defaults. The cache and log variables use the names of the CakePHP 5
-application skeleton. The `'dsn'` key needs the release of
-`pieceofcake2/cakephp` that follows v2.12.6.
+application skeleton. The `'dsn'` key needs `pieceofcake2/cakephp`
+2.12.7 or later.
 
 For example, to keep the caches in Redis and write the logs to the standard
 streams of a container:
