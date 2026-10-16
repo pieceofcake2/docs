@@ -60,6 +60,7 @@ AI ツールから直接読み込めます。
 - [Cakeplus Plugin](https://pieceofcake2.github.io/cakeplus/) ([Markdown](https://github.com/pieceofcake2/cakeplus/blob/2.x/docs/README.md)) - フォーム関連のユーティリティと機能拡張
 - [Captcha Plugin](https://pieceofcake2.github.io/captcha/) ([Markdown](https://github.com/pieceofcake2/captcha/blob/1.x/docs/README.md)) - CAPTCHA ウィジェットの表示とサーバー側での検証。
   Cloudflare Turnstile (デフォルト)、Google reCAPTCHA v2/v3、hCaptcha に対応
+- [Purifiable Plugin](https://pieceofcake2.github.io/purifiable/) ([Markdown](https://github.com/pieceofcake2/purifiable/blob/1.x/docs/README.md)) - HTML Purifier によるモデルのフィールドの HTML サニタイズ
 
 ### データベース
 
@@ -69,6 +70,8 @@ AI ツールから直接読み込めます。
 
 - [Authenticate Plugin](https://pieceofcake2.github.io/authenticate/) ([Markdown](https://github.com/pieceofcake2/authenticate/blob/1.x/docs/README.md)) - 認証クラス
 - [AclExtras Plugin](https://pieceofcake2.github.io/acl_extras/) ([Markdown](https://github.com/pieceofcake2/acl_extras/blob/2.x/docs/README.md)) - ACL テーブルを管理するコンソールツール
+- [AclMenu Plugin](https://pieceofcake2.github.io/acl_menu/) ([Markdown](https://github.com/pieceofcake2/acl_menu/blob/1.x/docs/README.md)) - ACL で許可されたアクションのナビゲーションメニュー
+- [Totp Plugin](https://pieceofcake2.github.io/totp/) ([Markdown](https://github.com/pieceofcake2/totp/blob/1.x/docs/README.md)) - ワンタイムパスワード (TOTP) による 2 要素認証
 
 ### ファイル
 
