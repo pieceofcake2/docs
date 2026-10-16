@@ -49,7 +49,7 @@ CakePHP 2 のテストには PHPUnit 9.6 を使います。`composer.json` が�
 composer require --dev phpunit/phpunit:^9.6
 ```
 
-[pieceofcake2/app](https://pieceofcake2.github.io/app/) スケルトンでは `require-dev` に
+[pieceofcake2/app](https://pieceofcake2.github.io/app/ja/) スケルトンでは `require-dev` に
 `phpunit/phpunit` が含まれているので、`composer install` を実行するだけで済みます。
 PHPUnit は CakePHP と同じく Composer のオートローダーで読み込まれ、`phpunit` コマンドは
 `vendor/bin/phpunit` にインストールされます。
@@ -242,7 +242,7 @@ PHPUnit をインストールし、テストケースをいくつか書いたら
 何らかの変更をコミットする前に、テストを実行することで何も壊していないか確認することはとてもいい考えです。
 
 テストはコマンドラインから実行することをお勧めします。
-[pieceofcake2/app](https://pieceofcake2.github.io/app/) スケルトンのプロジェクトルートには、
+[pieceofcake2/app](https://pieceofcake2.github.io/app/ja/) スケルトンのプロジェクトルートには、
 CakePHP 用に PHPUnit を設定する `phpunit.xml.dist` があります。
 
 ```xml
@@ -393,7 +393,7 @@ PHPUnit の出力先を標準エラーに切り替えることで、この問題
 
 CakePHP はテストを実行するためのウェブベースのインタフェースも提供しており、ブラウザを通して
 テストを実行することができます。ウェブランナーは `index.php` と同じ階層にある
-`webroot/test.php` で、[pieceofcake2/app](https://pieceofcake2.github.io/app/)
+`webroot/test.php` で、[pieceofcake2/app](https://pieceofcake2.github.io/app/ja/)
 スケルトンに含まれています。`http://localhost/your_app/test.php` からアクセスできます。
 デバッグレベルが 1 以上のときだけ利用できます。
 

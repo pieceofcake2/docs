@@ -2,7 +2,7 @@
 
 継続的インテグレーション (CI) は、プッシュやプルリクエストのたびにチェックを実行し、壊れたテスト、
 コーディング規約の違反、型のエラーを変更のマージ前に見つけます。このページでは、
-[pieceofcake2/app](https://pieceofcake2.github.io/app/) スケルトンで作ったアプリケーションのための
+[pieceofcake2/app](https://pieceofcake2.github.io/app/ja/) スケルトンで作ったアプリケーションのための
 GitHub Actions のワークフローを示し、各ジョブを、そのツールを詳しく説明しているページへのリンクとともに
 紹介します。また、各ジョブの短いサマリーを実行結果のページに表示する方法も説明します。
 Jenkins でテストを実行する方法は、最後の [Jenkins](#jenkins) で説明します。
@@ -21,11 +21,11 @@ CakePHP 2 のアプリケーションでは、通常、次のジョブを実行�
 | End-to-End | `vendor/bin/phpunit --testsuite EndToEnd` | 本物のブラウザーでのページの動作 | [End-to-End テスト](/ja/development/e2e-testing) |
 
 `pieceofcake2/app` スケルトンには、最初の 3 つの設定ファイル `phpunit.xml.dist`、`phpcs.xml`、
-`phpstan.neon` が含まれており、PHPUnit、[pieceofcake2/phpcs-cakephp2](https://pieceofcake2.github.io/phpcs-cakephp2/)、PHPStan、
-[pieceofcake2/phpstan-cakephp2](https://pieceofcake2.github.io/phpstan-cakephp2/) が開発用の
+`phpstan.neon` が含まれており、PHPUnit、[pieceofcake2/phpcs-cakephp2](https://pieceofcake2.github.io/phpcs-cakephp2/ja/)、PHPStan、
+[pieceofcake2/phpstan-cakephp2](https://pieceofcake2.github.io/phpstan-cakephp2/ja/) が開発用の
 依存パッケージになっています。`phpunit.xml.dist` には、デフォルトの `App` スイートのほかに
 `EndToEnd` テストスイートもあります。End-to-End テストには
-[pieceofcake2/panther](https://pieceofcake2.github.io/panther/) と少しのセットアップが必要です。
+[pieceofcake2/panther](https://pieceofcake2.github.io/panther/ja/) と少しのセットアップが必要です。
 End-to-End テストを書いたら、このジョブを追加してください。
 
 <a id="a-github-actions-workflow"></a>
@@ -388,7 +388,7 @@ PHPUnit のジョブは、スケルトンの `phpunit.xml.dist` を使って `te
 ### コーディング規約
 
 コーディング規約のジョブは、スケルトンの `phpcs.xml` を使って PHP_CodeSniffer を実行します。
-この設定は [pieceofcake2/phpcs-cakephp2](https://pieceofcake2.github.io/phpcs-cakephp2/) の `CakePHP2` 規約を使います。CakePHP 5 のコーディング規約から、
+この設定は [pieceofcake2/phpcs-cakephp2](https://pieceofcake2.github.io/phpcs-cakephp2/ja/) の `CakePHP2` 規約を使います。CakePHP 5 のコーディング規約から、
 CakePHP 2 のコードに合わない規則を除外したものです。
 `--report-full` は違反をログに表示し、`--report-checkstyle` は違反をファイルに書き出します。
 チェックが失敗すると、setup-php の `tools: cs2pr` でインストールされる
@@ -400,7 +400,7 @@ CakePHP 2 のコードに合わない規則を除外したものです。
 ### PHPStan
 
 PHPStan のジョブは、
-[pieceofcake2/phpstan-cakephp2](https://pieceofcake2.github.io/phpstan-cakephp2/) 拡張を読み込む
+[pieceofcake2/phpstan-cakephp2](https://pieceofcake2.github.io/phpstan-cakephp2/ja/) 拡張を読み込む
 スケルトンの `phpstan.neon` を使ってコードを解析します。`--error-format=checkstyle` は cs2pr が
 読める形式でエラーを書き出し、`--no-progress` はログを短くします。このジョブにデータベースは
 必要ありません。設定、ルールレベル、ベースラインについては [静的解析](/ja/development/static-analysis)
@@ -410,7 +410,7 @@ PHPStan のジョブは、
 
 ### End-to-End テスト {#e2e-テスト}
 
-`end-to-end` ジョブは、[pieceofcake2/panther](https://pieceofcake2.github.io/panther/) の
+`end-to-end` ジョブは、[pieceofcake2/panther](https://pieceofcake2.github.io/panther/ja/) の
 ブラウザーテスト、つまり同じ `phpunit.xml.dist` の `EndToEnd` スイートを実行します。別のジョブに
 するので、PHPUnit のジョブは引き続き `App` スイートだけを実行し (`defaultTestSuite="App"`)、
 ブラウザーは不要です。`defaultTestSuite` を削除した場合は、PHPUnit のジョブを `--testsuite App` で
@@ -427,7 +427,7 @@ Web サーバーは `DB_TEST_*` の値を引き継ぎます。`ubuntu-latest` �
 ファイルを生成する場合は、End-to-End テストの前にビルドしてください。
 
 [End-to-End テスト](/ja/development/e2e-testing#continuous-integration) と、panther の
-ドキュメントの [CI with GitHub Actions](https://pieceofcake2.github.io/panther/ci)
+ドキュメントの [CI with GitHub Actions](https://pieceofcake2.github.io/panther/ja/ci)
 を参照してください。
 
 <a id="job-summaries"></a>

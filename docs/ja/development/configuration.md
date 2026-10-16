@@ -188,7 +188,7 @@ settings
 
 ### .env ファイルの読み込み
 
-[pieceofcake2/app](https://pieceofcake2.github.io/app/) スケルトンから作成したアプリケーションは、
+[pieceofcake2/app](https://pieceofcake2.github.io/app/ja/) スケルトンから作成したアプリケーションは、
 `config/core.php` の先頭で [josegonzalez/dotenv](https://github.com/josegonzalez/php-dotenv)
 を使って `.env` ファイルから環境変数を読み込みます。`config/core.php` は最初に読み込まれるので、
 残りの設定、コンソール、テストで環境変数を使えます。
@@ -339,7 +339,7 @@ DB_DATABASE="my_app"
 
 CakePHP フレームワークのクラスは Composer のオートローダーで読み込まれるので、
 `App::uses()` を書く必要はありません。アプリケーションのクラスも、
-[pieceofcake2/app](https://pieceofcake2.github.io/app/) スケルトンのように
+[pieceofcake2/app](https://pieceofcake2.github.io/app/ja/) スケルトンのように
 `composer.json` に classmap を追加すれば同じようにオートロードできます。
 
 ```json
@@ -665,7 +665,7 @@ true にすると、`Security::encrypt()` と `Security::decrypt()` (つまり C
 Configure::write('Security.useOpenSsl', true);
 ```
 
-デフォルトは false です。[pieceofcake2/app](https://pieceofcake2.github.io/app/) のスケルトン (v2.3.1 以降) から
+デフォルトは false です。[pieceofcake2/app](https://pieceofcake2.github.io/app/ja/) のスケルトン (v2.3.1 以降) から
 作成したアプリケーションにはこの行が含まれています。既存のアプリケーションでは追加してください。
 
 Asset.timestamp  

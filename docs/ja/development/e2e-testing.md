@@ -2,7 +2,7 @@
 
 End-to-End テストは、アプリケーションを本物のブラウザーで開き、ユーザーと同じように
 操作します。リンクをクリックし、フォームに入力し、ボタンを押して、画面に表示される内容を確認します。
-[pieceofcake2/panther](https://pieceofcake2.github.io/panther/) パッケージは、
+[pieceofcake2/panther](https://pieceofcake2.github.io/panther/ja/) パッケージは、
 [Symfony Panther](https://symfony.com/doc/current/testing/end_to_end.html) を Symfony の
 アプリケーションと同じ使い方で CakePHP 2 アプリケーションに導入します。
 `static::createPantherClient()` が PHP のビルトイン Web サーバーでアプリケーションを起動して
@@ -10,8 +10,8 @@ Chrome を操作し、テストケースは `CakeTestCase` なので、`$fixture
 使えます。
 
 このページはセットアップの簡単なガイドです。設定、クライアント、アサーションの詳細は
-パッケージのドキュメント ([Web サイト](https://pieceofcake2.github.io/panther/)、
-[Markdown](https://github.com/pieceofcake2/panther/blob/1.x/docs/README.md)、英語) を
+パッケージのドキュメント ([Web サイト](https://pieceofcake2.github.io/panther/ja/)、
+[Markdown](https://github.com/pieceofcake2/panther/blob/1.x/docs/ja/README.md)、英語) を
 参照してください。[Symfony のドキュメント](https://symfony.com/doc/current/testing/end_to_end.html)
 もそのまま当てはまります。
 
@@ -82,7 +82,7 @@ bdi はドライバーを `drivers/` に保存し、Panther はそこからド�
 Symfony のアプリケーションと同じように、End-to-End テストはほかのテストと並べて
 `tests/TestCase/EndToEnd/` (従来の構成では `app/Test/Case/EndToEnd/`) に置き、同じ
 `phpunit.xml.dist` から実行し、Panther の `PANTHER_*` 変数を `<server>` 要素で設定します。
-[pieceofcake2/app](https://pieceofcake2.github.io/app/) スケルトンにはこの設定が含まれているので、
+[pieceofcake2/app](https://pieceofcake2.github.io/app/ja/) スケルトンにはこの設定が含まれているので、
 拡張のコメントを外してください。
 
 ```xml
@@ -127,8 +127,8 @@ Symfony のアプリケーションと同じように、End-to-End テストは�
 
 `PANTHER_WEB_SERVER_PORT` や `PANTHER_WEB_SERVER_DIR` などのほかの変数と、`createPantherClient()`
 のオプションは、パッケージのドキュメントの
-[Configuration](https://pieceofcake2.github.io/panther/configuration)
-([Markdown](https://github.com/pieceofcake2/panther/blob/1.x/docs/configuration.md)) に
+[Configuration](https://pieceofcake2.github.io/panther/ja/configuration)
+([Markdown](https://github.com/pieceofcake2/panther/blob/1.x/docs/ja/configuration.md)) に
 まとめられています。
 
 <a id="the-test-database"></a>
@@ -162,7 +162,7 @@ pieceofcake2/app の `config/database.php.default` にはこの行がありま�
   使ってください。
 
 詳しくはパッケージのドキュメントの
-[Test Database](https://pieceofcake2.github.io/panther/test-database) を参照してください。
+[Test Database](https://pieceofcake2.github.io/panther/ja/test-database) を参照してください。
 
 <a id="writing-tests"></a>
 
@@ -235,7 +235,7 @@ class ArticlesTest extends PantherTestCase
   `sleep()` は使わないでください。
 
 フォーム、待機、複数のブラウザー、スマートフォンの表示領域、アサーションの一覧は、パッケージの
-ドキュメントの [Writing Tests](https://pieceofcake2.github.io/panther/writing-tests) を
+ドキュメントの [Writing Tests](https://pieceofcake2.github.io/panther/ja/writing-tests) を
 参照してください。
 
 <a id="failure-screenshots-and-html"></a>
@@ -315,7 +315,7 @@ GitHub のランナーでは `PANTHER_NO_SANDBOX=1` が必要です。ビルド�
 ジョブ全体は [継続的インテグレーション](/ja/development/continuous-integration#e2e-tests) に
 あります。パッケージには
 [ジョブサマリー付きのワークフロー](https://github.com/pieceofcake2/panther/blob/1.x/docs/examples/end-to-end.yml)
-もあります ([CI with GitHub Actions](https://pieceofcake2.github.io/panther/ci))。
+もあります ([CI with GitHub Actions](https://pieceofcake2.github.io/panther/ja/ci))。
 
 <a id="troubleshooting"></a>
 
@@ -334,4 +334,4 @@ GitHub のランナーでは `PANTHER_NO_SANDBOX=1` が必要です。ビルド�
 `config/database.php` の `APP_ENV` の行を確認してください。
 
 そのほかは、パッケージのドキュメントの
-[Troubleshooting](https://pieceofcake2.github.io/panther/troubleshooting) を参照してください。
+[Troubleshooting](https://pieceofcake2.github.io/panther/ja/troubleshooting) を参照してください。
