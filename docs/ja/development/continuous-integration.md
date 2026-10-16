@@ -264,6 +264,10 @@ jobs:
       - name: Install chromedriver for the installed Chrome
         run: vendor/bin/bdi detect drivers
 
+      # The runners have no Japanese fonts; without them Japanese text is drawn as boxes in the screenshots
+      - name: Install Japanese fonts
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq fonts-noto-cjk
+
       - name: Run End-to-End tests
         env:
           PANTHER_NO_SANDBOX: 1
@@ -503,8 +507,8 @@ Web サーバーは `DB_TEST_*` の値を引き継ぎます。`ubuntu-latest` �
 ### End-to-End テスト {#e2e-テスト-1}
 
 End-to-End のステップで JUnit のレポートを書き出し、アップロードするアーティファクトの名前を
-`artifact-name` に渡します。テストが失敗した場合、サマリーには、スクリーンショットがある
-実行結果のアーティファクトへのリンクの行が追加されます。
+`artifact-name` に、アップロードのステップの出力 `artifact-url` を `artifact-url` に渡します。
+テストが失敗した場合、サマリーには、スクリーンショットのアーティファクトへのリンクの行が追加されます。
 
 ```yaml
 - name: Run End-to-End tests
@@ -512,7 +516,15 @@ End-to-End のステップで JUnit のレポートを書き出し、アップ�
     PANTHER_NO_SANDBOX: 1
   run: vendor/bin/phpunit --testsuite EndToEnd --log-junit end-to-end-junit.xml
 
-# ... the upload step
+- name: Upload the error screenshots
+  id: screenshots
+  if: ${{ failure() }}
+  uses: actions/upload-artifact@v7
+  with:
+    name: error-screenshots
+    path: tmp/error-screenshots/
+    retention-days: 7
+    if-no-files-found: ignore
 
 - name: End-to-End summary
   if: ${{ !cancelled() }}
@@ -522,6 +534,7 @@ End-to-End のステップで JUnit のレポートを書き出し、アップ�
     title: End-to-End
     file: end-to-end-junit.xml
     artifact-name: error-screenshots
+    artifact-url: ${{ steps.screenshots.outputs.artifact-url }}
     artifact-note: Screenshots of the failed tests are in the {artifact} artifact.
 ```
 

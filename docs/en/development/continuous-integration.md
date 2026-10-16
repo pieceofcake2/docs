@@ -264,6 +264,10 @@ jobs:
       - name: Install chromedriver for the installed Chrome
         run: vendor/bin/bdi detect drivers
 
+      # The runners have no Japanese fonts; without them Japanese text is drawn as boxes in the screenshots
+      - name: Install Japanese fonts
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq fonts-noto-cjk
+
       - name: Run End-to-End tests
         env:
           PANTHER_NO_SANDBOX: 1
@@ -505,8 +509,9 @@ The action also reads PHPStan's JSON output (`--error-format=json`).
 ### End-to-End Tests {#e2e-tests-1}
 
 Write a JUnit report in the End-to-End step, and pass the name of the uploaded
-artifact as `artifact-name`. When tests failed, the summary adds a line that
-links to the artifacts of the run, where the screenshots are:
+artifact as `artifact-name` and the `artifact-url` output of the upload step as
+`artifact-url`. When tests failed, the summary adds a line that links to the
+artifact with the screenshots:
 
 ```yaml
 - name: Run End-to-End tests
@@ -514,7 +519,15 @@ links to the artifacts of the run, where the screenshots are:
     PANTHER_NO_SANDBOX: 1
   run: vendor/bin/phpunit --testsuite EndToEnd --log-junit end-to-end-junit.xml
 
-# ... the upload step
+- name: Upload the error screenshots
+  id: screenshots
+  if: ${{ failure() }}
+  uses: actions/upload-artifact@v7
+  with:
+    name: error-screenshots
+    path: tmp/error-screenshots/
+    retention-days: 7
+    if-no-files-found: ignore
 
 - name: End-to-End summary
   if: ${{ !cancelled() }}
@@ -524,6 +537,7 @@ links to the artifacts of the run, where the screenshots are:
     title: End-to-End
     file: end-to-end-junit.xml
     artifact-name: error-screenshots
+    artifact-url: ${{ steps.screenshots.outputs.artifact-url }}
     artifact-note: Screenshots of the failed tests are in the {artifact} artifact.
 ```
 
