@@ -92,8 +92,8 @@ Symfony のアプリケーションと同じように、End-to-End テストは�
          stderr="true"
          colors="true">
     <php>
-        <!-- Web サーバーはフィクスチャのあるテスト用データソースを使う -->
-        <server name="PANTHER_APP_ENV" value="test"/>
+        <!-- テストと Web サーバーは config/.env.test を読み込む -->
+        <env name="APP_ENV" value="test" force="true"/>
         <!-- 失敗した End-to-End テストのスクリーンショット -->
         <server name="PANTHER_ERROR_SCREENSHOT_DIR" value="./tmp/error-screenshots"/>
     </php>
@@ -136,28 +136,40 @@ Symfony のアプリケーションと同じように、End-to-End テストは�
 ### テスト用データベース
 
 Web サーバーは別の PHP プロセスで、ブラウザーに見えるのは Web サーバーが読み込むデータだけです。
-そのため Web サーバーは、`CakeTestCase` がフィクスチャを読み込むデータソース `test` を使う必要が
-あります。`PANTHER_APP_ENV=test` を設定すると、Web サーバーに環境変数 `APP_ENV=test` が渡されます。
-`config/database.php` の `DATABASE_CONFIG` のコンストラクターで、そのときは `test` データソースを
-`default` として使います。
+そのため Web サーバーの `default` 接続は、`CakeTestCase` がフィクスチャを読み込むデータベース
+(`test` データソースのデータベース) でなければなりません。Symfony と同じように、これは `test` 環境で
+決まります。`phpunit.xml.dist` は 1 行で `APP_ENV` を設定します。
+
+```xml
+<env name="APP_ENV" value="test" force="true"/>
+```
+
+PHPUnit はこれを `putenv()` と `$_ENV` に設定するので、テストは pieceofcake2/app のコミットされている
+`config/.env.test` を読み込みます。Panther が起動する Web サーバーはテストのプロセスの環境を引き継ぐので、
+`APP_ENV=test` で動き、同じファイルを読み込みます。このファイルでは、`default` 接続の `DATABASE_URL` が
+`DATABASE_TEST_URL` と同じテスト用データベースです。
+
+```dotenv
+# config/.env.test
+DATABASE_URL="mysql://user:password@localhost:3306/test_database_name?encoding=utf8mb4"
+DATABASE_TEST_URL="mysql://user:password@localhost:3306/test_database_name?encoding=utf8mb4"
+```
+
+`config/database.php` にテスト用の分岐は必要ありません。
 
 ```php
 public function __construct()
 {
     $this->default['dsn'] = env('DATABASE_URL');
     $this->test['dsn'] = env('DATABASE_TEST_URL');
-
-    if (env('APP_ENV') === 'test') {
-        $this->default = $this->test;
-    }
 }
 ```
 
-pieceofcake2/app の `config/database.php.default` にはこの行があります。`config/database.php` が
-古い場合はコピーしてください。Web サーバーはテストのプロセスの環境変数を引き継ぐので、同じ
-`DATABASE_TEST_URL` を使います (たとえば
-`DATABASE_TEST_URL="mysql://root:root@127.0.0.1:3306/test_app"`)。`default` にも `test`
-接続の DSN が渡るように、接続の切り替えは `'dsn'` キーをセットした後に行ってください。
+自分のマシンのテスト用データベースは `config/.env.test.local` か、実際の環境変数 (CI など) で設定して
+ください。実際の環境変数は Web サーバーにも引き継がれ、両方のプロセスで `config/.env.test` より優先され
+ます。Panther の `PANTHER_APP_ENV` が必要になるのは、Web サーバーにテストとは異なる `APP_ENV` を渡す
+ときだけです。`config/database.php` に、`test` 接続を `default` として使う `APP_ENV` の分岐が残って
+いる場合は削除してください。
 
 - テストに開発用のデータベースを使わないでください。
 - 表示するページが使うテーブルは、すべて `$fixtures` に指定してください。
@@ -334,9 +346,10 @@ GitHub のランナーでは `PANTHER_NO_SANDBOX=1` が必要です。ビルド�
 **`--filter` でテストが見つからない**: `--testsuite EndToEnd` を付けてください。
 `defaultTestSuite="App"` の場合、`--filter` は `App` スイートの中だけを探します。
 
-**ブラウザーに "Missing Database Table" が表示される**: Web サーバーがテスト用データソースを
-使っていないか、`$fixtures` にテーブルが足りません。`phpunit.xml.dist` の `PANTHER_APP_ENV` と、
-`config/database.php` の `APP_ENV` の行を確認してください。
+**ブラウザーに "Missing Database Table" が表示される**: Web サーバーがテスト用データベースを
+使っていないか、`$fixtures` にテーブルが足りません。`phpunit.xml.dist` の
+`<env name="APP_ENV" value="test" force="true"/>` と、`config/.env.test` (または環境変数) の
+`DATABASE_URL` がテスト用データベースであることを確認してください。
 
 そのほかは、パッケージのドキュメントの
 [Troubleshooting](https://pieceofcake2.github.io/panther/troubleshooting) を参照してください。

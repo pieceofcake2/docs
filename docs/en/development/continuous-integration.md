@@ -81,6 +81,7 @@ jobs:
           --health-retries=5
 
     env:
+      DATABASE_URL: mysql://root:root@127.0.0.1:3306/cakephp_test?encoding=utf8mb4
       DATABASE_TEST_URL: mysql://root:root@127.0.0.1:3306/cakephp_test?encoding=utf8mb4
 
     steps:
@@ -218,6 +219,7 @@ jobs:
           --health-retries=5
 
     env:
+      DATABASE_URL: mysql://root:root@127.0.0.1:3306/cakephp_test?encoding=utf8mb4
       DATABASE_TEST_URL: mysql://root:root@127.0.0.1:3306/cakephp_test?encoding=utf8mb4
 
     steps:
@@ -291,9 +293,12 @@ The parts that every job shares:
   [service container](https://docs.github.com/en/actions/tutorials/use-containerized-services/use-docker-service-containers).
   `config/database.php` is not committed in the skeleton, so the job copies
   `config/database.php.default`, which reads the `test` connection from the
-  `DATABASE_TEST_URL` environment variable (see
-  [Database DSNs](/development/configuration#database-url); the `'dsn'`
-  key needs pieceofcake2/cakephp 2.12.7 or later).
+  `DATABASE_TEST_URL` environment variable and the `default` connection from
+  `DATABASE_URL` (see [Database DSNs](/development/configuration#database-url);
+  the `'dsn'` key needs pieceofcake2/cakephp 2.12.7 or later). The jobs set
+  both to the database of the service container as real environment
+  variables, which win over the committed `config/.env.test` that the tests
+  load with `APP_ENV=test`.
   Skeletons created before read the `DB_TEST_DATASOURCE`, `DB_TEST_HOST`, `DB_TEST_PORT`,
   `DB_TEST_USERNAME`, `DB_TEST_PASSWORD` and `DB_TEST_DATABASE` variables
   instead.
@@ -322,6 +327,7 @@ variable:
           --health-retries=5
 
     env:
+      DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/cakephp_test
       DATABASE_TEST_URL: postgres://postgres:postgres@127.0.0.1:5432/cakephp_test
 ```
 
@@ -406,8 +412,8 @@ The `end-to-end` job runs the browser tests of
 PHPUnit job keeps running only the `App` suite (`defaultTestSuite="App"`) and
 needs no browser. If you removed `defaultTestSuite`, run the PHPUnit job with
 `--testsuite App`. The `end-to-end` job needs the database, like the PHPUnit
-job: `PANTHER_APP_ENV=test` in `phpunit.xml.dist` makes the web server use the
-test datasource, and the web server inherits `DATABASE_TEST_URL`. The
+job: the web server inherits `APP_ENV=test` of `phpunit.xml.dist` and the
+`DATABASE_URL` of the job, so its `default` connection is the test database. The
 `ubuntu-latest` runner has Chrome, and `vendor/bin/bdi detect drivers`
 ([bdi](https://github.com/dbrekelmans/bdi), a development dependency) installs
 the matching chromedriver. `PANTHER_NO_SANDBOX=1` is needed on the GitHub

@@ -32,7 +32,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
 | `'cipher'` 暗号化（`CookieComponent` のデフォルトのタイプ） | デフォルトのタイプで安全でなく、警告もない | 非推奨でログに警告を記録。範囲外の `Security.cipherSeed` を報告。`Cookie.type` / `Cookie.key` でデフォルトを設定 (v2.12.6) | [脆弱性への対応](/ja/security/fixes#cipher) |
 | デバッグモードのエラーページ | CakePHP 2 のレイアウト | コードの抜粋とエディターへのリンクを含む CakePHP 5 風の `dev_error` レイアウト (v2.12.6) | [デバッグ](/ja/development/debugging#debug-error-pages) |
 | `.env` ファイル | 非対応 | `pieceofcake2/app` スケルトン (v2.4.0) が josegonzalez/dotenv で読み込み (フレームワークは読み込まない) | [環境変数](/ja/development/configuration#environment-variables) |
-| DSN による設定 | 非対応 (CakePHP 3.0 で `url` キーとして追加) | データソース、メール、キャッシュ、ログの設定の `'dsn'` キーに DSN を書ける。プラグインは `setDsnClassMap()` でスキームを登録できる。スケルトンは `DATABASE_URL`、`DATABASE_TEST_URL`、`MAILER_DSN` と `CACHE_*_URL`、`LOG_*_URL` を読み込む (v2.12.7) | [データベースの DSN](/ja/development/configuration#database-url) |
+| DSN による設定 | 非対応 (CakePHP 3.0 で `url` キーとして追加) | データソースとメールの設定の `'dsn'` キーに DSN を書ける。プラグインは `setDsnClassMap()` でスキームを登録できる。スケルトンは `DATABASE_URL`、`DATABASE_TEST_URL`、`MAILER_DSN` を読み込む (v2.12.7) | [データベースの DSN](/ja/development/configuration#database-url) |
 
 破壊的変更の一覧は [CakePHP 2.10 からの移行](/ja/appendices/migrating-from-cakephp-2-10) と
 [CHANGELOG](https://github.com/pieceofcake2/cakephp/blob/2.x/CHANGELOG.md) を参照してください。
@@ -177,7 +177,6 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
 - [キャッシュ](/ja/core-libraries/caching)
   - エンジン一覧から Xcache と Wincache を削除 (変更点の注記あり)。Apc エンジンは APCu を使うと説明
   - 設定ファイルのパスを `config/bootstrap.php`、`config/core.php`、`src/Lib/Cache/Engine` に変更。PHP 5.3 に関する記述を削除
-  - 「DSN によるキャッシュエンジンの設定」の節を追加 (v2.12.7): `'dsn'` キーと `file`、`apcu`/`apc`、`memcached`、`memcache`、`redis` のスキーム、スケルトンの `CACHE_*_URL`、プラグインのスキームを使えるタイミング
 - [イベントシステム](/ja/core-libraries/events)
   - 例のパスを `src/Lib/Event`、`config/bootstrap.php`、`config/events.php` に変更。App::uses と PHP 5.3 の記述を削除し、Composer のクラスマップによるオートロードを説明
 - [グローバル定数およびグローバル関数](/ja/core-libraries/global-constants-and-functions)
@@ -188,7 +187,6 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - モダンレイアウト向けの i18n extract の例を追加: `bin/cake i18n extract --paths src,templates --output resources/locales`
 - [ロギング](/ja/core-libraries/logging)
   - デフォルトのログディレクトリを `logs/` (LOGS 定数) に変更。独自ログエンジンは `src/Lib` と `plugins/` に配置。例から App::uses を削除
-  - 「DSN によるログストリームの設定」の節を追加 (v2.12.7): `'dsn'` キーと `file`、`console`、`syslog` のスキーム、スケルトンの `LOG_DEBUG_URL` と `LOG_ERROR_URL`
 - [Translate](/ja/core-libraries/behaviors/translate)
   - i18n テーブル初期化コマンドを `bin/cake i18n` に変更
 - [Tree](/ja/core-libraries/behaviors/tree)
@@ -300,13 +298,13 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - キャッシュ: 使用可能なエンジンを列挙 (File、Apc/APCu、Memcached、Memcache、Redis)。Xcache/Wincache の削除を変更点として記載
   - 設定リーダー: デフォルトの読み込み先は `CONFIG`。独自リーダーの例を `src/Lib/Configure` に移し、プロパティを宣言 (PHP 8.2)、`App::uses()` を削除。ja の例のクラス名を PHP の XMLReader と衝突する `XmlReader` から `MyXmlReader` に変更。ConfigReaderInterface/ConfigureException の説明を修正
   - Inflector のパス `src/Cake/Utility/Inflector.php` と `config/bootstrap.php` を本文に反映。古い IE/Chrome Frame や AMF/SOAP の例を更新。ja: `$merge` の説明を修正し `Configure::consume()` を追加
-  - 「環境変数」の節を追加: pieceofcake2/app スケルトンが `config/core.php` の先頭で josegonzalez/dotenv により `config/.env` とプロジェクトルートの `.env` を読み込むこと (CakePHP 3〜5 のアプリケーションスケルトンの `.env` サポートのバックポート。変更点: app v2.4.0 で追加)、優先順位 (実際の環境変数 > `config/.env` > ルートの `.env`)、値のクォート、レガシー構成や以前のアプリケーションへの読み込み処理の追加方法、スケルトンが読み込む環境変数 (`DEBUG`、`SECURITY_SALT`、`SECURITY_CIPHER_SEED`、`COOKIE_KEY`、`DATABASE_URL`、`DATABASE_TEST_URL`、`MAILER_DSN`。以前のスケルトンの `DB_*` とその置き換え方)
+  - 「環境変数」の節を追加: pieceofcake2/app スケルトンが `config/core.php` の先頭で josegonzalez/dotenv により `config/.env` とプロジェクトルートの `.env` を読み込むこと (CakePHP 3〜5 のアプリケーションスケルトンの `.env` サポートのバックポート。変更点: app v2.4.0 で追加)、Symfony と同じ順でのファイルの読み込み (`config/.env.{APP_ENV}.local`、`config/.env.{APP_ENV}`、`config/.env.local`、`config/.env`、ルートの `.env`。実際の環境変数と先に読み込むファイルが優先。`config/.env.test` はコミット) (v2.12.7)、値のクォート、レガシー構成や以前のアプリケーションへの読み込み処理の追加方法、スケルトンが読み込む環境変数 (`DEBUG`、`SECURITY_SALT`、`SECURITY_CIPHER_SEED`、`COOKIE_KEY`、`DATABASE_URL`、`DATABASE_TEST_URL`、`MAILER_DSN`、`APP_ENV`。以前のスケルトンの `DB_*` と `APP_ENV` の分岐、その置き換え方)
   - `App.baseUrl`: `.htaccess` ファイルを削除してもドキュメントルートは `webroot/` のままにすることを追記
   - 「セキュリティ用のソルトの生成」の節を追加: 安全な生成コマンド (PHP とシェル)、それぞれの値に依存するもの (Cookie の 'aes' タイプは専用のキーを設定しても `Security.salt` を組み合わせる)、値の変更手順
   - 「cipherSeed と Cookie の 'cipher' タイプ」の節を追加: `Security::cipher()` でのシードの使われ方、意味があるのは 1〜4294967295 だけで、27 桁以上の値 (本家の `config/core.php` のデフォルト値、ブログチュートリアルのサンプル値、以前の `.env.example` の生成コマンド) はシード 0 になること、範囲内のシードでも安全ではないこと、影響、どうすればよいか、`COOKIE_KEY` から `Cookie.key` に読み込む 32 バイトのキー、'aes' にした `Cookie.type`、`Security.useOpenSsl` を使った 'aes' への移行 (v2.12.6 以降は `Cookie.type` と `Cookie.key` を設定で指定できること、v2.12.5 以前でのコントローラーでの設定、代わりのキーの `Security.salt` が 32 バイト未満のときの例外)、警告
   - `Security.cipherSeed` の説明: 意味があるのは 1〜4294967295 だけで、どの値でも 'cipher' は安全にならないことを記載し、新しい節へのリンクを追加
   - 「v2.12.6 で予定している変更」を「v2.12.6 以降の警告」に変更: 'cipher' の非推奨の警告 (プロセスごとに一度、デバッグモードでは `E_USER_DEPRECATED`)、シードの範囲の警告と通知、コアの代替の `config/core.php` の範囲内のデフォルトのシード `'2659758734'`、`Cookie.type` / `Cookie.key`。以前のデフォルトのシードは v2.12.5 までのデフォルト値と記載
-  - 「データベースの DSN」の節を追加 (v2.12.7): 接続の `'dsn'` キー、スキームとデータソースの対応、DSN の各部分とキーの対応、SQLite のパス、配列のキーより DSN を優先すること、空の値、エンコード、クエリパラメーター、IPv6、エラー、プラグインのスキーム、`ConnectionManager::create()` と `ConnectionManager::parseDsn()`。接続のキーの一覧に `dsn` を追加。スケルトンの環境変数に `CACHE_DEFAULT_URL`、`CACHE_CAKECORE_URL`、`CACHE_CAKEMODEL_URL`、`LOG_DEBUG_URL`、`LOG_ERROR_URL` を追加
+  - 「データベースの DSN」の節を追加 (v2.12.7): 接続の `'dsn'` キー、スキームとデータソースの対応、DSN の各部分とキーの対応、SQLite のパス、配列のキーより DSN を優先すること、空の値、エンコード、クエリパラメーター、IPv6、エラー、プラグインのスキーム、`ConnectionManager::create()` と `ConnectionManager::parseDsn()`。接続のキーの一覧に `dsn` を追加
 - [ルーティング](/ja/development/routing)
   - ルート設定ファイルのパスを `config/routes.php` に変更（従来の `app/Config/routes.php` はフォルダ構造ページへのリンク付きで併記）
   - 組み込みルートの場所を `vendor/pieceofcake2/cakephp/config/routes.php` に修正し、無効化は `config/routes.php` の require 行を削除すると説明
@@ -356,7 +354,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - Jenkins: 新しい継続的インテグレーションのページの最後 (GitHub Actions のワークフローの後) に移動。`composer install` の手順、`config/database.php`、`vendor/bin/phpunit`、jenkins.io へのリンク。test-database-setup と generating-code-coverage のアンカーを明示的に追加
   - 「テストの種類」の節を追加: フィクスチャを使うユニットテスト、testAction() によるコントローラーのテスト、ブラウザーによる End-to-End テスト (End-to-End テストのページへのリンク)。testing-controllers のアンカーを明示的に追加
   - 「テストの種類」に `IntegrationTestTrait` による統合テストを追加 (統合テストのページへのリンク)。`ControllerTestCase` は引き続きサポートされていることを記載。「コントローラーのテスト」に統合テストのページへのリンクのヒントを追加。test-case-conventions のアンカーを明示的に追加
-  - テスト用データベースを `DATABASE_TEST_URL` で設定 (v2.12.7)
+  - テスト用データベースを `DATABASE_TEST_URL` で設定 (v2.12.7)。「スケルトンのテスト用データベース」の節を追加: `phpunit.xml.dist` の `APP_ENV=test` でコミット済みの `config/.env.test` を読み込み、マシンごとの値は `config/.env.test.local` に書く
 - [REST](/ja/development/rest)
   - パスを `config/routes.php`、`src/Controller`、`templates/Recipes/xml` に更新
   - HTTP メソッド上書きの優先順位を修正（X-HTTP-Method-Override ヘッダが _method より優先）
@@ -431,14 +429,14 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - プラグインのパスを `plugins/` に、ビューの上書きを `templates/Plugin` に変更し、プラグイン内部の構成とテストディレクトリを説明、プラグインのコードで App::uses() を残す理由を記載
   - Bake のコマンドを Bake プラグインの `bin/cake` に変更し、欠けていたアセットのプラグイン記法の例を追加、`flash/` フォルダを削除
   - 公開方法: plugins.cakephp.org と awesome-cakephp への言及を削除し、`composer.json` の例 (type cakephp-plugin、composer/installers、installer-name) を追加
-  - 「DSN スキームの登録」の節を追加 (v2.12.7): プラグインのブートストラップで使う `ConnectionManager`、`CakeEmail`、`Cache`、`CakeLog` の `setDsnClassMap()` と `getDsnClassMap()`、クラス名と callable、`null` による削除、`method_exists()` によるガード、マップが読まれるタイミング
+  - 「DSN スキームの登録」の節を追加 (v2.12.7): プラグインのブートストラップで使う `ConnectionManager` と `CakeEmail` の `setDsnClassMap()` と `getDsnClassMap()`、クラス名と callable、`null` による削除、`method_exists()` によるガード、マップが読まれるタイミング
 - [プラグインのインストール](/ja/plugins/how-to-install-plugins)
   - Composer を標準のインストール方法とし (pieceofcake2/debug_kit の例、`plugins/` 用の composer/installers と installer-paths)、手動や Git でのインストールも `plugins/` と https の URL に変更
   - プラグインは `config/bootstrap.php` でロードすることと、プラグインのクラスに App::uses() が必要な場合を記載
   - プラグインを `plugins/<Name>/` にインストールするために `composer.json` の installer-paths と allow-plugins (composer/installers、Composer 2.2 以降) の設定が必須であることを明記
 - [プラグインの使い方](/ja/plugins/how-to-use-plugins)
   - プラグインのロードを `config/bootstrap.php` で行うことと、プラグインの `Config/` 内のファイルの場所を記載し、schema コマンドを `bin/cake` に変更
-  - DSN のスキームを登録するプラグインのブートストラップと、そのスキームを使うキャッシュやログの設定の順序を記載
+  - DSN のスキームを登録するプラグインのブートストラップを記載
 - [メンテナンスされているプラグイン](/ja/plugins/maintained-plugins)
   - AsyncAws プラグインを Aws プラグインより軽量な代替として紹介
 

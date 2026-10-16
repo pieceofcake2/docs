@@ -314,14 +314,27 @@ ConnectionManager::parseDsn('postgres://user:secret@db:5432/app');
 を参照してください。
 :::
 
-スケルトンは、以下のファイルが存在すれば読み込みます。
+スケルトンは、以下のファイルが存在すれば、Symfony の `.env` ファイルと同じ順に読み込みます。
 
-1. `config/.env`。CakePHP 3〜5 のアプリケーションスケルトンが使う場所です。
-2. プロジェクトルートの `.env`
+| ファイル | 読み込まれるとき | Git |
+|----------|------------------|-----|
+| `config/.env.{APP_ENV}.local` | `APP_ENV` がセットされているとき | 無視 |
+| `config/.env.{APP_ENV}` (例: `config/.env.test`) | `APP_ENV` がセットされているとき | コミット |
+| `config/.env.local` | 常に | 無視 |
+| `config/.env`。CakePHP 3〜5 のアプリケーションスケルトンが使う場所です | 常に | 無視 |
+| プロジェクトルートの `.env` | 常に | 無視 |
 
-優先順位は、実際の環境変数 > `config/.env` > プロジェクトルートの `.env` です。
-`config/.env` を先に、ルートの `.env` を後に読み込み、実際の環境 (Web サーバー、シェル、
-コンテナ、CI) や `config/.env` ですでにセットされている環境変数が上書きされることはありません。
+すでにセットされている環境変数は上書きされないので、先に読み込むファイルが後のファイルより
+優先され、実際の環境変数 (Web サーバー、シェル、コンテナ、CI) はすべてのファイルより優先されます。
+`APP_ENV` は実際の環境変数から読み込まれます。テストでは `phpunit.xml.dist` が `test` に設定するので、
+コミットされている `config/.env.test` が読み込まれます。このファイルは `DATABASE_URL` と
+`DATABASE_TEST_URL` をテスト用データベースに設定します
+([スケルトンのテスト用データベース](/ja/development/testing#the-test-database-of-the-skeleton) を参照)。
+自分のマシンだけで使う値は `config/.env.local` や `config/.env.test.local` に書いてください。
+
+::: pieceofcake2
+以前のスケルトンは `config/.env` とルートの `.env` だけを読み込みます。
+:::
 
 読み込んだ値は文字列として `putenv()`、`$_ENV`、`$_SERVER` に書き込まれるので、`env()`、
 `getenv()`、`$_ENV`、`$_SERVER` のどれでも読み出せます。
@@ -337,9 +350,10 @@ Configure::write('Security.salt', env('SECURITY_SALT') ?: 'a-default-salt');
 cp config/.env.example config/.env
 ```
 
-`config/.env` と `/.env` は、どちらもスケルトンの `.gitignore` に記載されています。`.env`
-ファイルはバージョン管理に含めず、代わりに `config/.env.example` のようなサンプルファイルを
-コミットしてください。
+`config/.env`、`config/.env.local`、`config/.env.*.local`、`/.env` は、スケルトンの `.gitignore`
+に記載されています。認証情報を含む `.env` ファイルはバージョン管理に含めず、代わりに
+`config/.env.example` のようなサンプルファイルをコミットしてください。`config/.env.test` は
+テストの設定だけを含むので、Symfony と同じようにコミットします。
 
 `.env` ファイルは開発用です。本番環境では、Web サーバー、コンテナ、プロセスマネージャーなどの
 設定で実際の環境変数をセットしてください。実際の環境変数は常にファイルより優先されます。
@@ -386,7 +400,12 @@ composer require josegonzalez/dotenv
 
 use josegonzalez\Dotenv\Loader;
 
-foreach ([CONFIG . '.env', ROOT . DS . '.env'] as $dotenvFile) {
+$appEnv = (string)env('APP_ENV');
+$dotenvFiles = [CONFIG . '.env.local', CONFIG . '.env', ROOT . DS . '.env'];
+if ($appEnv !== '') {
+    array_unshift($dotenvFiles, CONFIG . ".env.{$appEnv}.local", CONFIG . ".env.{$appEnv}");
+}
+foreach ($dotenvFiles as $dotenvFile) {
     if (!is_file($dotenvFile)) {
         continue;
     }
@@ -406,7 +425,7 @@ foreach ([CONFIG . '.env', ROOT . DS . '.env'] as $dotenvFile) {
     }
     unset($dotenv, $key, $value);
 }
-unset($dotenvFile);
+unset($appEnv, $dotenvFiles, $dotenvFile);
 ```
 
 `.env` ファイルを `.gitignore` に追加し、次の節のように設定の中で `env()` を使って
@@ -428,32 +447,16 @@ unset($dotenvFile);
 | `DATABASE_URL` | `default` 接続の `'dsn'` ([データベースの DSN](#database-url) を参照) | `config/database.php` の値 |
 | `DATABASE_TEST_URL` | `test` 接続の `'dsn'` | `config/database.php` の値 |
 | `MAILER_DSN` | `default` メールプロファイルの `'dsn'` ([メーラー DSN](../core-utility-libraries/email#mailer-dsn) を参照) | `config/email.php` の値 |
-| `CACHE_DEFAULT_URL` | `config/bootstrap.php` の `default` キャッシュ設定の `'dsn'` ([DSN によるキャッシュエンジンの設定](../core-libraries/caching#configuring-cache-engines-with-a-dsn) を参照) | `File` エンジン |
-| `CACHE_CAKECORE_URL`、`CACHE_CAKEMODEL_URL` | `config/core.php` の `_cake_core_` と `_cake_model_` キャッシュの `'dsn'` | `config/core.php` の値 |
-| `LOG_DEBUG_URL`、`LOG_ERROR_URL` | `config/bootstrap.php` の `debug` と `error` のログ設定の `'dsn'` ([DSN によるログストリームの設定](../core-libraries/logging#configuring-log-streams-with-a-dsn) を参照) | `logs/` の `File` ログ |
+| `APP_ENV` | `config/.env.{APP_ENV}` と `config/.env.{APP_ENV}.local` を読み込みます。`phpunit.xml.dist` では `test` | ほかの `.env` ファイルだけが読み込まれます |
 
 空の環境変数はセットされていないものとして扱われます。`.env` ファイルも環境変数も無い場合、
 アプリケーションは設定ファイルの値を使います。DSN のキーは設定の同じキーを置き換え、それ以外の
-キーはデフォルトとして残ります。キャッシュとログの環境変数の名前は CakePHP 5 のアプリケーション
-スケルトンと同じです。`'dsn'` キーには、`pieceofcake2/cakephp` 2.12.7 以降が必要です。
-
-たとえば、キャッシュを Redis に置き、ログをコンテナの標準出力と標準エラー出力に書くには、
-次のようにします。
-
-```dotenv
-CACHE_DEFAULT_URL="redis://redis:6379/0?prefix=myapp_"
-CACHE_CAKECORE_URL="redis://redis:6379/0"
-CACHE_CAKEMODEL_URL="redis://redis:6379/0"
-LOG_DEBUG_URL="console://?stream=php://stdout"
-LOG_ERROR_URL="console://?stream=php://stderr"
-```
-
-コアのキャッシュの `prefix` は `config/core.php` の値が残るので、1 つの Redis データベースでも
-3 つのキャッシュが互いを上書きすることはありません。
+キーはデフォルトとして残ります。`'dsn'` キーには、`pieceofcake2/cakephp` 2.12.7 以降が必要です。
 
 以前のスケルトンから `config/database.php` や `config/email.php` を作成した場合は、
 `config/database.php.default` や `config/email.php.default` の `__construct()` メソッドを
-コピーしてください。以前のスケルトンは、`DB_DATASOURCE`、`DB_HOST`、`DB_PORT`、
+コピーし、`test` 接続を `default` として使う `APP_ENV` の分岐があれば削除してください
+(代わりに `config/.env.test` が `DATABASE_URL` をテスト用データベースに設定します)。以前のスケルトンは、`DB_DATASOURCE`、`DB_HOST`、`DB_PORT`、
 `DB_USERNAME`、`DB_PASSWORD`、`DB_DATABASE` (`test` 接続は `DB_TEST_*`) を `applyEnv()`
 メソッドで読み込んでいました。1 つの `DATABASE_URL` がこれらに置き換わります。
 
@@ -473,8 +476,16 @@ DATABASE_URL="mysql://my_app:secret@127.0.0.1/my_app"
 # config/.env
 DEBUG="2"
 DATABASE_URL="mysql://my_app:secret@127.0.0.1:3306/my_app?encoding=utf8mb4"
-DATABASE_TEST_URL="mysql://my_app:secret@127.0.0.1:3306/test_my_app?encoding=utf8mb4"
 MAILER_DSN="smtp://127.0.0.1:1025"
+```
+
+自分のマシンのテスト用データベースは `config/.env.test.local` に書きます。テストでは
+`config/.env.test` より優先されます。
+
+```dotenv
+# config/.env.test.local
+DATABASE_URL="mysql://my_app:secret@127.0.0.1:3306/test_my_app?encoding=utf8mb4"
+DATABASE_TEST_URL="mysql://my_app:secret@127.0.0.1:3306/test_my_app?encoding=utf8mb4"
 ```
 
 ## クラスの読み込みと追加のクラスパス

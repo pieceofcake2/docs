@@ -313,14 +313,12 @@ The same technique applies to Helpers and Behaviors.
 
 ## Registering DSN Schemes
 
-Datasources, email transports, cache engines and log engines can be configured
-with a DSN in the `'dsn'` key (see [Database DSNs](/development/configuration#database-url),
-[Mailer DSN](/core-utility-libraries/email#mailer-dsn),
-[Caching](/core-libraries/caching#configuring-cache-engines-with-a-dsn) and
-[Logging](/core-libraries/logging#configuring-log-streams-with-a-dsn)). The
-scheme of the DSN is looked up in a DSN class map, which a plugin can extend
-with its own schemes, as with `setDsnClassMap()` in CakePHP 3.x and later.
-`ConnectionManager`, `CakeEmail`, `Cache` and `CakeLog` each have one:
+Datasources and email transports can be configured with a DSN in the `'dsn'`
+key (see [Database DSNs](/development/configuration#database-url) and
+[Mailer DSN](/core-utility-libraries/email#mailer-dsn)). The scheme of the DSN
+is looked up in a DSN class map, which a plugin can extend with its own
+schemes, as with `setDsnClassMap()` in CakePHP 3.x and later.
+`ConnectionManager` and `CakeEmail` each have one:
 
 | Method | |
 |--------|---|
@@ -361,15 +359,14 @@ if (method_exists('CakeEmail', 'setDsnClassMap')) {
 
 A value of the map is either a class name or a callable:
 
-- A **class name** in plugin dot syntax is set as the `datasource`,
-  `transport` or `engine`, and the parts of the DSN become the usual keys of
-  that kind, followed by the query parameters, which win:
+- A **class name** in plugin dot syntax is set as the `datasource` or
+  `transport`, and the parts of the DSN become the usual keys of that kind,
+  followed by the query parameters, which win:
 
   | Map | Keys |
   |-----|------|
   | `ConnectionManager` | `login`, `password`, `host` (without the brackets of an IPv6 address), `port`, `database` (the path without the leading `/`) |
   | `CakeEmail` | `username`, `password`, `host` (the host `default` is left out, so the transport uses its default), `port` |
-  | `Cache`, `CakeLog` | `username`, `password`, `host`, `port`, `path` |
 
 - A **callable** that is not a string, such as a closure or
   `[$class, 'method']`, is called with the parts of the DSN and the
@@ -380,24 +377,20 @@ A value of the map is either a class name or a callable:
   always a class name, never a function name.
 
 The built-in schemes are entries of the same maps (class names for the
-databases, callables for email, cache and log), so a plugin can replace them,
-for example to point `mysql` to a datasource of its own. A `datasource`,
-`transport` or `engine` query parameter in the DSN still overrides a class
-name, and allows a scheme that is not registered at all.
+databases, callables for email), so a plugin can replace them, for example to
+point `mysql` to a datasource of its own. A `datasource` or `transport` query
+parameter in the DSN still overrides a class name, and allows a scheme that is
+not registered at all.
 
 Guard the calls with `method_exists()` when the plugin also supports releases
 of `pieceofcake2/cakephp` without DSN class maps.
 
 ### When to Register the Schemes
 
-- `ConnectionManager` reads the map when a connection is created (the first
-  `getDataSource()` call, usually the first query), and `CakeEmail` when a
-  configuration is applied. A plugin bootstrap is early enough for
-  `config/database.php` and `config/email.php`.
-- `Cache::config()` and `CakeLog::config()` build the engine at once. A cache
-  or log configuration that uses a scheme of a plugin must come after
-  `CakePlugin::load()` in `config/bootstrap.php`; it cannot be in
-  `config/core.php`. The built-in schemes work anywhere.
+`ConnectionManager` reads the map when a connection is created (the first
+`getDataSource()` call, usually the first query), and `CakeEmail` when a
+configuration is applied. A plugin bootstrap is early enough for
+`config/database.php` and `config/email.php`.
 
 ## Expand Your Plugin
 

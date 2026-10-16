@@ -138,7 +138,10 @@ my_app/
 1. `config/database.php.default` を `config/database.php` にコピーします。接続は環境変数
    `DATABASE_URL` と `DATABASE_TEST_URL` でセットするか (たとえば `config/.env` に
    `DATABASE_URL="mysql://user:password@localhost/my_app?encoding=utf8mb4"` と書きます)、
-   ファイルに記入します。[データベース設定](development/configuration#database-configuration) と
+   ファイルに記入します。テストはコミットされている `config/.env.test` からテスト用データベースを
+   読み込むので、自分のテスト用データベースは `config/.env.test.local` で設定します
+   ([スケルトンのテスト用データベース](development/testing#the-test-database-of-the-skeleton) を参照)。
+   [データベース設定](development/configuration#database-configuration) と
    [データベースの DSN](development/configuration#database-url) を参照してください。
 2. `config/core.php` の `Security.salt` と `Security.cipherSeed` の値を変更します。
    スケルトンに入っている値は誰でも知っているサンプル値なので、実際のアプリケーションでは使わないでください。

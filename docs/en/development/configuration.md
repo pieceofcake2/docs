@@ -307,7 +307,7 @@ In production, set the variables in the configuration of the web server,
 container or process manager. For local development, the application
 skeleton can load them from a `.env` file.
 
-### Loading .env Files
+### Loading .env Files {#loading-env-files}
 
 Applications created from the
 [pieceofcake2/app](https://pieceofcake2.github.io/app/) skeleton load
@@ -327,15 +327,30 @@ other applications, see
 [Adding .env Support to an Existing Application](#adding-env-support-to-an-existing-application).
 :::
 
-The skeleton loads these files if they exist:
+The skeleton loads these files if they exist, in the order of Symfony's
+`.env` files:
 
-1. `config/.env`, the location used by the CakePHP 3+/5 application skeleton.
-2. `.env` in the project root.
+| File | Loaded | In Git |
+|------|--------|--------|
+| `config/.env.{APP_ENV}.local` | when `APP_ENV` is set | ignored |
+| `config/.env.{APP_ENV}`, e.g. `config/.env.test` | when `APP_ENV` is set | committed |
+| `config/.env.local` | always | ignored |
+| `config/.env`, the location used by the CakePHP 3+/5 application skeleton | always | ignored |
+| `.env` in the project root | always | ignored |
 
-The precedence is: real environment variables > `config/.env` > the `.env` in
-the project root. `config/.env` is loaded first and the root `.env` second,
-and a variable that is already set, in the real environment (web server,
-shell, container, CI) or by `config/.env`, is never overwritten.
+A variable that is already set is never overwritten, so an earlier file wins
+over a later one, and real environment variables (web server, shell,
+container, CI) win over all files. `APP_ENV` is read from the real
+environment. The tests set it to `test` in `phpunit.xml.dist`, so they load
+`config/.env.test`, which is committed and points `DATABASE_URL` and
+`DATABASE_TEST_URL` to the test database (see
+[Testing](/development/testing#the-test-database-of-the-skeleton)).
+Put values for your machine only in `config/.env.local` or
+`config/.env.test.local`.
+
+::: pieceofcake2
+Earlier skeletons load only `config/.env` and the root `.env`.
+:::
 
 The loaded values are written to `putenv()`, `$_ENV` and `$_SERVER` as
 strings, so you can read them with `env()`, `getenv()`, `$_ENV` or `$_SERVER`:
@@ -351,9 +366,11 @@ To start, copy the example file that ships with the skeleton and edit it:
 cp config/.env.example config/.env
 ```
 
-Both `config/.env` and `/.env` are listed in the skeleton's `.gitignore`. Keep
-`.env` files out of version control and commit an example file, such as
-`config/.env.example`, instead.
+`config/.env`, `config/.env.local`, `config/.env.*.local` and `/.env` are
+listed in the skeleton's `.gitignore`. Keep `.env` files with credentials out
+of version control and commit an example file, such as `config/.env.example`,
+instead. `config/.env.test` holds only the settings of the tests and is
+committed, as in Symfony.
 
 A `.env` file is meant for development. In production, set real environment
 variables in the web server, container or process manager configuration; they
@@ -400,7 +417,12 @@ project root.
 
 use josegonzalez\Dotenv\Loader;
 
-foreach ([CONFIG . '.env', ROOT . DS . '.env'] as $dotenvFile) {
+$appEnv = (string)env('APP_ENV');
+$dotenvFiles = [CONFIG . '.env.local', CONFIG . '.env', ROOT . DS . '.env'];
+if ($appEnv !== '') {
+    array_unshift($dotenvFiles, CONFIG . ".env.{$appEnv}.local", CONFIG . ".env.{$appEnv}");
+}
+foreach ($dotenvFiles as $dotenvFile) {
     if (!is_file($dotenvFile)) {
         continue;
     }
@@ -420,7 +442,7 @@ foreach ([CONFIG . '.env', ROOT . DS . '.env'] as $dotenvFile) {
     }
     unset($dotenv, $key, $value);
 }
-unset($dotenvFile);
+unset($appEnv, $dotenvFiles, $dotenvFile);
 ```
 
 Add the `.env` files to `.gitignore`, and read the variables in your
@@ -441,34 +463,18 @@ the following variables. Its `config/.env.example` file lists them.
 | `DATABASE_URL` | the `'dsn'` of the `default` connection (see [Database DSNs](#database-url)) | the values in `config/database.php` |
 | `DATABASE_TEST_URL` | the `'dsn'` of the `test` connection | the values in `config/database.php` |
 | `MAILER_DSN` | the `'dsn'` of the `default` email profile (see [Mailer DSN](../core-utility-libraries/email#mailer-dsn)) | the values in `config/email.php` |
-| `CACHE_DEFAULT_URL` | the `'dsn'` of the `default` cache configuration in `config/bootstrap.php` (see [Configuring Cache Engines with a DSN](../core-libraries/caching#configuring-cache-engines-with-a-dsn)) | the `File` engine |
-| `CACHE_CAKECORE_URL`, `CACHE_CAKEMODEL_URL` | the `'dsn'` of the `_cake_core_` and `_cake_model_` caches in `config/core.php` | the values in `config/core.php` |
-| `LOG_DEBUG_URL`, `LOG_ERROR_URL` | the `'dsn'` of the `debug` and `error` log configurations in `config/bootstrap.php` (see [Configuring Log Streams with a DSN](../core-libraries/logging#configuring-log-streams-with-a-dsn)) | `File` logs in `logs/` |
+| `APP_ENV` | loads `config/.env.{APP_ENV}` and `config/.env.{APP_ENV}.local`; `test` in `phpunit.xml.dist` | only the other `.env` files are loaded |
 
 Empty variables are treated as not set. Without any `.env` file or environment
 variable, the application uses the values in the configuration files. The keys
 of a DSN replace the same keys of the configuration, and the other keys are
-kept as defaults. The cache and log variables use the names of the CakePHP 5
-application skeleton. The `'dsn'` key needs `pieceofcake2/cakephp`
-2.12.7 or later.
-
-For example, to keep the caches in Redis and write the logs to the standard
-streams of a container:
-
-```dotenv
-CACHE_DEFAULT_URL="redis://redis:6379/0?prefix=myapp_"
-CACHE_CAKECORE_URL="redis://redis:6379/0"
-CACHE_CAKEMODEL_URL="redis://redis:6379/0"
-LOG_DEBUG_URL="console://?stream=php://stdout"
-LOG_ERROR_URL="console://?stream=php://stderr"
-```
-
-The `prefix` of the core caches is kept from `config/core.php`, so the three
-caches do not overwrite each other in one Redis database.
+kept as defaults. The `'dsn'` key needs `pieceofcake2/cakephp` 2.12.7 or later.
 
 If your `config/database.php` or `config/email.php` was created from an
 earlier skeleton, copy the `__construct()` method of
-`config/database.php.default` or `config/email.php.default` into it. Earlier
+`config/database.php.default` or `config/email.php.default` into it, and
+remove an `APP_ENV` branch that used the `test` connection as `default`
+(`config/.env.test` sets `DATABASE_URL` to the test database instead). Earlier
 skeletons read the `DB_DATASOURCE`, `DB_HOST`, `DB_PORT`, `DB_USERNAME`,
 `DB_PASSWORD` and `DB_DATABASE` variables (and `DB_TEST_*` for the `test`
 connection) with an `applyEnv()` method; one `DATABASE_URL` replaces them:
@@ -489,8 +495,16 @@ For example, a `config/.env` file for development:
 # config/.env
 DEBUG="2"
 DATABASE_URL="mysql://my_app:secret@127.0.0.1:3306/my_app?encoding=utf8mb4"
-DATABASE_TEST_URL="mysql://my_app:secret@127.0.0.1:3306/test_my_app?encoding=utf8mb4"
 MAILER_DSN="smtp://127.0.0.1:1025"
+```
+
+and a `config/.env.test.local` file with the test database of your machine,
+which wins over `config/.env.test` in the tests:
+
+```dotenv
+# config/.env.test.local
+DATABASE_URL="mysql://my_app:secret@127.0.0.1:3306/test_my_app?encoding=utf8mb4"
+DATABASE_TEST_URL="mysql://my_app:secret@127.0.0.1:3306/test_my_app?encoding=utf8mb4"
 ```
 
 ## Class Loading and Additional Class Paths

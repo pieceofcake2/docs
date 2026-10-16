@@ -154,7 +154,7 @@ Support for TLS delivery was added in 2.3
 
 ::: pieceofcake2
 The `'dsn'` key was added in v2.12.7. Its value uses the `MAILER_DSN` format
-of Symfony Mailer. The same `'dsn'` key sets datasources, cache engines and log engines.
+of Symfony Mailer. The same `'dsn'` key sets datasources.
 :::
 
 A profile can set its transport with one DSN (a URL) in the `'dsn'` key, for

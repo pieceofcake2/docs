@@ -155,7 +155,10 @@ Next, finish the configuration:
    connections with the `DATABASE_URL` and `DATABASE_TEST_URL` environment
    variables (for example
    `DATABASE_URL="mysql://user:password@localhost/my_app?encoding=utf8mb4"`
-   in `config/.env`), or enter them in the file. See
+   in `config/.env`), or enter them in the file. The tests read the test
+   database from the committed `config/.env.test`; set your own in
+   `config/.env.test.local` (see
+   [The Test Database of the Skeleton](development/testing#the-test-database-of-the-skeleton)). See
    [Database Configuration](development/configuration#database-configuration)
    and [Database DSNs](development/configuration#database-url).
 2. In `config/core.php`, change the values of `Security.salt` and

@@ -83,16 +83,36 @@ public $test = [
 ];
 ```
 
-The connection can also be a DSN in the `'dsn'` key. The `config/database.php.default`
-file of the application skeleton reads it from the `DATABASE_TEST_URL`
-environment variable:
+The connection can also be a DSN in the `'dsn'` key. See
+[Database DSNs](configuration#database-url).
+
+### The Test Database of the Skeleton {#the-test-database-of-the-skeleton}
+
+The `config/database.php.default` file of the
+[pieceofcake2/app](https://pieceofcake2.github.io/app/) skeleton reads the
+`test` connection from the `DATABASE_TEST_URL` environment variable and the
+`default` connection from `DATABASE_URL`. Its `phpunit.xml.dist` sets
+`APP_ENV`, as in Symfony:
+
+```xml
+<env name="APP_ENV" value="test" force="true"/>
+```
+
+so the tests load the committed `config/.env.test` (see
+[Loading .env Files](configuration#loading-env-files)), which sets both
+variables to the test database. Set the test database of your machine in
+`config/.env.test.local`, which is ignored by Git, or as real environment
+variables, which win over the files:
 
 ```dotenv
-# config/.env
+# config/.env.test.local
+DATABASE_URL="mysql://dblogin:dbpassword@dbhost/test_database"
 DATABASE_TEST_URL="mysql://dblogin:dbpassword@dbhost/test_database"
 ```
 
-See [Database DSNs](configuration#database-url).
+`DATABASE_URL` points to the test database too, so that the web server of the
+[End-to-End tests](e2e-testing), which inherits `APP_ENV=test`, reads the
+fixtures.
 
 In the legacy `app/` layout these files are `app/Config/core.php` and
 `app/Config/database.php`.
@@ -269,8 +289,9 @@ The recommended way to run tests is from the command line. The
          stderr="true"
          colors="true">
     <php>
+        <!-- The tests and the End-to-End web server load config/.env.test -->
+        <env name="APP_ENV" value="test" force="true"/>
         <!-- Configuration of the End-to-End tests (pieceofcake2/panther) -->
-        <server name="PANTHER_APP_ENV" value="test"/>
         <server name="PANTHER_ERROR_SCREENSHOT_DIR" value="./tmp/error-screenshots"/>
     </php>
     <listeners>

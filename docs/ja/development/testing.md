@@ -82,15 +82,34 @@ public $test = [
 ];
 ```
 
-接続は `'dsn'` キーに DSN で書くこともできます。アプリケーションスケルトンの
-`config/database.php.default` は、環境変数 `DATABASE_TEST_URL` からこれを読み込みます。
+接続は `'dsn'` キーに DSN で書くこともできます。[データベースの DSN](configuration#database-url)
+を参照してください。
+
+<a id="the-test-database-of-the-skeleton"></a>
+
+### スケルトンのテスト用データベース
+
+[pieceofcake2/app](https://pieceofcake2.github.io/app/) スケルトンの `config/database.php.default` は、
+`test` 接続を環境変数 `DATABASE_TEST_URL` から、`default` 接続を `DATABASE_URL` から読み込みます。
+スケルトンの `phpunit.xml.dist` は、Symfony と同じように `APP_ENV` を設定します。
+
+```xml
+<env name="APP_ENV" value="test" force="true"/>
+```
+
+そのため、テストではコミットされている `config/.env.test` が読み込まれます
+([.env ファイルの読み込み](configuration#loading-env-files) を参照)。このファイルは両方の変数を
+テスト用データベースに設定します。自分のマシンのテスト用データベースは、Git で無視される
+`config/.env.test.local` か、ファイルより優先される実際の環境変数で設定してください。
 
 ```dotenv
-# config/.env
+# config/.env.test.local
+DATABASE_URL="mysql://dblogin:dbpassword@dbhost/test_database"
 DATABASE_TEST_URL="mysql://dblogin:dbpassword@dbhost/test_database"
 ```
 
-[データベースの DSN](configuration#database-url) を参照してください。
+`DATABASE_URL` もテスト用データベースを指すので、`APP_ENV=test` を引き継ぐ
+[End-to-End テスト](e2e-testing) の Web サーバーもフィクスチャを読み込めます。
 
 レガシーな `app/` 構成では、これらのファイルは `app/Config/core.php` と
 `app/Config/database.php` です。
@@ -262,8 +281,9 @@ CakePHP 用に PHPUnit を設定する `phpunit.xml.dist` があります。
          stderr="true"
          colors="true">
     <php>
+        <!-- テストと End-to-End テストの Web サーバーは config/.env.test を読み込む -->
+        <env name="APP_ENV" value="test" force="true"/>
         <!-- End-to-End テストの設定 (pieceofcake2/panther) -->
-        <server name="PANTHER_APP_ENV" value="test"/>
         <server name="PANTHER_ERROR_SCREENSHOT_DIR" value="./tmp/error-screenshots"/>
     </php>
     <listeners>

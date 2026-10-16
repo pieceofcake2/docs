@@ -152,8 +152,7 @@ class EmailConfig
 
 ::: pieceofcake2
 `'dsn'` キーは v2.12.7 で追加されます。値は
-Symfony Mailer の `MAILER_DSN` の書式です。同じ `'dsn'` キーで、データソース、キャッシュ
-エンジン、ログエンジンも設定できます。
+Symfony Mailer の `MAILER_DSN` の書式です。同じ `'dsn'` キーで、データソースも設定できます。
 :::
 
 プロファイルのトランスポートは、`'dsn'` キーに書いた 1 つの DSN (URL) で設定できます。
