@@ -74,7 +74,8 @@ suit your needs.
 
 A connection can also be set with one DSN (a URL) in the `'dsn'` key, for
 example `'dsn' => env('DATABASE_URL')`. The `config/database.php.default` file
-of the application skeleton reads `DATABASE_URL` and `DATABASE_TEST_URL`. See
+of the application skeleton reads `DATABASE_URL`, which is the test database
+in the tests. See
 [Database DSNs](#database-url) and
 [Environment Variables](#environment-variables).
 
@@ -341,9 +342,9 @@ The skeleton loads these files if they exist, in the order of Symfony's
 A variable that is already set is never overwritten, so an earlier file wins
 over a later one, and real environment variables (web server, shell,
 container, CI) win over all files. `APP_ENV` is read from the real
-environment. The tests set it to `test` in `phpunit.xml.dist`, so they load
-`config/.env.test`, which is committed and points `DATABASE_URL` and
-`DATABASE_TEST_URL` to the test database (see
+environment. The tests set it to `test` in `tests/bootstrap.php`, so they load
+`config/.env.test`, which is committed and points `DATABASE_URL` to the test
+database (see
 [Testing](/development/testing#the-test-database-of-the-skeleton)).
 Put values for your machine only in `config/.env.local` or
 `config/.env.test.local`.
@@ -460,10 +461,9 @@ the following variables. Its `config/.env.example` file lists them.
 | `SECURITY_SALT` | `Security.salt` | the value in `config/core.php` |
 | `SECURITY_CIPHER_SEED` | `Security.cipherSeed` (1 to 4294967295; see [cipherSeed](#cipher-seed)) | the value in `config/core.php` |
 | `COOKIE_KEY` | `Cookie.key`, the `CookieComponent` key for the `'aes'` type (see [Migrating to 'aes'](#migrating-to-aes)) | `null`: `CookieComponent` uses `Security.salt` |
-| `DATABASE_URL` | the `'dsn'` of the `default` connection (see [Database DSNs](#database-url)) | the values in `config/database.php` |
-| `DATABASE_TEST_URL` | the `'dsn'` of the `test` connection | the values in `config/database.php` |
+| `DATABASE_URL` | the `'dsn'` of the `default` connection, and with `APP_ENV=test` also of the `test` connection (see [Database DSNs](#database-url)) | the values in `config/database.php` |
 | `MAILER_DSN` | the `'dsn'` of the `default` email profile (see [Mailer DSN](../core-utility-libraries/email#mailer-dsn)) | the values in `config/email.php` |
-| `APP_ENV` | loads `config/.env.{APP_ENV}` and `config/.env.{APP_ENV}.local`; `test` in `phpunit.xml.dist` | only the other `.env` files are loaded |
+| `APP_ENV` | loads `config/.env.{APP_ENV}` and `config/.env.{APP_ENV}.local`; `test` in `tests/bootstrap.php` | only the other `.env` files are loaded |
 
 Empty variables are treated as not set. Without any `.env` file or environment
 variable, the application uses the values in the configuration files. The keys
@@ -474,7 +474,9 @@ If your `config/database.php` or `config/email.php` was created from an
 earlier skeleton, copy the `__construct()` method of
 `config/database.php.default` or `config/email.php.default` into it, and
 remove an `APP_ENV` branch that used the `test` connection as `default`
-(`config/.env.test` sets `DATABASE_URL` to the test database instead). Earlier
+(`config/.env.test` sets `DATABASE_URL` to the test database instead). Copy
+the `App.env` line of `config/core.php` and `tests/bootstrap.php` from the
+skeleton too. Earlier
 skeletons read the `DB_DATASOURCE`, `DB_HOST`, `DB_PORT`, `DB_USERNAME`,
 `DB_PASSWORD` and `DB_DATABASE` variables (and `DB_TEST_*` for the `test`
 connection) with an `applyEnv()` method; one `DATABASE_URL` replaces them:
@@ -499,12 +501,11 @@ MAILER_DSN="smtp://127.0.0.1:1025"
 ```
 
 and a `config/.env.test.local` file with the test database of your machine,
-which wins over `config/.env.test` in the tests:
+which wins over `config/.env.test` and `config/.env` in the tests:
 
 ```dotenv
 # config/.env.test.local
 DATABASE_URL="mysql://my_app:secret@127.0.0.1:3306/test_my_app?encoding=utf8mb4"
-DATABASE_TEST_URL="mysql://my_app:secret@127.0.0.1:3306/test_my_app?encoding=utf8mb4"
 ```
 
 ## Class Loading and Additional Class Paths

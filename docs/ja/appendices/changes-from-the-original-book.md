@@ -32,7 +32,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
 | `'cipher'` 暗号化（`CookieComponent` のデフォルトのタイプ） | デフォルトのタイプで安全でなく、警告もない | 非推奨でログに警告を記録。範囲外の `Security.cipherSeed` を報告。`Cookie.type` / `Cookie.key` でデフォルトを設定 (v2.12.6) | [脆弱性への対応](/ja/security/fixes#cipher) |
 | デバッグモードのエラーページ | CakePHP 2 のレイアウト | コードの抜粋とエディターへのリンクを含む CakePHP 5 風の `dev_error` レイアウト (v2.12.6) | [デバッグ](/ja/development/debugging#debug-error-pages) |
 | `.env` ファイル | 非対応 | `pieceofcake2/app` スケルトン (v2.4.0) が josegonzalez/dotenv で読み込み (フレームワークは読み込まない) | [環境変数](/ja/development/configuration#environment-variables) |
-| DSN による設定 | 非対応 (CakePHP 3.0 で `url` キーとして追加) | データソースとメールの設定の `'dsn'` キーに DSN を書ける。プラグインは `setDsnClassMap()` でスキームを登録できる。スケルトンは `DATABASE_URL`、`DATABASE_TEST_URL`、`MAILER_DSN` を読み込む (v2.12.7) | [データベースの DSN](/ja/development/configuration#database-url) |
+| DSN による設定 | 非対応 (CakePHP 3.0 で `url` キーとして追加) | データソースとメールの設定の `'dsn'` キーに DSN を書ける。プラグインは `setDsnClassMap()` でスキームを登録できる。スケルトンは `DATABASE_URL` (`config/.env.test` ではテスト用データベース) と `MAILER_DSN` を読み込む (v2.12.7) | [データベースの DSN](/ja/development/configuration#database-url) |
 
 破壊的変更の一覧は [CakePHP 2.10 からの移行](/ja/appendices/migrating-from-cakephp-2-10) と
 [CHANGELOG](https://github.com/pieceofcake2/cakephp/blob/2.x/CHANGELOG.md) を参照してください。
@@ -82,7 +82,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - 「既存のアプリケーションへの導入」を「新しいアプリケーションの作成」の前に移動。最後のリンクは「入門」ではなくブログチュートリアルを指すように変更
   - Apache のバーチャルホスト: `Options -Indexes -MultiViews +FollowSymLinks` を追加し、ドキュメントルートをプロジェクトのディレクトリにしないよう警告、Apache 2.2 の書き方へのリンクを追加
   - 新規アプリケーション: `Security.salt` と `Security.cipherSeed` を生成するコマンドを記載。シードで Cookie の 'cipher' タイプが安全になるわけではないことを追記
-  - 設定の手順で、データベースの接続を `DATABASE_URL` / `DATABASE_TEST_URL`、メールのトランスポートを `MAILER_DSN` でセット
+  - 設定の手順で、データベースの接続を `DATABASE_URL` (`config/.env.test` ではテスト用データベース)、メールのトランスポートを `MAILER_DSN` でセット
 - [応用インストール](/ja/installation/advanced-installation)
   - PEAR でのインストール、旧来の Composer/bake によるプロジェクト作成、CAKE_CORE_INCLUDE_PATH によるコア共有を削除
   - Composer 設定の詳細を追加: replace、プラグインの installer-paths、classmap オートロード、exclude-from-classmap
@@ -298,7 +298,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - キャッシュ: 使用可能なエンジンを列挙 (File、Apc/APCu、Memcached、Memcache、Redis)。Xcache/Wincache の削除を変更点として記載
   - 設定リーダー: デフォルトの読み込み先は `CONFIG`。独自リーダーの例を `src/Lib/Configure` に移し、プロパティを宣言 (PHP 8.2)、`App::uses()` を削除。ja の例のクラス名を PHP の XMLReader と衝突する `XmlReader` から `MyXmlReader` に変更。ConfigReaderInterface/ConfigureException の説明を修正
   - Inflector のパス `src/Cake/Utility/Inflector.php` と `config/bootstrap.php` を本文に反映。古い IE/Chrome Frame や AMF/SOAP の例を更新。ja: `$merge` の説明を修正し `Configure::consume()` を追加
-  - 「環境変数」の節を追加: pieceofcake2/app スケルトンが `config/core.php` の先頭で josegonzalez/dotenv により `config/.env` とプロジェクトルートの `.env` を読み込むこと (CakePHP 3〜5 のアプリケーションスケルトンの `.env` サポートのバックポート。変更点: app v2.4.0 で追加)、Symfony と同じ順でのファイルの読み込み (`config/.env.{APP_ENV}.local`、`config/.env.{APP_ENV}`、`config/.env.local`、`config/.env`、ルートの `.env`。実際の環境変数と先に読み込むファイルが優先。`config/.env.test` はコミット) (v2.12.7)、値のクォート、レガシー構成や以前のアプリケーションへの読み込み処理の追加方法、スケルトンが読み込む環境変数 (`DEBUG`、`SECURITY_SALT`、`SECURITY_CIPHER_SEED`、`COOKIE_KEY`、`DATABASE_URL`、`DATABASE_TEST_URL`、`MAILER_DSN`、`APP_ENV`。以前のスケルトンの `DB_*` と `APP_ENV` の分岐、その置き換え方)
+  - 「環境変数」の節を追加: pieceofcake2/app スケルトンが `config/core.php` の先頭で josegonzalez/dotenv により `config/.env` とプロジェクトルートの `.env` を読み込むこと (CakePHP 3〜5 のアプリケーションスケルトンの `.env` サポートのバックポート。変更点: app v2.4.0 で追加)、Symfony と同じ順でのファイルの読み込み (`config/.env.{APP_ENV}.local`、`config/.env.{APP_ENV}`、`config/.env.local`、`config/.env`、ルートの `.env`。実際の環境変数と先に読み込むファイルが優先。`config/.env.test` はコミット) (v2.12.7)、値のクォート、レガシー構成や以前のアプリケーションへの読み込み処理の追加方法、スケルトンが読み込む環境変数 (`DEBUG`、`SECURITY_SALT`、`SECURITY_CIPHER_SEED`、`COOKIE_KEY`、`DATABASE_URL`、`MAILER_DSN`、`APP_ENV`。以前のスケルトンの `DB_*` と `APP_ENV` の分岐、その置き換え方)
   - `App.baseUrl`: `.htaccess` ファイルを削除してもドキュメントルートは `webroot/` のままにすることを追記
   - 「セキュリティ用のソルトの生成」の節を追加: 安全な生成コマンド (PHP とシェル)、それぞれの値に依存するもの (Cookie の 'aes' タイプは専用のキーを設定しても `Security.salt` を組み合わせる)、値の変更手順
   - 「cipherSeed と Cookie の 'cipher' タイプ」の節を追加: `Security::cipher()` でのシードの使われ方、意味があるのは 1〜4294967295 だけで、27 桁以上の値 (本家の `config/core.php` のデフォルト値、ブログチュートリアルのサンプル値、以前の `.env.example` の生成コマンド) はシード 0 になること、範囲内のシードでも安全ではないこと、影響、どうすればよいか、`COOKIE_KEY` から `Cookie.key` に読み込む 32 バイトのキー、'aes' にした `Cookie.type`、`Security.useOpenSsl` を使った 'aes' への移行 (v2.12.6 以降は `Cookie.type` と `Cookie.key` を設定で指定できること、v2.12.5 以前でのコントローラーでの設定、代わりのキーの `Security.salt` が 32 バイト未満のときの例外)、警告
@@ -354,7 +354,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - Jenkins: 新しい継続的インテグレーションのページの最後 (GitHub Actions のワークフローの後) に移動。`composer install` の手順、`config/database.php`、`vendor/bin/phpunit`、jenkins.io へのリンク。test-database-setup と generating-code-coverage のアンカーを明示的に追加
   - 「テストの種類」の節を追加: フィクスチャを使うユニットテスト、testAction() によるコントローラーのテスト、ブラウザーによる End-to-End テスト (End-to-End テストのページへのリンク)。testing-controllers のアンカーを明示的に追加
   - 「テストの種類」に `IntegrationTestTrait` による統合テストを追加 (統合テストのページへのリンク)。`ControllerTestCase` は引き続きサポートされていることを記載。「コントローラーのテスト」に統合テストのページへのリンクのヒントを追加。test-case-conventions のアンカーを明示的に追加
-  - テスト用データベースを `DATABASE_TEST_URL` で設定 (v2.12.7)。「スケルトンのテスト用データベース」の節を追加: `phpunit.xml.dist` の `APP_ENV=test` でコミット済みの `config/.env.test` を読み込み、マシンごとの値は `config/.env.test.local` に書く
+  - テスト用データベースを `config/.env.test` の `DATABASE_URL` で設定 (v2.12.7)。「スケルトンのテスト用データベース」の節を追加: `tests/bootstrap.php` が `APP_ENV=test` を設定してコミット済みの `config/.env.test` を読み込み、マシンごとの値は `config/.env.test.local` に書く。`test` 接続は `APP_ENV=test` のときだけ `DATABASE_URL` を読み込み、`bin/cake test` は `APP_ENV=test` を付けて実行する
 - [REST](/ja/development/rest)
   - パスを `config/routes.php`、`src/Controller`、`templates/Recipes/xml` に更新
   - HTTP メソッド上書きの優先順位を修正（X-HTTP-Method-Override ヘッダが _method より優先）

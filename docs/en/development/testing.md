@@ -88,31 +88,49 @@ The connection can also be a DSN in the `'dsn'` key. See
 
 ### The Test Database of the Skeleton {#the-test-database-of-the-skeleton}
 
-The `config/database.php.default` file of the
-[pieceofcake2/app](https://pieceofcake2.github.io/app/) skeleton reads the
-`test` connection from the `DATABASE_TEST_URL` environment variable and the
-`default` connection from `DATABASE_URL`. Its `phpunit.xml.dist` sets
-`APP_ENV`, as in Symfony:
-
-```xml
-<env name="APP_ENV" value="test" force="true"/>
-```
-
-so the tests load the committed `config/.env.test` (see
-[Loading .env Files](configuration#loading-env-files)), which sets both
-variables to the test database. Set the test database of your machine in
-`config/.env.test.local`, which is ignored by Git, or as real environment
-variables, which win over the files:
+The [pieceofcake2/app](https://pieceofcake2.github.io/app/) skeleton has one
+database variable, as in Symfony: `DATABASE_URL` is the database of the current
+environment. Its `tests/bootstrap.php` always sets `APP_ENV=test` before
+CakePHP loads the `.env` files, so the tests load the committed
+`config/.env.test` (see [Loading .env Files](configuration#loading-env-files)),
+where `DATABASE_URL` is the test database. Set the test database of your
+machine in `config/.env.test.local`, which is ignored by Git, or as a real
+environment variable, which wins over the files (CI sets it this way):
 
 ```dotenv
 # config/.env.test.local
 DATABASE_URL="mysql://dblogin:dbpassword@dbhost/test_database"
-DATABASE_TEST_URL="mysql://dblogin:dbpassword@dbhost/test_database"
 ```
 
-`DATABASE_URL` points to the test database too, so that the web server of the
-[End-to-End tests](e2e-testing), which inherits `APP_ENV=test`, reads the
-fixtures.
+`config/database.php.default` reads `DATABASE_URL` for both connections, but
+the `test` connection only when `config/core.php` loaded the files with
+`APP_ENV=test`:
+
+```php
+public function __construct()
+{
+    $this->default['dsn'] = env('DATABASE_URL');
+    // Only the test database: config/core.php loaded config/.env.test (APP_ENV=test).
+    if (Configure::read('App.env') === 'test') {
+        $this->test['dsn'] = env('DATABASE_URL');
+    }
+}
+```
+
+Without `APP_ENV=test`, `DATABASE_URL` is your development database, and the
+fixtures drop and create tables, so the `test` connection then keeps the keys
+of `config/database.php`. The web server of the
+[End-to-End tests](e2e-testing) inherits `APP_ENV=test`, so its `default`
+connection is the test database and the pages read the fixtures.
+
+`bin/cake` loads the `.env` files before the test shell starts, so run the
+test shell with `APP_ENV=test`:
+
+```bash
+APP_ENV=test bin/cake test app Model/Post
+```
+
+Without it, `tests/bootstrap.php` stops the run with an error.
 
 In the legacy `app/` layout these files are `app/Config/core.php` and
 `app/Config/database.php`.
@@ -289,8 +307,6 @@ The recommended way to run tests is from the command line. The
          stderr="true"
          colors="true">
     <php>
-        <!-- The tests and the End-to-End web server load config/.env.test -->
-        <env name="APP_ENV" value="test" force="true"/>
         <!-- Configuration of the End-to-End tests (pieceofcake2/panther) -->
         <server name="PANTHER_ERROR_SCREENSHOT_DIR" value="./tmp/error-screenshots"/>
     </php>

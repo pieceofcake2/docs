@@ -89,27 +89,46 @@ public $test = [
 
 ### スケルトンのテスト用データベース
 
-[pieceofcake2/app](https://pieceofcake2.github.io/app/) スケルトンの `config/database.php.default` は、
-`test` 接続を環境変数 `DATABASE_TEST_URL` から、`default` 接続を `DATABASE_URL` から読み込みます。
-スケルトンの `phpunit.xml.dist` は、Symfony と同じように `APP_ENV` を設定します。
-
-```xml
-<env name="APP_ENV" value="test" force="true"/>
-```
-
-そのため、テストではコミットされている `config/.env.test` が読み込まれます
-([.env ファイルの読み込み](configuration#loading-env-files) を参照)。このファイルは両方の変数を
-テスト用データベースに設定します。自分のマシンのテスト用データベースは、Git で無視される
-`config/.env.test.local` か、ファイルより優先される実際の環境変数で設定してください。
+[pieceofcake2/app](https://pieceofcake2.github.io/app/) スケルトンのデータベースの変数は、Symfony と同じように
+1 つです。`DATABASE_URL` は現在の環境のデータベースです。スケルトンの `tests/bootstrap.php` は、CakePHP が
+`.env` ファイルを読み込む前に常に `APP_ENV=test` を設定します。そのため、テストではコミットされている
+`config/.env.test` が読み込まれ ([.env ファイルの読み込み](configuration#loading-env-files) を参照)、
+このファイルの `DATABASE_URL` がテスト用データベースになります。自分のマシンのテスト用データベースは、
+Git で無視される `config/.env.test.local` か、ファイルより優先される実際の環境変数 (CI はこの方法です) で
+設定してください。
 
 ```dotenv
 # config/.env.test.local
 DATABASE_URL="mysql://dblogin:dbpassword@dbhost/test_database"
-DATABASE_TEST_URL="mysql://dblogin:dbpassword@dbhost/test_database"
 ```
 
-`DATABASE_URL` もテスト用データベースを指すので、`APP_ENV=test` を引き継ぐ
-[End-to-End テスト](e2e-testing) の Web サーバーもフィクスチャを読み込めます。
+`config/database.php.default` は両方の接続で `DATABASE_URL` を読み込みますが、`test` 接続が読み込むのは
+`config/core.php` が `APP_ENV=test` でファイルを読み込んだときだけです。
+
+```php
+public function __construct()
+{
+    $this->default['dsn'] = env('DATABASE_URL');
+    // Only the test database: config/core.php loaded config/.env.test (APP_ENV=test).
+    if (Configure::read('App.env') === 'test') {
+        $this->test['dsn'] = env('DATABASE_URL');
+    }
+}
+```
+
+`APP_ENV=test` でないときの `DATABASE_URL` は開発用データベースで、フィクスチャはテーブルを削除して
+作成するので、`test` 接続は `config/database.php` のキーを使います。[End-to-End テスト](e2e-testing) の
+Web サーバーは `APP_ENV=test` を引き継ぐので、その `default` 接続はテスト用データベースになり、ページは
+フィクスチャを読み込みます。
+
+`bin/cake` はテストシェルが始まる前に `.env` ファイルを読み込むので、テストシェルは `APP_ENV=test` を
+付けて実行してください。
+
+```bash
+APP_ENV=test bin/cake test app Model/Post
+```
+
+付けないと、`tests/bootstrap.php` がエラーで実行を止めます。
 
 レガシーな `app/` 構成では、これらのファイルは `app/Config/core.php` と
 `app/Config/database.php` です。
@@ -281,8 +300,6 @@ CakePHP 用に PHPUnit を設定する `phpunit.xml.dist` があります。
          stderr="true"
          colors="true">
     <php>
-        <!-- テストと End-to-End テストの Web サーバーは config/.env.test を読み込む -->
-        <env name="APP_ENV" value="test" force="true"/>
         <!-- End-to-End テストの設定 (pieceofcake2/panther) -->
         <server name="PANTHER_ERROR_SCREENSHOT_DIR" value="./tmp/error-screenshots"/>
     </php>

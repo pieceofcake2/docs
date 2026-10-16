@@ -82,7 +82,6 @@ jobs:
 
     env:
       DATABASE_URL: mysql://root:root@127.0.0.1:3306/cakephp_test?encoding=utf8mb4
-      DATABASE_TEST_URL: mysql://root:root@127.0.0.1:3306/cakephp_test?encoding=utf8mb4
 
     steps:
       - uses: actions/checkout@v7
@@ -220,7 +219,6 @@ jobs:
 
     env:
       DATABASE_URL: mysql://root:root@127.0.0.1:3306/cakephp_test?encoding=utf8mb4
-      DATABASE_TEST_URL: mysql://root:root@127.0.0.1:3306/cakephp_test?encoding=utf8mb4
 
     steps:
       - uses: actions/checkout@v7
@@ -292,13 +290,13 @@ The parts that every job shares:
 - **Database.** The jobs that use the database start MySQL as a
   [service container](https://docs.github.com/en/actions/tutorials/use-containerized-services/use-docker-service-containers).
   `config/database.php` is not committed in the skeleton, so the job copies
-  `config/database.php.default`, which reads the `test` connection from the
-  `DATABASE_TEST_URL` environment variable and the `default` connection from
-  `DATABASE_URL` (see [Database DSNs](/development/configuration#database-url);
+  `config/database.php.default`, which reads the connections from the
+  `DATABASE_URL` environment variable; in the tests (`APP_ENV=test`, set by
+  `tests/bootstrap.php`) both the `default` and the `test` connection use it
+  (see [Database DSNs](/development/configuration#database-url);
   the `'dsn'` key needs pieceofcake2/cakephp 2.12.7 or later). The jobs set
-  both to the database of the service container as real environment
-  variables, which win over the committed `config/.env.test` that the tests
-  load with `APP_ENV=test`.
+  `DATABASE_URL` to the database of the service container as a real
+  environment variable, which wins over the committed `config/.env.test`.
   Skeletons created before read the `DB_TEST_DATASOURCE`, `DB_TEST_HOST`, `DB_TEST_PORT`,
   `DB_TEST_USERNAME`, `DB_TEST_PASSWORD` and `DB_TEST_DATABASE` variables
   instead.
@@ -328,7 +326,6 @@ variable:
 
     env:
       DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/cakephp_test
-      DATABASE_TEST_URL: postgres://postgres:postgres@127.0.0.1:5432/cakephp_test
 ```
 
 and install `pdo_pgsql` instead of `pdo_mysql`. To test both databases, add a
@@ -412,7 +409,7 @@ The `end-to-end` job runs the browser tests of
 PHPUnit job keeps running only the `App` suite (`defaultTestSuite="App"`) and
 needs no browser. If you removed `defaultTestSuite`, run the PHPUnit job with
 `--testsuite App`. The `end-to-end` job needs the database, like the PHPUnit
-job: the web server inherits `APP_ENV=test` of `phpunit.xml.dist` and the
+job: the web server inherits `APP_ENV=test` of `tests/bootstrap.php` and the
 `DATABASE_URL` of the job, so its `default` connection is the test database. The
 `ubuntu-latest` runner has Chrome, and `vendor/bin/bdi detect drivers`
 ([bdi](https://github.com/dbrekelmans/bdi), a development dependency) installs

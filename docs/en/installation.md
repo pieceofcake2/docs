@@ -152,12 +152,11 @@ details.
 Next, finish the configuration:
 
 1. Copy `config/database.php.default` to `config/database.php`. Set the
-   connections with the `DATABASE_URL` and `DATABASE_TEST_URL` environment
-   variables (for example
+   connection with the `DATABASE_URL` environment variable (for example
    `DATABASE_URL="mysql://user:password@localhost/my_app?encoding=utf8mb4"`
-   in `config/.env`), or enter them in the file. The tests read the test
-   database from the committed `config/.env.test`; set your own in
-   `config/.env.test.local` (see
+   in `config/.env`), or enter it in the file. The tests run with
+   `APP_ENV=test` and read `DATABASE_URL` from the committed
+   `config/.env.test`; set your test database in `config/.env.test.local` (see
    [The Test Database of the Skeleton](development/testing#the-test-database-of-the-skeleton)). See
    [Database Configuration](development/configuration#database-configuration)
    and [Database DSNs](development/configuration#database-url).
@@ -179,7 +178,7 @@ Next, finish the configuration:
    [cipherSeed and the 'cipher' Cookie Type](development/configuration#cipher-seed)).
 
 Instead of editing the files, you can set the debug level, the security
-salts, the database connections (`DATABASE_URL`, `DATABASE_TEST_URL`) and the
+salts, the database connection (`DATABASE_URL`) and the
 email transport (`MAILER_DSN`) with environment variables. For development, copy
 `config/.env.example` to `config/.env` (or to `.env` in the project root) and
 edit it; the skeleton loads it at the top of `config/core.php`. See

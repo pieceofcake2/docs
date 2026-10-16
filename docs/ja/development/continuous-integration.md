@@ -82,7 +82,6 @@ jobs:
 
     env:
       DATABASE_URL: mysql://root:root@127.0.0.1:3306/cakephp_test?encoding=utf8mb4
-      DATABASE_TEST_URL: mysql://root:root@127.0.0.1:3306/cakephp_test?encoding=utf8mb4
 
     steps:
       - uses: actions/checkout@v7
@@ -220,7 +219,6 @@ jobs:
 
     env:
       DATABASE_URL: mysql://root:root@127.0.0.1:3306/cakephp_test?encoding=utf8mb4
-      DATABASE_TEST_URL: mysql://root:root@127.0.0.1:3306/cakephp_test?encoding=utf8mb4
 
     steps:
       - uses: actions/checkout@v7
@@ -291,11 +289,11 @@ jobs:
 - **データベース**: データベースを使うジョブは、MySQL を
   [サービスコンテナー](https://docs.github.com/ja/actions/tutorials/use-containerized-services/use-docker-service-containers)
   として起動します。スケルトンでは `config/database.php` をコミットしないので、ジョブは
-  `config/database.php.default` をコピーします。このファイルは `test` 接続を環境変数
-  `DATABASE_TEST_URL` から、`default` 接続を `DATABASE_URL` から読み込みます
-  ([データベースの DSN](/ja/development/configuration#database-url) を参照。`'dsn'` キーには
-  pieceofcake2/cakephp 2.12.7 以降が必要です)。ジョブは両方をサービスコンテナーのデータベースに
-  実際の環境変数として設定し、これはテストが `APP_ENV=test` で読み込むコミット済みの
+  `config/database.php.default` をコピーします。このファイルは環境変数 `DATABASE_URL` から接続を
+  読み込み、テスト (`tests/bootstrap.php` が設定する `APP_ENV=test`) では `default` 接続と `test` 接続の
+  両方がこれを使います ([データベースの DSN](/ja/development/configuration#database-url) を参照。
+  `'dsn'` キーには pieceofcake2/cakephp 2.12.7 以降が必要です)。ジョブは `DATABASE_URL` を
+  サービスコンテナーのデータベースに実際の環境変数として設定し、これはコミット済みの
   `config/.env.test` より優先されます。以前のスケルトンでは、
   代わりに `DB_TEST_DATASOURCE`、`DB_TEST_HOST`、`DB_TEST_PORT`、`DB_TEST_USERNAME`、
   `DB_TEST_PASSWORD`、`DB_TEST_DATABASE` を読み込みます。フィクスチャはこのデータベースに
@@ -323,7 +321,6 @@ PostgreSQL でテストする場合は、サービスと環境変数を次のよ
 
     env:
       DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/cakephp_test
-      DATABASE_TEST_URL: postgres://postgres:postgres@127.0.0.1:5432/cakephp_test
 ```
 
 さらに、`pdo_mysql` の代わりに `pdo_pgsql` をインストールします。両方のデータベースでテストするには、
@@ -409,7 +406,7 @@ PHPStan のジョブは、
 するので、PHPUnit のジョブは引き続き `App` スイートだけを実行し (`defaultTestSuite="App"`)、
 ブラウザーは不要です。`defaultTestSuite` を削除した場合は、PHPUnit のジョブを `--testsuite App` で
 実行してください。`end-to-end` ジョブには PHPUnit のジョブと同じくデータベースが必要です。
-Web サーバーは `phpunit.xml.dist` の `APP_ENV=test` とジョブの `DATABASE_URL` を引き継ぐので、
+Web サーバーは `tests/bootstrap.php` の `APP_ENV=test` とジョブの `DATABASE_URL` を引き継ぐので、
 Web サーバーの `default` 接続はテスト用データベースになります。`ubuntu-latest` のランナーには Chrome があり、
 `vendor/bin/bdi detect drivers` (開発用の依存パッケージの [bdi](https://github.com/dbrekelmans/bdi))
 が対応する chromedriver をインストールします。GitHub のランナーでは `PANTHER_NO_SANDBOX=1` が

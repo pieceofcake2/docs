@@ -136,10 +136,10 @@ my_app/
 続いて設定を済ませます。
 
 1. `config/database.php.default` を `config/database.php` にコピーします。接続は環境変数
-   `DATABASE_URL` と `DATABASE_TEST_URL` でセットするか (たとえば `config/.env` に
+   `DATABASE_URL` でセットするか (たとえば `config/.env` に
    `DATABASE_URL="mysql://user:password@localhost/my_app?encoding=utf8mb4"` と書きます)、
-   ファイルに記入します。テストはコミットされている `config/.env.test` からテスト用データベースを
-   読み込むので、自分のテスト用データベースは `config/.env.test.local` で設定します
+   ファイルに記入します。テストは `APP_ENV=test` で動き、コミットされている `config/.env.test` から
+   `DATABASE_URL` を読み込むので、自分のテスト用データベースは `config/.env.test.local` で設定します
    ([スケルトンのテスト用データベース](development/testing#the-test-database-of-the-skeleton) を参照)。
    [データベース設定](development/configuration#database-configuration) と
    [データベースの DSN](development/configuration#database-url) を参照してください。
@@ -159,7 +159,7 @@ my_app/
    (スケルトンでは設定済みです。[cipherSeed と Cookie の 'cipher' タイプ](development/configuration#cipher-seed) を参照してください)。
 
 ファイルを編集する代わりに、デバッグレベル、セキュリティ用のソルト、データベースの接続
-(`DATABASE_URL`、`DATABASE_TEST_URL`)、メールのトランスポート (`MAILER_DSN`) を
+(`DATABASE_URL`)、メールのトランスポート (`MAILER_DSN`) を
 環境変数でセットすることもできます。開発環境では、`config/.env.example` を `config/.env`
 (またはプロジェクトルートの `.env`) にコピーして編集します。スケルトンは `config/core.php` の先頭で
 このファイルを読み込みます。[環境変数](development/configuration#environment-variables) を参照してください。

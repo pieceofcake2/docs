@@ -92,8 +92,6 @@ Symfony のアプリケーションと同じように、End-to-End テストは�
          stderr="true"
          colors="true">
     <php>
-        <!-- テストと Web サーバーは config/.env.test を読み込む -->
-        <env name="APP_ENV" value="test" force="true"/>
         <!-- 失敗した End-to-End テストのスクリーンショット -->
         <server name="PANTHER_ERROR_SCREENSHOT_DIR" value="./tmp/error-screenshots"/>
     </php>
@@ -138,30 +136,26 @@ Symfony のアプリケーションと同じように、End-to-End テストは�
 Web サーバーは別の PHP プロセスで、ブラウザーに見えるのは Web サーバーが読み込むデータだけです。
 そのため Web サーバーの `default` 接続は、`CakeTestCase` がフィクスチャを読み込むデータベース
 (`test` データソースのデータベース) でなければなりません。Symfony と同じように、これは `test` 環境で
-決まります。`phpunit.xml.dist` は 1 行で `APP_ENV` を設定します。
-
-```xml
-<env name="APP_ENV" value="test" force="true"/>
-```
-
-PHPUnit はこれを `putenv()` と `$_ENV` に設定するので、テストは pieceofcake2/app のコミットされている
-`config/.env.test` を読み込みます。Panther が起動する Web サーバーはテストのプロセスの環境を引き継ぐので、
-`APP_ENV=test` で動き、同じファイルを読み込みます。このファイルでは、`default` 接続の `DATABASE_URL` が
-`DATABASE_TEST_URL` と同じテスト用データベースです。
+決まります。pieceofcake2/app の `tests/bootstrap.php` は `putenv()`、`$_ENV`、`$_SERVER` で
+`APP_ENV=test` を設定するので、テストはコミットされている `config/.env.test` を読み込みます。Panther が
+起動する Web サーバーはテストのプロセスの環境を引き継ぐので、`APP_ENV=test` で動き、同じファイルを
+読み込みます。このファイルでは `DATABASE_URL` がテスト用データベースです。
 
 ```dotenv
 # config/.env.test
 DATABASE_URL="mysql://user:password@localhost:3306/test_database_name?encoding=utf8mb4"
-DATABASE_TEST_URL="mysql://user:password@localhost:3306/test_database_name?encoding=utf8mb4"
 ```
 
-`config/database.php` にテスト用の分岐は必要ありません。
+`APP_ENV=test` のとき、`config/database.php` は `DATABASE_URL` を両方の接続に渡すので、ページが使う
+`default` 接続はフィクスチャのデータベースになります。
 
 ```php
 public function __construct()
 {
     $this->default['dsn'] = env('DATABASE_URL');
-    $this->test['dsn'] = env('DATABASE_TEST_URL');
+    if (Configure::read('App.env') === 'test') {
+        $this->test['dsn'] = env('DATABASE_URL');
+    }
 }
 ```
 
@@ -347,9 +341,9 @@ GitHub のランナーでは `PANTHER_NO_SANDBOX=1` が必要です。ビルド�
 `defaultTestSuite="App"` の場合、`--filter` は `App` スイートの中だけを探します。
 
 **ブラウザーに "Missing Database Table" が表示される**: Web サーバーがテスト用データベースを
-使っていないか、`$fixtures` にテーブルが足りません。`phpunit.xml.dist` の
-`<env name="APP_ENV" value="test" force="true"/>` と、`config/.env.test` (または環境変数) の
-`DATABASE_URL` がテスト用データベースであることを確認してください。
+使っていないか、`$fixtures` にテーブルが足りません。`tests/bootstrap.php` が `APP_ENV=test` を
+設定していることと、`config/.env.test` (または環境変数) の `DATABASE_URL` がテスト用データベースで
+あることを確認してください。
 
 そのほかは、パッケージのドキュメントの
 [Troubleshooting](https://pieceofcake2.github.io/panther/troubleshooting) を参照してください。
