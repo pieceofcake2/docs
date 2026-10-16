@@ -298,7 +298,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - キャッシュ: 使用可能なエンジンを列挙 (File、Apc/APCu、Memcached、Memcache、Redis)。Xcache/Wincache の削除を変更点として記載
   - 設定リーダー: デフォルトの読み込み先は `CONFIG`。独自リーダーの例を `src/Lib/Configure` に移し、プロパティを宣言 (PHP 8.2)、`App::uses()` を削除。ja の例のクラス名を PHP の XMLReader と衝突する `XmlReader` から `MyXmlReader` に変更。ConfigReaderInterface/ConfigureException の説明を修正
   - Inflector のパス `src/Cake/Utility/Inflector.php` と `config/bootstrap.php` を本文に反映。古い IE/Chrome Frame や AMF/SOAP の例を更新。ja: `$merge` の説明を修正し `Configure::consume()` を追加
-  - 「環境変数」の節を追加: pieceofcake2/app スケルトンが `config/core.php` の先頭で josegonzalez/dotenv により `config/.env` とプロジェクトルートの `.env` を読み込むこと (CakePHP 3〜5 のアプリケーションスケルトンの `.env` サポートのバックポート。変更点: app v2.4.0 で追加)、app v2.5.0 からの symfony/dotenv の `bootEnv()` (`config/.env`、`config/.env.local`、`config/.env.{APP_ENV}`、`config/.env.{APP_ENV}.local` をマージし、後のファイルと実際の環境変数が優先。`APP_ENV` のデフォルトは `dev` で本番環境では `prod`、`APP_DEBUG`、`config/.env.local.php`、Git で無視するのは `.local` ファイルだけ。v2.4.0〜v2.4.2 の読み込み方を変更点として記載)、symfony/dotenv の書式、レガシー構成や以前のアプリケーションへの 1 行の読み込み処理の追加方法、スケルトンが読み込む環境変数 (`APP_ENV`、`APP_DEBUG` をデフォルトにする `DEBUG`、`SECURITY_SALT`、`SECURITY_CIPHER_SEED`、`COOKIE_KEY`、`DATABASE_URL`、`MAILER_DSN`。以前のスケルトンの `DB_*` と `APP_ENV` の分岐、その置き換え方)
+  - 「環境変数」の節を追加: pieceofcake2/app スケルトンが `config/core.php` の先頭で josegonzalez/dotenv により `config/.env` とプロジェクトルートの `.env` を読み込むこと (CakePHP 3〜5 のアプリケーションスケルトンの `.env` サポートのバックポート。変更点: app v2.4.0 で追加)、app v2.5.0 からの symfony/dotenv と `loadEnv()` による読み込み (`config/.env`、`config/.env.local`、`config/.env.{APP_ENV}`、`config/.env.{APP_ENV}.local` をマージし、後のファイルと実際の環境変数が優先。`APP_ENV` のデフォルトは `dev` で本番環境では `prod`、Git で無視するのは `.local` ファイルだけ。v2.4.0〜v2.4.2 の読み込み方を変更点として記載)、symfony/dotenv の書式、レガシー構成や以前のアプリケーションへの 1 行の読み込み処理の追加方法、スケルトンが読み込む環境変数 (`APP_ENV`、セットされていないとデバッグレベル 0 になる `APP_DEBUG`、`SECURITY_SALT`、`SECURITY_CIPHER_SEED`、`COOKIE_KEY`、`DATABASE_URL`、`MAILER_DSN`。以前のスケルトンの `DEBUG`、`DB_*`、`APP_ENV` の分岐、その置き換え方)
   - `App.baseUrl`: `.htaccess` ファイルを削除してもドキュメントルートは `webroot/` のままにすることを追記
   - 「セキュリティ用のソルトの生成」の節を追加: 安全な生成コマンド (PHP とシェル)、それぞれの値に依存するもの (Cookie の 'aes' タイプは専用のキーを設定しても `Security.salt` を組み合わせる)、値の変更手順
   - 「cipherSeed と Cookie の 'cipher' タイプ」の節を追加: `Security::cipher()` でのシードの使われ方、意味があるのは 1〜4294967295 だけで、27 桁以上の値 (本家の `config/core.php` のデフォルト値、ブログチュートリアルのサンプル値、以前の `.env.example` の生成コマンド) はシード 0 になること、範囲内のシードでも安全ではないこと、影響、どうすればよいか、`COOKIE_KEY` から `Cookie.key` に読み込む 32 バイトのキー、'aes' にした `Cookie.type`、`Security.useOpenSsl` を使った 'aes' への移行 (v2.12.6 以降は `Cookie.type` と `Cookie.key` を設定で指定できること、v2.12.5 以前でのコントローラーでの設定、代わりのキーの `Security.salt` が 32 バイト未満のときの例外)、警告
@@ -365,10 +365,10 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
 - [デプロイ](/ja/deployment)
   - ドキュメントルート、`core.php`、プラグインのシンボリックリンクのパスをモダンな構成に変更
   - `composer install --no-dev --optimize-autoloader` と開発用プラグインの条件付き読み込みを追加
-  - デバッグレベルは独自の `CAKEPHP_DEBUG` ではなく、スケルトンの環境変数 `DEBUG` から読み込む例に変更。ほかの設定は環境変数の節へのリンクを追加
+  - デバッグレベルは独自の `CAKEPHP_DEBUG` ではなく、スケルトンの環境変数 `APP_DEBUG` から読み込む例に変更。ほかの設定は環境変数の節へのリンクを追加
   - 新しいページへのリンクとして「AWS Lambda へのデプロイ」の節を追加
   - 「セキュリティの確認」を、セキュリティの章へのリンクを付けた短いチェックリストに書き直し (debug、ソルトとクッキーの暗号化方式、ドキュメントルート、HTTPS、SecurityComponent、バリデーション、HTML のエスケープとサニタイズ、依存パッケージ、パーミッション、秘密の情報)。「データのサニタイズが XSS 攻撃からデータベースを保護する」という誤った記述を削除
-  - ドキュメントルートをプロジェクトのディレクトリにすることと、`APP_ENV` が `prod` でない場合のスケルトンのデフォルトのデバッグレベル 2 についての警告、Apache、nginx、PHP-FPM での `APP_ENV=prod` の設定 (app v2.5.0)、秘密の情報は環境変数かシークレットストアから読み込み、リポジトリやログに残さないことを追加
+  - ドキュメントルートをプロジェクトのディレクトリにすることと、本番サーバーでの `APP_DEBUG=2` についての警告、Apache、nginx、PHP-FPM での `APP_ENV=prod` の設定 (app v2.5.0)、秘密の情報は環境変数かシークレットストアから読み込み、リポジトリやログに残さないことを追加
   - デプロイするファイル、ファイルのパーミッション (777 を使わない)、アップロードされたファイル、HTTPS (プロキシの背後でのセッションクッキーの secure、サポートされている PHP のバージョン)、キャッシュ (と OPcache) のクリアの節を追加
   - `DATABASE_URL` と `MAILER_DSN` はパスワードを含むので秘密の情報として扱う
 - [AWS Lambda へのデプロイ](/ja/deployment/aws-lambda)

@@ -309,7 +309,7 @@ Symfony のアプリケーションと同じように、`config/core.php` の先
 
 use Symfony\Component\Dotenv\Dotenv;
 
-(new Dotenv())->usePutenv()->bootEnv(CONFIG . '.env');
+(new Dotenv())->usePutenv()->loadEnv(CONFIG . '.env');
 ```
 
 CakePHP 3〜5 のアプリケーションスケルトン ([cakephp/app](https://github.com/cakephp/app)) も、
@@ -327,7 +327,7 @@ symfony/dotenv を使い、ここで説明するファイルを読み込みま�
 を参照してください。
 :::
 
-`bootEnv()` は以下のファイルをこの順に読み込んでマージするので、後のファイルが前のファイルより優先されます。
+`loadEnv()` は以下のファイルをこの順に読み込んでマージするので、後のファイルが前のファイルより優先されます。
 
 | ファイル | 読み込まれるとき | Git |
 |----------|------------------|-----|
@@ -344,13 +344,8 @@ symfony/dotenv を使い、ここで説明するファイルを読み込みま�
   このファイルは `DATABASE_URL` をテスト用データベースに設定します
   ([スケルトンのテスト用データベース](/ja/development/testing#the-test-database-of-the-skeleton) を参照)。
   本番環境では、`APP_ENV=prod` を実際の環境変数としてセットしてください。
-- `bootEnv()` は `APP_DEBUG` もセットします。`APP_ENV` が `prod` なら `0`、それ以外は `1` です。
-  スケルトンはこれをデバッグレベルのデフォルトに使います。
 - `config/.env` は必須です。スケルトンには開発用のデフォルトを書いたこのファイルが含まれているので、
   コミットしてください。`.local` ファイルには、データベースやソルトなど、自分のマシンで異なる値だけを書きます。
-- `config/.env.local.php` (Symfony の `composer dump-env prod` が書き出す、変数の配列を返す PHP ファイル) が
-  あれば、`.env` ファイルの代わりにそれが読み込まれます。スケルトンにはこのコマンド (symfony/flex) は
-  入っていませんが、デプロイの中でファイルを書き出せます。
 
 読み込んだ値は文字列として `$_SERVER`、`$_ENV`、`putenv()` に書き込まれるので、`env()`、
 `getenv()`、`$_SERVER`、`$_ENV` のどれでも読み出せます。
@@ -361,7 +356,7 @@ Configure::write('Security.salt', env('SECURITY_SALT') ?: 'a-default-salt');
 ```
 
 Symfony と同じように、スケルトンの `.gitignore` に記載されているのは `.local` ファイル
-(`config/.env.local`、`config/.env.*.local`、`config/.env.local.php`) だけです。`config/.env` と
+(`config/.env.local`、`config/.env.*.local`) だけです。`config/.env` と
 `config/.env.test` はコミットします。本当の秘密の情報はコミットするファイルに書かず、`.local` ファイルか
 実際の環境変数に置いてください。
 
@@ -379,7 +374,7 @@ Symfony と同じように、スケルトンの `.gitignore` に記載されて�
 
 ```dotenv
 # config/.env.local
-DEBUG=2
+APP_DEBUG=2
 SECURITY_SALT=a-long-random-string
 DATABASE_URL="mysql://my_app:secret@127.0.0.1:3306/my_app"
 ```
@@ -401,7 +396,7 @@ composer require symfony/dotenv
 ```
 
 次に、`app/Config/core.php` (モダン構成では `config/core.php`) の先頭に以下のコードを
-追加します。`use` 文はファイル冒頭のコメントの後に、`bootEnv()` の呼び出しは最初の `Configure::write()`
+追加します。`use` 文はファイル冒頭のコメントの後に、`loadEnv()` の呼び出しは最初の `Configure::write()`
 の前に置きます。レガシー構成では `CONFIG` は `app/Config/` なので、読み込むファイルは `app/Config/.env`、
 `app/Config/.env.local` などです。
 
@@ -410,7 +405,7 @@ composer require symfony/dotenv
 
 use Symfony\Component\Dotenv\Dotenv;
 
-(new Dotenv())->usePutenv()->bootEnv(CONFIG . '.env');
+(new Dotenv())->usePutenv()->loadEnv(CONFIG . '.env');
 ```
 
 デフォルトを書いた `app/Config/.env` を作成して (必須です。空でもかまいません) コミットし、`.local`
@@ -427,7 +422,7 @@ use Symfony\Component\Dotenv\Dotenv;
 | 環境変数 | 設定 | セットされていない場合 |
 |----------|------|------------------------|
 | `APP_ENV` | 環境 (`dev`、`test`、`prod`)。`config/.env.{APP_ENV}` を選びます。`vendor/bin/phpunit`、`bin/cake test`、`webroot/test.php` ではデフォルトで `test` | `config/.env` の `dev` |
-| `DEBUG` | `debug`: `0`、`1`、`2` | `2`。`APP_ENV` が `prod` のときは `0` |
+| `APP_DEBUG` | `debug` (`0`、`1`、`2`) | `0` |
 | `SECURITY_SALT` | `Security.salt` | `config/core.php` の値 |
 | `SECURITY_CIPHER_SEED` | `Security.cipherSeed` (1〜4294967295。[cipherSeed](#cipher-seed) を参照) | `config/core.php` の値 |
 | `COOKIE_KEY` | `Cookie.key`。`'aes'` タイプの `CookieComponent` のキー ([`'aes'` への移行](#migrating-to-aes) を参照) | `null`。`CookieComponent` は `Security.salt` を使います |
@@ -437,16 +432,17 @@ use Symfony\Component\Dotenv\Dotenv;
 空の環境変数はセットされていないものとして扱われます。DSN のキーは設定の同じキーを置き換え、それ以外の
 キーはデフォルトとして残ります。`'dsn'` キーには、`pieceofcake2/cakephp` 2.12.7 以降が必要です。
 
-スケルトンは、`bootEnv()` の `APP_DEBUG` をデフォルトにして、デバッグレベルを 1 行で読み込みます。
+スケルトンはデバッグレベルを 1 行で読み込み、`APP_DEBUG` がセットされていないとデバッグレベル 0 を使います。
 
 ```php
 // config/core.php
-Configure::write('debug', env('DEBUG') ?? (env('APP_DEBUG') ? 2 : 0));
+Configure::write('debug', env('APP_DEBUG') ?? 0);
 ```
 
 ::: pieceofcake2
-スケルトンの v2.4.2 は、`DEBUG` がセットされていないとデバッグレベル 0 を使い、それより前のバージョンは
-デバッグレベル 2 を使います。
+以前のスケルトンから作成したアプリケーションは、環境変数 `DEBUG` を読み込みます。デバッグレベルの行を
+`Configure::write('debug', env('APP_DEBUG') ?? 0);` に置き換え、`.env` ファイルと環境変数の `DEBUG` を
+`APP_DEBUG` に変更してください。
 :::
 
 以前のスケルトンから `config/database.php` や `config/email.php` を作成した場合は、
@@ -632,7 +628,7 @@ CakePHP のデバッグ出力を制御します。
 \[ SQL のログは、ビューやレイアウト内で
 \$this-\>element('sql_dump') をしている場合にのみ表示されます。 \]
 
-アプリケーションスケルトンは、デバッグレベルを環境変数 `DEBUG` から読み込みます。
+アプリケーションスケルトンは、デバッグレベルを環境変数 `APP_DEBUG` から読み込みます。
 [環境変数](#environment-variables) を参照してください。
 
 Error  

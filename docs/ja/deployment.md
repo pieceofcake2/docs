@@ -90,9 +90,9 @@ debug の無効化は以下の種々のものごとに変更を与えます。
 これにより、debug \> 0 のままアプリケーションを本番環境へデプロイしてしまうことを防げ、
 デプロイのたびにデバッグレベルを変更する手間も省けます。
 
-`pieceofcake2/app` スケルトンから作成したアプリケーションは、デバッグレベルを環境変数 `DEBUG`
-から読み込み、セットされていない場合は、環境変数 `APP_ENV` が `prod` でない限りデバッグレベル 2 を
-使います ([.env ファイルの読み込み](development/configuration#loading-env-files) を参照)。本番サーバーでは、
+`pieceofcake2/app` スケルトンから作成したアプリケーションは、デバッグレベルを環境変数 `APP_DEBUG`
+から読み込み、セットされていない場合はデバッグレベル 0 を使うので、本番サーバーはデフォルトでデバッグレベル 0
+で動作します ([.env ファイルの読み込み](development/configuration#loading-env-files) を参照)。本番サーバーでは、
 たとえば Apache の設定で `APP_ENV` を `prod` にセットします。
 
 ```apache
@@ -112,15 +112,15 @@ env[APP_ENV] = prod
 ```
 
 > [!WARNING]
-> `APP_ENV=prod` も `DEBUG` もセットされていないと、スケルトンはデバッグレベル 2 で動作します。スタックトレースや
+> `APP_DEBUG=2` では、アプリケーションはデバッグレベル 2 で動作します。スタックトレースや
 > SQL クエリ、設定の詳細が表示され、ブラウザ用のテストランナー `webroot/test.php` も有効になります。
-> すべての本番サーバで `APP_ENV` が `prod` (または `DEBUG` が `0`) になっていることを確認してください。
+> すべての本番サーバで `APP_DEBUG` がセットされていないか、`0` になっていることを確認してください。
 
 ほかのアプリケーションでは、`config/core.php` で環境変数を読み込みます。
 
 ```php
 // config/core.php
-Configure::write('debug', (int)env('DEBUG'));
+Configure::write('debug', env('APP_DEBUG') ?? 0);
 ```
 
 セキュリティ用のソルト、データベースの接続 (`DATABASE_URL`)、メールのトランスポート

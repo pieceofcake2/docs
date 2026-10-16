@@ -100,8 +100,8 @@ debug \> 0 and also save yourself from having to change the debug level each
 time before deploying to a production environment.
 
 Applications created from the `pieceofcake2/app` skeleton read the debug level
-from the `DEBUG` environment variable, and use debug level 2 when it is not
-set, unless the `APP_ENV` environment variable is `prod` (see
+from the `APP_DEBUG` environment variable, and use debug level 0 when it is
+not set, so a production server runs with debug level 0 by default (see
 [Loading .env Files](development/configuration#loading-env-files)). Set
 `APP_ENV` to `prod` on the production server, for example in your Apache
 configuration:
@@ -124,16 +124,16 @@ env[APP_ENV] = prod
 ```
 
 > [!WARNING]
-> If neither `APP_ENV=prod` nor `DEBUG` is set, the skeleton runs with debug
-> level 2, which shows stack traces, SQL queries and configuration details, and
-> enables the web test runner `webroot/test.php`. Check that `APP_ENV` is
-> `prod` (or `DEBUG` is `0`) on every production server.
+> With `APP_DEBUG=2`, the application runs with debug level 2, which shows
+> stack traces, SQL queries and configuration details, and enables the web
+> test runner `webroot/test.php`. Check that `APP_DEBUG` is not set, or is
+> `0`, on every production server.
 
 In other applications, read the variable in `config/core.php`:
 
 ```php
 // config/core.php
-Configure::write('debug', (int)env('DEBUG'));
+Configure::write('debug', env('APP_DEBUG') ?? 0);
 ```
 
 The other settings that the skeleton reads from environment variables, such as

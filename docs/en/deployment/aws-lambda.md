@@ -230,8 +230,8 @@ Everyone who can read the log group can read the logs, so do not log secrets:
 do not dump `$_SERVER`, `getenv()` or the configuration, which contain the
 values resolved from `bref-ssm:`, and do not log request data that contains
 passwords, tokens or the `Authorization` header. Keep the debug level at `0`
-(`APP_ENV=prod`), so that error messages do not include the configuration or
-SQL queries.
+(`APP_DEBUG` not set), so that error messages do not include the configuration
+or SQL queries.
 
 ### Configuration Files
 
@@ -448,13 +448,13 @@ Notes:
 ## Configuration and Secrets
 
 The skeleton reads its settings from environment variables: `APP_ENV`,
-`DEBUG`, `SECURITY_SALT`, `SECURITY_CIPHER_SEED`, `DATABASE_URL` and
+`APP_DEBUG`, `SECURITY_SALT`, `SECURITY_CIPHER_SEED`, `DATABASE_URL` and
 `MAILER_DSN` (see
 [Environment Variables](/development/configuration#environment-variables)). On
 Lambda, define them in the `environment` sections of `serverless.yml`, for all
-functions (`provider.environment`) or for one function. `APP_ENV: prod` gives
-debug level 0. Real environment variables always take precedence over the
-committed `config/.env`; do not deploy `.local` `.env` files.
+functions (`provider.environment`) or for one function. Without `APP_DEBUG`,
+the debug level is 0. Real environment variables always take precedence over
+the committed `config/.env`; do not deploy `.local` `.env` files.
 
 Store secrets, such as the salts and the database URL, which contains the
 password, in
