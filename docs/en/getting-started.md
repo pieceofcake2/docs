@@ -72,6 +72,9 @@ the points that changed:
   [Debug Error Pages](development/debugging#debug-error-pages), and the
   `utf8` validation rule rejects invalid UTF-8, see
   [Data Validation](models/data-validation) (both CakePHP 2.12.6).
+  Datasources and email profiles can be configured with a DSN from
+  `DATABASE_URL` and `MAILER_DSN`, see
+  [Database DSNs](development/configuration#database-url) (CakePHP 2.12.7).
 - **Bake and plugins.** Bake and the upgrade shell moved out of the core into
   plugins, and the major CakePHP 2 plugins are maintained for PHP 8. See
   [Code Generation with Bake](console-and-shells/code-generation-with-bake) and
