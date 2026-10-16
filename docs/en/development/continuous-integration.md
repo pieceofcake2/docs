@@ -290,9 +290,9 @@ The parts that every job shares:
 - **Database.** The jobs that use the database start MySQL as a
   [service container](https://docs.github.com/en/actions/tutorials/use-containerized-services/use-docker-service-containers).
   `config/database.php` is not committed in the skeleton, so the job copies
-  `config/database.php.default`, which reads the connections from the
-  `DATABASE_URL` environment variable; in the tests (`APP_ENV=test`, set by
-  `tests/bootstrap.php`) both the `default` and the `test` connection use it
+  `config/database.php.default`, which reads both the `default` and the `test`
+  connection from the `DATABASE_URL` environment variable; the tests run with
+  `APP_ENV=test` by default
   (see [Database DSNs](/development/configuration#database-url);
   the `'dsn'` key needs pieceofcake2/cakephp 2.12.7 or later). The jobs set
   `DATABASE_URL` to the database of the service container as a real
@@ -409,7 +409,7 @@ The `end-to-end` job runs the browser tests of
 PHPUnit job keeps running only the `App` suite (`defaultTestSuite="App"`) and
 needs no browser. If you removed `defaultTestSuite`, run the PHPUnit job with
 `--testsuite App`. The `end-to-end` job needs the database, like the PHPUnit
-job: the web server inherits `APP_ENV=test` of `tests/bootstrap.php` and the
+job: the web server inherits `APP_ENV=test` of the tests and the
 `DATABASE_URL` of the job, so its `default` connection is the test database. The
 `ubuntu-latest` runner has Chrome, and `vendor/bin/bdi detect drivers`
 ([bdi](https://github.com/dbrekelmans/bdi), a development dependency) installs

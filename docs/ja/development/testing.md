@@ -90,45 +90,34 @@ public $test = [
 ### スケルトンのテスト用データベース
 
 [pieceofcake2/app](https://pieceofcake2.github.io/app/) スケルトンのデータベースの変数は、Symfony と同じように
-1 つです。`DATABASE_URL` は現在の環境のデータベースです。スケルトンの `tests/bootstrap.php` は、CakePHP が
-`.env` ファイルを読み込む前に常に `APP_ENV=test` を設定します。そのため、テストではコミットされている
-`config/.env.test` が読み込まれ ([.env ファイルの読み込み](configuration#loading-env-files) を参照)、
-このファイルの `DATABASE_URL` がテスト用データベースになります。自分のマシンのテスト用データベースは、
-Git で無視される `config/.env.test.local` か、ファイルより優先される実際の環境変数 (CI はこの方法です) で
-設定してください。
+1 つです。`DATABASE_URL` は現在の環境のデータベースで、`config/database.php.default` はこれを両方の接続に
+渡します。
+
+```php
+public function __construct()
+{
+    $this->default['dsn'] = env('DATABASE_URL');
+    $this->test['dsn'] = env('DATABASE_URL');
+}
+```
+
+`vendor/bin/phpunit` と `bin/cake test` は、デフォルトで `APP_ENV=test` で動きます。`APP_ENV` が
+設定されていなければ、CakePHP が `.env` ファイルを読み込む前にスケルトンの `tests/bootstrap.php` と
+`bin/cake` (`test` シェルのとき) がこれを設定します。ブラウザーのテストランナー `webroot/test.php` も同じです。
+そのため、テストではコミットされている `config/.env.test` が読み込まれ
+([.env ファイルの読み込み](configuration#loading-env-files) を参照)、このファイルの `DATABASE_URL` が
+テスト用データベースになります。自分のマシンのテスト用データベースは、Git で無視される
+`config/.env.test.local` か、ファイルより優先される実際の環境変数 (CI はこの方法です) で設定してください。
 
 ```dotenv
 # config/.env.test.local
 DATABASE_URL="mysql://dblogin:dbpassword@dbhost/test_database"
 ```
 
-`config/database.php.default` は両方の接続で `DATABASE_URL` を読み込みますが、`test` 接続が読み込むのは
-`config/core.php` が `APP_ENV=test` でファイルを読み込んだときだけです。
-
-```php
-public function __construct()
-{
-    $this->default['dsn'] = env('DATABASE_URL');
-    // Only the test database: config/core.php loaded config/.env.test (APP_ENV=test).
-    if (Configure::read('App.env') === 'test') {
-        $this->test['dsn'] = env('DATABASE_URL');
-    }
-}
-```
-
-`APP_ENV=test` でないときの `DATABASE_URL` は開発用データベースで、フィクスチャはテーブルを削除して
-作成するので、`test` 接続は `config/database.php` のキーを使います。[End-to-End テスト](e2e-testing) の
+環境変数の `APP_ENV` や `DATABASE_URL` が優先されるので、テストを実行するシェルで開発用の値を export
+しないでください。フィクスチャはテーブルを削除して作成します。[End-to-End テスト](e2e-testing) の
 Web サーバーは `APP_ENV=test` を引き継ぐので、その `default` 接続はテスト用データベースになり、ページは
 フィクスチャを読み込みます。
-
-`bin/cake` はテストシェルが始まる前に `.env` ファイルを読み込むので、テストシェルは `APP_ENV=test` を
-付けて実行してください。
-
-```bash
-APP_ENV=test bin/cake test app Model/Post
-```
-
-付けないと、`tests/bootstrap.php` がエラーで実行を止めます。
 
 レガシーな `app/` 構成では、これらのファイルは `app/Config/core.php` と
 `app/Config/database.php` です。

@@ -326,7 +326,7 @@ ConnectionManager::parseDsn('postgres://user:secret@db:5432/app');
 
 すでにセットされている環境変数は上書きされないので、先に読み込むファイルが後のファイルより
 優先され、実際の環境変数 (Web サーバー、シェル、コンテナ、CI) はすべてのファイルより優先されます。
-`APP_ENV` は実際の環境変数から読み込まれます。テストでは `tests/bootstrap.php` が `test` に設定するので、
+`APP_ENV` は実際の環境変数から読み込まれます。`vendor/bin/phpunit` と `bin/cake test` はデフォルトで `APP_ENV=test` で動くので、
 コミットされている `config/.env.test` が読み込まれます。このファイルは `DATABASE_URL` を
 テスト用データベースに設定します
 ([スケルトンのテスト用データベース](/ja/development/testing#the-test-database-of-the-skeleton) を参照)。
@@ -444,9 +444,9 @@ unset($appEnv, $dotenvFiles, $dotenvFile);
 | `SECURITY_SALT` | `Security.salt` | `config/core.php` の値 |
 | `SECURITY_CIPHER_SEED` | `Security.cipherSeed` (1〜4294967295。[cipherSeed](#cipher-seed) を参照) | `config/core.php` の値 |
 | `COOKIE_KEY` | `Cookie.key`。`'aes'` タイプの `CookieComponent` のキー ([`'aes'` への移行](#migrating-to-aes) を参照) | `null`。`CookieComponent` は `Security.salt` を使います |
-| `DATABASE_URL` | `default` 接続の `'dsn'`。`APP_ENV=test` のときは `test` 接続の `'dsn'` も ([データベースの DSN](#database-url) を参照) | `config/database.php` の値 |
+| `DATABASE_URL` | `default` 接続と `test` 接続の `'dsn'` ([データベースの DSN](#database-url) を参照) | `config/database.php` の値 |
 | `MAILER_DSN` | `default` メールプロファイルの `'dsn'` ([メーラー DSN](../core-utility-libraries/email#mailer-dsn) を参照) | `config/email.php` の値 |
-| `APP_ENV` | `config/.env.{APP_ENV}` と `config/.env.{APP_ENV}.local` を読み込みます。`tests/bootstrap.php` では `test` | ほかの `.env` ファイルだけが読み込まれます |
+| `APP_ENV` | `config/.env.{APP_ENV}` と `config/.env.{APP_ENV}.local` を読み込みます。`vendor/bin/phpunit` と `bin/cake test` ではデフォルトで `test` | ほかの `.env` ファイルだけが読み込まれます |
 
 空の環境変数はセットされていないものとして扱われます。`.env` ファイルも環境変数も無い場合、
 アプリケーションは設定ファイルの値を使います。DSN のキーは設定の同じキーを置き換え、それ以外の
@@ -455,8 +455,8 @@ unset($appEnv, $dotenvFiles, $dotenvFile);
 以前のスケルトンから `config/database.php` や `config/email.php` を作成した場合は、
 `config/database.php.default` や `config/email.php.default` の `__construct()` メソッドを
 コピーし、`test` 接続を `default` として使う `APP_ENV` の分岐があれば削除してください
-(代わりに `config/.env.test` が `DATABASE_URL` をテスト用データベースに設定します)。`config/core.php` の
-`App.env` の行と `tests/bootstrap.php` もスケルトンからコピーしてください。以前のスケルトンは、`DB_DATASOURCE`、`DB_HOST`、`DB_PORT`、
+(代わりに `config/.env.test` が `DATABASE_URL` をテスト用データベースに設定します)。
+`tests/bootstrap.php`、`bin/cake`、`webroot/test.php` の `APP_ENV` のデフォルトもスケルトンからコピーしてください。以前のスケルトンは、`DB_DATASOURCE`、`DB_HOST`、`DB_PORT`、
 `DB_USERNAME`、`DB_PASSWORD`、`DB_DATABASE` (`test` 接続は `DB_TEST_*`) を `applyEnv()`
 メソッドで読み込んでいました。1 つの `DATABASE_URL` がこれらに置き換わります。
 

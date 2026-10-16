@@ -136,8 +136,8 @@ Symfony のアプリケーションと同じように、End-to-End テストは�
 Web サーバーは別の PHP プロセスで、ブラウザーに見えるのは Web サーバーが読み込むデータだけです。
 そのため Web サーバーの `default` 接続は、`CakeTestCase` がフィクスチャを読み込むデータベース
 (`test` データソースのデータベース) でなければなりません。Symfony と同じように、これは `test` 環境で
-決まります。pieceofcake2/app の `tests/bootstrap.php` は `putenv()`、`$_ENV`、`$_SERVER` で
-`APP_ENV=test` を設定するので、テストはコミットされている `config/.env.test` を読み込みます。Panther が
+決まります。pieceofcake2/app のテストはデフォルトで `APP_ENV=test` で動きます (`APP_ENV` が設定されて
+いなければ、`tests/bootstrap.php` が `putenv()`、`$_ENV`、`$_SERVER` で設定します)。そのため、テストはコミットされている `config/.env.test` を読み込みます。Panther が
 起動する Web サーバーはテストのプロセスの環境を引き継ぐので、`APP_ENV=test` で動き、同じファイルを
 読み込みます。このファイルでは `DATABASE_URL` がテスト用データベースです。
 
@@ -146,16 +146,14 @@ Web サーバーは別の PHP プロセスで、ブラウザーに見えるの�
 DATABASE_URL="mysql://user:password@localhost:3306/test_database_name?encoding=utf8mb4"
 ```
 
-`APP_ENV=test` のとき、`config/database.php` は `DATABASE_URL` を両方の接続に渡すので、ページが使う
-`default` 接続はフィクスチャのデータベースになります。
+`config/database.php` は `DATABASE_URL` を両方の接続に渡すので、ページが使う `default` 接続は
+フィクスチャのデータベースになります。
 
 ```php
 public function __construct()
 {
     $this->default['dsn'] = env('DATABASE_URL');
-    if (Configure::read('App.env') === 'test') {
-        $this->test['dsn'] = env('DATABASE_URL');
-    }
+    $this->test['dsn'] = env('DATABASE_URL');
 }
 ```
 
@@ -341,8 +339,8 @@ GitHub のランナーでは `PANTHER_NO_SANDBOX=1` が必要です。ビルド�
 `defaultTestSuite="App"` の場合、`--filter` は `App` スイートの中だけを探します。
 
 **ブラウザーに "Missing Database Table" が表示される**: Web サーバーがテスト用データベースを
-使っていないか、`$fixtures` にテーブルが足りません。`tests/bootstrap.php` が `APP_ENV=test` を
-設定していることと、`config/.env.test` (または環境変数) の `DATABASE_URL` がテスト用データベースで
+使っていないか、`$fixtures` にテーブルが足りません。テストが `APP_ENV=test` で動いていること (環境変数に
+ほかの `APP_ENV` が無いこと) と、`config/.env.test` (または環境変数) の `DATABASE_URL` がテスト用データベースで
 あることを確認してください。
 
 そのほかは、パッケージのドキュメントの

@@ -290,8 +290,8 @@ jobs:
   [サービスコンテナー](https://docs.github.com/ja/actions/tutorials/use-containerized-services/use-docker-service-containers)
   として起動します。スケルトンでは `config/database.php` をコミットしないので、ジョブは
   `config/database.php.default` をコピーします。このファイルは環境変数 `DATABASE_URL` から接続を
-  読み込み、テスト (`tests/bootstrap.php` が設定する `APP_ENV=test`) では `default` 接続と `test` 接続の
-  両方がこれを使います ([データベースの DSN](/ja/development/configuration#database-url) を参照。
+  読み込み、`default` 接続と `test` 接続の両方がこれを使います。テストはデフォルトで `APP_ENV=test` で
+  動きます ([データベースの DSN](/ja/development/configuration#database-url) を参照。
   `'dsn'` キーには pieceofcake2/cakephp 2.12.7 以降が必要です)。ジョブは `DATABASE_URL` を
   サービスコンテナーのデータベースに実際の環境変数として設定し、これはコミット済みの
   `config/.env.test` より優先されます。以前のスケルトンでは、
@@ -406,7 +406,7 @@ PHPStan のジョブは、
 するので、PHPUnit のジョブは引き続き `App` スイートだけを実行し (`defaultTestSuite="App"`)、
 ブラウザーは不要です。`defaultTestSuite` を削除した場合は、PHPUnit のジョブを `--testsuite App` で
 実行してください。`end-to-end` ジョブには PHPUnit のジョブと同じくデータベースが必要です。
-Web サーバーは `tests/bootstrap.php` の `APP_ENV=test` とジョブの `DATABASE_URL` を引き継ぐので、
+Web サーバーはテストの `APP_ENV=test` とジョブの `DATABASE_URL` を引き継ぐので、
 Web サーバーの `default` 接続はテスト用データベースになります。`ubuntu-latest` のランナーには Chrome があり、
 `vendor/bin/bdi detect drivers` (開発用の依存パッケージの [bdi](https://github.com/dbrekelmans/bdi))
 が対応する chromedriver をインストールします。GitHub のランナーでは `PANTHER_NO_SANDBOX=1` が

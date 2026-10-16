@@ -133,9 +133,9 @@ of the package documentation
 The web server is a separate PHP process, and the browser can only see data
 that it reads. Its `default` connection must be the database where
 `CakeTestCase` loads the fixtures, the one of the `test` datasource. As in
-Symfony, this comes from the `test` environment: the `tests/bootstrap.php` of
-pieceofcake2/app sets `APP_ENV=test` with `putenv()`, `$_ENV` and `$_SERVER`,
-so the tests load the committed `config/.env.test`, and the web server that
+Symfony, this comes from the `test` environment: the tests of pieceofcake2/app
+run with `APP_ENV=test` by default (its `tests/bootstrap.php` sets it with
+`putenv()`, `$_ENV` and `$_SERVER` when it is not set), so the tests load the committed `config/.env.test`, and the web server that
 Panther starts inherits the environment of the test process, runs with
 `APP_ENV=test` and loads the same file. There `DATABASE_URL` is the test
 database:
@@ -145,17 +145,14 @@ database:
 DATABASE_URL="mysql://user:password@localhost:3306/test_database_name?encoding=utf8mb4"
 ```
 
-With `APP_ENV=test`, `config/database.php` gives `DATABASE_URL` to both
-connections, so the `default` connection of the pages is the database of the
-fixtures:
+`config/database.php` gives `DATABASE_URL` to both connections, so the
+`default` connection of the pages is the database of the fixtures:
 
 ```php
 public function __construct()
 {
     $this->default['dsn'] = env('DATABASE_URL');
-    if (Configure::read('App.env') === 'test') {
-        $this->test['dsn'] = env('DATABASE_URL');
-    }
+    $this->test['dsn'] = env('DATABASE_URL');
 }
 ```
 
@@ -336,8 +333,8 @@ updated. Run `vendor/bin/bdi detect drivers` again.
 `defaultTestSuite="App"`, `--filter` searches only the `App` suite.
 
 **"Missing Database Table" in the browser**: the web server does not use the
-test database, or a table is missing from `$fixtures`. Check that
-`tests/bootstrap.php` sets `APP_ENV=test` and that `DATABASE_URL` in
+test database, or a table is missing from `$fixtures`. Check that the tests
+run with `APP_ENV=test` (no other `APP_ENV` in the environment) and that `DATABASE_URL` in
 `config/.env.test` (or in the environment) is the test database.
 
 See [Troubleshooting](https://pieceofcake2.github.io/panther/troubleshooting)

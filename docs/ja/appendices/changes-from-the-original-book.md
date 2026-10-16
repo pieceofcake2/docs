@@ -354,7 +354,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - Jenkins: 新しい継続的インテグレーションのページの最後 (GitHub Actions のワークフローの後) に移動。`composer install` の手順、`config/database.php`、`vendor/bin/phpunit`、jenkins.io へのリンク。test-database-setup と generating-code-coverage のアンカーを明示的に追加
   - 「テストの種類」の節を追加: フィクスチャを使うユニットテスト、testAction() によるコントローラーのテスト、ブラウザーによる End-to-End テスト (End-to-End テストのページへのリンク)。testing-controllers のアンカーを明示的に追加
   - 「テストの種類」に `IntegrationTestTrait` による統合テストを追加 (統合テストのページへのリンク)。`ControllerTestCase` は引き続きサポートされていることを記載。「コントローラーのテスト」に統合テストのページへのリンクのヒントを追加。test-case-conventions のアンカーを明示的に追加
-  - テスト用データベースを `config/.env.test` の `DATABASE_URL` で設定 (v2.12.7)。「スケルトンのテスト用データベース」の節を追加: `tests/bootstrap.php` が `APP_ENV=test` を設定してコミット済みの `config/.env.test` を読み込み、マシンごとの値は `config/.env.test.local` に書く。`test` 接続は `APP_ENV=test` のときだけ `DATABASE_URL` を読み込み、`bin/cake test` は `APP_ENV=test` を付けて実行する
+  - テスト用データベースを `config/.env.test` の `DATABASE_URL` で設定 (v2.12.7)。「スケルトンのテスト用データベース」の節を追加: `vendor/bin/phpunit` と `bin/cake test` はデフォルトで `APP_ENV=test` で動き、コミット済みの `config/.env.test` を読み込む。マシンごとの値は `config/.env.test.local` に書く。両方の接続が `DATABASE_URL` を読み込む
 - [REST](/ja/development/rest)
   - パスを `config/routes.php`、`src/Controller`、`templates/Recipes/xml` に更新
   - HTTP メソッド上書きの優先順位を修正（X-HTTP-Method-Override ヘッダが _method より優先）

@@ -359,7 +359,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - Jenkins: moved to the end of the new Continuous Integration page (after the GitHub Actions workflow), with `composer install` step, `config/database.php`, `vendor/bin/phpunit` and jenkins.io links; ja: explicit test-database-setup and generating-code-coverage anchors
   - New "Types of Tests" section: unit tests with fixtures, controller tests with testAction() and browser End-to-End tests (links to End-to-End Testing); ja: explicit testing-controllers anchor
   - "Types of Tests" also lists integration tests with `IntegrationTestTrait` (links to Integration Testing) and notes that `ControllerTestCase` remains supported; tip linking to Integration Testing in "Testing Controllers"
-  - Test database from `DATABASE_URL` in `config/.env.test` (v2.12.7); new "The Test Database of the Skeleton" subsection: `tests/bootstrap.php` sets `APP_ENV=test` and loads the committed `config/.env.test`, with per-machine values in `config/.env.test.local`; the `test` connection reads `DATABASE_URL` only with `APP_ENV=test`, and `bin/cake test` runs with `APP_ENV=test`
+  - Test database from `DATABASE_URL` in `config/.env.test` (v2.12.7); new "The Test Database of the Skeleton" subsection: `vendor/bin/phpunit` and `bin/cake test` run with `APP_ENV=test` by default and load the committed `config/.env.test`, with per-machine values in `config/.env.test.local`; both connections read `DATABASE_URL`
 - [REST](/development/rest)
   - Paths updated to `config/routes.php`, `src/Controller` and `templates/Recipes/xml`
   - Corrected HTTP method override precedence (X-HTTP-Method-Override header before _method)
