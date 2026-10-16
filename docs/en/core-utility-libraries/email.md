@@ -150,6 +150,82 @@ The above configuration would enable STARTTLS communication for email messages.
 Support for TLS delivery was added in 2.3
 :::
 
+### Mailer DSN {#mailer-dsn}
+
+::: pieceofcake2
+The `'dsn'` key was added in v2.12.7. Its value uses the `MAILER_DSN` format
+of Symfony Mailer. The same `'dsn'` key sets datasources.
+:::
+
+A profile can set its transport with one DSN (a URL) in the `'dsn'` key, for
+example from a `MAILER_DSN` environment variable. The `config/email.php.default`
+file of the application skeleton does this for the `default` profile:
+
+```php
+class EmailConfig
+{
+    public $default = [
+        'transport' => 'Mail',
+        'from' => 'you@localhost',
+    ];
+
+    public function __construct()
+    {
+        // Property defaults cannot call functions, so set the DSN here
+        $this->default['dsn'] = env('MAILER_DSN');
+    }
+}
+```
+
+```dotenv
+# config/.env
+MAILER_DSN="smtp://my@example.com:app-password@smtp.example.com:587"
+```
+
+| DSN | Configuration |
+|-----|---------------|
+| `smtp://user:password@host:port` | `Smtp` transport with `host`, `port`, `username` and `password`. `tls` (STARTTLS) is `true` when the port is 587 or with `?tls=1` |
+| `smtps://user:password@host:port` | `Smtp` transport with the host `ssl://host`, port 465 when no port is given |
+| `sendmail://default`, `native://default` | `Mail` transport (PHP `mail()`) |
+| `null://null` | `Debug` transport: nothing is sent |
+
+- **Query parameters**: They become configuration keys as they are, for example
+  `smtp://smtp.example.com:587?timeout=10&client=app.example.com`. `?tls=0`
+  turns STARTTLS off on port 587, `?transport=MyPlugin.Custom` selects another
+  transport, also with another scheme. The values `true`, `false` and `null`
+  become the PHP values.
+- **Host**: The host `default` is `localhost`, as in Symfony. Write an IPv6
+  host in brackets, e.g. `smtp://[::1]:1025`.
+- **Encoding**: The user name and password are URL-decoded. Encode reserved
+  characters of a password: `%40` for `@`, `%3F` for `?`, `%23` for `#` and
+  `%25` for `%`. A user name that is an email address may keep its `@`.
+- **Precedence**: The keys taken from the DSN replace the same keys of the
+  profile, and the other keys (`from`, `log`, `charset`, ...) are kept, as in
+  CakePHP 3.x and later.
+- **Empty values**: A `'dsn'` that is `null`, `''` or `false` is ignored, so
+  `env('MAILER_DSN')` falls back to the other keys of the profile when the
+  variable is not set.
+- **Errors**: An invalid DSN or an unknown scheme throws a
+  `ConfigureException` that names the profile. The message does not contain
+  the user name or password.
+- **When**: The DSN is parsed when the profile is applied
+  (`new CakeEmail('default')` or `config()`).
+- **Schemes of plugins**: A plugin can add schemes, for example for the API of
+  a delivery service, or replace the built-in ones with
+  `CakeEmail::setDsnClassMap()`. See
+  [Registering DSN Schemes](/plugins/how-to-create-plugins#registering-dsn-schemes).
+
+The `'dsn'` key also works in an array passed to `config()` or to the
+constructor, and `CakeEmail::parseDsn()` returns the keys of a DSN:
+
+```php
+$Email = new CakeEmail(['dsn' => 'smtp://localhost:1025', 'from' => 'me@example.org']);
+
+CakeEmail::parseDsn('smtps://user:secret@smtp.example.com');
+// ['transport' => 'Smtp', 'host' => 'ssl://smtp.example.com', 'port' => 465,
+//  'username' => 'user', 'password' => 'secret', 'tls' => false]
+```
+
 <a id="email-configurations"></a>
 
 ### Configurations
@@ -184,6 +260,8 @@ The following configuration keys are used:
 - `'emailFormat'`: Format of email (html, text or both). See `CakeEmail::emailFormat()`.
 - `'transport'`: Transport name. See `CakeEmail::transport()`.
 - `'helpers'`: Array of helpers used in the email template.
+- `'dsn'`: A mailer DSN that sets the transport and its keys. See
+  [Mailer DSN](#mailer-dsn).
 
 All of these configurations are optional, except `'from'`. If you put more
 configurations in this array, the configurations will be used in the

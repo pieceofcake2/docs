@@ -135,8 +135,11 @@ Configure::write('debug', (int)env('DEBUG'));
 ```
 
 The other settings that the skeleton reads from environment variables, such as
-the security salts and the database credentials, are listed in
+the security salts, the database connection (`DATABASE_URL`) and the email
+transport (`MAILER_DSN`), are listed in
 [Environment Variables](development/configuration#environment-variables).
+A DSN holds the whole connection, including the password, so treat
+`DATABASE_URL` and `MAILER_DSN` as secrets.
 Set them as real environment variables in production rather than in a `.env`
 file, or load them from a secret store such as AWS Systems Manager Parameter
 Store (see [Configuration and Secrets](deployment/aws-lambda#configuration-and-secrets)).

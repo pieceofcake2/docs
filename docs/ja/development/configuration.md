@@ -70,8 +70,15 @@ class DATABASE_CONFIG
 設定配列の中のキー／値のペアを、
 あなたの要求に合うように適切に設定してください。
 
-アプリケーションスケルトンの `config/database.php.default` は、接続設定を環境変数から
-読み込むこともできます。[環境変数](#environment-variables) を参照してください。
+`'dsn'` キーに 1 つの DSN (URL) を書いて接続を設定することもできます。
+たとえば `'dsn' => env('DATABASE_URL')` のように書きます。アプリケーションスケルトンの
+`config/database.php.default` は `DATABASE_URL` を読み込みます。テストではこれがテスト用データベースです。
+[データベースの DSN](#database-url) と [環境変数](#environment-variables) を参照してください。
+
+dsn (*オプション*)  
+`mysql://user:password@localhost/my_app?encoding=utf8mb4` のような DSN です。
+データソースと接続のキーを 1 つの文字列で設定します。
+[データベースの DSN](#database-url) を参照してください。v2.12.7 で追加されます。
 
 datasource  
 この設定配列が使うデータソースの名前。
@@ -175,6 +182,109 @@ settings
 データベーステーブル名はアンダースコア、小文字、複数形にします。
 たとえば bakers, pastry_stores, savory_cakes のようにします。
 
+### データベースの DSN {#database-url}
+
+::: pieceofcake2
+`'dsn'` キーは v2.12.7 で追加されます。それより前の
+リリースでは、このキーは何も言わずに無視されます。CakePHP 3.x 以降の DSN サポート (キーの名前は
+`url`) のバックポートで、CakePHP、Doctrine、Symfony の `DATABASE_URL` の書式を使います。
+:::
+
+接続は `'dsn'` キーに書いた 1 つの DSN で設定できます。環境ごとの認証情報を 1 つの環境変数に
+まとめられます。
+
+```php
+// config/database.php
+class DATABASE_CONFIG
+{
+    public $default = [
+        'datasource' => 'Database/Mysql',
+        'persistent' => false,
+        'host' => 'localhost',
+        'login' => 'user',
+        'password' => 'password',
+        'database' => 'my_app',
+        'prefix' => '',
+    ];
+
+    public function __construct()
+    {
+        // Property defaults cannot call functions, so set the DSN here
+        $this->default['dsn'] = env('DATABASE_URL');
+    }
+}
+```
+
+```dotenv
+# config/.env
+DATABASE_URL="mysql://my_app:secret@127.0.0.1:3306/my_app?encoding=utf8mb4"
+```
+
+DSN は接続を作成するとき (最初の `ConnectionManager::getDataSource()` の呼び出し。通常は
+最初のクエリ) に解析され、各部分が接続のキーに対応付けられます。
+
+| DSN の部分 | 接続のキー |
+|------------|------------|
+| スキーム `mysql` | `datasource` `Database/Mysql` |
+| スキーム `postgres`、`postgresql`、`pgsql` | `datasource` `Database/Postgres` |
+| スキーム `sqlite` | `datasource` `Database/Sqlite` |
+| スキーム `sqlserver`、`mssql`、`sqlsrv` | `datasource` `Database/Sqlserver` |
+| ユーザーとパスワード | `login` と `password` |
+| ホストとポート | `host` (IPv6 アドレスの角括弧は除かれます) と `port` |
+| パス (先頭の `/` を除く) | `database` |
+| クエリパラメーター | 同じ名前のキー |
+
+例:
+
+```dotenv
+# MySQL
+DATABASE_URL="mysql://user:password@localhost:3306/my_app?encoding=utf8mb4"
+# PostgreSQL
+DATABASE_URL="postgres://user:password@localhost:5432/my_app?schema=public"
+# SQLite in memory
+DATABASE_URL="sqlite:///:memory:"
+# SQLite file, relative to the working directory (three slashes)
+DATABASE_URL="sqlite:///tmp/my_app.sqlite"
+# SQLite file, absolute path (four slashes)
+DATABASE_URL="sqlite:////var/db/my_app.sqlite"
+# SQL Server
+DATABASE_URL="sqlserver://user:password@localhost:1433/my_app?encoding=utf8&options[TrustServerCertificate]=yes"
+```
+
+- **優先順位**: DSN から取り出したキーは配列の同じキーを置き換え、配列のそれ以外のキーは
+  そのまま残ります。CakePHP 3.x 以降と同じです。配列にはデフォルト (`persistent`、`prefix`、
+  `encoding` など) を書き、DSN で接続先を決めます。パスワードの無い DSN では配列の `password`
+  が残るので、空のパスワードは `user:@host` と書いてください。
+- **空の値**: `'dsn'` が `null`、`''`、`false` の場合は無視されます。そのため
+  `env('DATABASE_URL')` は、環境変数がセットされていなければ配列の値を使います。
+  `'dsn'` キー自体は、データソースに渡される設定から取り除かれます。
+- **エンコード**: ユーザー、パスワード、ホスト、データベースは URL デコードされます。
+  パスワードの予約文字はエンコードしてください。`@` は `%40`、`?` は `%3F`、`#` は `%23`、
+  `%` は `%25` です。
+- **クエリパラメーター**: そのままの名前でキーになります。たとえば `encoding`、`schema`、
+  `prefix`、`persistent=true`、`flags[1002]=SET%20NAMES%20utf8mb4`、`options[Encrypt]=no`
+  です。値の `true`、`false`、`null` は PHP の値になります。`flags[1002]` の `1002` は
+  `PDO::MYSQL_ATTR_INIT_COMMAND` の値です。DSN には定数名を書けません。
+  `datasource=MyPlugin.Database/Custom` はスキームのデータソースを上書きし、登録されていない
+  スキームも使えるようにします。
+- **IPv6**: ホストを角括弧で囲みます。例: `mysql://user:password@[::1]:3306/my_app`
+- **エラー**: 不正な DSN や未知のスキームでは、接続名を含む `CakeException` がスローされます。
+  メッセージにはユーザー名とパスワードは含まれません。
+- **プラグインのスキーム**: プラグインは `ConnectionManager::setDsnClassMap()` でスキームを
+  追加したり、組み込みのスキームを置き換えたりできます。
+  [DSN スキームの登録](/ja/plugins/how-to-create-plugins#registering-dsn-schemes) を参照してください。
+
+`'dsn'` キーは `ConnectionManager::create()` でも使えます。`ConnectionManager::parseDsn()`
+は DSN のキーを返します。
+
+```php
+ConnectionManager::create('reporting', ['dsn' => env('REPORTING_DATABASE_URL')]);
+
+ConnectionManager::parseDsn('postgres://user:secret@db:5432/app');
+// ['login' => 'user', 'password' => 'secret', 'host' => 'db', 'port' => '5432',
+//  'database' => 'app', 'datasource' => 'Database/Postgres']
+```
+
 <a id="environment-variables"></a>
 
 ## 環境変数
@@ -204,14 +314,27 @@ settings
 を参照してください。
 :::
 
-スケルトンは、以下のファイルが存在すれば読み込みます。
+スケルトンは、以下のファイルが存在すれば、Symfony の `.env` ファイルと同じ順に読み込みます。
 
-1. `config/.env`。CakePHP 3〜5 のアプリケーションスケルトンが使う場所です。
-2. プロジェクトルートの `.env`
+| ファイル | 読み込まれるとき | Git |
+|----------|------------------|-----|
+| `config/.env.{APP_ENV}.local` | `APP_ENV` がセットされているとき | 無視 |
+| `config/.env.{APP_ENV}` (例: `config/.env.test`) | `APP_ENV` がセットされているとき | コミット |
+| `config/.env.local` | 常に | 無視 |
+| `config/.env`。CakePHP 3〜5 のアプリケーションスケルトンが使う場所です | 常に | 無視 |
+| プロジェクトルートの `.env` | 常に | 無視 |
 
-優先順位は、実際の環境変数 > `config/.env` > プロジェクトルートの `.env` です。
-`config/.env` を先に、ルートの `.env` を後に読み込み、実際の環境 (Web サーバー、シェル、
-コンテナ、CI) や `config/.env` ですでにセットされている環境変数が上書きされることはありません。
+すでにセットされている環境変数は上書きされないので、先に読み込むファイルが後のファイルより
+優先され、実際の環境変数 (Web サーバー、シェル、コンテナ、CI) はすべてのファイルより優先されます。
+`APP_ENV` は実際の環境変数から読み込まれます。`vendor/bin/phpunit` と `bin/cake test` はデフォルトで `APP_ENV=test` で動くので、
+コミットされている `config/.env.test` が読み込まれます。このファイルは `DATABASE_URL` を
+テスト用データベースに設定します
+([スケルトンのテスト用データベース](/ja/development/testing#the-test-database-of-the-skeleton) を参照)。
+自分のマシンだけで使う値は `config/.env.local` や `config/.env.test.local` に書いてください。
+
+::: pieceofcake2
+以前のスケルトンは `config/.env` とルートの `.env` だけを読み込みます。
+:::
 
 読み込んだ値は文字列として `putenv()`、`$_ENV`、`$_SERVER` に書き込まれるので、`env()`、
 `getenv()`、`$_ENV`、`$_SERVER` のどれでも読み出せます。
@@ -227,9 +350,10 @@ Configure::write('Security.salt', env('SECURITY_SALT') ?: 'a-default-salt');
 cp config/.env.example config/.env
 ```
 
-`config/.env` と `/.env` は、どちらもスケルトンの `.gitignore` に記載されています。`.env`
-ファイルはバージョン管理に含めず、代わりに `config/.env.example` のようなサンプルファイルを
-コミットしてください。
+`config/.env`、`config/.env.local`、`config/.env.*.local`、`/.env` は、スケルトンの `.gitignore`
+に記載されています。認証情報を含む `.env` ファイルはバージョン管理に含めず、代わりに
+`config/.env.example` のようなサンプルファイルをコミットしてください。`config/.env.test` は
+テストの設定だけを含むので、Symfony と同じようにコミットします。
 
 `.env` ファイルは開発用です。本番環境では、Web サーバー、コンテナ、プロセスマネージャーなどの
 設定で実際の環境変数をセットしてください。実際の環境変数は常にファイルより優先されます。
@@ -246,7 +370,7 @@ cp config/.env.example config/.env
 # config/.env
 DEBUG="2"
 SECURITY_SALT="a-long-random-string"
-DB_HOST="127.0.0.1"
+DATABASE_URL="mysql://my_app:secret@127.0.0.1:3306/my_app"
 ```
 
 値は必ずクォートしてください。josegonzalez/dotenv は、クォートしない値を真偽値、数値、`null`
@@ -276,7 +400,12 @@ composer require josegonzalez/dotenv
 
 use josegonzalez\Dotenv\Loader;
 
-foreach ([CONFIG . '.env', ROOT . DS . '.env'] as $dotenvFile) {
+$appEnv = (string)env('APP_ENV');
+$dotenvFiles = [CONFIG . '.env.local', CONFIG . '.env', ROOT . DS . '.env'];
+if ($appEnv !== '') {
+    array_unshift($dotenvFiles, CONFIG . ".env.{$appEnv}.local", CONFIG . ".env.{$appEnv}");
+}
+foreach ($dotenvFiles as $dotenvFile) {
     if (!is_file($dotenvFile)) {
         continue;
     }
@@ -296,7 +425,7 @@ foreach ([CONFIG . '.env', ROOT . DS . '.env'] as $dotenvFile) {
     }
     unset($dotenv, $key, $value);
 }
-unset($dotenvFile);
+unset($appEnv, $dotenvFiles, $dotenvFile);
 ```
 
 `.env` ファイルを `.gitignore` に追加し、次の節のように設定の中で `env()` を使って
@@ -306,8 +435,8 @@ unset($dotenvFile);
 
 ### アプリケーションスケルトンの環境変数
 
-`pieceofcake2/app` スケルトンの `config/core.php` と `config/database.php.default` は、
-以下の環境変数を読み込みます。これらは `config/.env.example` に記載されています。
+`pieceofcake2/app` スケルトンの `config/core.php`、`config/bootstrap.php`、
+`config/database.php.default`、`config/email.php.default` は、以下の環境変数を読み込みます。これらは `config/.env.example` に記載されています。
 
 | 環境変数 | 設定 | セットされていない場合 |
 |----------|------|------------------------|
@@ -315,24 +444,47 @@ unset($dotenvFile);
 | `SECURITY_SALT` | `Security.salt` | `config/core.php` の値 |
 | `SECURITY_CIPHER_SEED` | `Security.cipherSeed` (1〜4294967295。[cipherSeed](#cipher-seed) を参照) | `config/core.php` の値 |
 | `COOKIE_KEY` | `Cookie.key`。`'aes'` タイプの `CookieComponent` のキー ([`'aes'` への移行](#migrating-to-aes) を参照) | `null`。`CookieComponent` は `Security.salt` を使います |
-| `DB_DATASOURCE`、`DB_HOST`、`DB_PORT`、`DB_USERNAME`、`DB_PASSWORD`、`DB_DATABASE` | `default` 接続の `datasource`、`host`、`port`、`login`、`password`、`database` | `config/database.php` の値 |
-| `DB_TEST_DATASOURCE`、`DB_TEST_HOST`、`DB_TEST_PORT`、`DB_TEST_USERNAME`、`DB_TEST_PASSWORD`、`DB_TEST_DATABASE` | `test` 接続の同じ設定 | `config/database.php` の値 |
+| `DATABASE_URL` | `default` 接続と `test` 接続の `'dsn'` ([データベースの DSN](#database-url) を参照) | `config/database.php` の値 |
+| `MAILER_DSN` | `default` メールプロファイルの `'dsn'` ([メーラー DSN](../core-utility-libraries/email#mailer-dsn) を参照) | `config/email.php` の値 |
+| `APP_ENV` | `config/.env.{APP_ENV}` と `config/.env.{APP_ENV}.local` を読み込みます。`vendor/bin/phpunit` と `bin/cake test` ではデフォルトで `test` | ほかの `.env` ファイルだけが読み込まれます |
 
-空の環境変数はセットされていないものとして扱われます。ただし、`DB_PASSWORD` と
-`DB_TEST_PASSWORD` は空にできます。`.env` ファイルも環境変数も無い場合、アプリケーションは
-設定ファイルの値を使います。スケルトンがこれらの環境変数を読み込むようになる前に
-`config/database.php` を作成した場合は、`config/database.php.default` の `__construct()` と
-`applyEnv()` メソッドをコピーしてください。
+空の環境変数はセットされていないものとして扱われます。`.env` ファイルも環境変数も無い場合、
+アプリケーションは設定ファイルの値を使います。DSN のキーは設定の同じキーを置き換え、それ以外の
+キーはデフォルトとして残ります。`'dsn'` キーには、`pieceofcake2/cakephp` 2.12.7 以降が必要です。
+
+以前のスケルトンから `config/database.php` や `config/email.php` を作成した場合は、
+`config/database.php.default` や `config/email.php.default` の `__construct()` メソッドを
+コピーし、`test` 接続を `default` として使う `APP_ENV` の分岐があれば削除してください
+(代わりに `config/.env.test` が `DATABASE_URL` をテスト用データベースに設定します)。
+`tests/bootstrap.php`、`bin/cake`、`webroot/test.php` の `APP_ENV` のデフォルトもスケルトンからコピーしてください。以前のスケルトンは、`DB_DATASOURCE`、`DB_HOST`、`DB_PORT`、
+`DB_USERNAME`、`DB_PASSWORD`、`DB_DATABASE` (`test` 接続は `DB_TEST_*`) を `applyEnv()`
+メソッドで読み込んでいました。1 つの `DATABASE_URL` がこれらに置き換わります。
+
+```dotenv
+# Before
+DB_HOST="127.0.0.1"
+DB_USERNAME="my_app"
+DB_PASSWORD="secret"
+DB_DATABASE="my_app"
+# After
+DATABASE_URL="mysql://my_app:secret@127.0.0.1/my_app"
+```
 
 たとえば、開発用の `config/.env` は次のようになります。
 
 ```dotenv
 # config/.env
 DEBUG="2"
-DB_HOST="127.0.0.1"
-DB_USERNAME="my_app"
-DB_PASSWORD="secret"
-DB_DATABASE="my_app"
+DATABASE_URL="mysql://my_app:secret@127.0.0.1:3306/my_app?encoding=utf8mb4"
+MAILER_DSN="smtp://127.0.0.1:1025"
+```
+
+自分のマシンのテスト用データベースは `config/.env.test.local` に書きます。テストでは
+`config/.env.test` と `config/.env` より優先されます。
+
+```dotenv
+# config/.env.test.local
+DATABASE_URL="mysql://my_app:secret@127.0.0.1:3306/test_my_app?encoding=utf8mb4"
 ```
 
 ## クラスの読み込みと追加のクラスパス

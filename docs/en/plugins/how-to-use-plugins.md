@@ -28,6 +28,11 @@ automatically at the right time and place. CakePHP loads the plugin's
 have also been supplied to the load() method, which would have loaded only those
 three plugins, and not the rest.
 
+A plugin bootstrap can also register DSN schemes for datasources and email
+transports (see
+[Registering DSN Schemes](/plugins/how-to-create-plugins#registering-dsn-schemes)).
+Load such a plugin with `'bootstrap' => true`.
+
 Finally, you can also specify a set of defaults for loadAll which will apply to
 every plugin that doesn't have a more specific configuration.
 

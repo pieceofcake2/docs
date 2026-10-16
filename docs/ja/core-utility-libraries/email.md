@@ -148,6 +148,78 @@ class EmailConfig
 2.3 から TLS 送信のサポートが追加されました。
 :::
 
+### メーラー DSN {#mailer-dsn}
+
+::: pieceofcake2
+`'dsn'` キーは v2.12.7 で追加されます。値は
+Symfony Mailer の `MAILER_DSN` の書式です。同じ `'dsn'` キーで、データソースも設定できます。
+:::
+
+プロファイルのトランスポートは、`'dsn'` キーに書いた 1 つの DSN (URL) で設定できます。
+たとえば環境変数 `MAILER_DSN` から読み込みます。アプリケーションスケルトンの
+`config/email.php.default` は、`default` プロファイルでこれを行っています。
+
+```php
+class EmailConfig
+{
+    public $default = [
+        'transport' => 'Mail',
+        'from' => 'you@localhost',
+    ];
+
+    public function __construct()
+    {
+        // Property defaults cannot call functions, so set the DSN here
+        $this->default['dsn'] = env('MAILER_DSN');
+    }
+}
+```
+
+```dotenv
+# config/.env
+MAILER_DSN="smtp://my@example.com:app-password@smtp.example.com:587"
+```
+
+| DSN | 設定 |
+|-----|------|
+| `smtp://user:password@host:port` | `Smtp` トランスポート。`host`、`port`、`username`、`password` を設定します。ポートが 587 のとき、または `?tls=1` のとき `tls` (STARTTLS) が `true` になります |
+| `smtps://user:password@host:port` | `Smtp` トランスポート。ホストは `ssl://host` で、ポートを書かなければ 465 です |
+| `sendmail://default`、`native://default` | `Mail` トランスポート (PHP の `mail()`) |
+| `null://null` | `Debug` トランスポート。何も送信しません |
+
+- **クエリパラメーター**: そのままの名前で設定のキーになります。たとえば
+  `smtp://smtp.example.com:587?timeout=10&client=app.example.com` です。`?tls=0` で
+  ポート 587 の STARTTLS を無効にできます。`?transport=MyPlugin.Custom` で別のトランスポートを
+  選べます。その場合は別のスキームも使えます。値の `true`、`false`、`null` は PHP の値に
+  なります。
+- **ホスト**: Symfony と同じく、ホスト `default` は `localhost` になります。IPv6 のホストは
+  角括弧で囲みます。例: `smtp://[::1]:1025`
+- **エンコード**: ユーザー名とパスワードは URL デコードされます。パスワードの予約文字は
+  エンコードしてください。`@` は `%40`、`?` は `%3F`、`#` は `%23`、`%` は `%25` です。
+  メールアドレスのユーザー名は `@` をそのまま書けます。
+- **優先順位**: DSN から取り出したキーはプロファイルの同じキーを置き換え、それ以外のキー
+  (`from`、`log`、`charset` など) はそのまま残ります。CakePHP 3.x 以降と同じです。
+- **空の値**: `'dsn'` が `null`、`''`、`false` の場合は無視されます。そのため
+  `env('MAILER_DSN')` は、環境変数がセットされていなければプロファイルのほかのキーを使います。
+- **エラー**: 不正な DSN や未知のスキームでは、プロファイル名を含む `ConfigureException`
+  がスローされます。メッセージにはユーザー名とパスワードは含まれません。
+- **解析のタイミング**: DSN はプロファイルを適用するとき (`new CakeEmail('default')` や
+  `config()`) に解析されます。
+- **プラグインのスキーム**: プラグインは `CakeEmail::setDsnClassMap()` で、配信サービスの API
+  などのスキームを追加したり、組み込みのスキームを置き換えたりできます。
+  [DSN スキームの登録](/ja/plugins/how-to-create-plugins#registering-dsn-schemes) を参照してください。
+
+`'dsn'` キーは、`config()` やコンストラクターに渡す配列でも使えます。`CakeEmail::parseDsn()`
+は DSN のキーを返します。
+
+```php
+$Email = new CakeEmail(['dsn' => 'smtp://localhost:1025', 'from' => 'me@example.org']);
+
+CakeEmail::parseDsn('smtps://user:secret@smtp.example.com');
+// ['transport' => 'Smtp', 'host' => 'ssl://smtp.example.com', 'port' => 465,
+//  'username' => 'user', 'password' => 'secret', 'tls' => false]
+```
+
 <a id="email-configurations"></a>
 
 ### 設定
@@ -184,6 +256,8 @@ class EmailConfig
   を参照。
 - `'transport'`: トランスポート名。 `CakeEmail::transport()` を参照。
 - `'helpers'`: メールテンプレート内で使用するヘルパーの配列。
+- `'dsn'`: トランスポートとそのキーを設定するメーラー DSN。[メーラー DSN](#mailer-dsn)
+  を参照してください。
 
 これらの設定の全ては `'from'` を除いてオプションです。多くの設定を配列で登録する場合、
 設定は、 `CakeEmail::config()` メソッド内で行います。そして、

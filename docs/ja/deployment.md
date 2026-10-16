@@ -122,8 +122,11 @@ env[DEBUG] = 0
 Configure::write('debug', (int)env('DEBUG'));
 ```
 
-セキュリティ用のソルトやデータベースの認証情報など、スケルトンが環境変数から読み込むほかの設定は
-[環境変数](development/configuration#environment-variables) に一覧があります。本番環境では、
+セキュリティ用のソルト、データベースの接続 (`DATABASE_URL`)、メールのトランスポート
+(`MAILER_DSN`) など、スケルトンが環境変数から読み込むほかの設定は
+[環境変数](development/configuration#environment-variables) に一覧があります。DSN には
+パスワードを含めた接続全体が入るので、`DATABASE_URL` と `MAILER_DSN` は秘密の情報として
+扱ってください。本番環境では、
 `.env` ファイルではなく実際の環境変数としてセットするか、AWS Systems Manager パラメータストアなどの
 シークレットストアから読み込んでください ([設定と秘密の情報](deployment/aws-lambda#configuration-and-secrets) を参照)。
 実際の環境変数は、スケルトンが開発時に読み込む `.env` ファイルより常に優先されます。

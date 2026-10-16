@@ -90,8 +90,6 @@ this configuration; uncomment the extension there:
          stderr="true"
          colors="true">
     <php>
-        <!-- The web server uses the test datasource, where the fixtures are -->
-        <server name="PANTHER_APP_ENV" value="test"/>
         <!-- Screenshots of the failed End-to-End tests -->
         <server name="PANTHER_ERROR_SCREENSHOT_DIR" value="./tmp/error-screenshots"/>
     </php>
@@ -133,24 +131,37 @@ of the package documentation
 ### The test database
 
 The web server is a separate PHP process, and the browser can only see data
-that it reads. It must use the datasource where `CakeTestCase` loads the
-fixtures, `test`. `PANTHER_APP_ENV=test` gives the web server the environment
-variable `APP_ENV=test`; in the constructor of `DATABASE_CONFIG` in
-`config/database.php`, use the `test` datasource as `default` then:
+that it reads. Its `default` connection must be the database where
+`CakeTestCase` loads the fixtures, the one of the `test` datasource. As in
+Symfony, this comes from the `test` environment: the tests of pieceofcake2/app
+run with `APP_ENV=test` by default (its `tests/bootstrap.php` sets it with
+`putenv()`, `$_ENV` and `$_SERVER` when it is not set), so the tests load the committed `config/.env.test`, and the web server that
+Panther starts inherits the environment of the test process, runs with
+`APP_ENV=test` and loads the same file. There `DATABASE_URL` is the test
+database:
+
+```dotenv
+# config/.env.test
+DATABASE_URL="mysql://user:password@localhost:3306/test_database_name?encoding=utf8mb4"
+```
+
+`config/database.php` gives `DATABASE_URL` to both connections, so the
+`default` connection of the pages is the database of the fixtures:
 
 ```php
 public function __construct()
 {
-    if (env('APP_ENV') === 'test') {
-        $this->default = $this->test;
-    }
+    $this->default['dsn'] = env('DATABASE_URL');
+    $this->test['dsn'] = env('DATABASE_URL');
 }
 ```
 
-`config/database.php.default` of pieceofcake2/app has these lines; copy them
-into your `config/database.php` if it is older. The web server inherits the
-environment variables of the test process, so it gets the same `DB_TEST_*`
-values.
+Set the test database of your machine in `config/.env.test.local`, or as a
+real environment variable (for example in CI), which the web server inherits
+and which wins over `config/.env.test` in both processes. Panther's
+`PANTHER_APP_ENV` is only needed to give the web server a different `APP_ENV`
+than the tests. If your `config/database.php` still has an `APP_ENV` branch
+that uses the `test` connection as `default`, remove it.
 
 - Never point the tests to your development database.
 - List every table that the visited pages use in `$fixtures`.
@@ -322,9 +333,9 @@ updated. Run `vendor/bin/bdi detect drivers` again.
 `defaultTestSuite="App"`, `--filter` searches only the `App` suite.
 
 **"Missing Database Table" in the browser**: the web server does not use the
-test datasource, or a table is missing from `$fixtures`. Check
-`PANTHER_APP_ENV` in `phpunit.xml.dist` and the `APP_ENV` lines of
-`config/database.php`.
+test database, or a table is missing from `$fixtures`. Check that the tests
+run with `APP_ENV=test` (no other `APP_ENV` in the environment) and that `DATABASE_URL` in
+`config/.env.test` (or in the environment) is the test database.
 
 See [Troubleshooting](https://pieceofcake2.github.io/panther/troubleshooting)
 in the package documentation for more.

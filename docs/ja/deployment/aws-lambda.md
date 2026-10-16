@@ -242,8 +242,8 @@ PHP 自身が報告するエラーも CloudWatch に書き込まれます。エ�
 除外しています。CI でビルドするイメージにはリポジトリにあるファイルしか入らないので、次のように
 します。
 
-- `config/database.php.default` から作成した `config/database.php` をコミットします。接続の設定は
-  環境変数 `DB_*` から読み込むので、秘密の情報は含まれません。
+- `config/database.php.default` から作成した `config/database.php` をコミットします。接続は
+  環境変数 `DATABASE_URL` から読み込むので、秘密の情報は含まれません。
 - [メール](#email) で説明する SES のトランスポートを設定した `config/email.php` をコミットします。
   IAM ロールを使うので、こちらにも認証情報は含まれません。
 - テストした依存パッケージがそのままデプロイされるように、`composer.lock` をコミットします。
@@ -334,10 +334,7 @@ provider:
         APP_FULL_BASE_URL: https://www.example.com
         SECURITY_SALT: bref-ssm:/my-cake-app/${sls:stage}/security-salt
         SECURITY_CIPHER_SEED: bref-ssm:/my-cake-app/${sls:stage}/security-cipher-seed
-        DB_HOST: ${ssm:/my-cake-app/${sls:stage}/db-host}
-        DB_USERNAME: my_cake_app
-        DB_PASSWORD: bref-ssm:/my-cake-app/${sls:stage}/db-password
-        DB_DATABASE: my_cake_app
+        DATABASE_URL: bref-ssm:/my-cake-app/${sls:stage}/database-url
         SESSION_TABLE: !Ref SessionsTable
         UPLOADS_BUCKET: !Ref UploadsBucket
         MAIL_FROM: noreply@example.com
@@ -448,28 +445,32 @@ resources:
 
 ## 設定と秘密の情報
 
-スケルトンは設定を環境変数 `DEBUG`、`SECURITY_SALT`、`SECURITY_CIPHER_SEED`、`DB_*` から
+スケルトンは設定を環境変数 `DEBUG`、`SECURITY_SALT`、`SECURITY_CIPHER_SEED`、`DATABASE_URL`、`MAILER_DSN` から
 読み込みます ([環境変数](/ja/development/configuration#environment-variables) を参照してください)。
 Lambda では、これらを `serverless.yml` の `environment` で、すべての関数
 (`provider.environment`) または関数ごとに定義します。スケルトンは、セットされていない変数だけを
 `.env` ファイルから読み込み、実際の環境変数が常に優先されます。`.env` ファイルはデプロイしないで
 ください。
 
-ソルトやデータベースのパスワードなどの秘密の情報は、
+ソルトや、パスワードを含むデータベースの URL などの秘密の情報は、
 [AWS Systems Manager パラメータストア](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html)
 に、たとえば `SecureString` のパラメータとして保存します。
 
 ```bash
 aws ssm put-parameter --region ap-northeast-1 \
-    --name /my-cake-app/prod/db-password --type SecureString --value 'secret'
+    --name /my-cake-app/prod/database-url --type SecureString \
+    --value 'mysql://my_cake_app:secret@my-cake-app.cluster-xxxx.ap-northeast-1.rds.amazonaws.com:3306/my_cake_app?encoding=utf8mb4'
 ```
+
+URL の中のパスワードの予約文字はエンコードしてください (`@` は `%40`、`?` は `%3F`、`#` は
+`%23`)。[データベースの DSN](/ja/development/configuration#database-url) を参照してください。
 
 `serverless.yml` からパラメータを読み込む方法は 2 つあります。
 
-- `${ssm:/my-cake-app/prod/db-host}` は、デプロイ時に Serverless CLI が解決します。値は関数の
+- `${ssm:/my-cake-app/prod/full-base-url}` は、デプロイ時に Serverless CLI が解決します。値は関数の
   設定に平文で保存され、デプロイする人がパラメータを読める必要があります。秘密でない値に
   使ってください。
-- `bref-ssm:/my-cake-app/prod/db-password` は、Lambda のインスタンスの起動時に Bref が、すべての
+- `bref-ssm:/my-cake-app/prod/database-url` は、Lambda のインスタンスの起動時に Bref が、すべての
   変数をまとめて 1 回の API 呼び出しで解決します。値は関数の設定には保存されません。
   `bref/secrets-loader` パッケージと、上の `iam` の節にある `ssm:GetParameters` の権限が必要です。
 
@@ -480,7 +481,7 @@ aws ssm put-parameter --region ap-northeast-1 \
   パラメータをデフォルトの `aws/ssm` キーではなくカスタマー管理の KMS キーで暗号化している場合は、
   ロールにそのキーに対する `kms:Decrypt` の権限も必要です。
 
-Bref はアプリケーションの開始前に `bref-ssm:` の値を解決するので、`env('DB_PASSWORD')` や
+Bref はアプリケーションの開始前に `bref-ssm:` の値を解決するので、`env('DATABASE_URL')` や
 `getenv()` は復号された値を返します。Lambda は `AWS_REGION` などの
 [ランタイムの環境変数](https://docs.aws.amazon.com/lambda/latest/dg/configuration-envvars.html#configuration-envvars-runtime)
 をすべての関数にセットします。
@@ -631,6 +632,27 @@ class EmailConfig
 [Amazon SES Email Transport](https://pieceofcake2.github.io/aws/ja/email.html)
 と [メール](/ja/core-utility-libraries/email) を参照してください。
 
+SES API の代わりに SES の SMTP インターフェイスで送信する場合は、`MAILER_DSN` で `Smtp`
+トランスポートを設定します ([メーラー DSN](/ja/core-utility-libraries/email#mailer-dsn) を参照)。
+SMTP の認証情報は秘密の情報なので、この DSN もパラメータストアに保存します。
+
+```bash
+aws ssm put-parameter --region ap-northeast-1 \
+    --name /my-cake-app/prod/mailer-dsn --type SecureString \
+    --value 'smtp://SMTP_USERNAME:SMTP_PASSWORD@email-smtp.ap-northeast-1.amazonaws.com:587'
+```
+
+```yaml
+# serverless.yml
+provider:
+    environment:
+        MAILER_DSN: bref-ssm:/my-cake-app/${sls:stage}/mailer-dsn
+```
+
+SES の SMTP パスワードには `/` や `+` がよく含まれます。パスワードを URL エンコード
+(`%2F`、`%2B`) しておけば確実です。VPC 内の関数から SMTP インターフェイスに接続するには、
+NAT ゲートウェイか SES SMTP の VPC エンドポイントが必要です。
+
 <a id="file-uploads-and-s3"></a>
 
 ### ファイルのアップロードと S3
@@ -754,8 +776,8 @@ CloudFront にアクセスを許可します。
 
 ## データベース
 
-Amazon RDS と Aurora (MySQL または PostgreSQL) は、`config/database.php` の `DB_*` の設定で
-使えます。Bref は `pdo_mysql` と `pdo_pgsql` を有効にしています。次の点を考えておいてください。
+Amazon RDS と Aurora (MySQL または PostgreSQL) は、`config/database.php` の `DATABASE_URL`
+(`mysql://...` または `postgres://...`) で使えます。Bref は `pdo_mysql` と `pdo_pgsql` を有効にしています。次の点を考えておいてください。
 
 - **ネットワーク。** プライベートな VPC にあるデータベースを使うには、関数をその VPC で実行する
   必要があります (`serverless.yml` の `provider.vpc` に `securityGroupIds` と `subnetIds`)。

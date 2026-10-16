@@ -239,7 +239,7 @@ and `composer.lock`. An image built in CI only contains the files in the
 repository, so:
 
 - Commit `config/database.php` created from `config/database.php.default`. It
-  reads the connection settings from the `DB_*` environment variables, so it
+  reads the connection from the `DATABASE_URL` environment variable, so it
   contains no secrets.
 - Commit `config/email.php` with the SES transport described in
   [Email](#email). With an IAM role, it contains no credentials either.
@@ -334,10 +334,7 @@ provider:
         APP_FULL_BASE_URL: https://www.example.com
         SECURITY_SALT: bref-ssm:/my-cake-app/${sls:stage}/security-salt
         SECURITY_CIPHER_SEED: bref-ssm:/my-cake-app/${sls:stage}/security-cipher-seed
-        DB_HOST: ${ssm:/my-cake-app/${sls:stage}/db-host}
-        DB_USERNAME: my_cake_app
-        DB_PASSWORD: bref-ssm:/my-cake-app/${sls:stage}/db-password
-        DB_DATABASE: my_cake_app
+        DATABASE_URL: bref-ssm:/my-cake-app/${sls:stage}/database-url
         SESSION_TABLE: !Ref SessionsTable
         UPLOADS_BUCKET: !Ref UploadsBucket
         MAIL_FROM: noreply@example.com
@@ -449,29 +446,35 @@ Notes:
 ## Configuration and Secrets
 
 The skeleton reads its settings from environment variables: `DEBUG`,
-`SECURITY_SALT`, `SECURITY_CIPHER_SEED` and the `DB_*` variables (see
+`SECURITY_SALT`, `SECURITY_CIPHER_SEED`, `DATABASE_URL` and `MAILER_DSN` (see
 [Environment Variables](/development/configuration#environment-variables)). On
 Lambda, define them in the `environment` sections of `serverless.yml`, for all
 functions (`provider.environment`) or for one function. The skeleton loads
 `.env` files only for variables that are not set, and real environment
 variables always take precedence; do not deploy `.env` files.
 
-Store secrets, such as the salts and database passwords, in
+Store secrets, such as the salts and the database URL, which contains the
+password, in
 [AWS Systems Manager Parameter Store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html),
 for example as `SecureString` parameters:
 
 ```bash
 aws ssm put-parameter --region ap-northeast-1 \
-    --name /my-cake-app/prod/db-password --type SecureString --value 'secret'
+    --name /my-cake-app/prod/database-url --type SecureString \
+    --value 'mysql://my_cake_app:secret@my-cake-app.cluster-xxxx.ap-northeast-1.rds.amazonaws.com:3306/my_cake_app?encoding=utf8mb4'
 ```
+
+Encode reserved characters of the password in the URL (`%40` for `@`, `%3F`
+for `?`, `%23` for `#`); see
+[Database DSNs](/development/configuration#database-url).
 
 `serverless.yml` can read the parameters in two ways:
 
-- `${ssm:/my-cake-app/prod/db-host}` is resolved by the Serverless CLI during
+- `${ssm:/my-cake-app/prod/full-base-url}` is resolved by the Serverless CLI during
   the deployment. The value is stored in plain text in the configuration of the
   function, and whoever deploys must be allowed to read the parameter. Use it
   for values that are not secret.
-- `bref-ssm:/my-cake-app/prod/db-password` is resolved by Bref when a Lambda
+- `bref-ssm:/my-cake-app/prod/database-url` is resolved by Bref when a Lambda
   instance starts, with one API call for all variables. The value is never
   stored in the configuration of the function. This needs the
   `bref/secrets-loader` package and the `ssm:GetParameters` permission shown in
@@ -485,7 +488,7 @@ aws ssm put-parameter --region ap-northeast-1 \
   the default `aws/ssm` key, the role also needs `kms:Decrypt` on that key.
 
 Bref resolves `bref-ssm:` values before the application starts, so
-`env('DB_PASSWORD')` and `getenv()` return the decrypted value. Lambda sets
+`env('DATABASE_URL')` and `getenv()` return the decrypted value. Lambda sets
 `AWS_REGION` and other
 [runtime environment variables](https://docs.aws.amazon.com/lambda/latest/dg/configuration-envvars.html#configuration-envvars-runtime)
 on every function.
@@ -632,6 +635,27 @@ See
 [Amazon SES Email Transport](https://pieceofcake2.github.io/aws/email.html)
 and [Email](/core-utility-libraries/email).
 
+To send through the SES SMTP interface instead, set the `Smtp` transport with
+a `MAILER_DSN` (see [Mailer DSN](/core-utility-libraries/email#mailer-dsn)).
+The SMTP credentials are secret, so keep the DSN in Parameter Store as well:
+
+```bash
+aws ssm put-parameter --region ap-northeast-1 \
+    --name /my-cake-app/prod/mailer-dsn --type SecureString \
+    --value 'smtp://SMTP_USERNAME:SMTP_PASSWORD@email-smtp.ap-northeast-1.amazonaws.com:587'
+```
+
+```yaml
+# serverless.yml
+provider:
+    environment:
+        MAILER_DSN: bref-ssm:/my-cake-app/${sls:stage}/mailer-dsn
+```
+
+SES SMTP passwords often contain `/` and `+`; URL-encoding the password
+(`%2F`, `%2B`) is always safe. A function in a VPC needs a NAT gateway
+or an SES SMTP VPC endpoint to reach the SMTP interface.
+
 ### File Uploads and S3
 
 Uploaded files must be stored in S3, because `/tmp` is not shared and is
@@ -754,8 +778,9 @@ in the Bref documentation.
 
 ## Database
 
-Amazon RDS and Aurora (MySQL or PostgreSQL) work with the `DB_*` settings of
-`config/database.php`; Bref enables `pdo_mysql` and `pdo_pgsql`. Things to
+Amazon RDS and Aurora (MySQL or PostgreSQL) work with the `DATABASE_URL` of
+`config/database.php` (`mysql://...` or `postgres://...`); Bref enables
+`pdo_mysql` and `pdo_pgsql`. Things to
 plan for:
 
 - **Network.** A database in a private VPC requires the functions to run in that

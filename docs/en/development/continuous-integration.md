@@ -81,12 +81,7 @@ jobs:
           --health-retries=5
 
     env:
-      DB_TEST_DATASOURCE: Database/Mysql
-      DB_TEST_HOST: 127.0.0.1
-      DB_TEST_PORT: 3306
-      DB_TEST_USERNAME: root
-      DB_TEST_PASSWORD: root
-      DB_TEST_DATABASE: cakephp_test
+      DATABASE_URL: mysql://root:root@127.0.0.1:3306/cakephp_test?encoding=utf8mb4
 
     steps:
       - uses: actions/checkout@v7
@@ -223,12 +218,7 @@ jobs:
           --health-retries=5
 
     env:
-      DB_TEST_DATASOURCE: Database/Mysql
-      DB_TEST_HOST: 127.0.0.1
-      DB_TEST_PORT: 3306
-      DB_TEST_USERNAME: root
-      DB_TEST_PASSWORD: root
-      DB_TEST_DATABASE: cakephp_test
+      DATABASE_URL: mysql://root:root@127.0.0.1:3306/cakephp_test?encoding=utf8mb4
 
     steps:
       - uses: actions/checkout@v7
@@ -300,9 +290,16 @@ The parts that every job shares:
 - **Database.** The jobs that use the database start MySQL as a
   [service container](https://docs.github.com/en/actions/tutorials/use-containerized-services/use-docker-service-containers).
   `config/database.php` is not committed in the skeleton, so the job copies
-  `config/database.php.default`, which reads the `test` connection from the
-  `DB_TEST_*` environment variables (see
-  [Environment Variables](/development/configuration#environment-variables)).
+  `config/database.php.default`, which reads both the `default` and the `test`
+  connection from the `DATABASE_URL` environment variable; the tests run with
+  `APP_ENV=test` by default
+  (see [Database DSNs](/development/configuration#database-url);
+  the `'dsn'` key needs pieceofcake2/cakephp 2.12.7 or later). The jobs set
+  `DATABASE_URL` to the database of the service container as a real
+  environment variable, which wins over the committed `config/.env.test`.
+  Skeletons created before read the `DB_TEST_DATASOURCE`, `DB_TEST_HOST`, `DB_TEST_PORT`,
+  `DB_TEST_USERNAME`, `DB_TEST_PASSWORD` and `DB_TEST_DATABASE` variables
+  instead.
   Fixtures are created in this database, so the tests do not need any tables
   beforehand.
 - **Salts.** The skeleton reads `Security.salt` and `Security.cipherSeed`
@@ -310,7 +307,7 @@ The parts that every job shares:
   values for them; never put your production values in the workflow.
 
 To test with PostgreSQL instead, change the service and the environment
-variables:
+variable:
 
 ```yaml
     services:
@@ -328,12 +325,7 @@ variables:
           --health-retries=5
 
     env:
-      DB_TEST_DATASOURCE: Database/Postgres
-      DB_TEST_HOST: 127.0.0.1
-      DB_TEST_PORT: 5432
-      DB_TEST_USERNAME: postgres
-      DB_TEST_PASSWORD: postgres
-      DB_TEST_DATABASE: cakephp_test
+      DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/cakephp_test
 ```
 
 and install `pdo_pgsql` instead of `pdo_mysql`. To test both databases, add a
@@ -417,8 +409,8 @@ The `end-to-end` job runs the browser tests of
 PHPUnit job keeps running only the `App` suite (`defaultTestSuite="App"`) and
 needs no browser. If you removed `defaultTestSuite`, run the PHPUnit job with
 `--testsuite App`. The `end-to-end` job needs the database, like the PHPUnit
-job: `PANTHER_APP_ENV=test` in `phpunit.xml.dist` makes the web server use the
-test datasource, and the web server inherits the `DB_TEST_*` values. The
+job: the web server inherits `APP_ENV=test` of the tests and the
+`DATABASE_URL` of the job, so its `default` connection is the test database. The
 `ubuntu-latest` runner has Chrome, and `vendor/bin/bdi detect drivers`
 ([bdi](https://github.com/dbrekelmans/bdi), a development dependency) installs
 the matching chromedriver. `PANTHER_NO_SANDBOX=1` is needed on the GitHub

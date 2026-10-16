@@ -72,9 +72,17 @@ setting `public $useDbConfig = 'legacy';` in the appropriate models.
 Fill out the key/value pairs in the configuration array to best
 suit your needs.
 
-The `config/database.php.default` file of the application skeleton can also
-read the connection settings from environment variables. See
+A connection can also be set with one DSN (a URL) in the `'dsn'` key, for
+example `'dsn' => env('DATABASE_URL')`. The `config/database.php.default` file
+of the application skeleton reads `DATABASE_URL`, which is the test database
+in the tests. See
+[Database DSNs](#database-url) and
 [Environment Variables](#environment-variables).
+
+dsn (*optional*)  
+A DSN such as `mysql://user:password@localhost/my_app?encoding=utf8mb4`
+that sets the datasource and the connection keys in one string. See
+[Database DSNs](#database-url). Added in v2.12.7.
 
 datasource  
 The name of the datasource this configuration array is for.
@@ -182,6 +190,115 @@ together automatically. By convention, use underscores, lower case,
 and plural forms for your database table names - for example:
 bakers, pastry_stores, and savory_cakes.
 
+### Database DSNs {#database-url}
+
+::: pieceofcake2
+The `'dsn'` key was added in v2.12.7; earlier releases ignore it silently. It
+is a backport of the DSN support of CakePHP 3.x and later, where the key is
+called `url`, and uses the `DATABASE_URL` format of CakePHP, Doctrine and Symfony.
+:::
+
+A connection can be set with one DSN in the `'dsn'` key. This keeps the
+credentials of each environment in one environment variable:
+
+```php
+// config/database.php
+class DATABASE_CONFIG
+{
+    public $default = [
+        'datasource' => 'Database/Mysql',
+        'persistent' => false,
+        'host' => 'localhost',
+        'login' => 'user',
+        'password' => 'password',
+        'database' => 'my_app',
+        'prefix' => '',
+    ];
+
+    public function __construct()
+    {
+        // Property defaults cannot call functions, so set the DSN here
+        $this->default['dsn'] = env('DATABASE_URL');
+    }
+}
+```
+
+```dotenv
+# config/.env
+DATABASE_URL="mysql://my_app:secret@127.0.0.1:3306/my_app?encoding=utf8mb4"
+```
+
+The DSN is parsed when the connection is created (the first
+`ConnectionManager::getDataSource()` call, usually the first query), and its
+parts are mapped to the connection keys:
+
+| DSN part | Connection key |
+|----------|----------------|
+| scheme `mysql` | `datasource` `Database/Mysql` |
+| scheme `postgres`, `postgresql` or `pgsql` | `datasource` `Database/Postgres` |
+| scheme `sqlite` | `datasource` `Database/Sqlite` |
+| scheme `sqlserver`, `mssql` or `sqlsrv` | `datasource` `Database/Sqlserver` |
+| user and password | `login` and `password` |
+| host and port | `host` (without the brackets of an IPv6 address) and `port` |
+| path, without the leading `/` | `database` |
+| query parameters | keys of the same name |
+
+For example:
+
+```dotenv
+# MySQL
+DATABASE_URL="mysql://user:password@localhost:3306/my_app?encoding=utf8mb4"
+# PostgreSQL
+DATABASE_URL="postgres://user:password@localhost:5432/my_app?schema=public"
+# SQLite in memory
+DATABASE_URL="sqlite:///:memory:"
+# SQLite file, relative to the working directory (three slashes)
+DATABASE_URL="sqlite:///tmp/my_app.sqlite"
+# SQLite file, absolute path (four slashes)
+DATABASE_URL="sqlite:////var/db/my_app.sqlite"
+# SQL Server
+DATABASE_URL="sqlserver://user:password@localhost:1433/my_app?encoding=utf8&options[TrustServerCertificate]=yes"
+```
+
+- **Precedence**: The keys taken from the DSN replace the same keys of the
+  array, and the other keys of the array are kept, as in CakePHP 3.x and later.
+  The array therefore holds the defaults (`persistent`, `prefix`, `encoding`,
+  ...) and the DSN decides the connection. A DSN without a password keeps the
+  `password` of the array; write `user:@host` for an empty password.
+- **Empty values**: A `'dsn'` that is `null`, `''` or `false` is ignored, so
+  `env('DATABASE_URL')` falls back to the array when the variable is not set.
+  The `'dsn'` key itself is removed from the configuration that the datasource
+  gets.
+- **Encoding**: The user, password, host and database are URL-decoded. Encode
+  reserved characters of a password: `%40` for `@`, `%3F` for `?`, `%23` for
+  `#` and `%25` for `%`.
+- **Query parameters**: They become keys as they are, e.g. `encoding`,
+  `schema`, `prefix`, `persistent=true`, `flags[1002]=SET%20NAMES%20utf8mb4`
+  or `options[Encrypt]=no`. The values `true`, `false` and `null` become the
+  PHP values. `datasource=MyPlugin.Database/Custom` overrides the datasource
+  of the scheme and also allows a scheme that is not registered. `1002` in
+  `flags[1002]` is the value of `PDO::MYSQL_ATTR_INIT_COMMAND`; a DSN cannot
+  contain constant names.
+- **IPv6**: Write the host in brackets, e.g.
+  `mysql://user:password@[::1]:3306/my_app`.
+- **Errors**: An invalid DSN or an unknown scheme throws a `CakeException` that
+  names the connection. The message does not contain the user name or
+  password.
+- **Schemes of plugins**: A plugin can add schemes, or replace the built-in
+  ones, with `ConnectionManager::setDsnClassMap()`. See
+  [Registering DSN Schemes](/plugins/how-to-create-plugins#registering-dsn-schemes).
+
+The `'dsn'` key also works with `ConnectionManager::create()`, and
+`ConnectionManager::parseDsn()` returns the keys of a DSN:
+
+```php
+ConnectionManager::create('reporting', ['dsn' => env('REPORTING_DATABASE_URL')]);
+
+ConnectionManager::parseDsn('postgres://user:secret@db:5432/app');
+// ['login' => 'user', 'password' => 'secret', 'host' => 'db', 'port' => '5432',
+//  'database' => 'app', 'datasource' => 'Database/Postgres']
+```
+
 ## Environment Variables
 
 Settings that differ between environments, such as the debug level, the
@@ -191,7 +308,7 @@ In production, set the variables in the configuration of the web server,
 container or process manager. For local development, the application
 skeleton can load them from a `.env` file.
 
-### Loading .env Files
+### Loading .env Files {#loading-env-files}
 
 Applications created from the
 [pieceofcake2/app](https://pieceofcake2.github.io/app/) skeleton load
@@ -211,15 +328,31 @@ other applications, see
 [Adding .env Support to an Existing Application](#adding-env-support-to-an-existing-application).
 :::
 
-The skeleton loads these files if they exist:
+The skeleton loads these files if they exist, in the order of Symfony's
+`.env` files:
 
-1. `config/.env`, the location used by the CakePHP 3+/5 application skeleton.
-2. `.env` in the project root.
+| File | Loaded | In Git |
+|------|--------|--------|
+| `config/.env.{APP_ENV}.local` | when `APP_ENV` is set | ignored |
+| `config/.env.{APP_ENV}`, e.g. `config/.env.test` | when `APP_ENV` is set | committed |
+| `config/.env.local` | always | ignored |
+| `config/.env`, the location used by the CakePHP 3+/5 application skeleton | always | ignored |
+| `.env` in the project root | always | ignored |
 
-The precedence is: real environment variables > `config/.env` > the `.env` in
-the project root. `config/.env` is loaded first and the root `.env` second,
-and a variable that is already set, in the real environment (web server,
-shell, container, CI) or by `config/.env`, is never overwritten.
+A variable that is already set is never overwritten, so an earlier file wins
+over a later one, and real environment variables (web server, shell,
+container, CI) win over all files. `APP_ENV` is read from the real
+environment. `vendor/bin/phpunit` and `bin/cake test` run with `APP_ENV=test`
+by default, so the tests load
+`config/.env.test`, which is committed and points `DATABASE_URL` to the test
+database (see
+[Testing](/development/testing#the-test-database-of-the-skeleton)).
+Put values for your machine only in `config/.env.local` or
+`config/.env.test.local`.
+
+::: pieceofcake2
+Earlier skeletons load only `config/.env` and the root `.env`.
+:::
 
 The loaded values are written to `putenv()`, `$_ENV` and `$_SERVER` as
 strings, so you can read them with `env()`, `getenv()`, `$_ENV` or `$_SERVER`:
@@ -235,9 +368,11 @@ To start, copy the example file that ships with the skeleton and edit it:
 cp config/.env.example config/.env
 ```
 
-Both `config/.env` and `/.env` are listed in the skeleton's `.gitignore`. Keep
-`.env` files out of version control and commit an example file, such as
-`config/.env.example`, instead.
+`config/.env`, `config/.env.local`, `config/.env.*.local` and `/.env` are
+listed in the skeleton's `.gitignore`. Keep `.env` files with credentials out
+of version control and commit an example file, such as `config/.env.example`,
+instead. `config/.env.test` holds only the settings of the tests and is
+committed, as in Symfony.
 
 A `.env` file is meant for development. In production, set real environment
 variables in the web server, container or process manager configuration; they
@@ -253,7 +388,7 @@ comments. The parser also accepts an `export ` prefix, but it is not needed:
 # config/.env
 DEBUG="2"
 SECURITY_SALT="a-long-random-string"
-DB_HOST="127.0.0.1"
+DATABASE_URL="mysql://my_app:secret@127.0.0.1:3306/my_app"
 ```
 
 Always quote the values. josegonzalez/dotenv converts unquoted values to
@@ -284,7 +419,12 @@ project root.
 
 use josegonzalez\Dotenv\Loader;
 
-foreach ([CONFIG . '.env', ROOT . DS . '.env'] as $dotenvFile) {
+$appEnv = (string)env('APP_ENV');
+$dotenvFiles = [CONFIG . '.env.local', CONFIG . '.env', ROOT . DS . '.env'];
+if ($appEnv !== '') {
+    array_unshift($dotenvFiles, CONFIG . ".env.{$appEnv}.local", CONFIG . ".env.{$appEnv}");
+}
+foreach ($dotenvFiles as $dotenvFile) {
     if (!is_file($dotenvFile)) {
         continue;
     }
@@ -304,7 +444,7 @@ foreach ([CONFIG . '.env', ROOT . DS . '.env'] as $dotenvFile) {
     }
     unset($dotenv, $key, $value);
 }
-unset($dotenvFile);
+unset($appEnv, $dotenvFiles, $dotenvFile);
 ```
 
 Add the `.env` files to `.gitignore`, and read the variables in your
@@ -312,9 +452,9 @@ configuration with `env()`, as shown in the next section.
 
 ### Environment Variables of the Application Skeleton
 
-The `config/core.php` and `config/database.php.default` files of the
-`pieceofcake2/app` skeleton read the following variables. Its
-`config/.env.example` file lists them.
+The `config/core.php`, `config/bootstrap.php`, `config/database.php.default`
+and `config/email.php.default` files of the `pieceofcake2/app` skeleton read
+the following variables. Its `config/.env.example` file lists them.
 
 | Variable | Setting | When not set |
 |----------|---------|--------------|
@@ -322,25 +462,51 @@ The `config/core.php` and `config/database.php.default` files of the
 | `SECURITY_SALT` | `Security.salt` | the value in `config/core.php` |
 | `SECURITY_CIPHER_SEED` | `Security.cipherSeed` (1 to 4294967295; see [cipherSeed](#cipher-seed)) | the value in `config/core.php` |
 | `COOKIE_KEY` | `Cookie.key`, the `CookieComponent` key for the `'aes'` type (see [Migrating to 'aes'](#migrating-to-aes)) | `null`: `CookieComponent` uses `Security.salt` |
-| `DB_DATASOURCE`, `DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD`, `DB_DATABASE` | `datasource`, `host`, `port`, `login`, `password` and `database` of the `default` connection | the values in `config/database.php` |
-| `DB_TEST_DATASOURCE`, `DB_TEST_HOST`, `DB_TEST_PORT`, `DB_TEST_USERNAME`, `DB_TEST_PASSWORD`, `DB_TEST_DATABASE` | the same settings of the `test` connection | the values in `config/database.php` |
+| `DATABASE_URL` | the `'dsn'` of the `default` and `test` connections (see [Database DSNs](#database-url)) | the values in `config/database.php` |
+| `MAILER_DSN` | the `'dsn'` of the `default` email profile (see [Mailer DSN](../core-utility-libraries/email#mailer-dsn)) | the values in `config/email.php` |
+| `APP_ENV` | loads `config/.env.{APP_ENV}` and `config/.env.{APP_ENV}.local`; `test` by default for `vendor/bin/phpunit` and `bin/cake test` | only the other `.env` files are loaded |
 
-Empty variables are treated as not set, except `DB_PASSWORD` and
-`DB_TEST_PASSWORD`, which may be empty. Without any `.env` file or environment
-variable, the application uses the values in the configuration files. If your
-`config/database.php` was created before the skeleton read these variables,
-copy the `__construct()` and `applyEnv()` methods from
-`config/database.php.default` into it.
+Empty variables are treated as not set. Without any `.env` file or environment
+variable, the application uses the values in the configuration files. The keys
+of a DSN replace the same keys of the configuration, and the other keys are
+kept as defaults. The `'dsn'` key needs `pieceofcake2/cakephp` 2.12.7 or later.
+
+If your `config/database.php` or `config/email.php` was created from an
+earlier skeleton, copy the `__construct()` method of
+`config/database.php.default` or `config/email.php.default` into it, and
+remove an `APP_ENV` branch that used the `test` connection as `default`
+(`config/.env.test` sets `DATABASE_URL` to the test database instead). Copy
+the `APP_ENV` default of `tests/bootstrap.php`, `bin/cake` and
+`webroot/test.php` from the skeleton too. Earlier
+skeletons read the `DB_DATASOURCE`, `DB_HOST`, `DB_PORT`, `DB_USERNAME`,
+`DB_PASSWORD` and `DB_DATABASE` variables (and `DB_TEST_*` for the `test`
+connection) with an `applyEnv()` method; one `DATABASE_URL` replaces them:
+
+```dotenv
+# Before
+DB_HOST="127.0.0.1"
+DB_USERNAME="my_app"
+DB_PASSWORD="secret"
+DB_DATABASE="my_app"
+# After
+DATABASE_URL="mysql://my_app:secret@127.0.0.1/my_app"
+```
 
 For example, a `config/.env` file for development:
 
 ```dotenv
 # config/.env
 DEBUG="2"
-DB_HOST="127.0.0.1"
-DB_USERNAME="my_app"
-DB_PASSWORD="secret"
-DB_DATABASE="my_app"
+DATABASE_URL="mysql://my_app:secret@127.0.0.1:3306/my_app?encoding=utf8mb4"
+MAILER_DSN="smtp://127.0.0.1:1025"
+```
+
+and a `config/.env.test.local` file with the test database of your machine,
+which wins over `config/.env.test` and `config/.env` in the tests:
+
+```dotenv
+# config/.env.test.local
+DATABASE_URL="mysql://my_app:secret@127.0.0.1:3306/test_my_app?encoding=utf8mb4"
 ```
 
 ## Class Loading and Additional Class Paths

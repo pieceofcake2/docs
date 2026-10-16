@@ -83,6 +83,43 @@ public $test = [
 ];
 ```
 
+The connection can also be a DSN in the `'dsn'` key. See
+[Database DSNs](configuration#database-url).
+
+### The Test Database of the Skeleton {#the-test-database-of-the-skeleton}
+
+The [pieceofcake2/app](https://pieceofcake2.github.io/app/) skeleton has one
+database variable, as in Symfony: `DATABASE_URL` is the database of the current
+environment, and `config/database.php.default` gives it to both connections:
+
+```php
+public function __construct()
+{
+    $this->default['dsn'] = env('DATABASE_URL');
+    $this->test['dsn'] = env('DATABASE_URL');
+}
+```
+
+`vendor/bin/phpunit` and `bin/cake test` run with `APP_ENV=test` by default:
+when `APP_ENV` is not set, the skeleton's `tests/bootstrap.php` and `bin/cake`
+(for the `test` shell) set it before CakePHP loads the `.env` files, and so does
+`webroot/test.php`, the browser test runner. So the tests load the committed
+`config/.env.test` (see [Loading .env Files](configuration#loading-env-files)),
+where `DATABASE_URL` is the test database. Set the test database of your
+machine in `config/.env.test.local`, which is ignored by Git, or as a real
+environment variable, which wins over the files (CI sets it this way):
+
+```dotenv
+# config/.env.test.local
+DATABASE_URL="mysql://dblogin:dbpassword@dbhost/test_database"
+```
+
+An `APP_ENV` or `DATABASE_URL` from the environment wins, so do not export your
+development values in the shell where you run the tests: the fixtures drop and
+create tables. The web server of the [End-to-End tests](e2e-testing) inherits
+`APP_ENV=test`, so its `default` connection is the test database and the pages
+read the fixtures.
+
 In the legacy `app/` layout these files are `app/Config/core.php` and
 `app/Config/database.php`.
 
@@ -259,7 +296,6 @@ The recommended way to run tests is from the command line. The
          colors="true">
     <php>
         <!-- Configuration of the End-to-End tests (pieceofcake2/panther) -->
-        <server name="PANTHER_APP_ENV" value="test"/>
         <server name="PANTHER_ERROR_SCREENSHOT_DIR" value="./tmp/error-screenshots"/>
     </php>
     <listeners>

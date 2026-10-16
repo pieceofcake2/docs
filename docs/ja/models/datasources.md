@@ -79,6 +79,47 @@ MySQL と PostgreSQL のドライバには `getVersion()` などのメソッド�
 詳しくは [CakePHP 2.10 からの移行](/ja/appendices/migrating-from-cakephp-2-10) を参照してください。
 :::
 
+<a id="connection-dsn"></a>
+
+### 接続の DSN
+
+CakePHP 3.x 以降の `url` キーと同じく、`'dsn'` キーに 1 つの DSN (URL) を書いて接続を
+設定できます。スキームでデータソースが決まり、DSN のユーザー、パスワード、ホスト、ポート、
+パス、クエリパラメーターは、それぞれ `login`、`password`、`host`、`port`、`database`、
+同じ名前のキーになります。
+
+```php
+public $default = [
+    'datasource' => 'Database/Mysql',
+    'persistent' => false,
+    'encoding' => 'utf8mb4',
+];
+
+public function __construct()
+{
+    // DATABASE_URL="postgres://app:secret@db.example.com:5432/app?schema=public"
+    $this->default['dsn'] = env('DATABASE_URL');
+}
+```
+
+| スキーム | データソース |
+|----------|--------------|
+| `mysql` | `Database/Mysql` |
+| `postgres`、`postgresql`、`pgsql` | `Database/Postgres` |
+| `sqlite` | `Database/Sqlite` (`sqlite:///:memory:`、`sqlite:///relative/path.sqlite`、`sqlite:////absolute/path.sqlite`) |
+| `sqlserver`、`mssql`、`sqlsrv` | `Database/Sqlserver` |
+
+DSN のキーは配列の同じキーを置き換え、それ以外のキーはそのまま残ります。`'dsn'` が空の場合は
+無視されるので、`DATABASE_URL` がセットされていなければ配列の値が使われます。すべての規則は
+[データベースの DSN](../development/configuration#database-url) を、DSN を自分で解析する
+場合は `ConnectionManager::parseDsn()` を参照してください。プラグインは
+`ConnectionManager::setDsnClassMap()` でスキームを追加できます
+([DSN スキームの登録](../plugins/how-to-create-plugins#registering-dsn-schemes) を参照)。
+
+::: pieceofcake2
+`'dsn'` キーは v2.12.7 で追加されます。
+:::
+
 前述のソースはどれも `DboSource` から派生したもので、これにより
 ほとんどのリレーショナルデータベースで共通な、いくつかのロジックを
 集約しています。新しく RDBMS のデータソースを書いてみようという向きには、
@@ -387,6 +428,10 @@ public $faraway = [
 ];
 ```
 
+アプリケーションがこのデータソースを DSN で設定できるようにするには、プラグインの
+`Config/bootstrap.php` でスキームを登録します。
+[DSN スキームの登録](../plugins/how-to-create-plugins#registering-dsn-schemes) を参照してください。
+
 ## SQL Server に接続する
 
 SQL Server のデータソースは、[pdo_sqlsrv と呼ばれるマイクロソフトの
@@ -430,6 +475,14 @@ public $default = [
   `Encrypt` や `TrustServerCertificate` などです。
 - `encoding` に `utf8` を指定すると、ドライバは文字列を UTF-8 で扱います。
 - `pdo_sqlsrv` ドライバは持続的接続に対応していないため、`persistent` は `false` にしてください。
+
+同じ接続を DSN で書くと次のようになります。`options` はクエリパラメーターに
+書きます。名前付きインスタンスは `localhost%5CSQLEXPRESS` と書きます。
+
+```php
+$this->default['dsn'] = 'sqlserver://sa:secret@localhost:1433/cakephp?schema=dbo&encoding=utf8'
+    . '&options[TrustServerCertificate]=yes&options[Encrypt]=no';
+```
 
 ::: pieceofcake2
 SQL Server データソースに `port` と `options` の設定が追加され、

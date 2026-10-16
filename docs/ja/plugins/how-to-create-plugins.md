@@ -287,6 +287,86 @@ public $components = ['ContactManager.Example'];
 > App::uses('AppHelper', 'View/Helper');
 > ```
 
+<a id="registering-dsn-schemes"></a>
+
+## DSN スキームの登録
+
+データソースとメールのトランスポートは、`'dsn'` キーに書いた DSN で設定できます
+([データベースの DSN](/ja/development/configuration#database-url) と
+[メーラー DSN](/ja/core-utility-libraries/email#mailer-dsn) を参照)。DSN のスキームは DSN クラスマップから探されます。CakePHP 3.x 以降の
+`setDsnClassMap()` と同じく、プラグインはこのマップに独自のスキームを追加できます。
+`ConnectionManager` と `CakeEmail` がそれぞれマップを持っています。
+
+| メソッド | |
+|----------|---|
+| `setDsnClassMap($map)` | スキームを追加するか、組み込みのスキームを置き換えます。`null` を指定するとスキームを削除します。スキームの大文字と小文字は区別されません |
+| `getDsnClassMap()` | 組み込みのスキームを含むマップを返します |
+| `parseDsn($dsn, $config = [])` | DSN の設定のキーを返します |
+
+::: pieceofcake2
+DSN クラスマップは v2.12.7 で追加されます。
+:::
+
+スキームはプラグインの `Config/bootstrap.php` で登録します。アプリケーションはこのファイルを
+`CakePlugin::load('MyPlugin', ['bootstrap' => true])` で読み込みます。
+
+```php
+// plugins/MyPlugin/Config/bootstrap.php
+
+// mydb://user:pass@host:1234/name uses the MyPlugin.Database/MyDb datasource
+// with login, password, host, port and database
+ConnectionManager::setDsnClassMap([
+    'mydb' => 'MyPlugin.Database/MyDb',
+]);
+
+// Keep working with releases that have no DSN class maps
+if (method_exists('CakeEmail', 'setDsnClassMap')) {
+    CakeEmail::setDsnClassMap([
+        // myapi+api://KEY@default?region=eu uses the MyPlugin.MyApi transport
+        'myapi+api' => function (array $parts, array $config) {
+            return [
+                'transport' => 'MyPlugin.MyApi',
+                'apiKey' => $parts['username'] ?? null,
+                'region' => $parts['query']['region'] ?? 'eu',
+            ];
+        },
+    ]);
+}
+```
+
+マップの値はクラス名か callable です。
+
+- プラグイン記法の **クラス名** は `datasource` か `transport` に設定され、DSN の
+  各部分はその種類の通常のキーになります。その後にクエリパラメーターが追加され、こちらが
+  優先されます。
+
+  | マップ | キー |
+  |--------|------|
+  | `ConnectionManager` | `login`、`password`、`host` (IPv6 アドレスの角括弧は除かれます)、`port`、`database` (先頭の `/` を除いたパス) |
+  | `CakeEmail` | `username`、`password`、`host` (ホスト `default` は省かれ、トランスポートのデフォルトが使われます)、`port` |
+
+- クロージャや `[$class, 'method']` のような文字列ではない **callable** は、DSN の各部分と、
+  `'dsn'` キーを除いた設定を引数に呼ばれ、クラスを含む設定のキーを返します。各部分は
+  `scheme`、`username`、`password`、`host`、`port`、`path` (存在するものだけ。URL デコード
+  済み) と `query` (常に配列) です。どのクエリパラメーターを使うかは callable が決めます。
+  文字列は常にクラス名として扱われ、関数名にはなりません。
+
+組み込みのスキームも同じマップのエントリー (データベースはクラス名、メールは callable)
+なので、プラグインはこれを置き換えることもできます。たとえば `mysql` を独自のデータソースに
+向けられます。DSN のクエリパラメーターの `datasource` と `transport` は、引き続きクラス名を
+上書きし、登録されていないスキームも使えるようにします。
+
+DSN クラスマップの無い `pieceofcake2/cakephp` のリリースにもプラグインが対応する場合は、
+呼び出しを `method_exists()` でガードしてください。
+
+<a id="when-to-register-the-schemes"></a>
+
+### スキームを登録するタイミング
+
+`ConnectionManager` は接続を作成するとき (最初の `getDataSource()` の呼び出し。通常は最初の
+クエリ) に、`CakeEmail` は設定を適用するときにマップを読みます。`config/database.php` と
+`config/email.php` に対しては、プラグインのブートストラップで登録すれば間に合います。
+
 ## プラグインの拡張
 
 この例は、プラグインを作るための一つの良い開始方法であって、他にも色んな方法があります。

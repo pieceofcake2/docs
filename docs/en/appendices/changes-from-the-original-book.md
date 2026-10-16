@@ -33,6 +33,7 @@ and lists the pages of this book that were changed from the original.
 | `'cipher'` encryption (default `CookieComponent` type) | Default type, insecure, no warning | Deprecated with a logged warning; out-of-range `Security.cipherSeed` reported; `Cookie.type` / `Cookie.key` set the defaults (v2.12.6) | [Security Fixes](/security/fixes#cipher) |
 | Error pages in debug mode | CakePHP 2 layout | CakePHP 5 style `dev_error` layout with code excerpts and editor links (v2.12.6) | [Debugging](/development/debugging#debug-error-pages) |
 | `.env` files | Not supported | Loaded by the `pieceofcake2/app` skeleton (v2.4.0) with josegonzalez/dotenv, not by the framework | [Environment Variables](/development/configuration#environment-variables) |
+| Configuration with a DSN | Not supported (added in CakePHP 3.0 as the `url` key) | `'dsn'` key in datasource and email configurations; plugins register schemes with `setDsnClassMap()`; the skeleton reads `DATABASE_URL` (the test database in `config/.env.test`) and `MAILER_DSN` (v2.12.7) | [Database DSNs](/development/configuration#database-url) |
 
 For the complete list of breaking changes, see
 [Migrating from CakePHP 2.10](/appendices/migrating-from-cakephp-2-10) and the
@@ -83,6 +84,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - "Adding CakePHP to an Existing Application" comes before "Creating a New Application"; the closing link points to the blog tutorial instead of Getting Started
   - Apache virtual host: `Options -Indexes -MultiViews +FollowSymLinks`, a warning against a project-root document root and a link to the Apache 2.2 syntax
   - New application: commands to generate `Security.salt` and `Security.cipherSeed`, noting that the seed does not make the 'cipher' cookie type secure
+  - Database connection from `DATABASE_URL` (the test database in `config/.env.test`) and the email transport from `MAILER_DSN` in the configuration steps
 - [Advanced Installation](/installation/advanced-installation)
   - Removed PEAR installation, the old Composer/bake project setup and CAKE_CORE_INCLUDE_PATH core sharing
   - Added Composer setup details: replace directive, plugin installer-paths, classmap autoloading, exclude-from-classmap
@@ -167,6 +169,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - SQL Server: ODBC driver on any OS instead of Windows-only Native Client; port, schema (default dbo), options, persistent settings
   - Datasource example and plugin paths moved to `src/Model/Datasource` and `plugins/`
   - Link to the pieceofcake2/datasources plugin instead of the old cakephp/datasources repository
+  - New "Connection DSN" subsection with the scheme table, and the SQL Server connection as a DSN (v2.12.7); plugin datasources can register a DSN scheme
 - [Model Attributes](/models/model-attributes)
   - Database configuration file path is `config/database.php`
   - `order`: allowed sort directions, link to Sort Order
@@ -231,6 +234,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
 - [CakeEmail](/core-utility-libraries/email)
   - Config in `config/email.php`, templates in `templates/Emails` and `templates/Layouts/Emails`, custom transports in `src/Lib/Network/Email`; removed EmailComponent comparisons and App::uses()
   - Gmail: app password instead of the defunct "less secure apps" setting; STARTTLS example uses port 587; change note for the typed MailTransport::_mail() signature
+  - New "Mailer DSN" section (v2.12.7): the `'dsn'` key of a profile in the Symfony `MAILER_DSN` format (`smtp`, `smtps`, `sendmail`, `native`, `null`), query parameters, precedence, empty values, errors, schemes of plugins and `CakeEmail::parseDsn()`; `'dsn'` added to the configuration keys
 - [Folder & File](/core-utility-libraries/file-folder)
   - Folder and File are autoloaded; removed App::uses()
 - [Hash](/core-utility-libraries/hash)
@@ -299,12 +303,13 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - Cache: available engines listed (File, Apc/APCu, Memcached, Memcache, Redis); change note on removed Xcache/Wincache
   - Config readers: readers default to `CONFIG`; custom reader example moved to `src/Lib/Configure`, declares its property (PHP 8.2), no `App::uses()`; ja example renamed from `XmlReader` (clashes with PHP's XMLReader) to `MyXmlReader`; ConfigReaderInterface/ConfigureException reference fixed
   - Inflector path `src/Cake/Utility/Inflector.php` and bootstrap `config/bootstrap.php` folded into text; era-specific examples (old IE/Chrome Frame, AMF/SOAP) modernized; ja: `$merge` description corrected, `Configure::consume()` added
-  - New "Environment Variables" section: the pieceofcake2/app skeleton loads `config/.env` and the project-root `.env` with josegonzalez/dotenv at the top of `config/core.php` (backport of the `.env` support of the CakePHP 3+/5 app skeleton; change note: added in app v2.4.0), precedence (real environment > `config/.env` > root `.env`), quoting advice, adding the loader to legacy-layout and older applications, and the variables read by the skeleton (`DEBUG`, `SECURITY_SALT`, `SECURITY_CIPHER_SEED`, `DB_*`, `DB_TEST_*`)
+  - New "Environment Variables" section: the pieceofcake2/app skeleton loads `config/.env` and the project-root `.env` with josegonzalez/dotenv at the top of `config/core.php` (backport of the `.env` support of the CakePHP 3+/5 app skeleton; change note: added in app v2.4.0), the files loaded in Symfony's order (`config/.env.{APP_ENV}.local`, `config/.env.{APP_ENV}`, `config/.env.local`, `config/.env`, root `.env`; real environment variables and earlier files win; `config/.env.test` committed) (v2.12.7), quoting advice, adding the loader to legacy-layout and older applications, and the variables read by the skeleton (`DEBUG`, `SECURITY_SALT`, `SECURITY_CIPHER_SEED`, `COOKIE_KEY`, `DATABASE_URL`, `MAILER_DSN`, `APP_ENV`; the `DB_*` variables and the `APP_ENV` branch of earlier skeletons and how to replace them)
   - `App.baseUrl`: keep the document root at `webroot/` when the `.htaccess` files are removed
   - New "Generating the Security Salts" section: secure one-liners (PHP and shell), what depends on each value (the 'aes' cookie type mixes in `Security.salt` even with its own key), and how to rotate them
   - New "cipherSeed and the 'cipher' Cookie Type" section: how `Security::cipher()` uses the seed, only 1-4294967295 meaningful, values with 27 or more digits (the default of the original `config/core.php`, the blog tutorial example and the old `.env.example` generator) end up as seed 0, in-range seeds are still not secure, impact, which action to take, migrating to 'aes' with a 32-byte key in `Cookie.key` (from `COOKIE_KEY`), `Cookie.type` set to 'aes' and `Security.useOpenSsl` set to true (`Cookie.type` and `Cookie.key` can be set in configuration from v2.12.6; controller form for v2.12.5 and earlier; exception when the fallback key `Security.salt` is shorter than 32 bytes), and the warnings
   - `Security.cipherSeed` entry: only 1-4294967295 is meaningful and no value makes 'cipher' secure, with a link to the new section
   - "Planned for v2.12.6" replaced by "Warnings Since v2.12.6": the deprecation warning for 'cipher' (once per process, `E_USER_DEPRECATED` in debug mode), the seed range warning and notice, the in-range default seed `'2659758734'` of the core's fallback `config/core.php`, and `Cookie.type` / `Cookie.key`; the former default seed is noted as the default up to v2.12.5
+  - New "Database DSNs" section (v2.12.7): the `'dsn'` key of a connection, scheme to datasource mapping, DSN parts to keys, SQLite paths, precedence of the DSN over the array keys, empty values, encoding, query parameters, IPv6, errors, schemes of plugins, `ConnectionManager::create()` and `ConnectionManager::parseDsn()`; `dsn` added to the list of connection keys
 - [Routing](/development/routing)
   - Routes file path changed to `config/routes.php` (legacy `app/Config/routes.php` noted with link to the folder structure page)
   - Built-in routes located in `vendor/pieceofcake2/cakephp/config/routes.php`; disabling them means removing the require line from `config/routes.php`
@@ -354,6 +359,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - Jenkins: moved to the end of the new Continuous Integration page (after the GitHub Actions workflow), with `composer install` step, `config/database.php`, `vendor/bin/phpunit` and jenkins.io links; ja: explicit test-database-setup and generating-code-coverage anchors
   - New "Types of Tests" section: unit tests with fixtures, controller tests with testAction() and browser End-to-End tests (links to End-to-End Testing); ja: explicit testing-controllers anchor
   - "Types of Tests" also lists integration tests with `IntegrationTestTrait` (links to Integration Testing) and notes that `ControllerTestCase` remains supported; tip linking to Integration Testing in "Testing Controllers"
+  - Test database from `DATABASE_URL` in `config/.env.test` (v2.12.7); new "The Test Database of the Skeleton" subsection: `vendor/bin/phpunit` and `bin/cake test` run with `APP_ENV=test` by default and load the committed `config/.env.test`, with per-machine values in `config/.env.test.local`; both connections read `DATABASE_URL`
 - [REST](/development/rest)
   - Paths updated to `config/routes.php`, `src/Controller` and `templates/Recipes/xml`
   - Corrected HTTP method override precedence (X-HTTP-Method-Override header before _method)
@@ -369,10 +375,12 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - "Check your security" rewritten as a short checklist linking to the Security section (debug, salts and cookie cipher, document root, HTTPS, SecurityComponent, validation, escaping and sanitizing HTML, dependencies, permissions, secrets); removed the Data Sanitization link
   - Warnings about a project-root document root and the skeleton's default debug level 2; setting `DEBUG` with nginx and PHP-FPM; secrets from environment variables or a secret store, not in the repository or logs
   - New sections on deployed files, file permissions (no 777), uploaded files, HTTPS (secure session cookie behind a proxy, supported PHP versions) and clearing the cache (and OPcache)
+  - `DATABASE_URL` and `MAILER_DSN` are secrets, as they contain the passwords
 - [Deploying to AWS Lambda](/deployment/aws-lambda)
   - New page: deploying the pieceofcake2/app skeleton to AWS Lambda with Bref 3 and Docker container images (TMP/LOGS in /tmp, SCRIPT_NAME and HTTPS for Bref's FPM runtime, logs to stderr), configuration with environment variables and SSM Parameter Store (`bref-ssm:`), DynamoDB sessions and SES email with pieceofcake2/aws, cache, S3 uploads with presigned URLs, static assets with Lift (S3 + CloudFront), RDS, console commands and schedules, local testing with the Runtime Interface Emulator, and deployment from GitHub Actions with OIDC
   - Tip: pieceofcake2/async-aws offers the same session handler, SES transport, cache engine and S3 stream wrapper with smaller dependencies (AsyncAws); the cache section points to its `AsyncAws.DynamoDb` engine, and the S3 section mentions its stream wrapper
   - SES permission limited to the sender identity, uploads bucket with S3 Block Public Access, authorization check noted in the download example, public database discouraged for production, no secrets in logs, private assets bucket with CloudFront OAC, exact OIDC `sub` condition (no wildcards) and no `AdministratorAccess` for the deploy role
+  - `DATABASE_URL` from an SSM `SecureString` parameter instead of the `DB_*` variables; SES SMTP interface with `MAILER_DSN` from SSM as an alternative to the SES API transport
 
 ### Security
 
@@ -426,12 +434,14 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - Plugin paths use `plugins/` and `templates/Plugin` overrides; internal plugin structure and test directories explained; App::uses() kept in plugin code with the reason
   - Bake commands use `bin/cake` with the Bake plugin; added the missing asset plugin-syntax example; removed `flash/` asset folder
   - Publishing: removed plugins.cakephp.org/awesome-cakephp; added a `composer.json` example (type cakephp-plugin, composer/installers, installer-name)
+  - New "Registering DSN Schemes" section (v2.12.7): `setDsnClassMap()` / `getDsnClassMap()` of `ConnectionManager` and `CakeEmail` in the plugin bootstrap, class names and callables, `null` removal, the `method_exists()` guard and when the maps are read
 - [How To Install Plugins](/plugins/how-to-install-plugins)
   - Composer is the primary method (pieceofcake2/debug_kit example, composer/installers and installer-paths for `plugins/`); manual and Git installs use `plugins/` and https URLs
   - Plugins are loaded in `config/bootstrap.php`; when App::uses() is still needed for plugin classes
   - `composer.json` installer-paths and allow-plugins (composer/installers, Composer 2.2+) documented as required so plugins land in `plugins/<Name>/`
 - [How To Use Plugins](/plugins/how-to-use-plugins)
   - Plugin loading shown in `config/bootstrap.php` with plugin `Config/` file locations; schema command uses `bin/cake`
+  - Plugin bootstraps that register DSN schemes
 - [Maintained Plugins](/plugins/maintained-plugins)
   - The AsyncAws plugin is described as a lighter alternative to the Aws plugin
 

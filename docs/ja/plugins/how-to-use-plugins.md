@@ -26,6 +26,11 @@ CakePHP はプラグインの `Config/bootstrap.php` と `Config/routes.php` を
 また、正確に同じパラメータが load() メソッドに設定されます。
 ３つのプラグインのみがロードされ、残りのプラグインはロードされません。
 
+プラグインのブートストラップは、データソースとメールのトランスポートの DSN スキームを
+登録することもあります
+([DSN スキームの登録](/ja/plugins/how-to-create-plugins#registering-dsn-schemes) を参照)。
+そのようなプラグインは `'bootstrap' => true` でロードしてください。
+
 最後に、loadAll に対して、具体的な設定をしていない全てのプラグインに適用するデフォルトの設定を
 指定できます。
 
