@@ -232,7 +232,7 @@ PHP 自身が報告するエラーも CloudWatch に書き込まれます。エ�
 ロググループを読める人は誰でもログを読めるので、秘密の情報をログに出力しないでください。
 `bref-ssm:` から解決された値を含む `$_SERVER`、`getenv()` や設定をダンプしたり、パスワード、トークン、
 `Authorization` ヘッダーを含むリクエストのデータをログに書いたりしないでください。エラーメッセージに
-設定や SQL クエリが含まれないように、デバッグレベルは `0` (`APP_ENV=prod`) のままにします。
+設定や SQL クエリが含まれないように、デバッグレベルは `0` (`APP_DEBUG` をセットしない) のままにします。
 
 <a id="configuration-files"></a>
 
@@ -446,10 +446,10 @@ resources:
 
 ## 設定と秘密の情報
 
-スケルトンは設定を環境変数 `APP_ENV`、`DEBUG`、`SECURITY_SALT`、`SECURITY_CIPHER_SEED`、`DATABASE_URL`、`MAILER_DSN` から
+スケルトンは設定を環境変数 `APP_ENV`、`APP_DEBUG`、`SECURITY_SALT`、`SECURITY_CIPHER_SEED`、`DATABASE_URL`、`MAILER_DSN` から
 読み込みます ([環境変数](/ja/development/configuration#environment-variables) を参照してください)。
 Lambda では、これらを `serverless.yml` の `environment` で、すべての関数
-(`provider.environment`) または関数ごとに定義します。`APP_ENV: prod` でデバッグレベルは 0 になります。
+(`provider.environment`) または関数ごとに定義します。`APP_DEBUG` がなければデバッグレベルは 0 になります。
 実際の環境変数は、コミットされている `config/.env` より常に優先されます。`.local` の `.env` ファイルは
 デプロイしないでください。
 

@@ -324,7 +324,7 @@ tests:
 
 use Symfony\Component\Dotenv\Dotenv;
 
-(new Dotenv())->usePutenv()->bootEnv(CONFIG . '.env');
+(new Dotenv())->usePutenv()->loadEnv(CONFIG . '.env');
 ```
 
 The CakePHP 3+/5 application skeleton ([cakephp/app](https://github.com/cakephp/app))
@@ -342,7 +342,7 @@ to switch. For other applications, see
 [Adding .env Support to an Existing Application](#adding-env-support-to-an-existing-application).
 :::
 
-`bootEnv()` loads these files in this order and merges them, so a later file
+`loadEnv()` loads these files in this order and merges them, so a later file
 wins over an earlier one:
 
 | File | Loaded | In Git |
@@ -362,15 +362,9 @@ wins over an earlier one:
   test database (see
   [Testing](/development/testing#the-test-database-of-the-skeleton)). In
   production, set `APP_ENV=prod` as a real environment variable.
-- `bootEnv()` also sets `APP_DEBUG`: `0` when `APP_ENV` is `prod`, otherwise
-  `1`. The skeleton uses it as the default of the debug level.
 - `config/.env` must exist. The skeleton ships it, with the defaults for
   development; commit it. The `.local` files hold only what differs on your
   machine, such as your database and the salts.
-- If `config/.env.local.php` exists (a PHP file that returns an array of the
-  variables, as written by Symfony's `composer dump-env prod`), it is loaded
-  instead of the `.env` files. The skeleton does not install that command
-  (symfony/flex), but a deployment can write the file.
 
 The loaded values are written to `$_SERVER`, `$_ENV` and `putenv()` as
 strings, so you can read them with `env()`, `getenv()`, `$_SERVER` or `$_ENV`:
@@ -381,10 +375,9 @@ Configure::write('Security.salt', env('SECURITY_SALT') ?: 'a-default-salt');
 ```
 
 As in Symfony, only the `.local` files are listed in the skeleton's
-`.gitignore`: `config/.env.local`, `config/.env.*.local` and
-`config/.env.local.php`. `config/.env` and `config/.env.test` are committed.
-Never put real secrets in a committed file: keep them in a `.local` file or
-in real environment variables.
+`.gitignore`: `config/.env.local` and `config/.env.*.local`. `config/.env`
+and `config/.env.test` are committed. Never put real secrets in a committed
+file: keep them in a `.local` file or in real environment variables.
 
 A `.env` file is meant for development and tests. In production, set
 `APP_ENV=prod` and the other settings as real environment variables in the web
@@ -399,7 +392,7 @@ comments, and an `export ` prefix is accepted:
 
 ```dotenv
 # config/.env.local
-DEBUG=2
+APP_DEBUG=2
 SECURITY_SALT=a-long-random-string
 DATABASE_URL="mysql://my_app:secret@127.0.0.1:3306/my_app"
 ```
@@ -421,7 +414,7 @@ composer require symfony/dotenv
 
 Then add the following code at the top of `app/Config/core.php`
 (`config/core.php` in the modern layout): the `use` statement after the
-opening file comment, and the `bootEnv()` call before the first
+opening file comment, and the `loadEnv()` call before the first
 `Configure::write()` call. In the legacy layout, `CONFIG` is `app/Config/`, so
 the files are `app/Config/.env`, `app/Config/.env.local` and so on.
 
@@ -430,7 +423,7 @@ the files are `app/Config/.env`, `app/Config/.env.local` and so on.
 
 use Symfony\Component\Dotenv\Dotenv;
 
-(new Dotenv())->usePutenv()->bootEnv(CONFIG . '.env');
+(new Dotenv())->usePutenv()->loadEnv(CONFIG . '.env');
 ```
 
 Create `app/Config/.env` with the defaults (it is required, and can be empty)
@@ -447,7 +440,7 @@ the following variables. Its `config/.env` file lists them.
 | Variable | Setting | When not set |
 |----------|---------|--------------|
 | `APP_ENV` | the environment (`dev`, `test` or `prod`): selects `config/.env.{APP_ENV}`; `test` by default for `vendor/bin/phpunit`, `bin/cake test` and `webroot/test.php` | `dev`, from `config/.env` |
-| `DEBUG` | `debug`: `0`, `1` or `2` | `2`, or `0` when `APP_ENV` is `prod` |
+| `APP_DEBUG` | `debug` (`0`, `1`, `2`) | `0` |
 | `SECURITY_SALT` | `Security.salt` | the value in `config/core.php` |
 | `SECURITY_CIPHER_SEED` | `Security.cipherSeed` (1 to 4294967295; see [cipherSeed](#cipher-seed)) | the value in `config/core.php` |
 | `COOKIE_KEY` | `Cookie.key`, the `CookieComponent` key for the `'aes'` type (see [Migrating to 'aes'](#migrating-to-aes)) | `null`: `CookieComponent` uses `Security.salt` |
@@ -458,17 +451,18 @@ Empty variables are treated as not set. The keys of a DSN replace the same keys
 of the configuration, and the other keys are kept as defaults. The `'dsn'` key
 needs `pieceofcake2/cakephp` 2.12.7 or later.
 
-The skeleton reads the debug level in one line, with `APP_DEBUG` of
-`bootEnv()` as the default:
+The skeleton reads the debug level in one line, and uses debug level 0 when
+`APP_DEBUG` is not set:
 
 ```php
 // config/core.php
-Configure::write('debug', env('DEBUG') ?? (env('APP_DEBUG') ? 2 : 0));
+Configure::write('debug', env('APP_DEBUG') ?? 0);
 ```
 
 ::: pieceofcake2
-v2.4.2 of the skeleton uses debug level 0 when `DEBUG` is not set, and
-earlier versions use debug level 2.
+Applications created from an earlier skeleton read a `DEBUG` variable. Replace
+their debug line with `Configure::write('debug', env('APP_DEBUG') ?? 0);`, and
+rename `DEBUG` to `APP_DEBUG` in their `.env` files and environment.
 :::
 
 If your `config/database.php` or `config/email.php` was created from an
@@ -659,8 +653,8 @@ Changes CakePHP debugging output.
 - 2 = Show errors, warnings, and SQL. \[SQL log is only shown when you
   add \$this-\>element('sql_dump') to your view or layout.\]
 
-The application skeleton reads the debug level from the `DEBUG` environment
-variable. See [Environment Variables](#environment-variables).
+The application skeleton reads the debug level from the `APP_DEBUG`
+environment variable. See [Environment Variables](#environment-variables).
 
 Error  
 Configure the Error handler used to handle errors for your application.
