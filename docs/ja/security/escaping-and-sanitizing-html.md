@@ -132,7 +132,7 @@ HTML として出力するもの以外の値は、すべて `h()` でエスケ�
 ### Markdown
 
 Markdown にも生の HTML を書けます。ユーザーが入力した Markdown を表示する場合
-(たとえば、変換した HTML をそのまま返す [pieceofcake2/markdown](https://pieceofcake2.github.io/markdown/)
+(たとえば、変換した HTML をそのまま返す [pieceofcake2/markdown](https://pieceofcake2.github.io/markdown/ja/)
 を使う場合) は、変換後の HTML を同じように無害化してください。
 
 <a id="sanitize-class"></a>

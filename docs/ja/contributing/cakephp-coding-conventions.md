@@ -11,7 +11,7 @@ CakePHP の開発者は以下のコーディング規約を使います。これ
 
 規約のチェックは
 [PHP_CodeSniffer](https://github.com/PHPCSStandards/PHP_CodeSniffer) と
-[pieceofcake2/phpcs-cakephp2](https://pieceofcake2.github.io/phpcs-cakephp2/) の `CakePHP2` 規約、そしてプロジェクトの `phpcs.xml` で自動的に行います。
+[pieceofcake2/phpcs-cakephp2](https://pieceofcake2.github.io/phpcs-cakephp2/ja/) の `CakePHP2` 規約、そしてプロジェクトの `phpcs.xml` で自動的に行います。
 `CakePHP2` 規約は、[cakephp/cakephp-codesniffer](https://github.com/cakephp/cakephp-codesniffer)
 5.x の `CakePHP` ルールセットに、CakePHP 2 のコードに必要な除外を加えたものです
 ([CakePHP 2 のための除外ルール](#the-exclusions-used-for-cakephp-2) を参照)。
@@ -24,7 +24,7 @@ CakePHP の開発者は以下のコーディング規約を使います。これ
 
 ## コードのチェック
 
-フレームワークと [pieceofcake2/app](https://pieceofcake2.github.io/app/) アプリケーションスケルトンは、
+フレームワークと [pieceofcake2/app](https://pieceofcake2.github.io/app/ja/) アプリケーションスケルトンは、
 この規約を開発用の依存パッケージとしてインストールします。
 既存のアプリケーションに追加するには次のコマンドを実行します。
 
@@ -791,7 +791,7 @@ CakePHP 2 のコードでよく引っかかるものには次のようなもの�
 ## CakePHP 2 のための除外ルール
 
 CakePHP 5 の規約は、名前空間とネイティブの型宣言を使うコードを前提にしています。
-そのため [pieceofcake2/phpcs-cakephp2](https://pieceofcake2.github.io/phpcs-cakephp2/) の `CakePHP2` 規約は次のルールを除外しています。
+そのため [pieceofcake2/phpcs-cakephp2](https://pieceofcake2.github.io/phpcs-cakephp2/ja/) の `CakePHP2` 規約は次のルールを除外しています。
 
 | ルール | 理由 |
 |--------|------|
@@ -809,7 +809,7 @@ CakePHP 5 の規約は、名前空間とネイティブの型宣言を使うコ�
 メソッド名を、テストでは 1 ファイルに複数のクラスを置くことやドキュメントブロックの省略を、
 `database.php` では `DATABASE_CONFIG` というクラス名を、`acl.ini.php` では先頭の `exit;` を認めています。
 すべてのルールと理由は
-[phpcs-cakephp2 のドキュメント](https://pieceofcake2.github.io/phpcs-cakephp2/#rules) (英語)
+[phpcs-cakephp2 のドキュメント](https://pieceofcake2.github.io/phpcs-cakephp2/ja/#rules)
 にあります。
 
 フレームワーク自身の
@@ -820,7 +820,7 @@ CakePHP 5 の規約は、名前空間とネイティブの型宣言を使うコ�
 
 ## アプリケーション用の phpcs.xml
 
-[pieceofcake2/app](https://pieceofcake2.github.io/app/) スケルトンには、
+[pieceofcake2/app](https://pieceofcake2.github.io/app/ja/) スケルトンには、
 モダンなディレクトリ構成用の次の `phpcs.xml` が含まれています。
 CakePHP 2 のための除外はすべて `CakePHP2` 規約にあるので、このファイルにはチェックする対象だけを書きます。
 
@@ -848,9 +848,9 @@ CakePHP 2 のための除外はすべて `CakePHP2` 規約にあるので、こ�
 規約のパターン (`*/Controller/*` や `*/Test/Case/*` など) は、どちらの構成にも一致します。
 
 自分のファイルについて除外を追加するときは、`<rule ref="CakePHP2"/>` の後にルールを書きます
-([Adding Exceptions](https://pieceofcake2.github.io/phpcs-cakephp2/#adding-exceptions) (英語) を参照)。
+([例外の追加](https://pieceofcake2.github.io/phpcs-cakephp2/ja/#adding-exceptions) を参照)。
 `phpcs.xml` が `<rule ref="CakePHP">` の後に除外を並べている場合は、
-[Migrating from a CakePHP-Based phpcs.xml](https://pieceofcake2.github.io/phpcs-cakephp2/#migrating-from-a-cakephp-based-phpcsxml) (英語)
+[CakePHP ベースの phpcs.xml からの移行](https://pieceofcake2.github.io/phpcs-cakephp2/ja/#migrating-from-a-cakephp-based-phpcsxml)
 を参照してください。
 
 既存のアプリケーションにこの規約を導入するときは、まず `phpcbf` を一度実行し、

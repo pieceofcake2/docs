@@ -201,7 +201,7 @@ if (getenv('LAMBDA_TASK_ROOT') !== false) {
 `ConsoleLog` はメッセージを 1 行ずつ書き込むので、CloudWatch ではスタックトレースの各行が別々の
 ログイベントになります。メッセージとスタックトレースを 1 つのイベントにまとめ、CloudWatch Logs
 Insights でログレベルによる絞り込みができるようにするには、`Console` エンジンの代わりに
-[Monolog プラグイン](https://pieceofcake2.github.io/monolog/) と Bref の `CloudWatchFormatter`
+[Monolog プラグイン](https://pieceofcake2.github.io/monolog/ja/) と Bref の `CloudWatchFormatter`
 を使います。
 
 ```bash
@@ -227,7 +227,7 @@ if (getenv('LAMBDA_TASK_ROOT') !== false) {
 
 各行は Lambda のリクエスト ID で始まり、ログレベル、メッセージ、JSON 形式のメッセージが続きます。
 PHP 自身が報告するエラーも CloudWatch に書き込まれます。エラーを Sentry にも送るには
-[Sentry プラグイン](https://pieceofcake2.github.io/sentry/) を参照してください。
+[Sentry プラグイン](https://pieceofcake2.github.io/sentry/ja/) を参照してください。
 
 ロググループを読める人は誰でもログを読めるので、秘密の情報をログに出力しないでください。
 `bref-ssm:` から解決された値を含む `$_SERVER`、`getenv()` や設定をダンプしたり、パスワード、トークン、
@@ -489,7 +489,7 @@ Bref はアプリケーションの開始前に `bref-ssm:` の値を解決す�
 
 ## AWS のサービス
 
-[AWS プラグイン](https://pieceofcake2.github.io/aws/) (`pieceofcake2/aws`) は、DynamoDB の
+[AWS プラグイン](https://pieceofcake2.github.io/aws/ja/) (`pieceofcake2/aws`) は、DynamoDB の
 セッションハンドラー、SES のメールトランスポート、AWS SDK のクライアントを作成するコンポーネントを
 提供します。インストールして読み込みます。
 
@@ -518,11 +518,11 @@ Configure::write('Aws', [
 サービスごとに権限が必要です。
 
 ::: tip
-[pieceofcake2/async-aws](https://pieceofcake2.github.io/async-aws/) は、同じ DynamoDB のセッションハンドラー、
+[pieceofcake2/async-aws](https://pieceofcake2.github.io/async-aws/ja/) は、同じ DynamoDB のセッションハンドラー、
 SES のメールトランスポート、DynamoDB のキャッシュエンジン、S3 ストリームラッパーを、
 より小さな依存関係で提供します。AWS SDK 全体ではなく、使う AWS のサービスだけをインストールする
 [AsyncAws](https://async-aws.com) を使うので、Lambda のパッケージを小さくできます。
-[Migrating from pieceofcake2/aws](https://pieceofcake2.github.io/async-aws/migrating-from-aws.html)
+[Migrating from pieceofcake2/aws](https://pieceofcake2.github.io/async-aws/ja/migrating-from-aws.html)
 を参照してください。
 :::
 
@@ -561,7 +561,7 @@ if (env('SESSION_TABLE')) {
 プラグインは `config/core.php` の後の `config/bootstrap.php` で読み込みますが、セッションは
 その後、セッションに最初にアクセスしたときに開始するので問題ありません。DynamoDB のテーブルは
 VPC なしで使え、料金はリクエストごとです。セッションのロックなど、ほかのオプションについては
-[DynamoDB Session Handler](https://pieceofcake2.github.io/aws/session.html)
+[DynamoDB Session Handler](https://pieceofcake2.github.io/aws/ja/session.html)
 を参照してください。
 
 <a id="cache"></a>
@@ -598,7 +598,7 @@ ElastiCache は VPC の中で動くので、関数も同じ VPC で実行する�
 かかります。`RedisEngine` には TLS のオプションがないので、プライベートな VPC の中で転送中の
 暗号化を使わないクラスターを使うか、PHP の Redis クライアントが `server` の `tls://`
 プレフィックスを受け付けることを確認してから使ってください。VPC なしでリクエストごとの料金に
-したい場合は、[pieceofcake2/async-aws](https://pieceofcake2.github.io/async-aws/cache.html)
+したい場合は、[pieceofcake2/async-aws](https://pieceofcake2.github.io/async-aws/ja/cache.html)
 の `AsyncAws.DynamoDb` エンジンで、キャッシュするデータを DynamoDB に保存できます。
 キャッシュエンジンについては [キャッシュ](/ja/core-libraries/caching)
 を参照してください。
@@ -628,7 +628,7 @@ class EmailConfig
 送信元の ID に対する `ses:SendEmail` の権限が必要です (`serverless.yml` の例の `iam` のセクションを参照)。
 アカウントがサンドボックスにある間は、SES が検証済みの送信先アドレスに対しても権限を確認することがあります。
 送信が拒否された場合は、それらの ID の ARN も追加してください。
-[Amazon SES Email Transport](https://pieceofcake2.github.io/aws/email.html)
+[Amazon SES Email Transport](https://pieceofcake2.github.io/aws/ja/email.html)
 と [メール](/ja/core-utility-libraries/email) を参照してください。
 
 <a id="file-uploads-and-s3"></a>
@@ -712,13 +712,13 @@ public function download($id)
 }
 ```
 
-[Upload プラグイン](https://pieceofcake2.github.io/upload/) はローカルのファイルシステム上で
+[Upload プラグイン](https://pieceofcake2.github.io/upload/ja/) はローカルのファイルシステム上で
 ファイルを移動します。Lambda で使うには、`handleUploadedFileCallback` オプションでファイルを
 別の場所に保存するモデルのメソッドを指定できます。プラグインが作成するパスが `/tmp` の下に
 なることを確認してください。AWS プラグインは
-[S3 ストリームラッパー](https://pieceofcake2.github.io/aws/s3.html) を登録することも
+[S3 ストリームラッパー](https://pieceofcake2.github.io/aws/ja/s3.html) を登録することも
 でき、PHP のファイル関数で `s3://bucket/key` のパスを使えるようになります。
-pieceofcake2/async-aws にも[同じラッパー](https://pieceofcake2.github.io/async-aws/s3.html#s3-stream-wrapper)があります。
+pieceofcake2/async-aws にも[同じラッパー](https://pieceofcake2.github.io/async-aws/ja/s3.html#s3-stream-wrapper)があります。
 
 <a id="static-assets"></a>
 

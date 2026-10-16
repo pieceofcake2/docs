@@ -17,7 +17,7 @@ CakePHP 2.4 は、2.3 の API の完全上位互換です。
 
 ::: pieceofcake2
 Piece of Cake 2 フォークでは Bake はコアに含まれていません。`cake bake` を使うには
-[pieceofcake2/bake](https://pieceofcake2.github.io/bake/) プラグインをインストールしてください
+[pieceofcake2/bake](https://pieceofcake2.github.io/bake/ja/) プラグインをインストールしてください
 (`composer require --dev pieceofcake2/bake`)。
 :::
 
