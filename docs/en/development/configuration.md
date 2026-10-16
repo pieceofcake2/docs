@@ -333,7 +333,7 @@ CakePHP 5, the framework itself does not load `.env` files.
 
 ::: pieceofcake2
 `.env` loading is part of the `pieceofcake2/app` skeleton since v2.4.0. Since
-v2.4.3, it uses symfony/dotenv and the files described here. Earlier versions
+v2.5.0, it uses symfony/dotenv and the files described here. Earlier versions
 use josegonzalez/dotenv and also read `.env` files in the project root: v2.4.2
 loads only the first file that exists, v2.4.1 merges the files with the earlier
 file winning, and v2.4.0 loads `config/.env` and the root `.env`. See
