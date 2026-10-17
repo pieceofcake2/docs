@@ -24,6 +24,12 @@ AI ツールから直接読み込めます。
   ([コーディング規約](/ja/contributing/cakephp-coding-conventions) を参照してください)
 - [Panther](https://pieceofcake2.github.io/panther/ja/) ([Markdown](https://github.com/pieceofcake2/panther/blob/1.x/docs/ja/README.md)) - Symfony Panther による End-to-End テスト
   ([End-to-End テスト](/ja/development/e2e-testing) を参照してください)
+- [Storybook](https://pieceofcake2.github.io/storybook/ja/) ([Markdown](https://github.com/pieceofcake2/storybook/blob/1.x/docs/ja/README.md)) - アプリケーションの Element のための Storybook
+- [Report](https://pieceofcake2.github.io/report/ja/) ([Markdown](https://github.com/pieceofcake2/report/blob/1.x/docs/ja/README.md)) - ヘッドレス Chrome で印刷する A4 の PDF の報告書。Panther とセキュリティ診断で使用
+- [Security Check](https://pieceofcake2.github.io/security-check/ja/) ([Markdown](https://github.com/pieceofcake2/security-check/blob/1.x/docs/ja/README.md)) - セキュリティ診断 (SCA、SAST、DAST) を 1 つのコマンドで
+- [Security SCA](https://pieceofcake2.github.io/security-sca/ja/) ([Markdown](https://github.com/pieceofcake2/security-sca/blob/1.x/docs/ja/README.md)) - Composer のパッケージの既知の脆弱性を PDF の報告書に
+- [Security SAST](https://pieceofcake2.github.io/security-sast/ja/) ([Markdown](https://github.com/pieceofcake2/security-sast/blob/1.x/docs/ja/README.md)) - Semgrep か PHPStan によるコードと設定の静的解析を PDF の報告書に
+- [Security DAST](https://pieceofcake2.github.io/security-dast/ja/) ([Markdown](https://github.com/pieceofcake2/security-dast/blob/1.x/docs/ja/README.md)) - OWASP ZAP による動いているアプリケーションのスキャンを PDF の報告書に
 
 ## メンテナンスしているプラグイン
 
@@ -77,6 +83,7 @@ AI ツールから直接読み込めます。
 
 - [Upload Plugin](https://pieceofcake2.github.io/upload/ja/) ([Markdown](https://github.com/pieceofcake2/upload/blob/2.x/docs/ja/README.md)) - ファイルアップロードの処理
 - [Imagine Plugin](https://pieceofcake2.github.io/imagine/ja/) ([Markdown](https://github.com/pieceofcake2/imagine/blob/1.x/docs/ja/README.md)) - 画像処理ライブラリのラッパー
+- [Image Plugin](https://pieceofcake2.github.io/image/ja/) ([Markdown](https://github.com/pieceofcake2/image/blob/1.x/docs/ja/README.md)) - アップロードされた画像の中身による検証 (JPEG、PNG、GIF、WebP、SVG)
 - [CakePdf Plugin](https://pieceofcake2.github.io/cakepdf/ja/) ([Markdown](https://github.com/pieceofcake2/cakepdf/blob/1.x/docs/ja/README.md)) - PDF の生成
 
 ### SEO
