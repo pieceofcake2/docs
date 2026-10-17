@@ -27,6 +27,9 @@ directly.
   (see [End-to-End Testing](/development/e2e-testing))
 - [Storybook](https://pieceofcake2.github.io/storybook/) ([Markdown](https://github.com/pieceofcake2/storybook/blob/1.x/docs/README.md)) - Storybook for the Elements of an application
 - [Report](https://pieceofcake2.github.io/report/) ([Markdown](https://github.com/pieceofcake2/report/blob/1.x/docs/README.md)) - A4 PDF reports printed by a headless Chrome, for Panther and the security checks
+
+## Security
+
 - [Security Check](https://pieceofcake2.github.io/security-check/) ([Markdown](https://github.com/pieceofcake2/security-check/blob/1.x/docs/README.md)) - The security checks (SCA, SAST and DAST) in one command
 - [Security SCA](https://pieceofcake2.github.io/security-sca/) ([Markdown](https://github.com/pieceofcake2/security-sca/blob/1.x/docs/README.md)) - Known vulnerabilities of the Composer packages, as a PDF report
 - [Security SAST](https://pieceofcake2.github.io/security-sast/) ([Markdown](https://github.com/pieceofcake2/security-sast/blob/1.x/docs/README.md)) - Static analysis of the code and the configuration with Semgrep or PHPStan, as a PDF report
