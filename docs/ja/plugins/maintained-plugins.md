@@ -26,6 +26,9 @@ AI ツールから直接読み込めます。
   ([End-to-End テスト](/ja/development/e2e-testing) を参照してください)
 - [Storybook](https://pieceofcake2.github.io/storybook/ja/) ([Markdown](https://github.com/pieceofcake2/storybook/blob/1.x/docs/ja/README.md)) - アプリケーションの Element のための Storybook
 - [Report](https://pieceofcake2.github.io/report/ja/) ([Markdown](https://github.com/pieceofcake2/report/blob/1.x/docs/ja/README.md)) - ヘッドレス Chrome で印刷する A4 の PDF の報告書。Panther とセキュリティ診断で使用
+
+## セキュリティ
+
 - [Security Check](https://pieceofcake2.github.io/security-check/ja/) ([Markdown](https://github.com/pieceofcake2/security-check/blob/1.x/docs/ja/README.md)) - セキュリティ診断 (SCA、SAST、DAST) を 1 つのコマンドで
 - [Security SCA](https://pieceofcake2.github.io/security-sca/ja/) ([Markdown](https://github.com/pieceofcake2/security-sca/blob/1.x/docs/ja/README.md)) - Composer のパッケージの既知の脆弱性を PDF の報告書に
 - [Security SAST](https://pieceofcake2.github.io/security-sast/ja/) ([Markdown](https://github.com/pieceofcake2/security-sast/blob/1.x/docs/ja/README.md)) - Semgrep か PHPStan によるコードと設定の静的解析を PDF の報告書に
