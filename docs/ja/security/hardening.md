@@ -10,7 +10,7 @@ CakePHP 2 のアプリケーションを本番環境で運用する前に、次�
 本番環境では `debug` を `0` にしてください。デバッグレベルが高いと、エラーメッセージ、スタックトレース、
 SQL クエリが訪問者に表示されます。`pieceofcake2/app` スケルトンから作成したアプリケーションは
 `APP_DEBUG` 環境変数からデバッグレベルを読み込み、設定されていない場合はレベル 0 を使います。
-本番サーバーでは `APP_DEBUG` を設定しないか、`APP_DEBUG=0` を設定してください。[core.php の更新](/ja/deployment#core-php-の更新)
+本番サーバーでは `APP_DEBUG` を設定しないか、`APP_DEBUG=0` を設定してください。[core.php の更新](/ja/deployment#update-core-php)
 を参照してください。
 
 <a id="salt"></a>
@@ -19,13 +19,18 @@ SQL クエリが訪問者に表示されます。`pieceofcake2/app` スケルト
 
 `Security.salt` と `Security.cipherSeed` には、スケルトンに含まれる値ではなく、アプリケーション固有の
 秘密の値を設定してください。ソルトは CSRF トークンとフォーム改ざん防止のトークンの署名に使われ、
-`CookieComponent` の既定の暗号化キーにもなります。スケルトンの既定のソルトを使っている間は、
-CakePHP が通知を表示します。スケルトンは `SECURITY_SALT` と `SECURITY_CIPHER_SEED`
-環境変数から値を読み込みます。[CakePHP のコア設定](/ja/development/configuration#cakephp-のコア設定)
+`Cookie.key` が未設定か空のときは `CookieComponent` の鍵にもなります。スケルトンは `SECURITY_SALT` と
+`SECURITY_CIPHER_SEED` 環境変数から値を読み込みます。既定のソルトについての CakePHP の通知は、デバッグが有効で
+`AuthComponent` を読み込んでいるときだけ出ます。本番で通知が出ないことは確認になりません。本番の設定は
+[pieceofcake2/security-sast](https://pieceofcake2.github.io/security-sast/ja/) で確かめてください。[CakePHP のコア設定](/ja/development/configuration#cakephp-のコア設定)
 の `Security.salt` と `Security.cipherSeed`、および [環境変数](/ja/development/configuration#environment-variables)
 を参照してください。
 
-ソルトを変更すると、発行済みの CSRF トークンと、既定のキーで暗号化したクッキーは無効になります。
+運用中のアプリケーションでソルトを変更すると、それで署名やハッシュをしたものが使えなくなります。既定の `Simple`
+パスワードハッシャーのパスワード (誰もログインできなくなります)、`Security::encrypt()` の値、`Session.checkAgent`
+(既定で有効) のセッション、ソルトを鍵にしたクッキー、開いているフォームです。先にパスワードを `Blowfish` ハッシャーに
+移してください。手順は [cakephp2-config-salt](https://pieceofcake2.github.io/security-sast/ja/rules#cakephp2-config-salt)
+をご覧ください。
 
 <a id="dependencies"></a>
 
@@ -46,7 +51,7 @@ composer install --no-dev --optimize-autoloader
 
 `composer/ca-bundle` も最新に保ってください。このパッケージは、`HttpSocket` の HTTPS 接続で使う
 CA 証明書を提供します。[脆弱性への対応](/ja/security/fixes) と
-[本番用の依存パッケージのインストール](/ja/deployment#本番用の依存パッケージのインストール) を参照してください。
+[本番用の依存パッケージのインストール](/ja/deployment#install-dependencies-for-production) を参照してください。
 
 <a id="security-component"></a>
 
@@ -91,8 +96,11 @@ Content Security Policy も使ってください。
 - `CookieComponent` は、既定では `secure` と `httpOnly` のフラグを設定しません。クッキーを HTTPS でだけ
   送るように `$this->Cookie->secure = true;` を設定し、JavaScript から読む必要がないクッキーには
   `$this->Cookie->httpOnly = true;` を設定してください。[Cookie](/ja/core-libraries/components/cookie) を参照してください。
-- クッキーの暗号化タイプは、既定の `'cipher'` ではなく `'aes'` を使い、`Security.useOpenSsl` を有効にしてください。
-  [CookieComponent の `cipher` タイプ](/ja/security/fixes#cookiecomponent-の-cipher-タイプ) を参照してください。
+- クッキーは、既定の `'cipher'` ではなく `'aes'` で暗号化してください。`config/core.php` で、`Cookie.type` を
+  `'aes'`、`Cookie.key` を `COOKIE_KEY` 環境変数から読む 32 バイト以上のランダムな値、`Security.useOpenSsl` を `true`
+  にします (v2.12.6 以降)。スケルトン v2.4.1 以降から作成したアプリケーションには、すでにこれらの行があります。
+  切り替えると、既存の `'cipher'` のクッキーは一度失われます。[`'cipher'` 暗号化の弱さ](/ja/security/fixes#cipher)
+  を参照してください。
 
 <a id="file-permissions"></a>
 
@@ -100,8 +108,8 @@ Content Security Policy も使ってください。
 
 ドキュメントルートを `webroot/` ディレクトリに設定し、アプリケーションのコード、設定、`vendor/`
 に URL でアクセスできないようにしてください。ウェブサーバーが書き込む必要があるのは `tmp/` と `logs/`
-だけです。[ドキュメントルートの指定](/ja/deployment#ドキュメントルートの指定)、
-[パーミッション](/ja/installation#パーミッション)、[URLリライティング](/ja/installation/url-rewriting)
+だけです。[ドキュメントルートの指定](/ja/deployment#set-document-root)、
+[パーミッション](/ja/installation#permissions)、[URLリライティング](/ja/installation/url-rewriting)
 を参照してください。
 
 <a id="https"></a>
@@ -109,7 +117,8 @@ Content Security Policy も使ってください。
 ## HTTPS を使う
 
 アプリケーションは HTTPS だけで提供してください。CakePHP が HTTPS を検出すると (`HTTPS` サーバー変数)、
-セッションのクッキーに secure 属性が付きます。`SecurityComponent::requireSecure()` を使うと、
+セッションのクッキーに secure 属性が付きます。HTTPS をプロキシやロードバランサーで終端していると CakePHP は検出
+できないので、本番の `Session.ini` に `'session.cookie_secure' => 1` を設定してください。`SecurityComponent::requireSecure()` を使うと、
 アクションを HTTPS に限定できます。[アクションを SSL 通信に限定](/ja/core-libraries/components/security-component#アクションを-ssl-通信に限定)
 を参照してください。TLS とリダイレクトはウェブサーバーで設定してください。
 [URLリライティング](/ja/installation/url-rewriting) と [デプロイ](/ja/deployment) を参照してください。

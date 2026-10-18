@@ -112,6 +112,8 @@ HTML として出力するもの以外の値は、すべて `h()` でエスケ�
 - [HTML Purifier](https://htmlpurifier.org/) (`ezyang/htmlpurifier`) も引き続きメンテナンスされており、
   PHP 8.0 を含め、`pieceofcake2/cakephp` が動作するすべての PHP のバージョンに対応しています。
   PHP 8.0 を使う場合や、細かい設定が必要な場合に使ってください。
+  [pieceofcake2/purifiable](https://pieceofcake2.github.io/purifiable/ja/) を使うと、保存するときにモデルの項目を
+  HTML Purifier で無害化できます。
 
   ```php
   $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());

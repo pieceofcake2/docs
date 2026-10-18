@@ -26,9 +26,9 @@ when SAST uses it) and Chrome to print the reports; see the
 | When | What | Why |
 | --- | --- | --- |
 | Each pull request | `vendor/bin/security-check`: SCA, SAST and the baseline scan of DAST | A change that adds a vulnerable package, unsafe code or a missing header fails before it is merged |
-| Every week | SCA, and the full scan of DAST on the End-to-End tests | New advisories are published for packages that did not change, and the full scan attacks every form the tests send, which takes too long for each pull request |
+| Every week | SCA, and the full scan of DAST on the End-to-End tests (the example workflow of security-dast runs it every night) | New advisories are published for packages that did not change, and the full scan attacks every form the tests send, which takes too long for each pull request |
 | Before each release | All three, with the full scan of DAST | The last check of what is released, with the reports kept as the record of the release |
-| After a deployment to staging | The baseline scan of DAST with `--url` | The headers and the cookies of the real web server, which the built-in server of CI does not have |
+| After a deployment to staging | The baseline scan of DAST on the server: `vendor/bin/security-dast --url=https://staging.example.com` (security-check has no `--url`) | The headers and the cookies of the real web server, which the built-in server of CI does not have |
 
 The full scan attacks the application: run it only on a test environment, e.g. the built-in web server and the
 test database of a CI job, never on production. The weekly SCA matters most: a package that was safe last week
@@ -47,9 +47,12 @@ The workflows of GitHub Actions for each case are in the documentation:
    SECURITY_DAST_SCAN=full SECURITY_DAST_END_TO_END="vendor/bin/phpunit --testsuite EndToEnd" vendor/bin/security-check
    ```
 
-2. Fix what reaches the threshold (High by default). For a finding that does not apply, record why: an ignored
-   advisory with its reason in `composer.json`, a suppressed finding with a comment, an ignored alert in the
-   settings. A reason that is written down can be checked again at the next release.
+2. Fix what reaches the threshold (High by default). For a finding that does not apply, record why:
+   [an ignored advisory](https://pieceofcake2.github.io/security-sca/#ignoring-an-advisory) with its reason in
+   `composer.json`, [a suppressed finding](https://pieceofcake2.github.io/security-sast/#suppressing-a-finding)
+   with a comment, [an ignored alert](https://pieceofcake2.github.io/security-dast/report#ignoring-an-alert) with
+   its reason in the settings. The reports list them with their reasons, so that they are checked again at the
+   next release.
 3. Keep the PDF reports with the release, e.g. as assets of the GitHub Release or in the records of the project:
    they show what was checked, when, and with which versions of the rules.
 

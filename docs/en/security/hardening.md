@@ -15,15 +15,23 @@ variable and use level 0 when it is not set, so do not set `APP_DEBUG` (or set
 
 Set `Security.salt` and `Security.cipherSeed` to secret values that are unique
 to your application, not the values shipped with the skeleton. The salt is
-used to sign CSRF tokens and form tampering tokens and is the default key of
-`CookieComponent`; CakePHP shows a notice while the skeleton's default salt is
-in use. The skeleton reads the values from the `SECURITY_SALT` and
-`SECURITY_CIPHER_SEED` environment variables. See `Security.salt` and
+used to sign CSRF tokens and form tampering tokens, and is the key of
+`CookieComponent` when `Cookie.key` is not set or empty. The skeleton reads
+the values from the `SECURITY_SALT` and `SECURITY_CIPHER_SEED` environment
+variables. CakePHP shows a notice about the default salt only with debug on and
+`AuthComponent` loaded, so its absence in production proves nothing: check the
+configuration of production with
+[pieceofcake2/security-sast](https://pieceofcake2.github.io/security-sast/). See `Security.salt` and
 `Security.cipherSeed` in [Core Configuration](/development/configuration#cakephp-core-configuration)
 and [Environment Variables](/development/configuration#environment-variables).
 
-Changing the salt invalidates outstanding CSRF tokens and cookies encrypted
-with the default key.
+Changing the salt of an application in use breaks what it signed or hashed:
+the passwords of the default `Simple` password hasher (no user can log in), the
+values of `Security::encrypt()`, the sessions with `Session.checkAgent` (the
+default), the cookies whose key is the salt, and the forms that are open. Move
+the passwords to the `Blowfish` hasher first; see
+[cakephp2-config-salt](https://pieceofcake2.github.io/security-sast/rules#cakephp2-config-salt) for the
+steps.
 
 ## Keep Dependencies Up to Date {#dependencies}
 
@@ -85,9 +93,13 @@ Add a Content Security Policy as a second layer. See
   default. Set `$this->Cookie->secure = true;` so that cookies are sent only
   over HTTPS, and `$this->Cookie->httpOnly = true;` for cookies that
   JavaScript does not need to read. See [Cookie](/core-libraries/components/cookie).
-- Use the `'aes'` cookie encryption type instead of the default `'cipher'`, and
-  enable `Security.useOpenSsl`. See
-  [CookieComponent cipher type](/security/fixes#cookiecomponent-cipher-type).
+- Encrypt cookies with `'aes'` instead of the default `'cipher'`: set
+  `Cookie.type` to `'aes'`, `Cookie.key` to a random value of at least 32
+  bytes from the `COOKIE_KEY` environment variable, and `Security.useOpenSsl`
+  to `true` in `config/core.php` (v2.12.6 and later). Applications created from
+  the skeleton v2.4.1 or later have these lines already. Existing `'cipher'`
+  cookies are lost once when you switch. See
+  [Weak 'cipher' encryption](/security/fixes#cipher).
 
 ## Restrict File Permissions {#file-permissions}
 
@@ -101,7 +113,9 @@ web server needs write access only to `tmp/` and `logs/`. See
 ## Use HTTPS {#https}
 
 Serve the application over HTTPS only. The session cookie is marked secure
-when CakePHP detects HTTPS (the `HTTPS` server variable). Actions can require
+when CakePHP detects HTTPS (the `HTTPS` server variable). Behind a proxy or a
+load balancer that ends HTTPS, CakePHP does not see it: set
+`'session.cookie_secure' => 1` in the `Session.ini` of production. Actions can require
 HTTPS with `SecurityComponent::requireSecure()`; see
 [Restrict actions to SSL](/core-libraries/components/security-component#restrict-actions-to-ssl).
 Configure TLS and redirects in the web server; see

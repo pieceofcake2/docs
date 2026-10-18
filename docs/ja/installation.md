@@ -42,7 +42,7 @@ CakePHP は次の PHP 拡張モジュールも使用します。
   による AES 暗号化には必要です。
 - `mcrypt` は任意で、従来の `Security::rijndael()` と Cookie の `'rijndael'` タイプにだけ
   必要です。PHP 7.2 以降には同梱されていません。
-  [PHP 8 での暗号化](/ja/security/fixes#php-8-での暗号化)を参照してください。
+  [PHP 8 での暗号化](/ja/security/fixes#encryption-on-php-8)を参照してください。
 
 ::: pieceofcake2
 PHP 8.0 以上が必要です。CakePHP は Composer の

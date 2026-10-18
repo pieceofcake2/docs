@@ -1,7 +1,7 @@
 # Security Fixes
 
 The CakePHP team stopped releasing security fixes for CakePHP 2.x when it
-reached End of Life in June 2021. The Piece of Cake 2 fork continues to fix
+reached End of Life in June 2021. The pieceofcake2 fork continues to fix
 vulnerabilities that affect CakePHP 2.x. This page lists the vulnerabilities
 fixed in the fork and other security-related changes, and explains what you
 need to do in your application.
@@ -214,7 +214,7 @@ This applies to `CakeSocket` and `HttpSocket`. If you set
 **What you need to do:** update code that refers to the removed `cacert.pem`
 file, and keep `composer/ca-bundle` up to date.
 
-### Encryption on PHP 8
+### Encryption on PHP 8 {#encryption-on-php-8}
 
 The mcrypt extension is not bundled with PHP 7.2 and later; it is only
 available from [PECL](https://pecl.php.net/package/mcrypt). Without it, `Security::encrypt()`,
@@ -233,12 +233,12 @@ applications.
 `Security::rijndael()` and the `'rijndael'` cookie type always require mcrypt.
 See the [Upgrade Guide](/appendices/migrating-from-cakephp-2-10#enable-openssl).
 
-### CookieComponent `cipher` type
+### CookieComponent `cipher` type {#cookiecomponent-cipher-type}
 
-The default encryption type of `CookieComponent` is `'cipher'`, which uses the
-XOR-based `Security::cipher()`. It is not secure, and its seed
-(`Security.cipherSeed`) depends on undefined float-to-int conversion. Use
-`'aes'` instead, set with the `'type'` setting in `$components`:
+The default encryption type of `CookieComponent` is `'cipher'`, which is not
+secure (see [Weak `'cipher'` encryption](#cipher) above). On v2.12.6 and later,
+set `Cookie.type` and `Cookie.key` in `config/core.php` as described there. On
+v2.12.5 and earlier, set `'aes'` with the `'type'` setting in `$components`:
 
 ```php
 public $components = [
@@ -252,14 +252,11 @@ You can also call `$this->Cookie->type('aes');` in `beforeFilter()`.
 The `'type'` setting in `$components` is honored since v2.12.3. In v2.12.2 and
 earlier it was ignored and cookies were encrypted with `'cipher'`.
 
-Since v2.12.6, `'cipher'` is deprecated, and `Cookie.type` and `Cookie.key` in
-`config/core.php` set the default type and key for the whole application. See
-[Weak `'cipher'` encryption](#cipher) above.
 :::
 
 ::: warning
-Changing the encryption type makes existing cookies unreadable. Plan the
-migration, for example by accepting both types during a transition period.
+Changing the encryption type makes the existing cookies unreadable: they are
+lost once, e.g. a "remember me" login. Switch with a release.
 :::
 
 ### XML external entities
