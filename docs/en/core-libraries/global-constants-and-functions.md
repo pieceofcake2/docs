@@ -241,6 +241,30 @@ PHP include_path. Returns a boolean result.
 
 Convenience wrapper for `htmlspecialchars()`.
 
+<a id="raw"></a>
+
+`function` **raw(string $html)**
+
+Returns `$html` as it is, as a string: the opposite of `h()`, to print HTML
+without escaping on purpose, such as HTML that the application built or
+sanitized:
+
+```php
+<?= raw($post['Post']['body_html']) ?>
+```
+
+It marks the places that print unescaped HTML, so that they can be found and
+reviewed; [pieceofcake2/security-sast](https://pieceofcake2.github.io/security-sast/)
+lists them. It takes a string, a number, a boolean, `null` (an empty string)
+or an object with `__toString()`, and throws `InvalidArgumentException` for an
+array. Never pass it a value of the request. See
+[Output Escaping and HTML Sanitization](/security/escaping-and-sanitizing-html#accepting-html).
+
+::: pieceofcake2
+Added in v2.12.10. An application or a package that already defines a global
+`raw()` keeps its own function.
+:::
+
 `function` **LogError(string $message)**
 
 Shortcut to `Log::write()`.

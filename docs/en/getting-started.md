@@ -75,6 +75,9 @@ the points that changed:
   Datasources and email profiles can be configured with a DSN from
   `DATABASE_URL` and `MAILER_DSN`, see
   [Database DSNs](development/configuration#database-url) (CakePHP 2.12.7).
+  Views mark the HTML that they print without escaping on purpose with
+  `raw()`, see [raw()](core-libraries/global-constants-and-functions#raw)
+  (CakePHP 2.12.10).
 - **Bake and plugins.** Bake and the upgrade shell moved out of the core into
   plugins, and the major CakePHP 2 plugins are maintained for PHP 8. See
   [Code Generation with Bake](console-and-shells/code-generation-with-bake) and
