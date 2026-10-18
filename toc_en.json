@@ -521,6 +521,10 @@
           "link": "/security/hardening"
         },
         {
+          "text": "Security Checks",
+          "link": "/security/checks"
+        },
+        {
           "text": "Reporting a Vulnerability",
           "link": "/security/reporting"
         },

@@ -8,6 +8,8 @@ have been fixed, and how to run a CakePHP 2 application safely.
 
 - [Hardening Checklist](/security/hardening): settings to check before you
   run an application in production.
+- [Security Checks](/security/checks): when to run the checks of the
+  security packages (SCA, SAST, DAST), e.g. before each release.
 - [Reporting a Vulnerability](/security/reporting): how to report a
   security issue privately and what happens after you report it.
 - [Security Fixes](/security/fixes): the vulnerabilities fixed in the fork

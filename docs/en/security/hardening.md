@@ -37,6 +37,10 @@ composer update
 composer install --no-dev --optimize-autoloader
 ```
 
+To know when a package you use gets a published vulnerability, run
+[pieceofcake2/security-sca](https://pieceofcake2.github.io/security-sca/)
+every week; see [Security Checks](/security/checks).
+
 Keep `composer/ca-bundle` up to date as well; it provides the CA certificates
 for HTTPS connections made by `HttpSocket`. See
 [Security Fixes](/security/fixes) and

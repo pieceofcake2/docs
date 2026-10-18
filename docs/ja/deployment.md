@@ -29,6 +29,9 @@ CakePHP アプリケーションをデプロイする際には、いくつかや
 - 秘密の情報をリポジトリのファイルではなく環境変数から読み込んでいること。
   [環境変数](development/configuration#environment-variables) を参照してください。
 
+これらの多くは自動で確かめられます。リリースの前にセキュリティ診断を実行してください。
+[セキュリティ診断](/ja/security/checks#before-release) を参照してください。
+
 <a id="set-document-root"></a>
 
 ## ドキュメントルートの指定
