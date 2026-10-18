@@ -32,7 +32,7 @@ the plugin forks, unless a repository has its own `SECURITY.md`. It states:
   are in scope.
 
 So far, security fixes have been released as patch releases of the current
-minor version, for example 2.12.3 and 2.12.5. To receive fixes, keep your
+minor version, for example 2.12.3, 2.12.5 and 2.12.6. To receive fixes, keep your
 application on the latest release:
 
 ```bash

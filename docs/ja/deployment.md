@@ -14,7 +14,7 @@ CakePHP アプリケーションをデプロイする際には、いくつかや
 - `Security.salt` と `Security.cipherSeed` がアプリケーション固有の秘密の値になっていて、
   `CookieComponent` が暗号化方式 `'aes'` を使っていること。
   [コア設定](development/configuration#cakephp-のコア設定) と
-  [CookieComponent の暗号化方式](security/fixes#cookiecomponent-の-cipher-タイプ) を参照してください。
+  [CookieComponent の暗号化方式](security/fixes#cookiecomponent-cipher-type) を参照してください。
 - ドキュメントルートが `webroot/` ディレクトリだけであること。[ドキュメントルートの指定](#set-document-root) と
   [Web サーバーの設定](installation/url-rewriting) を参照してください。
 - アプリケーションを HTTPS だけで提供していること。[HTTPS の使用](#use-https) を参照してください。

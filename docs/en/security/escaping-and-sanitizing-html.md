@@ -115,7 +115,8 @@ with regular expressions or `strip_tags()`; they miss many cases.
 - [HTML Purifier](https://htmlpurifier.org/) (`ezyang/htmlpurifier`) is
   still maintained and supports every PHP version that `pieceofcake2/cakephp`
   runs on, including PHP 8.0. Use it on PHP 8.0, or when you need its detailed
-  configuration.
+  configuration. [pieceofcake2/purifiable](https://pieceofcake2.github.io/purifiable/)
+  purifies the fields of a model with it when they are saved.
 
   ```php
   $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());

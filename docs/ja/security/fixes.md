@@ -1,7 +1,7 @@
 # 脆弱性への対応
 
 CakePHP 2.x は 2021年6月にサポートが終了し、CakePHP チームによるセキュリティ修正のリリースも
-終了しました。Piece of Cake 2 フォークでは、CakePHP 2.x に影響する脆弱性の修正を続けています。
+終了しました。pieceofcake2 のフォークでは、CakePHP 2.x に影響する脆弱性の修正を続けています。
 このページでは、フォークで修正した脆弱性とその他のセキュリティ関連の変更、
 そしてアプリケーション側で必要な対応を説明します。
 
@@ -175,6 +175,8 @@ CakePHP 2 についての本家のアドバイザリはありません。`cakeph
 
 **必要な対応:** 削除された `cacert.pem` を参照しているコードを修正し、`composer/ca-bundle` を最新に保ってください。
 
+<a id="encryption-on-php-8"></a>
+
 ### PHP 8 での暗号化
 
 mcrypt 拡張は PHP 7.2 以降同梱されておらず、[PECL](https://pecl.php.net/package/mcrypt) から入れる必要があります。mcrypt が無い場合、`Security::encrypt()`、`Security::decrypt()`、
@@ -191,11 +193,13 @@ Configure::write('Security.useOpenSsl', true);
 `Security::rijndael()` と Cookie の `'rijndael'` タイプは、常に mcrypt が必要です。
 [アップグレードガイド](/ja/appendices/migrating-from-cakephp-2-10#enable-openssl) も参照してください。
 
+<a id="cookiecomponent-cipher-type"></a>
+
 ### CookieComponent の `cipher` タイプ
 
-`CookieComponent` の暗号化タイプの既定値は `'cipher'` で、XOR ベースの `Security::cipher()` を使います。
-これは安全ではなく、シード値（`Security.cipherSeed`）の扱いも float から int への未定義の変換に依存しています。
-代わりに `'aes'` を使ってください。タイプは `$components` の `'type'` で設定します。
+`CookieComponent` の暗号化タイプの既定値は `'cipher'` で、安全ではありません (上記の [`'cipher'` 暗号化の弱さ](#cipher))。
+v2.12.6 以降では、そこで説明しているとおり `config/core.php` で `Cookie.type` と `Cookie.key` を設定してください。
+v2.12.5 以前では、`$components` の `'type'` で `'aes'` を設定します。
 
 ```php
 public $components = [
@@ -208,15 +212,11 @@ public $components = [
 ::: pieceofcake2
 `$components` の `'type'` は v2.12.3 から反映されます。v2.12.2 以前では無視され、
 Cookie は `'cipher'` で暗号化されていました。
-
-v2.12.6 以降では `'cipher'` は非推奨で、`config/core.php` の `Cookie.type` と `Cookie.key` で
-アプリケーション全体のデフォルトのタイプとキーを設定できます。上記の
-[`'cipher'` 暗号化の弱さ](#cipher) を参照してください。
 :::
 
 ::: warning
-暗号化タイプを変更すると、既存のクッキーは読み取れなくなります。移行期間中は両方のタイプを受け付けるなど、
-移行の手順を計画してください。
+暗号化タイプを変更すると、既存のクッキーは読み取れなくなり、一度失われます (「ログインしたままにする」など)。
+リリースに合わせて切り替えてください。
 :::
 
 ### XML の外部エンティティ
