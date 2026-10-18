@@ -521,6 +521,10 @@
           "link": "/ja/security/hardening"
         },
         {
+          "text": "セキュリティ診断",
+          "link": "/ja/security/checks"
+        },
+        {
           "text": "脆弱性の報告",
           "link": "/ja/security/reporting"
         },

@@ -40,6 +40,10 @@ composer update
 composer install --no-dev --optimize-autoloader
 ```
 
+使っているパッケージに脆弱性が公開されたことを知るには、
+[pieceofcake2/security-sca](https://pieceofcake2.github.io/security-sca/ja/) を毎週実行してください。
+[セキュリティ診断](/ja/security/checks) を参照してください。
+
 `composer/ca-bundle` も最新に保ってください。このパッケージは、`HttpSocket` の HTTPS 接続で使う
 CA 証明書を提供します。[脆弱性への対応](/ja/security/fixes) と
 [本番用の依存パッケージのインストール](/ja/deployment#本番用の依存パッケージのインストール) を参照してください。

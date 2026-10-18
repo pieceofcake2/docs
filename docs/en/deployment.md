@@ -32,6 +32,9 @@ Before you deploy, check at least these points. The
 - Secrets come from environment variables, not from files in the
   repository; see [Environment Variables](development/configuration#environment-variables).
 
+Many of these points can be checked automatically: run the security checks
+before each release; see [Security Checks](/security/checks#before-release).
+
 ## Set document root
 
 Setting the document root correctly on your application is an important step to

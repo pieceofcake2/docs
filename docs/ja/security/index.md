@@ -6,6 +6,7 @@ CakePHP 2.x は 2021年6月にサポートが終了し、CakePHP チームによ
 そして CakePHP 2 のアプリケーションを安全に運用するための設定を説明します。
 
 - [セキュリティチェックリスト](/ja/security/hardening): 本番環境で運用する前に確認する設定
+- [セキュリティ診断](/ja/security/checks): セキュリティのパッケージ (SCA、SAST、DAST) の診断をいつ実行するか。リリースの前など
 - [脆弱性の報告](/ja/security/reporting): セキュリティの問題を非公開で報告する方法と、報告した後の流れ
 - [脆弱性への対応](/ja/security/fixes): フォークで修正した脆弱性と、アプリケーション側で必要な対応
 - [本家のアドバイザリ](/ja/security/upstream-advisories): CakePHP 2.x に関係する本家 CakePHP のアドバイザリへの対応状況
