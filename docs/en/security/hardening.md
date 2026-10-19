@@ -100,6 +100,14 @@ Add a Content Security Policy as a second layer. See
   the skeleton v2.4.1 or later have these lines already. Existing `'cipher'`
   cookies are lost once when you switch. See
   [Weak 'cipher' encryption](/security/fixes#cipher).
+- Send `Cache-Control: no-store` with the pages that have a session: set
+  `Session.cacheLimiter` to `'nocache'` in `config/core.php`. The default,
+  `must-revalidate`, is a value that PHP does not know, so PHP sends no cache
+  header, and a browser can show the pages of a logged-in user again after the
+  logout, or a shared cache can store them. Applications created from the
+  skeleton v2.5.3 or later have this setting already; pieceofcake2/security-sast
+  reports it as `cakephp2-config-session-cache-limiter`. See
+  [Sessions](/development/sessions).
 
 ## Restrict File Permissions {#file-permissions}
 

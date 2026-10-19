@@ -75,6 +75,30 @@ CPU のサイクルを減らすために、ビューをキャッシュするこ�
 
 `method` HtmlHelper::**useTag**(string $tag)
 
+<a id="html5"></a>
+
+## HTML5 のタグ
+
+v2.12.11 から、HtmlHelper は HTML5 の script、link、style のタグを出力します。`type` 属性も CDATA も
+付けません。
+
+| 呼び出し | 出力 |
+| --- | --- |
+| `$this->Html->script('app')` | `<script src="/js/app.js"></script>` |
+| `$this->Html->css('style')` | `<link rel="stylesheet" href="/css/style.css"/>` |
+| `$this->Html->css('style', ['rel' => 'import'])` | `<style>@import url(/css/style.css);</style>` |
+| `$this->Html->scriptBlock('init();')` | `<script>init();</script>` |
+
+`application/xhtml+xml` で配信するページなど、XHTML の出力 (`type="text/javascript"`、`type="text/css"`、
+CDATA で囲んだスクリプトブロック) にするには、ヘルパーの設定 `html5` を `false` にします。
+
+```php
+public $helpers = ['Html' => ['html5' => false]];
+```
+
+`scriptBlock()` と `scriptStart()` の `safe` オプションは、`true` のときスクリプトを CDATA で囲みます。デフォルトは
+`false` で、`html5` が `false` のときは `true` です。`JsHelper` も同じ設定に従います。
+
 ## HtmlHelper が出力するタグの変更
 
 `method` HtmlHelper::**loadConfig**(mixed $configFile, string $path = null)
