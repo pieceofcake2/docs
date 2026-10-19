@@ -33,15 +33,21 @@ v2.13.0 の変更のうち、すでにフォークで動いているアプリケ
 - フレームワークのクラスは `Cake` 名前空間に移りました。たとえば `Cake\Controller\Controller` です。
   CakePHP 2 のグローバルな名前は同じクラスの別名なので、`Controller`、`CakeRequest`、
   `NotFoundException` を継承、型宣言、`catch`、読み込みに使っているコードはそのまま動きます。
-- `get_class()`、`::class`、`ReflectionClass::getName()` は名前空間を含む名前を返します。
-  `get_class($x) === 'CakeRequest'` のような比較は `instanceof` に書き換えてください。
-- エラーログ、`Debugger` の出力、デバッグ用のエラーページには名前空間を含む名前が出ます。たとえば
-  `[Cake\Error\NotFoundException]` です。グローバルな名前に一致させているログのフィルターや
-  アラートを直してください。
 - 更新前にシリアライズしたオブジェクトは、これまでどおりアンシリアライズできます。更新後に
   シリアライズしたオブジェクトは名前空間を含む名前になるので、前のバージョンでは読めません。
-- PHPStan には、名前空間のクラスに対応した pieceofcake2/phpstan-cakephp2 が必要です。
+- PHPStan には pieceofcake2/phpstan-cakephp2 の `^1.1` が必要です。
   [名前空間のあるクラス](/ja/development/namespaced-classes#the-classes-of-the-framework) を参照してください。
+
+> [!WARNING]
+> `get_class()`、`::class`、`ReflectionClass::getName()` は名前空間を含む名前を返すので、
+> `get_class($x) === 'CakeRequest'` のような比較は false になります。エラーログ、`Debugger` の出力、
+> デバッグ用のエラーページにも名前空間を含む名前が出ます (例: `[Cake\Error\NotFoundException]`)。
+> グローバルな名前に一致させているログのフィルターやアラートを直してください。
+
+> [!TIP]
+> [pieceofcake2/upgrade](https://github.com/pieceofcake2/upgrade) の
+> `bin/cake upgrade rector --rules namespaced-classes src tests` は、`get_class()` との比較を書き換え、
+> 名前空間のクラスを `use` します。
 
 ### 名前空間のあるクラス: `App::className()` と `App.namespace` ([PR #91](https://github.com/pieceofcake2/cakephp/pull/91)) {#app-classname}
 

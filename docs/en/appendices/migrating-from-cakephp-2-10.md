@@ -36,16 +36,22 @@ Changes in v2.13.0 that may affect applications already running on the fork.
   `Cake\Controller\Controller`. The global names of CakePHP 2 are aliases of the
   same classes: code that extends, type-hints, catches or loads `Controller`,
   `CakeRequest` or `NotFoundException` keeps working.
-- `get_class()`, `::class` and `ReflectionClass::getName()` return the
-  namespaced names. Replace comparisons like `get_class($x) === 'CakeRequest'`
-  with `instanceof`.
-- The error log, `Debugger` output and the debug error pages show the
-  namespaced names, e.g. `[Cake\Error\NotFoundException]`. Update log filters
-  and alerts that match the global names.
 - Objects serialized before the update still unserialize. Objects serialized
   after it name the namespaced classes and cannot be read by an older version.
-- PHPStan needs a version of pieceofcake2/phpstan-cakephp2 that supports the
-  namespaced classes. See [Namespaced Classes](/development/namespaced-classes#the-classes-of-the-framework).
+- PHPStan needs pieceofcake2/phpstan-cakephp2 `^1.1`. See
+  [Namespaced Classes](/development/namespaced-classes#the-classes-of-the-framework).
+
+> [!WARNING]
+> `get_class()`, `::class` and `ReflectionClass::getName()` return the
+> namespaced names, so a comparison like `get_class($x) === 'CakeRequest'` is
+> now false. The error log, `Debugger` output and the debug error pages show
+> the namespaced names too, e.g. `[Cake\Error\NotFoundException]`: update the
+> log filters and alerts that match the global names.
+
+> [!TIP]
+> `bin/cake upgrade rector --rules namespaced-classes src tests` of
+> [pieceofcake2/upgrade](https://github.com/pieceofcake2/upgrade) rewrites the
+> comparisons with `get_class()` and imports the namespaced classes.
 
 ### Classes in a namespace: `App::className()` and `App.namespace` ([PR #91](https://github.com/pieceofcake2/cakephp/pull/91)) {#app-classname}
 
