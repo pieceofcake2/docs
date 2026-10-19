@@ -26,6 +26,17 @@ Before migrating to this fork, ensure:
 4. **Upgrade PHP**: Update your PHP version to 8.0 or newer
 5. **Test Thoroughly**: Run your application's test suite to ensure compatibility
 
+## v2.12.11
+
+### Security fix: request URLs with extra leading slashes ([GHSA-wh43-gc93-wh4c](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-wh43-gc93-wh4c), [PR #90](https://github.com/pieceofcake2/cakephp/pull/90)) {#request-url-leading-slashes}
+
+- `CakeRequest` removes all the leading slashes and backslashes of the request
+  URL, not only the first one. A request to `//posts/view/1` is routed as
+  before, but `$this->request->url` is now `posts/view/1` instead of
+  `/posts/view/1`, and `here` is `/posts/view/1` instead of the
+  protocol-relative `//posts/view/1`. `here()` also collapses the leading
+  slashes of its result. URLs with a single leading slash are not affected. See [Security Fixes](/security/fixes#request-here).
+
 ## v2.12.10
 
 Changes in v2.12.10 that may affect applications already running on the fork.

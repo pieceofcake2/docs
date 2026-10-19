@@ -24,6 +24,16 @@
 4. **PHP をアップグレードする**: PHP 8.0 以降に更新します
 5. **十分にテストする**: アプリケーションのテストスイートを実行し、互換性を確認します
 
+## v2.12.11
+
+### セキュリティ修正: 先頭のスラッシュが多いリクエスト URL ([GHSA-wh43-gc93-wh4c](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-wh43-gc93-wh4c), [PR #90](https://github.com/pieceofcake2/cakephp/pull/90)) {#request-url-leading-slashes}
+
+- `CakeRequest` は、リクエスト URL の先頭のスラッシュとバックスラッシュを、最初の 1 つだけでなくすべて取り除きます。
+  `//posts/view/1` へのリクエストはこれまでどおりルーティングされますが、`$this->request->url` は `/posts/view/1`
+  ではなく `posts/view/1` に、`here` はプロトコル相対の `//posts/view/1` ではなく `/posts/view/1` になります。
+  `here()` も、返す値の先頭のスラッシュを 1 つにまとめます。
+  先頭のスラッシュが 1 つの URL は変わりません。[脆弱性への対応](/ja/security/fixes#request-here) を参照してください。
+
 ## v2.12.10
 
 v2.12.10 の変更のうち、すでにフォークで動いているアプリケーションに影響する可能性があるものです。
