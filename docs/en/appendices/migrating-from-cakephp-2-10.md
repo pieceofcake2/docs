@@ -40,10 +40,12 @@ Changes in v2.13.0 that may affect applications already running on the fork.
 - `App.namespace` is new and not set by default. When it is set, controllers,
   shells, models and the classes above are first looked up in that namespace
   by their short name, e.g. `App\Controller\PostsController` for `/posts`.
-- `Controller::$name`, `Model::$name` and `Shell::$name` of a class in a
-  namespace no longer contain the namespace, e.g. `Post` instead of
-  `Acme\Model\Post`. Set `$name` if you relied on the old value.
   See [Namespaced Classes](/development/namespaced-classes).
+
+> [!WARNING]
+> `Controller::$name`, `Model::$name` and `Shell::$name` of a class in a
+> namespace no longer contain the namespace, e.g. `Post` instead of
+> `Acme\Model\Post`. Set `$name` if you relied on the old value.
 
 ## v2.12.11
 

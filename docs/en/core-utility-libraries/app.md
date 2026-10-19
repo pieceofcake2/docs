@@ -104,10 +104,14 @@ So basically the second param should simply match the folder path of the class f
 
 Return type: `string|null`
 
+::: pieceofcake2 Added in version 2.13.0
+Backported from CakePHP 3 and later.
+:::
+
 Returns the name of the class that CakePHP uses for a name in its
-configuration, or `null` when the class does not exist (since CakePHP 2.13). CakePHP uses it for components, helpers, behaviors,
-cache engines, email transports, view classes, controllers, shells and
-models:
+configuration, or `null` when the class does not exist. CakePHP uses it for
+components, helpers, behaviors, cache engines, email transports, view classes,
+controllers, shells and models:
 
 ```php
 App::className('Auth', 'Controller/Component', 'Component');

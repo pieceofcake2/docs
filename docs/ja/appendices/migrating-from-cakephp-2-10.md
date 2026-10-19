@@ -38,10 +38,11 @@ v2.13.0 の変更のうち、すでにフォークで動いているアプリケ
 - `App.namespace` は新しい設定で、既定では設定されていません。設定すると、コントローラー、シェル、
   モデルと上のクラスを、まずその名前空間から短い名前で探します。たとえば `/posts` なら
   `App\Controller\PostsController` です。
-- 名前空間のあるクラスの `Controller::$name`、`Model::$name`、`Shell::$name` は、名前空間を
-  含まなくなります。たとえば `Acme\Model\Post` ではなく `Post` です。前の値に頼っていた場合は
-  `$name` を書いてください。[名前空間のあるクラス](/ja/development/namespaced-classes) を
-  参照してください。
+  [名前空間のあるクラス](/ja/development/namespaced-classes) を参照してください。
+
+> [!WARNING]
+> 名前空間のあるクラスの `Controller::$name`、`Model::$name`、`Shell::$name` は、名前空間を含まなくなります。
+> たとえば `Acme\Model\Post` ではなく `Post` です。前の値に頼っていた場合は `$name` を書いてください。
 
 ## v2.12.11
 

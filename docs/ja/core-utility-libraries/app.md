@@ -100,10 +100,13 @@ Utilities
 
 戻り値の型: `string|null`
 
+::: pieceofcake2 Added in version 2.13.0
+CakePHP 3 以降からのバックポートです。
+:::
+
 CakePHP の設定に書いた名前から、CakePHP が使うクラスの名前を返します。クラスが無ければ `null`
-を返します (CakePHP 2.13 から)。CakePHP は、コンポーネント、ヘルパー、
-ビヘイビア、キャッシュエンジン、メールのトランスポート、ビュークラス、コントローラー、シェル、
-モデルを探すときにこれを使います。
+を返します。CakePHP は、コンポーネント、ヘルパー、ビヘイビア、キャッシュエンジン、メールの
+トランスポート、ビュークラス、コントローラー、シェル、モデルを探すときにこれを使います。
 
 ```php
 App::className('Auth', 'Controller/Component', 'Component');

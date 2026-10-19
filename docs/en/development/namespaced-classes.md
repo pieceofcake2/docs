@@ -21,15 +21,17 @@ pieceofcake2/cakephp and how CakePHP finds the class for each of them, and
 how `App.namespace` lets CakePHP find controllers, models and other classes
 in your namespace by their short names.
 
+::: pieceofcake2 Added in version 2.13.0
+`App::className()` and `App.namespace`
+([#91](https://github.com/pieceofcake2/cakephp/pull/91)). In CakePHP 2.12, the
+settings with a suffix take a namespaced name only without the suffix
+(`'Acme\Cache\Memory'`, not `MemoryEngine::class`), and controllers, shells
+and models in `$uses` must be global classes.
+:::
+
 > [!NOTE]
-> `App::className()` and `App.namespace` are available since CakePHP 2.13
-> ([#91](https://github.com/pieceofcake2/cakephp/pull/91)). In CakePHP 2.12,
-> the settings with a suffix take a
-> namespaced name only without the suffix (`'Acme\Cache\Memory'`, not
-> `MemoryEngine::class`), and controllers, shells and models in `$uses` must
-> be global classes. The classes of the framework itself are still global;
-> the `Cake\` namespace of pull requests
-> [#23](https://github.com/pieceofcake2/cakephp/pull/23) and
+> The classes of the framework itself are still global; the `Cake\` namespace
+> of pull requests [#23](https://github.com/pieceofcake2/cakephp/pull/23) and
 > [#28](https://github.com/pieceofcake2/cakephp/pull/28) is only on the
 > `feature/phpstan-level5` branch.
 
@@ -237,9 +239,13 @@ $Post = ClassRegistry::init(['class' => Post::class, 'alias' => 'Post']);
 ```
 
 The name of the model is the class name without its namespace (`Post`), and
-the table name is derived from it (`posts`). In CakePHP 2.12,
-the name kept the namespace, so set `$name` in models that must also work
-there.
+the table name is derived from it (`posts`).
+
+::: pieceofcake2 Changed in version 2.13.0
+In CakePHP 2.12, the name kept the namespace (`Acme\Model\Post`), which gave
+the table `acme\model\posts`. Set `$name` in models that must also work there.
+The same applies to `Controller::$name` and `Shell::$name`.
+:::
 
 `Controller::$uses` and `Controller::loadModel()` use the configured name as
 the property and the model alias, so a fully qualified name there gives
@@ -250,6 +256,9 @@ short names with [`App.namespace`](#app-namespace), or load the models with
 <a id="app-namespace"></a>
 
 ## App.namespace
+
+::: pieceofcake2 Added in version 2.13.0
+:::
 
 Set `App.namespace` to the namespace of your application, for example in
 `config/bootstrap.php`:
@@ -279,6 +288,16 @@ controller does with the global `AppController`. The global classes of the
 framework, such as `AuthComponent` or `FileEngine`, are still found when the
 namespace has no class of that name.
 
+> [!NOTE]
+> `App.namespace` has no default value: when it is not set, CakePHP only looks
+> for global classes, as before. CakePHP 5 also reads it from the configuration
+> of the application (`'App' => ['namespace' => 'App']` in `config/app.php`).
+
+> [!WARNING]
+> A class in the namespace is used instead of a global class with the same
+> short name, for example `App\Controller\Component\AuthComponent` instead of
+> `AuthComponent`.
+
 A name with a plugin prefix (`'MyPlugin.Greeting'`) is looked up in the
 namespace of the plugin (`MyPlugin\Controller\Component\GreetingComponent`)
 instead of `App.namespace`, then as the global class of the plugin.
@@ -288,5 +307,8 @@ instead of `App.namespace`, then as the global class of the plugin.
 - `App::uses()` does not load namespaced classes: `App::load()` would look for
   a file named after the whole name in the package. Composer loads them, so
   `App::uses()` is not needed.
-- Fully qualified class names as the keys of `$uses`, `$components`,
-  `$helpers` and `$actsAs` become aliases with backslashes. Use short aliases.
+
+> [!WARNING]
+> Fully qualified class names as the keys of `$uses`, `$components`,
+> `$helpers` and `$actsAs` become aliases with backslashes. Use short aliases
+> with `className`.
