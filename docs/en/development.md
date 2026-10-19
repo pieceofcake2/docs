@@ -5,6 +5,7 @@ application. Topics like Configuration, handling errors & exceptions,
 debugging, and testing will be covered.
 
 - [Configuration](development/configuration)
+- [Namespaced Classes](development/namespaced-classes)
 - [Routing](development/routing)
 - [Sessions](development/sessions)
 - [Exceptions](development/exceptions)

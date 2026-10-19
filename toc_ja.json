@@ -439,6 +439,10 @@
           "link": "/ja/development/configuration"
         },
         {
+          "text": "名前空間のあるクラス",
+          "link": "/ja/development/namespaced-classes"
+        },
+        {
           "text": "ルーティング",
           "link": "/ja/development/routing"
         },
