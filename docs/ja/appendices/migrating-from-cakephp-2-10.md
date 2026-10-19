@@ -34,6 +34,20 @@
   `here()` も、返す値の先頭のスラッシュを 1 つにまとめます。
   先頭のスラッシュが 1 つの URL は変わりません。[脆弱性への対応](/ja/security/fixes#request-here) を参照してください。
 
+### HTML5 の script、link、style のタグ ([PR #86](https://github.com/pieceofcake2/cakephp/pull/86)) {#html5-tags}
+
+- HtmlHelper は HTML5 のタグを出力します: `<script src="...">`、`<link rel="stylesheet" href="...">`、`<style>`、
+  `type="text/javascript"` も CDATA も付けないスクリプトブロック。ブラウザはどちらも同じに扱うので、ページの見た目や
+  動きは変わりません。
+- ページやヘルパーの HTML を比べるテストは、新しいタグに合わせる必要があるかもしれません。
+- XHTML で配信するページなど、元の出力のままにするには、ヘルパーの設定で `html5` を `false` にします。
+
+  ```php
+  public $helpers = ['Html' => ['html5' => false]];
+  ```
+
+  [HTML5 のタグ](/ja/core-libraries/helpers/html#html5) を参照してください。
+
 ## v2.12.10
 
 v2.12.10 の変更のうち、すでにフォークで動いているアプリケーションに影響する可能性があるものです。

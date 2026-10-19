@@ -204,7 +204,8 @@ them to a file and returns a linked script.
 - `onDomReady` - wrap cached scripts in domready event (default
   true)
 - `safe` - if an inline block is generated should it be wrapped
-  in \<\![CDATA\[ ... \]\]\> (default true)
+  in \<\![CDATA\[ ... \]\]\> (default false, or true when the `html5`
+  setting of HtmlHelper is false, see [HTML5 Tags](/core-libraries/helpers/html#html5))
 
 Creating a cache file with `writeBuffer()` requires that
 `webroot/js` be world writable and allows a browser to cache

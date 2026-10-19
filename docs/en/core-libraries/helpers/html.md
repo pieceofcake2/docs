@@ -74,6 +74,30 @@ methods of the HtmlHelper and how to use them.
 
 `method` HtmlHelper::**useTag**(string $tag)
 
+## HTML5 Tags {#html5}
+
+Since v2.12.11, HtmlHelper outputs the script, link and style tags of HTML5,
+without the `type` attribute and without CDATA:
+
+| Call | Output |
+| --- | --- |
+| `$this->Html->script('app')` | `<script src="/js/app.js"></script>` |
+| `$this->Html->css('style')` | `<link rel="stylesheet" href="/css/style.css"/>` |
+| `$this->Html->css('style', ['rel' => 'import'])` | `<style>@import url(/css/style.css);</style>` |
+| `$this->Html->scriptBlock('init();')` | `<script>init();</script>` |
+
+Set the `html5` setting of the helper to `false` for the output of XHTML, with
+`type="text/javascript"`, `type="text/css"` and the script blocks in CDATA, for
+example for pages served as `application/xhtml+xml`:
+
+```php
+public $helpers = ['Html' => ['html5' => false]];
+```
+
+The `safe` option of `scriptBlock()` and `scriptStart()` wraps the script in
+CDATA when it is `true`; its default is `false`, or `true` with `html5` set to
+`false`. `JsHelper` follows the same setting.
+
 ## Changing the tags output by HtmlHelper
 
 `method` HtmlHelper::**loadConfig**(mixed $configFile, string $path = null)
