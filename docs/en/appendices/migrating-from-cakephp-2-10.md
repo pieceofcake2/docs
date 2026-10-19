@@ -26,6 +26,20 @@ Before migrating to this fork, ensure:
 4. **Upgrade PHP**: Update your PHP version to 8.0 or newer
 5. **Test Thoroughly**: Run your application's test suite to ensure compatibility
 
+## v2.13.0
+
+Changes in v2.13.0 that may affect applications already running on the fork.
+
+### Templates in the CakePHP 5 style ([PR #94](https://github.com/pieceofcake2/cakephp/pull/94)) {#php-templates}
+
+- In `templates/`, templates, layouts and elements may use the `.php`
+  extension and the CakePHP 5 directories `layout/`, `element/`, `email/` and
+  `Error/`, e.g. `templates/email/html/welcome.php`.
+- A `.php` file next to a `.ctp` file of the same name in `templates/` is now
+  used instead of it. Check that `templates/` holds no other `.php` files.
+- Nothing changes for `.ctp` templates and for the `View/` directories of the
+  legacy layout. See [Templates in the CakePHP 5 style](/views#templates-in-the-cakephp-5-style).
+
 ## v2.12.11
 
 ### Security fix: request URLs with extra leading slashes ([GHSA-wh43-gc93-wh4c](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-wh43-gc93-wh4c), [PR #90](https://github.com/pieceofcake2/cakephp/pull/90)) {#request-url-leading-slashes}

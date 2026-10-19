@@ -24,6 +24,19 @@
 4. **PHP をアップグレードする**: PHP 8.0 以降に更新します
 5. **十分にテストする**: アプリケーションのテストスイートを実行し、互換性を確認します
 
+## v2.13.0
+
+v2.13.0 の変更のうち、すでにフォークで動いているアプリケーションに影響する可能性があるものです。
+
+### CakePHP 5 の形式のテンプレート ([PR #94](https://github.com/pieceofcake2/cakephp/pull/94)) {#php-templates}
+
+- `templates/` のテンプレート、レイアウト、エレメントに、`.php` の拡張子と、CakePHP 5 のディレクトリ
+  `layout/`、`element/`、`email/`、`Error/` を使えます。たとえば `templates/email/html/welcome.php` です。
+- `templates/` で、同じ名前の `.ctp` の隣に `.php` のファイルがあると、`.php` が使われます。
+  `templates/` にテンプレート以外の `.php` のファイルが無いことを確かめてください。
+- `.ctp` のテンプレートと、従来のレイアウトの `View/` ディレクトリは何も変わりません。
+  [CakePHP 5 の形式のテンプレート](/ja/views#templates-in-the-cakephp-5-style) を参照してください。
+
 ## v2.12.11
 
 ### セキュリティ修正: 先頭のスラッシュが多いリクエスト URL ([GHSA-wh43-gc93-wh4c](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-wh43-gc93-wh4c), [PR #90](https://github.com/pieceofcake2/cakephp/pull/90)) {#request-url-leading-slashes}

@@ -46,6 +46,32 @@ CSV ファイルを出力する必要があるかもしれません。
 たとえば `plugins/Contacts/View/Contacts/index.ctp` です。対応関係の全体は
 [CakePHP のフォルダ構造](/ja/getting-started/cakephp-folder-structure) を参照してください。
 
+<a id="templates-in-the-cakephp-5-style"></a>
+
+### CakePHP 5 の形式のテンプレート
+
+CakePHP 2.13 からは、(アプリケーション、プラグイン、テーマの) `templates/` のテンプレートを
+CakePHP 5 と同じ形で書くこともできます。
+
+| CakePHP 2 | CakePHP 5 の形式 |
+|---|---|
+| `templates/Products/view.ctp` | `templates/Products/view.php` |
+| `templates/Layouts/default.ctp` | `templates/layout/default.php` |
+| `templates/Elements/menu.ctp` | `templates/element/menu.php` |
+| `templates/Emails/html/welcome.ctp` | `templates/email/html/welcome.php` |
+| `templates/Layouts/Emails/html/default.ctp` | `templates/layout/email/html/default.php` |
+| `templates/Errors/error400.ctp` | `templates/Error/error400.php` |
+
+CakePHP は、それぞれのディレクトリで `.ctp` より先に `.php` を、CakePHP 2 のディレクトリより先に
+CakePHP 5 のディレクトリを探します。ディレクトリを探す順番は変わらないので、テーマやプラグインは、
+拡張子に関係なく、これまでどおりアプリケーションのテンプレートを上書きします。両方の形式を混ぜて
+使えるので、テンプレートを 1 つずつ移せます。
+
+`.php` のテンプレートは `templates/` でだけ探します。従来のレイアウトの `View/` ディレクトリには
+ビュークラスやヘルパークラスも置かれているので、そこにある `.php` のファイルをテンプレートとして
+描画することはありません。`$ext = '.php'` を設定したビュークラスは、これまでどおりどこでも
+テンプレートを探します。
+
 CakePHP のビューレイヤーはいくつかの異なるパーツによって作り上げられています。
 各パーツはそれぞれ役割を持っており、この章で説明していきます。
 

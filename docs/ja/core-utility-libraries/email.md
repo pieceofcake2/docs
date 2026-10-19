@@ -315,6 +315,10 @@ $Email->template('welcome', 'fancy')
 - `templates/Emails/html/welcome.ctp`
 - `templates/Layouts/Emails/html/fancy.ctp`
 
+CakePHP 2.13 からは、テンプレートを CakePHP 5 のディレクトリに `.php` の拡張子で置くこともできます。
+`templates/email/html/welcome.php` と `templates/layout/email/html/fancy.php` です。
+[CakePHP 5 の形式のテンプレート](/ja/views#templates-in-the-cakephp-5-style) を参照してください。
+
 テンプレートメールを送信する時、 `text` 、 `html` と `both` のうちの
 どれかを送信オプションとして指定します。
 
