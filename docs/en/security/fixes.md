@@ -216,7 +216,9 @@ This affects `pieceofcake2/cakephp` 2.12.10 and earlier, every
 affected, because zend/laminas-diactoros collapses the leading slashes of the
 path. The fix ([GHSA-wh43-gc93-wh4c](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-wh43-gc93-wh4c), [PR #90](https://github.com/pieceofcake2/cakephp/pull/90)) removes all the leading slashes and backslashes of
 the request URL, so `CakeRequest::$url` never starts with `/` or `\` and
-`here` starts with a single slash after the base path. Routing is unchanged.
+`here` starts with a single slash after the base path. `here()` also collapses
+the leading slashes and backslashes of its result, so a `$here` changed by the
+application can not become protocol-relative either. Routing is unchanged.
 
 **What you need to do:** update to the release with the fix; no code changes
 are needed. Until you can update, pass an explicit `url` to

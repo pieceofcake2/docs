@@ -34,8 +34,8 @@ Before migrating to this fork, ensure:
   URL, not only the first one. A request to `//posts/view/1` is routed as
   before, but `$this->request->url` is now `posts/view/1` instead of
   `/posts/view/1`, and `here` is `/posts/view/1` instead of the
-  protocol-relative `//posts/view/1`. URLs with a single leading slash are not
-  affected. See [Security Fixes](/security/fixes#request-here).
+  protocol-relative `//posts/view/1`. `here()` also collapses the leading
+  slashes of its result. URLs with a single leading slash are not affected. See [Security Fixes](/security/fixes#request-here).
 
 ## v2.12.10
 

@@ -176,6 +176,7 @@ CakePHP 2 についての本家のアドバイザリはありません。`cakeph
 CakePHP 3.4 以降は、zend/laminas-diactoros がパスの先頭のスラッシュを 1 つにまとめるため影響を受けません。
 修正（[GHSA-wh43-gc93-wh4c](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-wh43-gc93-wh4c)、[PR #90](https://github.com/pieceofcake2/cakephp/pull/90)）では、リクエスト URL の先頭のスラッシュとバックスラッシュをすべて取り除きます。
 `CakeRequest::$url` が `/` や `\` で始まることはなくなり、`here` はベースパスの後に 1 つのスラッシュで始まります。
+`here()` も、返す値の先頭のスラッシュとバックスラッシュを 1 つにまとめるため、アプリケーションが `$here` を書き換えてもプロトコル相対の URL にはなりません。
 ルーティングは変わりません。
 
 **必要な対応:** 修正を含むリリースに更新してください。コードの変更は不要です。すぐに更新できない場合は、
