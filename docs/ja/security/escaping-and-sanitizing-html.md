@@ -155,6 +155,17 @@ CakePHP 2 の `Sanitize` クラスは非推奨です。`html()` メソッドは�
   厳格なポリシー (`script-src 'nonce-...' 'strict-dynamic'; object-src 'none'; base-uri 'none'`)
   です。リクエストごとにランダムな nonce を作ってヘッダーで送り、出力するすべての `<script>`
   タグに付けます。最初は `Content-Security-Policy-Report-Only` で、nonce が必要なスクリプトを洗い出してください。
+  [pieceofcake2/security-headers](https://pieceofcake2.github.io/security-headers/ja/) は、すべてのレスポンスに
+  このヘッダーを付けます (デフォルトは報告のみのモード)。`contentSecurityPolicyNonce` で nonce を作り、ヘルパーの
+  `$this->SecurityHeaders->nonce()` で出力します。プラグインを使わない場合は、`AppController::beforeFilter()` で
+  `$this->response` にヘッダーを追加してください。
+
+  ```php
+  Configure::write('SecurityHeaders', [
+      'contentSecurityPolicy' => "script-src 'strict-dynamic'; object-src 'none'; base-uri 'none'",
+      'contentSecurityPolicyNonce' => true,
+  ]);
+  ```
 - スクリプトから読めないよう、クッキーに `httpOnly` を付けてください。
   [セキュリティチェックリスト](/ja/security/hardening#cookies-and-sessions) を参照してください。
 

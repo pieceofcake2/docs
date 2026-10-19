@@ -33,6 +33,7 @@ AI ツールから直接読み込めます。
 - [Security SCA](https://pieceofcake2.github.io/security-sca/ja/) ([Markdown](https://github.com/pieceofcake2/security-sca/blob/1.x/docs/ja/README.md)) - Composer のパッケージの既知の脆弱性を PDF の報告書に
 - [Security SAST](https://pieceofcake2.github.io/security-sast/ja/) ([Markdown](https://github.com/pieceofcake2/security-sast/blob/1.x/docs/ja/README.md)) - Semgrep か PHPStan によるコードと設定の静的解析を PDF の報告書に
 - [Security DAST](https://pieceofcake2.github.io/security-dast/ja/) ([Markdown](https://github.com/pieceofcake2/security-dast/blob/1.x/docs/ja/README.md)) - OWASP ZAP による動いているアプリケーションのスキャンを PDF の報告書に
+- [Security Headers Plugin](https://pieceofcake2.github.io/security-headers/ja/) ([Markdown](https://github.com/pieceofcake2/security-headers/blob/1.x/docs/ja/README.md)) - すべてのレスポンスにセキュリティヘッダーを付ける。ほかのサイトや Google のタグを名前で許可できる Content Security Policy
 
 ## メンテナンスしているプラグイン
 
