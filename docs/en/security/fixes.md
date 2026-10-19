@@ -21,7 +21,7 @@ CakePHP advisories, see [Upstream Advisories](/security/upstream-advisories).
 | [GHSA-w2mh-x92p-5p95](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-w2mh-x92p-5p95) | Path traversal in view, layout and element names (CakePHP 2 equivalent of CVE-2026-48820) | 2.12.5 |
 | [GHSA-x4p9-p4cx-gxwx](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-x4p9-p4cx-gxwx) | Open redirect after login via a protocol-relative `Auth.redirect` URL | 2.12.5 |
 | [GHSA-65v5-h65v-8pgg](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-65v5-h65v-8pgg) | Weak `'cipher'` encryption and `Security.cipherSeed`: the default `CookieComponent` type is not secure, and most long seeds become seed 0 (deprecated with warnings; switch to `'aes'`) | 2.12.6 |
-| [PR #90](https://github.com/pieceofcake2/cakephp/pull/90) | Form action and redirects to another host via a request URL that starts with `//` (`CakeRequest::here()` is protocol-relative) | Unreleased |
+| [GHSA-wh43-gc93-wh4c](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-wh43-gc93-wh4c) | Form action and redirects to another host via a request URL that starts with `//` (`CakeRequest::here()` is protocol-relative) | 2.12.11 |
 
 All of these vulnerabilities are present in the original CakePHP 2.10.24, and
 the CakePHP team no longer releases fixes for it. If your application still
@@ -214,7 +214,7 @@ for the details and the migration steps.
 This affects `pieceofcake2/cakephp` 2.12.10 and earlier, every
 `cakephp/cakephp` 2.x release and 3.0 to 3.3. CakePHP 3.4 and later are not
 affected, because zend/laminas-diactoros collapses the leading slashes of the
-path. The fix ([PR #90](https://github.com/pieceofcake2/cakephp/pull/90)) removes all the leading slashes and backslashes of
+path. The fix ([GHSA-wh43-gc93-wh4c](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-wh43-gc93-wh4c), [PR #90](https://github.com/pieceofcake2/cakephp/pull/90)) removes all the leading slashes and backslashes of
 the request URL, so `CakeRequest::$url` never starts with `/` or `\` and
 `here` starts with a single slash after the base path. Routing is unchanged.
 
