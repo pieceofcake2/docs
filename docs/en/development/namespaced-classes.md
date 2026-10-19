@@ -27,11 +27,37 @@ in your namespace by their short names.
 > In CakePHP 2.12.10 and earlier, the settings with a suffix take a
 > namespaced name only without the suffix (`'Acme\Cache\Memory'`, not
 > `MemoryEngine::class`), and controllers, shells and models in `$uses` must
-> be global classes. The classes of the framework itself are still global;
-> the `Cake\` namespace of pull requests
-> [#23](https://github.com/pieceofcake2/cakephp/pull/23) and
-> [#28](https://github.com/pieceofcake2/cakephp/pull/28) is only on the
-> `feature/phpstan-level5` branch.
+> be global classes.
+
+## The Classes of the Framework
+
+Since the release after CakePHP 2.12.10
+([#92](https://github.com/pieceofcake2/cakephp/pull/92)), the classes of the
+framework are in the `Cake` namespace, following their directories:
+`Cake\Controller\Controller`, `Cake\Network\CakeRequest`,
+`Cake\Utility\Hash`. The global names of CakePHP 2 are aliases of the same
+classes, so `Controller` and `Cake\Controller\Controller` can be used
+interchangeably, and existing code does not change. In a namespaced class, import
+the classes of the framework like any other class:
+
+```php
+// lib/Controller/Component/GreetingComponent.php
+namespace Acme\Controller\Component;
+
+use Cake\Controller\Component;
+use Cake\Controller\Controller;
+
+class GreetingComponent extends Component
+{
+    public function startup(Controller $controller)
+    {
+        $controller->set('greeting', 'Hello');
+    }
+}
+```
+
+`get_class()` and `::class` return the namespaced names, so compare classes with
+`instanceof` rather than with the string of a global name.
 
 ## How CakePHP Looks Up a Class
 

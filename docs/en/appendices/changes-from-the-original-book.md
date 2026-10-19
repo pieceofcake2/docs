@@ -73,7 +73,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - Moved to the top of the "Getting Started" sidebar group; the other pages follow in the order Installation, Advanced Installation, Web Server Configuration, Folder Structure, Conventions, Structure, A Typical CakePHP Request
   - "What's Different from CakePHP 2.10": the backports item links to [Integration Testing](/development/integration-testing) instead of the upgrade guide on GitHub
   - "What's Different from CakePHP 2.10": the backports item mentions the debug error pages in the CakePHP 5 style and the `utf8` validation rule (v2.12.6)
-  - "Coming from Modern PHP": the "No namespaces" item links to [Namespaced Classes](/development/namespaced-classes) for using namespaced classes in the configuration
+  - "Coming from Modern PHP": the "Global class names" item (formerly "No namespaces") links to [Namespaced Classes](/development/namespaced-classes) for using namespaced classes in the configuration
 - [Installation](/installation)
   - Requirements: PHP 8.0-8.5, Composer, MySQL 5.6+/PostgreSQL 9.4+/SQLite 3/SQL Server 2022+, mbstring/intl/openssl notes
   - New application via `composer create-project pieceofcake2/app` (modern layout) with `database.php` and salt/cipherSeed setup

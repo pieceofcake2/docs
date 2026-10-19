@@ -30,6 +30,23 @@ Before migrating to this fork, ensure:
 
 Changes in the next release that may affect applications already running on the fork.
 
+### The framework classes in the `Cake` namespace ([PR #92](https://github.com/pieceofcake2/cakephp/pull/92)) {#cake-namespace}
+
+- The classes of the framework moved into the `Cake` namespace, e.g.
+  `Cake\Controller\Controller`. The global names of CakePHP 2 are aliases of the
+  same classes: code that extends, type-hints, catches or loads `Controller`,
+  `CakeRequest` or `NotFoundException` keeps working.
+- `get_class()`, `::class` and `ReflectionClass::getName()` return the
+  namespaced names. Replace comparisons like `get_class($x) === 'CakeRequest'`
+  with `instanceof`.
+- The error log, `Debugger` output and the debug error pages show the
+  namespaced names, e.g. `[Cake\Error\NotFoundException]`. Update log filters
+  and alerts that match the global names.
+- Objects serialized before the update still unserialize. Objects serialized
+  after it name the namespaced classes and cannot be read by an older version.
+- PHPStan needs a version of pieceofcake2/phpstan-cakephp2 that supports the
+  namespaced classes. See [Namespaced Classes](/development/namespaced-classes#the-classes-of-the-framework).
+
 ### Classes in a namespace: `App::className()` and `App.namespace` ([PR #91](https://github.com/pieceofcake2/cakephp/pull/91)) {#app-classname}
 
 - Settings with a suffix take fully qualified class names with the suffix:

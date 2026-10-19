@@ -25,10 +25,37 @@ pieceofcake2/cakephp の設定項目と、それぞれで CakePHP がクラス�
 > ([#91](https://github.com/pieceofcake2/cakephp/pull/91))。CakePHP 2.12.10 までは、
 > サフィックスの付く設定には名前空間のある名前をサフィックスを省いてしか書けず
 > (`MemoryEngine::class` ではなく `'Acme\Cache\Memory'`)、コントローラー、シェル、`$uses` の
-> モデルはグローバルなクラスにする必要があります。フレームワーク自体のクラスは今もグローバルな
-> クラスです。プルリクエスト [#23](https://github.com/pieceofcake2/cakephp/pull/23) と
-> [#28](https://github.com/pieceofcake2/cakephp/pull/28) の `Cake\` 名前空間は、
-> `feature/phpstan-level5` ブランチにしかありません。
+> モデルはグローバルなクラスにする必要があります。
+
+<a id="the-classes-of-the-framework"></a>
+
+## フレームワークのクラス
+
+CakePHP 2.12.10 の次のリリースから ([#92](https://github.com/pieceofcake2/cakephp/pull/92))、
+フレームワークのクラスはディレクトリに合わせた `Cake` 名前空間にあります。たとえば
+`Cake\Controller\Controller`、`Cake\Network\CakeRequest`、`Cake\Utility\Hash` です。
+CakePHP 2 のグローバルな名前は同じクラスの別名なので、`Controller` と
+`Cake\Controller\Controller` はどちらを使っても同じで、これまでのコードは変わりません。
+名前空間のあるクラスでは、ほかのクラスと同じようにフレームワークのクラスを `use` します。
+
+```php
+// lib/Controller/Component/GreetingComponent.php
+namespace Acme\Controller\Component;
+
+use Cake\Controller\Component;
+use Cake\Controller\Controller;
+
+class GreetingComponent extends Component
+{
+    public function startup(Controller $controller)
+    {
+        $controller->set('greeting', 'Hello');
+    }
+}
+```
+
+`get_class()` と `::class` は名前空間を含む名前を返すので、クラスはグローバルな名前の文字列と
+比べずに、`instanceof` で比べます。
 
 <a id="how-cakephp-looks-up-a-class"></a>
 

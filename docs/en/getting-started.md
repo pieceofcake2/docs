@@ -121,15 +121,18 @@ the configuration that follows.
 CakePHP 2 was designed for PHP 5.2 and 5.3. If you know CakePHP 5, Laravel or
 Symfony, expect these differences:
 
-- **No namespaces.** Framework and application classes are global classes, and
-  the class name and the file location follow
+- **Global class names.** Application classes are global classes, and the
+  class name and the file location follow
   [conventions](getting-started/cakephp-conventions#file-and-classname-conventions),
   for example `PostsController` in `src/Controller/PostsController.php`. On the
   fork, Composer's classmap loads them; `App::uses()` is only needed for classes
-  Composer does not know, such as most plugin classes. Your own classes can use
-  namespaces; [Namespaced Classes](development/namespaced-classes) lists where
-  CakePHP accepts them in its configuration, and how `App.namespace` finds
-  controllers and models in your namespace (the release after CakePHP 2.12.10).
+  Composer does not know, such as most plugin classes. The framework classes
+  are in the `Cake` namespace with their CakePHP 2 names as aliases, such as
+  `Controller` for `Cake\Controller\Controller` (the release after CakePHP
+  2.12.10). Your own classes can use namespaces;
+  [Namespaced Classes](development/namespaced-classes) lists where CakePHP
+  accepts them in its configuration, and how `App.namespace` finds controllers
+  and models in your namespace.
 - **Arrays instead of objects.** `find()` takes an array of options and
   returns nested arrays keyed by model alias, such as
   `$post['Post']['title']`, not entities or collections. See

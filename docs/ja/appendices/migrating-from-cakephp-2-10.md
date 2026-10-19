@@ -28,6 +28,21 @@
 
 次のリリースの変更のうち、すでにフォークで動いているアプリケーションに影響する可能性があるものです。
 
+### フレームワークのクラスを `Cake` 名前空間に移動 ([PR #92](https://github.com/pieceofcake2/cakephp/pull/92)) {#cake-namespace}
+
+- フレームワークのクラスは `Cake` 名前空間に移りました。たとえば `Cake\Controller\Controller` です。
+  CakePHP 2 のグローバルな名前は同じクラスの別名なので、`Controller`、`CakeRequest`、
+  `NotFoundException` を継承、型宣言、`catch`、読み込みに使っているコードはそのまま動きます。
+- `get_class()`、`::class`、`ReflectionClass::getName()` は名前空間を含む名前を返します。
+  `get_class($x) === 'CakeRequest'` のような比較は `instanceof` に書き換えてください。
+- エラーログ、`Debugger` の出力、デバッグ用のエラーページには名前空間を含む名前が出ます。たとえば
+  `[Cake\Error\NotFoundException]` です。グローバルな名前に一致させているログのフィルターや
+  アラートを直してください。
+- 更新前にシリアライズしたオブジェクトは、これまでどおりアンシリアライズできます。更新後に
+  シリアライズしたオブジェクトは名前空間を含む名前になるので、前のバージョンでは読めません。
+- PHPStan には、名前空間のクラスに対応した pieceofcake2/phpstan-cakephp2 が必要です。
+  [名前空間のあるクラス](/ja/development/namespaced-classes#the-classes-of-the-framework) を参照してください。
+
 ### 名前空間のあるクラス: `App::className()` と `App.namespace` ([PR #91](https://github.com/pieceofcake2/cakephp/pull/91)) {#app-classname}
 
 - サフィックスの付く設定に、サフィックスの付いた完全なクラス名を書けます。キャッシュエンジンなら
