@@ -24,6 +24,21 @@
 4. **PHP をアップグレードする**: PHP 8.0 以降に更新します
 5. **十分にテストする**: アプリケーションのテストスイートを実行し、互換性を確認します
 
+## 未リリース
+
+次のリリースの変更のうち、すでにフォークで動いているアプリケーションに影響する可能性があるものです。
+
+### CakePHP 5 の構成のプラグイン ([PR #88](https://github.com/pieceofcake2/cakephp/pull/88)) {#plugin-modern-layout}
+
+- アプリケーションと同じように、プラグインもクラスを `src/`、テンプレートを `templates/`、翻訳を
+  `resources/locales/`、ベンダーのファイルを `vendor/` に置けます。CakePHP はこれらのディレクトリを、
+  `Controller/`、`View/`、`Locale/`、`Vendor/` などの CakePHP 2 のディレクトリの後に、
+  ディレクトリがあるときだけ探します。これらのディレクトリが無いプラグインでは何も変わりません。
+- これらのディレクトリを別の目的ですでに使っているプラグインでは、探すパスが増えます。たとえば
+  `App::objects('MyPlugin.Controller')` は `src/Controller/` のクラスも返し、
+  `App::import('Vendor', ...)` は、開発用にチェックアウトしたプラグインの Composer の `vendor/`
+  ディレクトリも探します。[プラグインの作成](/ja/plugins/how-to-create-plugins) を参照してください。
+
 ## v2.12.10
 
 v2.12.10 の変更のうち、すでにフォークで動いているアプリケーションに影響する可能性があるものです。

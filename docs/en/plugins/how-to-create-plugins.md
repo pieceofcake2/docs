@@ -19,10 +19,32 @@ that this folder has the same name as the plugin.
 
 Plugins live in the `plugins/` directory at the root of your project (in an
 application with the legacy `app/` layout you can also use `app/Plugin/`).
-Unlike the application itself, a plugin keeps the CakePHP 2 structure
-*inside* its folder: PHP classes in `Controller/`, `Model/` and so on, and
-templates in `View/` next to `View/Helper/`. Plugin tests can use either
-`Test/Case/` and `Test/Fixture/` or `tests/TestCase/` and `tests/Fixture/`.
+Inside its folder, a plugin uses the CakePHP 2 structure shown above: PHP
+classes in `Controller/`, `Model/` and so on, and templates in `View/` next to
+`View/Helper/`. Plugin tests can use either `Test/Case/` and `Test/Fixture/` or
+`tests/TestCase/` and `tests/Fixture/`.
+
+A plugin can also use the layout of the application and of CakePHP 5 (since
+the release after CakePHP 2.12.10):
+
+    /plugins
+        /ContactManager
+            /src
+                /Controller
+                    /Component
+                /Model
+                    /Behavior
+                /View
+                    /Helper
+            /templates
+                /Contacts
+                /Layouts
+            /resources
+                /locales
+
+CakePHP searches `src/`, `templates/`, `resources/locales/` and `vendor/`
+after the CakePHP 2 directories, and only when they exist, so a plugin can
+also move to the new layout one directory at a time.
 The [pieceofcake2/plugin](https://github.com/pieceofcake2/plugin) skeleton is a
 good starting point for a new plugin.
 

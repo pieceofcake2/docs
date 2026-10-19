@@ -18,10 +18,31 @@
 名前のフォルダになることが重要です。
 
 プラグインはプロジェクトルートの `plugins/` ディレクトリに置きます (従来の `app/` レイアウトの
-アプリケーションでは `app/Plugin/` も使えます)。アプリケーション本体とは異なり、プラグインの
-*内部* は CakePHP 2 の構成のままです。PHP のクラスは `Controller/` や `Model/` などに置き、
-テンプレートは `View/Helper/` と並べて `View/` に置きます。プラグインのテストには
-`Test/Case/` と `Test/Fixture/`、または `tests/TestCase/` と `tests/Fixture/` のどちらも使えます。
+アプリケーションでは `app/Plugin/` も使えます)。プラグインの中は、上のような CakePHP 2 の構成です。
+PHP のクラスは `Controller/` や `Model/` などに置き、テンプレートは `View/Helper/` と並べて
+`View/` に置きます。プラグインのテストには `Test/Case/` と `Test/Fixture/`、または
+`tests/TestCase/` と `tests/Fixture/` のどちらも使えます。
+
+CakePHP 2.12.10 の次のリリースからは、アプリケーションや CakePHP 5 と同じ構成も使えます。
+
+    /plugins
+        /ContactManager
+            /src
+                /Controller
+                    /Component
+                /Model
+                    /Behavior
+                /View
+                    /Helper
+            /templates
+                /Contacts
+                /Layouts
+            /resources
+                /locales
+
+CakePHP は `src/`、`templates/`、`resources/locales/`、`vendor/` を、CakePHP 2 の
+ディレクトリの後に、ディレクトリがあるときだけ探します。そのため、プラグインを 1 ディレクトリずつ
+新しい構成に移すこともできます。
 新しくプラグインを作るときは、 [pieceofcake2/plugin](https://github.com/pieceofcake2/plugin)
 スケルトンをひな形にするとよいでしょう。
 

@@ -26,6 +26,23 @@ Before migrating to this fork, ensure:
 4. **Upgrade PHP**: Update your PHP version to 8.0 or newer
 5. **Test Thoroughly**: Run your application's test suite to ensure compatibility
 
+## Unreleased
+
+Changes in the next release that may affect applications already running on the fork.
+
+### Plugins in the CakePHP 5 layout ([PR #88](https://github.com/pieceofcake2/cakephp/pull/88)) {#plugin-modern-layout}
+
+- A plugin can put its classes in `src/`, its templates in `templates/`, its
+  translations in `resources/locales/` and its vendor files in `vendor/`, as
+  the application does. CakePHP searches these directories after `Controller/`,
+  `View/`, `Locale/`, `Vendor/` and the other CakePHP 2 directories, and only
+  when they exist, so nothing changes for a plugin that does not have them.
+- A plugin that already has one of these directories for another purpose gets
+  more search paths. For example, `App::objects('MyPlugin.Controller')` also
+  lists the classes in `src/Controller/`, and `App::import('Vendor', ...)`
+  also looks in the Composer `vendor/` directory of a plugin checked out for
+  development. See [How To Create Plugins](/plugins/how-to-create-plugins).
+
 ## v2.12.10
 
 Changes in v2.12.10 that may affect applications already running on the fork.
