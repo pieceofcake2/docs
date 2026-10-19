@@ -35,10 +35,12 @@ Changes in v2.13.0 that may affect applications already running on the fork.
 - In `templates/`, templates, layouts and elements may use the `.php`
   extension and the CakePHP 5 directories `layout/`, `element/`, `email/` and
   `Error/`, e.g. `templates/email/html/welcome.php`.
-- A `.php` file next to a `.ctp` file of the same name in `templates/` is now
-  used instead of it. Check that `templates/` holds no other `.php` files.
 - Nothing changes for `.ctp` templates and for the `View/` directories of the
   legacy layout. See [Templates in the CakePHP 5 style](/views#templates-in-the-cakephp-5-style).
+
+> [!WARNING]
+> A `.php` file next to a `.ctp` file of the same name in `templates/` is now
+> used instead of it. Check that `templates/` holds no other `.php` files.
 
 ## v2.12.11
 

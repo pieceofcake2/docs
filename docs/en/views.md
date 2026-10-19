@@ -57,8 +57,11 @@ for example `plugins/Contacts/View/Contacts/index.ctp`. See
 
 ### Templates in the CakePHP 5 style
 
-Since CakePHP 2.13, templates in `templates/` (of the application, a plugin or
-a theme) can also be written as in CakePHP 5:
+::: pieceofcake2 Added in version 2.13.0
+:::
+
+Templates in `templates/` (of the application, a plugin or a theme) can also be
+written as in CakePHP 5:
 
 | CakePHP 2 | CakePHP 5 style |
 |---|---|
@@ -75,10 +78,17 @@ directories does not change, so a theme or a plugin still overrides a template
 of the application, whichever extension each one uses. Both styles can be
 mixed, so templates can be moved one by one.
 
-`.php` templates are only looked up in `templates/`. The `View/` directories of
-the legacy layout also hold the view and helper classes, so CakePHP never
-renders a `.php` file there as a template. A view class that sets
-`$ext = '.php'` finds its templates everywhere, as before.
+> [!NOTE]
+> `.php` templates are only looked up in `templates/`. The `View/` directories
+> of the legacy layout also hold the view and helper classes, so CakePHP never
+> renders a `.php` file there as a template. A view class that sets
+> `$ext = '.php'` finds its templates everywhere, as before.
+
+> [!WARNING]
+> In `templates/`, a `.php` file is used instead of the `.ctp` file of the same
+> name next to it, and `layout/`, `element/`, `email/` and `Error/` instead of
+> `Layouts/`, `Elements/`, `Emails/` and `Errors/`. Keep only templates in
+> `templates/`.
 
 The view layer in CakePHP can be made up of a number of different
 parts. Each part has different uses, and will be covered in this

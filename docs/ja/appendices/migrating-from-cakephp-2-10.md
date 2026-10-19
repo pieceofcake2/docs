@@ -32,10 +32,12 @@ v2.13.0 の変更のうち、すでにフォークで動いているアプリケ
 
 - `templates/` のテンプレート、レイアウト、エレメントに、`.php` の拡張子と、CakePHP 5 のディレクトリ
   `layout/`、`element/`、`email/`、`Error/` を使えます。たとえば `templates/email/html/welcome.php` です。
-- `templates/` で、同じ名前の `.ctp` の隣に `.php` のファイルがあると、`.php` が使われます。
-  `templates/` にテンプレート以外の `.php` のファイルが無いことを確かめてください。
 - `.ctp` のテンプレートと、従来のレイアウトの `View/` ディレクトリは何も変わりません。
   [CakePHP 5 の形式のテンプレート](/ja/views#templates-in-the-cakephp-5-style) を参照してください。
+
+> [!WARNING]
+> `templates/` で、同じ名前の `.ctp` の隣に `.php` のファイルがあると、`.php` が使われます。
+> `templates/` にテンプレート以外の `.php` のファイルが無いことを確かめてください。
 
 ## v2.12.11
 
