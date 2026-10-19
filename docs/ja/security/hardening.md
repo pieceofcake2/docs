@@ -101,6 +101,12 @@ Content Security Policy も使ってください。
   にします (v2.12.6 以降)。スケルトン v2.4.1 以降から作成したアプリケーションには、すでにこれらの行があります。
   切り替えると、既存の `'cipher'` のクッキーは一度失われます。[`'cipher'` 暗号化の弱さ](/ja/security/fixes#cipher)
   を参照してください。
+- セッションのあるページには `Cache-Control: no-store` を送ってください。`config/core.php` で `Session.cacheLimiter`
+  を `'nocache'` にします。デフォルトの `must-revalidate` は PHP が知らない値なので、PHP はキャッシュのヘッダーを
+  送らず、ログアウトしたあとにブラウザがログイン中のページを再び表示したり、共有のキャッシュがページを保存したり
+  できます。スケルトン v2.5.3 以降から作成したアプリケーションには、すでにこの設定があります。
+  pieceofcake2/security-sast は `cakephp2-config-session-cache-limiter` として報告します。
+  [セッション](/ja/development/sessions) を参照してください。
 
 <a id="file-permissions"></a>
 

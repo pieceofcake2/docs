@@ -53,10 +53,35 @@ v2.13.0 の変更のうち、すでにフォークで動いているアプリケ
 - `App.namespace` は新しい設定で、既定では設定されていません。設定すると、コントローラー、シェル、
   モデルと上のクラスを、まずその名前空間から短い名前で探します。たとえば `/posts` なら
   `App\Controller\PostsController` です。
-- 名前空間のあるクラスの `Controller::$name`、`Model::$name`、`Shell::$name` は、名前空間を
-  含まなくなります。たとえば `Acme\Model\Post` ではなく `Post` です。前の値に頼っていた場合は
-  `$name` を書いてください。[名前空間のあるクラス](/ja/development/namespaced-classes) を
-  参照してください。
+  [名前空間のあるクラス](/ja/development/namespaced-classes) を参照してください。
+
+> [!WARNING]
+> 名前空間のあるクラスの `Controller::$name`、`Model::$name`、`Shell::$name` は、名前空間を含まなくなります。
+> たとえば `Acme\Model\Post` ではなく `Post` です。前の値に頼っていた場合は `$name` を書いてください。
+
+## v2.12.11
+
+### セキュリティ修正: 先頭のスラッシュが多いリクエスト URL ([GHSA-wh43-gc93-wh4c](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-wh43-gc93-wh4c), [PR #90](https://github.com/pieceofcake2/cakephp/pull/90)) {#request-url-leading-slashes}
+
+- `CakeRequest` は、リクエスト URL の先頭のスラッシュとバックスラッシュを、最初の 1 つだけでなくすべて取り除きます。
+  `//posts/view/1` へのリクエストはこれまでどおりルーティングされますが、`$this->request->url` は `/posts/view/1`
+  ではなく `posts/view/1` に、`here` はプロトコル相対の `//posts/view/1` ではなく `/posts/view/1` になります。
+  `here()` も、返す値の先頭のスラッシュを 1 つにまとめます。
+  先頭のスラッシュが 1 つの URL は変わりません。[脆弱性への対応](/ja/security/fixes#request-here) を参照してください。
+
+### HTML5 の script、link、style のタグ ([PR #86](https://github.com/pieceofcake2/cakephp/pull/86)) {#html5-tags}
+
+- HtmlHelper は HTML5 のタグを出力します: `<script src="...">`、`<link rel="stylesheet" href="...">`、`<style>`、
+  `type="text/javascript"` も CDATA も付けないスクリプトブロック。ブラウザはどちらも同じに扱うので、ページの見た目や
+  動きは変わりません。
+- ページやヘルパーの HTML を比べるテストは、新しいタグに合わせる必要があるかもしれません。
+- XHTML で配信するページなど、元の出力のままにするには、ヘルパーの設定で `html5` を `false` にします。
+
+  ```php
+  public $helpers = ['Html' => ['html5' => false]];
+  ```
+
+  [HTML5 のタグ](/ja/core-libraries/helpers/html#html5) を参照してください。
 
 ## v2.12.10
 

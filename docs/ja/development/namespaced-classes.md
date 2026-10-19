@@ -20,23 +20,26 @@ pieceofcake2/cakephp の設定項目と、それぞれで CakePHP がクラス�
 また、`App.namespace` を設定して、コントローラーやモデルなどのクラスをアプリケーションの
 名前空間から短い名前で探す方法も説明します。
 
-> [!NOTE]
-> `App::className()` と `App.namespace` は CakePHP 2.13 から使えます
-> ([#91](https://github.com/pieceofcake2/cakephp/pull/91))。CakePHP 2.12 までは、
-> サフィックスの付く設定には名前空間のある名前をサフィックスを省いてしか書けず
-> (`MemoryEngine::class` ではなく `'Acme\Cache\Memory'`)、コントローラー、シェル、`$uses` の
-> モデルはグローバルなクラスにする必要があります。
+::: pieceofcake2 Added in version 2.13.0
+`App::className()` と `App.namespace` ([#91](https://github.com/pieceofcake2/cakephp/pull/91))。
+CakePHP 2.12 までは、サフィックスの付く設定には名前空間のある名前をサフィックスを省いてしか書けず
+(`MemoryEngine::class` ではなく `'Acme\Cache\Memory'`)、コントローラー、シェル、`$uses` のモデルは
+グローバルなクラスにする必要があります。
+:::
 
 <a id="the-classes-of-the-framework"></a>
 
 ## フレームワークのクラス
 
-CakePHP 2.13 から ([#92](https://github.com/pieceofcake2/cakephp/pull/92))、
-フレームワークのクラスはディレクトリに合わせた `Cake` 名前空間にあります。たとえば
-`Cake\Controller\Controller`、`Cake\Network\CakeRequest`、`Cake\Utility\Hash` です。
-CakePHP 2 のグローバルな名前は同じクラスの別名なので、`Controller` と
-`Cake\Controller\Controller` はどちらを使っても同じで、これまでのコードは変わりません。
-名前空間のあるクラスでは、ほかのクラスと同じようにフレームワークのクラスを `use` します。
+::: pieceofcake2 Added in version 2.13.0
+フレームワークのクラスは `Cake` 名前空間にあります ([#92](https://github.com/pieceofcake2/cakephp/pull/92))。
+:::
+
+フレームワークのクラスは、ディレクトリに合わせた `Cake` 名前空間にあります。たとえば
+`Cake\Controller\Controller`、`Cake\Network\CakeRequest`、`Cake\Utility\Hash` です。CakePHP 2 の
+グローバルな名前は同じクラスの別名なので、`Controller` と `Cake\Controller\Controller` はどちらを使っても
+同じで、これまでのコードは変わりません。名前空間のあるクラスでは、ほかのクラスと同じようにフレームワークの
+クラスを `use` します。
 
 ```php
 // lib/Controller/Component/GreetingComponent.php
@@ -54,8 +57,16 @@ class GreetingComponent extends Component
 }
 ```
 
-`get_class()` と `::class` は名前空間を含む名前を返すので、クラスはグローバルな名前の文字列と
-比べずに、`instanceof` で比べます。
+> [!WARNING]
+> `get_class()`、`::class`、`ReflectionClass::getName()` は、`Cake\Network\CakeRequest` のように名前空間を
+> 含む名前を返し、エラーログ、`Debugger` の出力、デバッグ用のエラーページにもその名前が出ます。
+> `get_class($request) === 'CakeRequest'` のような比較は false になるので、`instanceof` で比べるか、
+> クラスを `use` したファイルで `CakeRequest::class` と比べてください。
+
+> [!TIP]
+> [pieceofcake2/upgrade](https://github.com/pieceofcake2/upgrade) の
+> `bin/cake upgrade rector --rules namespaced-classes src tests` は、コードのグローバルな名前を `use` を付けた
+> 名前空間の名前に置き換え、`get_class()` と比べているグローバルな名前を `::class` に置き換えます。
 
 <a id="how-cakephp-looks-up-a-class"></a>
 
@@ -262,8 +273,13 @@ $Post = ClassRegistry::init(['class' => Post::class, 'alias' => 'Post']);
 ```
 
 モデルの名前は、名前空間を除いたクラス名 (`Post`) になり、そこからテーブル名 (`posts`) が
-作られます。CakePHP 2.12 までは名前が名前空間を含んでいたので、そのバージョンでも動かす
-モデルには `$name` を書きます。
+作られます。
+
+::: pieceofcake2 Changed in version 2.13.0
+CakePHP 2.12 までは名前が名前空間を含み (`Acme\Model\Post`)、テーブル名が `acme\model\posts` に
+なっていました。そのバージョンでも動かすモデルには `$name` を書きます。`Controller::$name` と
+`Shell::$name` も同じです。
+:::
 
 `Controller::$uses` と `Controller::loadModel()` は、設定した名前をプロパティ名とモデルの
 エイリアスに使います。完全なクラス名を書くと、`$this->{'Acme\Model\Post'}` になり、
@@ -274,6 +290,9 @@ $Post = ClassRegistry::init(['class' => Post::class, 'alias' => 'Post']);
 <a id="app-namespace"></a>
 
 ## App.namespace
+
+::: pieceofcake2 Added in version 2.13.0
+:::
 
 `App.namespace` に、アプリケーションの名前空間を設定します。たとえば
 `config/bootstrap.php` に書きます。
@@ -301,6 +320,15 @@ CakePHP は、まずその名前空間のクラスを探し、無ければグロ
 マージします。`AuthComponent` や `FileEngine` のようなフレームワークのグローバルなクラスは、
 名前空間に同じ名前のクラスが無ければ、これまでどおり使われます。
 
+> [!NOTE]
+> `App.namespace` に既定値はありません。設定しなければ、これまでどおりグローバルなクラスだけを探します。
+> CakePHP 5 でも、アプリケーションの設定 (`config/app.php` の `'App' => ['namespace' => 'App']`) から
+> 読みます。
+
+> [!WARNING]
+> 名前空間のクラスは、同じ短い名前のグローバルなクラスより先に使われます。たとえば `AuthComponent` ではなく
+> `App\Controller\Component\AuthComponent` が使われます。
+
 プラグインの接頭辞が付いた名前 (`'MyPlugin.Greeting'`) は、`App.namespace` ではなくプラグインの
 名前空間 (`MyPlugin\Controller\Component\GreetingComponent`) で探し、次にプラグインの
 グローバルなクラスを探します。
@@ -312,5 +340,7 @@ CakePHP は、まずその名前空間のクラスを探し、無ければグロ
 - `App::uses()` では名前空間のあるクラスを読み込めません。`App::load()` は、名前全体を
   ファイル名にしてパッケージの中を探します。名前空間のあるクラスは Composer が読み込むので、
   `App::uses()` は要りません。
-- `$uses`、`$components`、`$helpers`、`$actsAs` のキーに完全なクラス名を書くと、エイリアスが
-  バックスラッシュを含む名前になります。短いエイリアスを付けます。
+
+> [!WARNING]
+> `$uses`、`$components`、`$helpers`、`$actsAs` のキーに完全なクラス名を書くと、エイリアスが
+> バックスラッシュを含む名前になります。`className` を使って短いエイリアスを付けてください。
