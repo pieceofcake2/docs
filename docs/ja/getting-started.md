@@ -107,7 +107,9 @@ CakePHP 2 は PHP 5.2 と 5.3 の時代に設計されました。CakePHP 5、La
   クラス名とファイルの場所は [規約](getting-started/cakephp-conventions#file-and-classname-conventions)
   で決まります。たとえば `PostsController` は `src/Controller/PostsController.php` に置きます。
   フォークでは Composer のクラスマップがこれらを読み込みます。`App::uses()` が必要なのは、
-  多くのプラグインのクラスのように、Composer が知らないクラスだけです。
+  多くのプラグインのクラスのように、Composer が知らないクラスだけです。アプリケーションの
+  クラスには名前空間を使えます。CakePHP の設定で使える場所は
+  [名前空間のあるクラス](development/namespaced-classes) を参照してください。
 - **オブジェクトではなく配列。** `find()` はオプションを配列で受け取り、`$post['Post']['title']` のように
   モデルのエイリアスをキーにした入れ子の配列を返します。エンティティやコレクションではありません。
   [データを取得する](models/retrieving-your-data) を参照してください。フォームのデータ、

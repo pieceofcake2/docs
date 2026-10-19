@@ -126,7 +126,9 @@ Symfony, expect these differences:
   [conventions](getting-started/cakephp-conventions#file-and-classname-conventions),
   for example `PostsController` in `src/Controller/PostsController.php`. On the
   fork, Composer's classmap loads them; `App::uses()` is only needed for classes
-  Composer does not know, such as most plugin classes.
+  Composer does not know, such as most plugin classes. Your own classes can use
+  namespaces; [Namespaced Classes](development/namespaced-classes) lists where
+  CakePHP accepts them in its configuration.
 - **Arrays instead of objects.** `find()` takes an array of options and
   returns nested arrays keyed by model alias, such as
   `$post['Post']['title']`, not entities or collections. See

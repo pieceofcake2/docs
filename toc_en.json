@@ -439,6 +439,10 @@
           "link": "/development/configuration"
         },
         {
+          "text": "Namespaced Classes",
+          "link": "/development/namespaced-classes"
+        },
+        {
           "text": "Routing",
           "link": "/development/routing"
         },

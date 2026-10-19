@@ -61,6 +61,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
 - [静的解析](/ja/development/static-analysis)
 - [継続的インテグレーション](/ja/development/continuous-integration) (静的解析のページにあった CI のジョブサマリーの節をここに移動)
 - [AWS Lambda へのデプロイ](/ja/deployment/aws-lambda)
+- [名前空間のあるクラス](/ja/development/namespaced-classes)
 
 ### はじめに
 
@@ -70,6 +71,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - ページのタイトルを「入門」から「はじめに」に変更し、サイドバーの「はじめに」グループの先頭に移動。その他のページは、インストール、高度なインストール、Web サーバーの設定、フォルダ構造、規約、構造、典型的なリクエストの順に並べ替え
   - 「CakePHP 2.10 との違い」: バックポートの項目のリンク先を、GitHub のアップグレードガイドから [統合テスト](/ja/development/integration-testing) に変更
   - 「CakePHP 2.10 との違い」: バックポートの項目に、CakePHP 5 風のデバッグ用エラーページと `utf8` バリデーションルール (v2.12.6) を追加
+  - 「モダンな PHP から来た方へ」: 「名前空間がありません」の項目に、設定で名前空間のあるクラスを使うための [名前空間のあるクラス](/ja/development/namespaced-classes) へのリンクを追加
 - [インストール](/ja/installation)
   - 動作要件: PHP 8.0〜8.5、Composer、MySQL 5.6 以上など対応 DB、mbstring/intl/openssl の説明
   - `composer create-project pieceofcake2/app` による新規作成 (モダンな構成) と `database.php`、salt/cipherSeed の設定
