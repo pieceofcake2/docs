@@ -130,7 +130,9 @@ Where to sanitize:
   gets clean HTML, **or** keep the original and sanitize right before output.
   Do not output unsanitized user HTML anywhere, including in admin screens and
   emails.
-- Output sanitized HTML without `h()`, and escape every other field as usual.
+- Output sanitized HTML with `raw()` instead of `h()` (v2.12.10 and later), so
+  that the places that print HTML on purpose can be found:
+  `<?= raw($post['Post']['body_html']) ?>`. Escape every other field as usual.
 - Keep the allow list small. Allow only the elements and attributes the editor
   needs, and only `http`/`https` (and `mailto`) links.
 

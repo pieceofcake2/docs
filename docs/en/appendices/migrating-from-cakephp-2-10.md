@@ -26,6 +26,24 @@ Before migrating to this fork, ensure:
 4. **Upgrade PHP**: Update your PHP version to 8.0 or newer
 5. **Test Thoroughly**: Run your application's test suite to ensure compatibility
 
+## v2.12.10
+
+Changes in v2.12.10 that may affect applications already running on the fork.
+
+### New function `raw()` ([PR #84](https://github.com/pieceofcake2/cakephp/pull/84)) {#raw}
+
+- `raw()`, the opposite of `h()`, returns a value as it is, to print HTML
+  without escaping on purpose. Use it where a view prints HTML that the
+  application built or sanitized, instead of a bare `echo`:
+
+  ```php
+  <?= raw($post['Post']['body_html']) ?>
+  ```
+
+- An application or a package that already defines a global `raw()` keeps its
+  own function, as for the other global functions. Check that yours does the
+  same, or rename it. See [raw()](/core-libraries/global-constants-and-functions#raw).
+
 ## v2.12.7
 
 Changes in v2.12.7 that may affect applications already running on the fork.

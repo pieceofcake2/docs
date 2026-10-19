@@ -220,6 +220,27 @@ context は、同じドメイン内で一意にする翻訳文字列の一意の
 
 `htmlspecialchars()` の便利なラッパー。
 
+<a id="raw"></a>
+
+`function` **raw(string $html)**
+
+`$html` をそのまま文字列で返します。`h()` の逆で、アプリケーションが組み立てた HTML や無害化した HTML など、
+わざとエスケープせずに出力するときに使います。
+
+```php
+<?= raw($post['Post']['body_html']) ?>
+```
+
+エスケープしない HTML を出力する箇所に印を付けるので、その箇所を探して確かめられます。
+[pieceofcake2/security-sast](https://pieceofcake2.github.io/security-sast/ja/) はその一覧を出します。文字列、数値、
+真偽値、`null` (空文字列)、`__toString()` のあるオブジェクトを受け付け、配列には `InvalidArgumentException` を
+投げます。リクエストの値は渡さないでください。
+[出力時のエスケープと HTML の無害化](/ja/security/escaping-and-sanitizing-html#accepting-html) を参照してください。
+
+::: pieceofcake2
+v2.12.10 で追加。すでにグローバルな `raw()` を定義しているアプリケーションやパッケージでは、その関数が使われます。
+:::
+
 `function` **LogError(string $message)**
 
 `Log::write()` へのショートカット。
