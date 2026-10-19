@@ -26,9 +26,9 @@ Before migrating to this fork, ensure:
 4. **Upgrade PHP**: Update your PHP version to 8.0 or newer
 5. **Test Thoroughly**: Run your application's test suite to ensure compatibility
 
-## Unreleased
+## v2.13.0
 
-Changes in the next release that may affect applications already running on the fork.
+Changes in v2.13.0 that may affect applications already running on the fork.
 
 ### The framework classes in the `Cake` namespace ([PR #92](https://github.com/pieceofcake2/cakephp/pull/92)) {#cake-namespace}
 
