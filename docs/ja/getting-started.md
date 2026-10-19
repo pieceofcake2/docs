@@ -66,7 +66,7 @@ CakePHP 2.10 を知っていれば、その知識のほとんどはそのまま�
   [raw()](core-libraries/global-constants-and-functions#raw) をご覧ください (CakePHP 2.12.10)。
 - **Bake とプラグイン。** Bake とアップグレード用のシェルはコアからプラグインに移りました。
   また、主要な CakePHP 2 のプラグインも PHP 8 対応版がメンテナンスされています。
-  プラグインには CakePHP 5 の `src/` や `templates/` の構成も使えます (CakePHP 2.12.10 の次のリリース)。
+  プラグインには CakePHP 5 の `src/` や `templates/` の構成も使えます (CakePHP 2.13)。
   [Bakeでコード生成](console-and-shells/code-generation-with-bake) と
   [メンテナンスされているプラグイン](/ja/plugins/maintained-plugins) を参照してください。
 

@@ -43,7 +43,7 @@ CSV ファイルを出力する必要があるかもしれません。
 | ビュークラス | `src/View/` | `app/View/` |
 
 プラグイン内のテンプレートは、プラグイン自身の `View/` ディレクトリに置きます。
-たとえば `plugins/Contacts/View/Contacts/index.ctp` です。CakePHP 2.12.10 の次のリリースからは、
+たとえば `plugins/Contacts/View/Contacts/index.ctp` です。CakePHP 2.13 からは、
 `plugins/Contacts/templates/Contacts/index.ctp` のように `templates/` ディレクトリにも置けます。対応関係の全体は
 [CakePHP のフォルダ構造](/ja/getting-started/cakephp-folder-structure) を参照してください。
 

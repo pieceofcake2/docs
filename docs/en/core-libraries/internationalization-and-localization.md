@@ -169,7 +169,7 @@ plugins/DebugKit/Locale/por/LC_MESSAGES/debug_kit.po (Portuguese)
 ```
 
 Plugins keep their translations in their own `Locale/` directory in both
-layouts. Since the release after CakePHP 2.12.10, a plugin can also keep them
+layouts. Since CakePHP 2.13, a plugin can also keep them
 in `resources/locales/`, for example
 `plugins/DebugKit/resources/locales/fra/LC_MESSAGES/debug_kit.po`. CakePHP
 looks in `Locale/` first.

@@ -80,8 +80,7 @@ the points that changed:
   (CakePHP 2.12.10).
 - **Bake and plugins.** Bake and the upgrade shell moved out of the core into
   plugins, and the major CakePHP 2 plugins are maintained for PHP 8. Plugins
-  can use the `src/` and `templates/` layout of CakePHP 5 (the release after
-  CakePHP 2.12.10). See
+  can use the `src/` and `templates/` layout of CakePHP 5 (CakePHP 2.13). See
   [Code Generation with Bake](console-and-shells/code-generation-with-bake) and
   [Maintained Plugins](/plugins/maintained-plugins).
 

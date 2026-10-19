@@ -23,10 +23,13 @@ PHP のクラスは `Controller/` や `Model/` などに置き、テンプレー
 `View/` に置きます。プラグインのテストには `Test/Case/` と `Test/Fixture/`、または
 `tests/TestCase/` と `tests/Fixture/` のどちらも使えます。
 
-CakePHP 2.12.10 の次のリリースからは、アプリケーションや CakePHP 5 と同じ構成も使えます。
+CakePHP 2.13 からは、アプリケーションや CakePHP 5 と同じ構成も使えます。
 
     /plugins
         /ContactManager
+            /config
+                bootstrap.php
+                routes.php
             /src
                 /Controller
                     /Component
@@ -39,9 +42,20 @@ CakePHP 2.12.10 の次のリリースからは、アプリケーションや Cak
                 /Layouts
             /resources
                 /locales
+            /webroot
 
-CakePHP は `src/`、`templates/`、`resources/locales/`、`vendor/` を、CakePHP 2 の
-ディレクトリの後に、ディレクトリがあるときだけ探します。そのため、プラグインを 1 ディレクトリずつ
+`src/` のクラスは、CakePHP 5 と同じく名前空間のあるクラスです。たとえば
+`src/Controller/Component/ContactsComponent.php` には
+`ContactManager\Controller\Component\ContactsComponent` を置きます。プラグインの `composer.json` の
+`psr-4` (`"ContactManager\\": "src/"`) で Composer が読み込み、`App::uses()` は `src/` を探しません。
+設定にはプラグインの接頭辞を付けた名前 (`'ContactManager.Contacts'`) か
+`ContactsComponent::class` を書きます。[名前空間のあるクラス](/ja/development/namespaced-classes)
+を参照してください。
+
+`config/` には、CakePHP 2 の構成の `Config/` と同じく、`bootstrap.php`、`routes.php`、
+`Configure::load('ContactManager.file')` で読む設定ファイル、`config/Schema/` のスキーマを置きます。
+CakePHP は `src/`、`templates/`、`resources/locales/`、`vendor/` を CakePHP 2 のディレクトリの後に
+探し、`Config/` が無いときは `config/` を使います。そのため、プラグインを 1 ディレクトリずつ
 新しい構成に移すこともできます。
 新しくプラグインを作るときは、 [pieceofcake2/plugin](https://github.com/pieceofcake2/plugin)
 スケルトンをひな形にするとよいでしょう。

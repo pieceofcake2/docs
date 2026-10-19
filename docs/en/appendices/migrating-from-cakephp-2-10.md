@@ -26,17 +26,27 @@ Before migrating to this fork, ensure:
 4. **Upgrade PHP**: Update your PHP version to 8.0 or newer
 5. **Test Thoroughly**: Run your application's test suite to ensure compatibility
 
-## Unreleased
+## v2.13.0
 
-Changes in the next release that may affect applications already running on the fork.
+Changes in v2.13.0 that may affect applications already running on the fork.
+CakePHP 2.13 adds features; follow these steps to update from 2.12:
+
+1. Update the constraint in `composer.json` to `"pieceofcake2/cakephp": "^2.13"`
+   and run `composer update pieceofcake2/cakephp`.
+2. If you use pieceofcake2/phpstan-cakephp2, update it to `^1.0.1`, which knows
+   the classes of the `Cake` namespace.
+3. Read the items below, especially the class names in logs and output and the
+   comparisons of class names as strings, and run your tests.
 
 ### Plugins in the CakePHP 5 layout ([PR #88](https://github.com/pieceofcake2/cakephp/pull/88)) {#plugin-modern-layout}
 
-- A plugin can put its classes in `src/`, its templates in `templates/`, its
-  translations in `resources/locales/` and its vendor files in `vendor/`, as
-  the application does. CakePHP searches these directories after `Controller/`,
-  `View/`, `Locale/`, `Vendor/` and the other CakePHP 2 directories, and only
-  when they exist, so nothing changes for a plugin that does not have them.
+- A plugin can put namespaced classes in `src/` (loaded by Composer with the
+  plugin's `psr-4` entry), its templates in `templates/`, its translations in
+  `resources/locales/`, its vendor files in `vendor/` and its bootstrap, routes,
+  configuration files and schemas in `config/`, as the application does.
+  CakePHP searches these directories after `Controller/`, `View/`, `Locale/`,
+  `Vendor/` and the other CakePHP 2 directories, uses `config/` only when there
+  is no `Config/`, and nothing changes for a plugin that does not have them.
 - A plugin that already has one of these directories for another purpose gets
   more search paths. For example, `App::objects('MyPlugin.Controller')` also
   lists the classes in `src/Controller/`, and `App::import('Vendor', ...)`

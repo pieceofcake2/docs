@@ -24,11 +24,14 @@ classes in `Controller/`, `Model/` and so on, and templates in `View/` next to
 `View/Helper/`. Plugin tests can use either `Test/Case/` and `Test/Fixture/` or
 `tests/TestCase/` and `tests/Fixture/`.
 
-A plugin can also use the layout of the application and of CakePHP 5 (since
-the release after CakePHP 2.12.10):
+Since CakePHP 2.13, a plugin can also use the layout of the application and of
+CakePHP 5:
 
     /plugins
         /ContactManager
+            /config
+                bootstrap.php
+                routes.php
             /src
                 /Controller
                     /Component
@@ -41,10 +44,22 @@ the release after CakePHP 2.12.10):
                 /Layouts
             /resources
                 /locales
+            /webroot
 
-CakePHP searches `src/`, `templates/`, `resources/locales/` and `vendor/`
-after the CakePHP 2 directories, and only when they exist, so a plugin can
-also move to the new layout one directory at a time.
+The classes in `src/` are namespaced classes, as in CakePHP 5, for example
+`ContactManager\Controller\Component\ContactsComponent` in
+`src/Controller/Component/ContactsComponent.php`. Composer loads them with the
+`psr-4` entry of the plugin's `composer.json` (`"ContactManager\\": "src/"`);
+`App::uses()` does not look in `src/`. Name them in settings with the plugin
+prefix (`'ContactManager.Contacts'`) or with `ContactsComponent::class`; see
+[Namespaced Classes](/development/namespaced-classes).
+
+`config/` holds `bootstrap.php`, `routes.php`, the configuration files read with
+`Configure::load('ContactManager.file')` and the schemas in `config/Schema/`,
+like `Config/` of the CakePHP 2 layout. CakePHP searches `src/`, `templates/`,
+`resources/locales/` and `vendor/` after the CakePHP 2 directories, and uses
+`config/` when the plugin has no `Config/`, so a plugin can move to the new
+layout one directory at a time.
 The [pieceofcake2/plugin](https://github.com/pieceofcake2/plugin) skeleton is a
 good starting point for a new plugin.
 
