@@ -41,12 +41,13 @@ CakePHP 2.13 は機能を追加したリリースです。2.12 からは次の�
 - アプリケーションと同じように、プラグインも名前空間のあるクラスを `src/` (プラグインの `psr-4` で
   Composer が読み込みます)、テンプレートを `templates/`、翻訳を `resources/locales/`、ベンダーのファイルを
   `vendor/`、bootstrap、routes、設定ファイル、スキーマを `config/` に置けます。CakePHP はこれらの
-  ディレクトリを、`Controller/`、`View/`、`Locale/`、`Vendor/` などの CakePHP 2 のディレクトリの後に探し、
-  `config/` は `Config/` が無いときだけ使います。これらのディレクトリが無いプラグインでは何も変わりません。
-- これらのディレクトリを別の目的ですでに使っているプラグインでは、探すパスが増えます。たとえば
-  `App::objects('MyPlugin.Controller')` は `src/Controller/` のクラスも返し、
-  `App::import('Vendor', ...)` は、開発用にチェックアウトしたプラグインの Composer の `vendor/`
-  ディレクトリも探します。[プラグインの作成](/ja/plugins/how-to-create-plugins) を参照してください。
+  ディレクトリを先に探し、`Controller/`、`View/`、`Locale/`、`Vendor/`、`Config/` などの CakePHP 2 の
+  ディレクトリをその後に探します。これらのディレクトリが無いプラグインでは何も変わりません。
+  [プラグインの作成](/ja/plugins/how-to-create-plugins) を参照してください。
+
+> [!WARNING]
+> これらのディレクトリを別の目的ですでに使っているプラグインでは、そのファイルが先に見つかります。たとえば
+> `App::import('Vendor', ...)` は、開発用にチェックアウトしたプラグインの Composer の `vendor/` を先に探します。
 
 ## v2.12.11
 

@@ -43,9 +43,14 @@ CSV ファイルを出力する必要があるかもしれません。
 | ビュークラス | `src/View/` | `app/View/` |
 
 プラグイン内のテンプレートは、プラグイン自身の `View/` ディレクトリに置きます。
-たとえば `plugins/Contacts/View/Contacts/index.ctp` です。CakePHP 2.13 からは、
-`plugins/Contacts/templates/Contacts/index.ctp` のように `templates/` ディレクトリにも置けます。対応関係の全体は
+たとえば `plugins/Contacts/View/Contacts/index.ctp` です。対応関係の全体は
 [CakePHP のフォルダ構造](/ja/getting-started/cakephp-folder-structure) を参照してください。
+
+::: pieceofcake2 Added in version 2.13.0
+CakePHP 5 と同じく、`plugins/Contacts/templates/Contacts/index.ctp` のように `templates/` にも置けます。
+CakePHP は `View/` より先にそこを探します。[プラグインの作成](/ja/plugins/how-to-create-plugins) を
+参照してください。
+:::
 
 CakePHP のビューレイヤーはいくつかの異なるパーツによって作り上げられています。
 各パーツはそれぞれ役割を持っており、この章で説明していきます。

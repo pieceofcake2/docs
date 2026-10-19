@@ -44,14 +44,16 @@ CakePHP 2.13 adds features; follow these steps to update from 2.12:
   plugin's `psr-4` entry), its templates in `templates/`, its translations in
   `resources/locales/`, its vendor files in `vendor/` and its bootstrap, routes,
   configuration files and schemas in `config/`, as the application does.
-  CakePHP searches these directories after `Controller/`, `View/`, `Locale/`,
-  `Vendor/` and the other CakePHP 2 directories, uses `config/` only when there
-  is no `Config/`, and nothing changes for a plugin that does not have them.
-- A plugin that already has one of these directories for another purpose gets
-  more search paths. For example, `App::objects('MyPlugin.Controller')` also
-  lists the classes in `src/Controller/`, and `App::import('Vendor', ...)`
-  also looks in the Composer `vendor/` directory of a plugin checked out for
-  development. See [How To Create Plugins](/plugins/how-to-create-plugins).
+- CakePHP searches these directories first, and `Controller/`, `View/`,
+  `Locale/`, `Vendor/`, `Config/` and the other CakePHP 2 directories after
+  them. Nothing changes for a plugin that does not have them. See
+  [How To Create Plugins](/plugins/how-to-create-plugins).
+
+> [!WARNING]
+> In a plugin that already has one of these directories for another purpose,
+> its files are now found first. For example, `App::import('Vendor', ...)`
+> looks first in the Composer `vendor/` directory of a plugin checked out for
+> development.
 
 ## v2.12.11
 
