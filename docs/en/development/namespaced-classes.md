@@ -22,9 +22,9 @@ how `App.namespace` lets CakePHP find controllers, models and other classes
 in your namespace by their short names.
 
 > [!NOTE]
-> `App::className()` and `App.namespace` are available since the release after
-> CakePHP 2.12.10 ([#91](https://github.com/pieceofcake2/cakephp/pull/91)).
-> In CakePHP 2.12.10 and earlier, the settings with a suffix take a
+> `App::className()` and `App.namespace` are available since CakePHP 2.13
+> ([#91](https://github.com/pieceofcake2/cakephp/pull/91)). In CakePHP 2.12,
+> the settings with a suffix take a
 > namespaced name only without the suffix (`'Acme\Cache\Memory'`, not
 > `MemoryEngine::class`), and controllers, shells and models in `$uses` must
 > be global classes. The classes of the framework itself are still global;
@@ -237,7 +237,7 @@ $Post = ClassRegistry::init(['class' => Post::class, 'alias' => 'Post']);
 ```
 
 The name of the model is the class name without its namespace (`Post`), and
-the table name is derived from it (`posts`). In CakePHP 2.12.10 and earlier,
+the table name is derived from it (`posts`). In CakePHP 2.12,
 the name kept the namespace, so set `$name` in models that must also work
 there.
 

@@ -21,8 +21,8 @@ pieceofcake2/cakephp の設定項目と、それぞれで CakePHP がクラス�
 名前空間から短い名前で探す方法も説明します。
 
 > [!NOTE]
-> `App::className()` と `App.namespace` は CakePHP 2.12.10 の次のリリースから使えます
-> ([#91](https://github.com/pieceofcake2/cakephp/pull/91))。CakePHP 2.12.10 までは、
+> `App::className()` と `App.namespace` は CakePHP 2.13 から使えます
+> ([#91](https://github.com/pieceofcake2/cakephp/pull/91))。CakePHP 2.12 までは、
 > サフィックスの付く設定には名前空間のある名前をサフィックスを省いてしか書けず
 > (`MemoryEngine::class` ではなく `'Acme\Cache\Memory'`)、コントローラー、シェル、`$uses` の
 > モデルはグローバルなクラスにする必要があります。フレームワーク自体のクラスは今もグローバルな
@@ -235,7 +235,7 @@ $Post = ClassRegistry::init(['class' => Post::class, 'alias' => 'Post']);
 ```
 
 モデルの名前は、名前空間を除いたクラス名 (`Post`) になり、そこからテーブル名 (`posts`) が
-作られます。CakePHP 2.12.10 までは名前が名前空間を含んでいたので、そのバージョンでも動かす
+作られます。CakePHP 2.12 までは名前が名前空間を含んでいたので、そのバージョンでも動かす
 モデルには `$name` を書きます。
 
 `Controller::$uses` と `Controller::loadModel()` は、設定した名前をプロパティ名とモデルの
