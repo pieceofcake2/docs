@@ -34,6 +34,7 @@ directly.
 - [Security SCA](https://pieceofcake2.github.io/security-sca/) ([Markdown](https://github.com/pieceofcake2/security-sca/blob/1.x/docs/README.md)) - Known vulnerabilities of the Composer packages, as a PDF report
 - [Security SAST](https://pieceofcake2.github.io/security-sast/) ([Markdown](https://github.com/pieceofcake2/security-sast/blob/1.x/docs/README.md)) - Static analysis of the code and the configuration with Semgrep or PHPStan, as a PDF report
 - [Security DAST](https://pieceofcake2.github.io/security-dast/) ([Markdown](https://github.com/pieceofcake2/security-dast/blob/1.x/docs/README.md)) - Scan of the running application with OWASP ZAP, as a PDF report
+- [Security Headers Plugin](https://pieceofcake2.github.io/security-headers/) ([Markdown](https://github.com/pieceofcake2/security-headers/blob/1.x/docs/README.md)) - The security headers of every response, with a Content Security Policy that allows other sites and Google's tags by name
 
 ## Maintained plugins
 

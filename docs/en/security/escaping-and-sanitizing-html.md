@@ -158,6 +158,18 @@ reason about. Use `h()` and the libraries above instead; see
   nonce per request, send it in the header, and add it to every `<script>`
   tag you output. Start with `Content-Security-Policy-Report-Only` to find the
   scripts that still need a nonce.
+  [pieceofcake2/security-headers](https://pieceofcake2.github.io/security-headers/)
+  sends the header for every response, in report-only mode by default, and
+  generates the nonce with `contentSecurityPolicyNonce`; output it with
+  `$this->SecurityHeaders->nonce()` of its helper. Without the plugin, add the
+  header to `$this->response` in `AppController::beforeFilter()`.
+
+  ```php
+  Configure::write('SecurityHeaders', [
+      'contentSecurityPolicy' => "script-src 'strict-dynamic'; object-src 'none'; base-uri 'none'",
+      'contentSecurityPolicyNonce' => true,
+  ]);
+  ```
 - Mark cookies `httpOnly` so that scripts cannot read them. See the
   [Hardening Checklist](/security/hardening#cookies-and-sessions).
 
