@@ -53,6 +53,33 @@ CakePHP 2.13 adds features; follow these steps to update from 2.12:
   also looks in the Composer `vendor/` directory of a plugin checked out for
   development. See [How To Create Plugins](/plugins/how-to-create-plugins).
 
+## v2.12.11
+
+### Security fix: request URLs with extra leading slashes ([GHSA-wh43-gc93-wh4c](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-wh43-gc93-wh4c), [PR #90](https://github.com/pieceofcake2/cakephp/pull/90)) {#request-url-leading-slashes}
+
+- `CakeRequest` removes all the leading slashes and backslashes of the request
+  URL, not only the first one. A request to `//posts/view/1` is routed as
+  before, but `$this->request->url` is now `posts/view/1` instead of
+  `/posts/view/1`, and `here` is `/posts/view/1` instead of the
+  protocol-relative `//posts/view/1`. `here()` also collapses the leading
+  slashes of its result. URLs with a single leading slash are not affected. See [Security Fixes](/security/fixes#request-here).
+
+### HTML5 script, link and style tags ([PR #86](https://github.com/pieceofcake2/cakephp/pull/86)) {#html5-tags}
+
+- HtmlHelper outputs the tags of HTML5: `<script src="...">`,
+  `<link rel="stylesheet" href="...">`, `<style>`, and script blocks without
+  `type="text/javascript"` and without CDATA. Browsers treat both forms the
+  same, so the pages do not change.
+- Tests that compare the HTML of a page or of a helper may need the new tags.
+- To keep the former output, e.g. for pages served as XHTML, set `html5` to
+  `false` in the settings of the helper:
+
+  ```php
+  public $helpers = ['Html' => ['html5' => false]];
+  ```
+
+  See [HTML5 Tags](/core-libraries/helpers/html#html5).
+
 ## v2.12.10
 
 Changes in v2.12.10 that may affect applications already running on the fork.

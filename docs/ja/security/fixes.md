@@ -19,6 +19,7 @@ CakePHP 2.x は 2021年6月にサポートが終了し、CakePHP チームによ
 | [GHSA-w2mh-x92p-5p95](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-w2mh-x92p-5p95) | ビュー・レイアウト・エレメント名のパストラバーサル（CVE-2026-48820 に相当する CakePHP 2 の脆弱性） | 2.12.5 |
 | [GHSA-x4p9-p4cx-gxwx](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-x4p9-p4cx-gxwx) | プロトコル相対 URL の `Auth.redirect` によるログイン後のオープンリダイレクト | 2.12.5 |
 | [GHSA-65v5-h65v-8pgg](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-65v5-h65v-8pgg) | `'cipher'` 暗号化と `Security.cipherSeed` の弱さ: `CookieComponent` のデフォルトのタイプが安全でなく、長いシードの多くがシード 0 になる（警告付きで非推奨に。`'aes'` へ移行が必要） | 2.12.6 |
+| [GHSA-wh43-gc93-wh4c](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-wh43-gc93-wh4c) | `//` で始まるリクエスト URL により、フォームの送信先や現在の URL へのリダイレクトが別のホストになる（`CakeRequest::here()` がプロトコル相対 URL になる） | 2.12.11 |
 
 いずれの脆弱性も本家の CakePHP 2.10.24 に存在し、CakePHP チームによる修正はリリースされません。
 `cakephp/cakephp` を使っているアプリケーションは、`pieceofcake2/cakephp` に切り替えると修正を適用できます。
@@ -157,6 +158,36 @@ CakePHP 2 についての本家のアドバイザリはありません。`cakeph
 `Security::cipher()` を直接呼び出している場合は、`Security::encrypt()` と `Security::decrypt()` に
 置き換えてください。2.12.5 以前では、タイプとキーをコントローラーで設定してください。詳細と移行の手順は
 [cipherSeed と Cookie の 'cipher' タイプ](/ja/development/configuration#cipher-seed) を参照してください。
+
+### `//` で始まるリクエスト URL で `here` がプロトコル相対 URL になる {#request-here}
+
+`CakeRequest` は、リクエスト URL の先頭のスラッシュを 1 つだけ取り除いていました。`//example.com/posts`
+へのリクエストは `/example.com/posts` と同じようにルーティングされますが、`CakeRequest::$here` と `here()` は
+プロトコル相対 URL の `//example.com/posts` になり、ブラウザーはこれをホスト `example.com` の URL として扱います。
+その結果、次の問題がありました。
+
+- `url` を指定しない `FormHelper::create()` が `<form action="//example.com/posts">` を出力し、個人情報や
+  添付ファイルを含むフォームが別のホストに送信される
+- `$this->redirect($this->request->here(false))` が別のホストにリダイレクトする（オープンリダイレクト）
+- ベースパスがあるときも `/base//example.com/posts` の `here(false)` で同じ問題が起き、`/\example.com` も
+  `//example.com` と同じように扱われる
+
+`pieceofcake2/cakephp` 2.12.10 以前、`cakephp/cakephp` の 2.x の全リリースと 3.0 から 3.3 が影響を受けます。
+CakePHP 3.4 以降は、zend/laminas-diactoros がパスの先頭のスラッシュを 1 つにまとめるため影響を受けません。
+修正（[GHSA-wh43-gc93-wh4c](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-wh43-gc93-wh4c)、[PR #90](https://github.com/pieceofcake2/cakephp/pull/90)）では、リクエスト URL の先頭のスラッシュとバックスラッシュをすべて取り除きます。
+`CakeRequest::$url` が `/` や `\` で始まることはなくなり、`here` はベースパスの後に 1 つのスラッシュで始まります。
+`here()` も、返す値の先頭のスラッシュとバックスラッシュを 1 つにまとめるため、アプリケーションが `$here` を書き換えてもプロトコル相対の URL にはなりません。
+ルーティングは変わりません。
+
+**必要な対応:** 修正を含むリリースに更新してください。コードの変更は不要です。すぐに更新できない場合は、
+`FormHelper::create()` に `url` を明示し、先頭のスラッシュをまとめずに `here()` へリダイレクトしないでください。
+たとえば `AppController::beforeFilter()` で次のようにします。
+
+```php
+if (preg_match('#^[/\\\\]{2}#', $this->request->here(false))) {
+    return $this->redirect('/' . ltrim($this->request->url, '/\\'));
+}
+```
 
 ## その他のセキュリティ関連の変更
 
