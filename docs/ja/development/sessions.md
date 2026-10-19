@@ -33,6 +33,10 @@ CakePHP は PHP 標準の `session` 機能上に、ユーティリティ機能�
   置き換えます。
 - `Session.cacheLimiter` - セッションクッキーで使用するキャッシュ制御ヘッダーを定義できます。
   デフォルトは、 `must-revalidate` です。このオプションは 2.8.0 で追加されました。
+  Internet Explorer 8 以前のために残っている `must-revalidate` は PHP のキャッシュリミッターではないので、
+  PHP はセッションを開始するページにキャッシュのヘッダーを送りません。スケルトン v2.5.3 以降と同じく
+  `'nocache'` にすると、PHP は `Cache-Control: no-store, no-cache, must-revalidate` を送ります。
+  [セキュリティのチェックリスト](/ja/security/hardening#cookies-and-sessions) を参照してください。
 
 CakePHP のデフォルトは、アプリケーションが SSL プロトコル上にある時、
 `session.cookie_secure` が有効 (true) です。SSL と SSL 以外のプロトコルで

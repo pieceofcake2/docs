@@ -195,7 +195,8 @@ JavaScript ライブラリが変更可能な開発を簡素化する試みにお
 - `onDomReady` - domready イベント内にキャッシュされたスクリプトを
   ラップします。 (デフォルトは true)
 - `safe` - インラインブロックが生成された場合、 \<\![CDATA\[ ... \]\]\>
-  でラップしなければなりません。 (デフォルトは true)
+  でラップしなければなりません。 (デフォルトは false。HtmlHelper の設定 `html5` が false のときは true。
+  [HTML5 のタグ](/ja/core-libraries/helpers/html#html5) を参照してください)
 
 `writeBuffer()` でキャッシュファイルを作成するためには、
 `webroot/js` が書き込み可能で、ブラウザーがどのページで生成された
