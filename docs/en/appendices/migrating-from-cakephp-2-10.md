@@ -33,7 +33,7 @@ CakePHP 2.13 adds features; follow these steps to update from 2.12:
 
 1. Update the constraint in `composer.json` to `"pieceofcake2/cakephp": "^2.13"`
    and run `composer update pieceofcake2/cakephp`.
-2. If you use pieceofcake2/phpstan-cakephp2, update it to `^1.0.1`, which knows
+2. If you use pieceofcake2/phpstan-cakephp2, update it to `^1.1`, which knows
    the classes of the `Cake` namespace.
 3. Read the items below, especially the class names in logs and output and the
    comparisons of class names as strings, and run your tests.

@@ -31,7 +31,7 @@ CakePHP 2.13 は機能を追加したリリースです。2.12 からは次の�
 
 1. `composer.json` の制約を `"pieceofcake2/cakephp": "^2.13"` にして、
    `composer update pieceofcake2/cakephp` を実行します。
-2. pieceofcake2/phpstan-cakephp2 を使っている場合は、`Cake` 名前空間のクラスに対応した `^1.0.1`
+2. pieceofcake2/phpstan-cakephp2 を使っている場合は、`Cake` 名前空間のクラスに対応した `^1.1`
    に更新します。
 3. 下の項目、特にログや出力に出るクラス名と、クラス名を文字列で比べているコードを確かめてから、
    テストを実行します。
