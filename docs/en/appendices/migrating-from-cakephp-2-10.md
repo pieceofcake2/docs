@@ -62,6 +62,65 @@ Changes in the next release that may affect applications already running on the 
   `Acme\Model\Post`. Set `$name` if you relied on the old value.
   See [Namespaced Classes](/development/namespaced-classes).
 
+### Variadic arguments ([PR #89](https://github.com/pieceofcake2/cakephp/pull/89)) {#variadic-arguments}
+
+- The methods that read a variable number of arguments with `func_get_args()`
+  now declare them as a variadic parameter. The calls do not change:
+  `$this->Auth->allow('index', 'view')` and `$this->Post->query($sql, $params)`
+  work as before.
+- A class that **overrides** one of these methods must declare the same
+  variadic parameter. PHP refuses an override with fewer parameters and stops
+  when the class is loaded:
+  `Declaration of AppModel::query($sql) must be compatible with Model::query($sql, ...$params)`.
+
+  | Method | New signature |
+  | --- | --- |
+  | `Shell::dispatchShell()` | `dispatchShell(...$args)` |
+  | `AuthComponent::allow()`, `deny()` | `allow(...$args)`, `deny(...$args)` |
+  | `SecurityComponent::requirePost()`, `requireGet()`, `requirePut()`, `requireDelete()`, `requireSecure()`, `requireAuth()` | `requirePost(...$args)`, ... |
+  | `Controller::setAction()` | `setAction($action, ...$args)` |
+  | `Controller::validate()`, `validateErrors()` | `validate(...$args)`, `validateErrors(...$objects)` |
+  | `ContainableBehavior::contain()` | `contain(Model $Model, ...$args)` |
+  | `DboSource::query()` | `query(...$args)` |
+  | `Model::isUnique()` | `isUnique($fields, $or = true, ...$args)` |
+  | `Model::query()` | `query($sql, ...$params)` |
+  | `CakeRequest::data()`, `param()` | `data($name, ...$args)`, `param($name, ...$args)` |
+  | `CakeRequest::input()` | `input($callback = null, ...$args)` |
+  | `CakeRequest::allowMethod()`, `onlyAllow()` | `allowMethod($methods, ...$args)`, `onlyAllow($methods, ...$args)` |
+  | `Router::parseExtensions()` | `parseExtensions(...$extensions)` |
+  | `CakeTestCase::loadFixtures()` | `loadFixtures(...$args)` |
+  | `Hash::merge()` | `merge(array $data, $merge, ...$args)` |
+  | `Sanitize::stripTags()` | `stripTags($str, ...$tags)` |
+  | `Set::merge()` | `merge($data, $merge = null, ...$args)` |
+  | `HtmlHelper::css()` | `css($path, $options = [], ...$args)` |
+  | `HtmlHelper::useTag()` | `useTag($tag, ...$args)` |
+
+  ```php
+  // Before
+  public function query($sql)
+  {
+      return parent::query(...func_get_args());
+  }
+
+  // After
+  public function query($sql, ...$params)
+  {
+      return parent::query($sql, ...$params);
+  }
+  ```
+
+- The `rector` command of pieceofcake2/upgrade adds the parameters for you.
+  The changed code also runs on the versions before, so run it before you
+  update:
+
+  ```bash
+  bin/cake upgrade rector --rules variadic-arguments src tests
+  ```
+
+  See [Rector rules](/console-and-shells/upgrade-shell#rector-rules).
+- `CakeRequest::input(null)` now returns the raw input, as `input()` does.
+  It called `null` before.
+
 ## v2.12.10
 
 Changes in v2.12.10 that may affect applications already running on the fork.

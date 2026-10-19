@@ -58,3 +58,25 @@ vendor/bin/cake upgrade --help
 アップグレードシェルが扱うのは 1.3 から 2.0 への変更だけです。こうして変換したアプリケーションを
 Piece of Cake 2 フォークで動かすには、さらに CakePHP 2.10.24 まで更新する必要があります。
 [CakePHP 2.10 からの移行](/ja/appendices/migrating-from-cakephp-2-10) と付録の移行ガイドを参照してください。
+
+## Rector のルール {#rector-rules}
+
+`rector` コマンドは、pieceofcake2/cakephp の変更に合わせてコードを書き換える
+[Rector](https://getrector.com/) のルールを実行します。`all` には含まれません。上と同じように
+プラグインをインストールして読み込み (CakePHP 5 の構成では `config/bootstrap.php`)、書き換える
+ディレクトリやファイルを指定します。
+
+```bash
+# 変更を確認する
+bin/cake upgrade rector --rules variadic-arguments src tests --dry-run
+
+# 変更を適用する
+bin/cake upgrade rector --rules variadic-arguments src tests
+```
+
+| ルール | 変更 |
+| --- | --- |
+| `variadic-arguments` | 可変長引数を持つ CakePHP のメソッドをオーバーライドしているメソッドに、同じ可変長引数のパラメーターを追加します。たとえば `AppModel` の `query($sql)` は `query($sql, ...$params)` になります。[可変長引数](/ja/appendices/migrating-from-cakephp-2-10#variadic-arguments) を参照してください。 |
+
+書き換えたコードは変更前の pieceofcake2/cakephp でも動くので、更新する前にルールを実行できます。
+詳しくは [プラグインのドキュメント](https://pieceofcake2.github.io/upgrade/) を参照してください。
