@@ -15,19 +15,23 @@ the classmap of the application skeleton, and run `composer dump-autoload`:
 
 Composer then loads a class such as `Acme\Error\Renderer` from
 `lib/Error/Renderer.php` on first use, without `App::uses()`. Where CakePHP
-takes a class name in its configuration, however, whether you can give it a
-namespaced class depends on how CakePHP looks the class up. This page lists the
-configuration points of pieceofcake2/cakephp v2.12.x and how to use a
-namespaced class with each of them.
+takes a class name in its configuration, you can give it a namespaced class
+as `Foo::class`. This page lists the configuration points of
+pieceofcake2/cakephp and how CakePHP finds the class for each of them, and
+how `App.namespace` lets CakePHP find controllers, models and other classes
+in your namespace by their short names.
 
 > [!NOTE]
-> Namespace support for the framework itself (the `Cake\` namespace,
-> `App.namespace` and `App::className()`), merged in pull requests
-> [#23](https://github.com/pieceofcake2/cakephp/pull/23),
-> [#28](https://github.com/pieceofcake2/cakephp/pull/28) and
-> [#29](https://github.com/pieceofcake2/cakephp/pull/29), is on the
-> `feature/phpstan-level5` branch. It is not part of the `2.x` branch or of
-> any v2.12.x release, and this page does not apply to it.
+> `App::className()` and `App.namespace` are available since the release after
+> CakePHP 2.12.10 ([#91](https://github.com/pieceofcake2/cakephp/pull/91)).
+> In CakePHP 2.12.10 and earlier, the settings with a suffix take a
+> namespaced name only without the suffix (`'Acme\Cache\Memory'`, not
+> `MemoryEngine::class`), and controllers, shells and models in `$uses` must
+> be global classes. The classes of the framework itself are still global;
+> the `Cake\` namespace of pull requests
+> [#23](https://github.com/pieceofcake2/cakephp/pull/23) and
+> [#28](https://github.com/pieceofcake2/cakephp/pull/28) is only on the
+> `feature/phpstan-level5` branch.
 
 ## How CakePHP Looks Up a Class
 
@@ -40,14 +44,20 @@ CakePHP resolves a configured class in one of four ways:
   the name, then `class_exists()` and `new`. `pluginSplit()` only splits at a
   dot, so a namespaced name passes through unchanged, and `class_exists()`
   lets Composer load it. `Foo::class` works.
-- **Name plus a suffix.** CakePHP appends a suffix such as `Component` or
-  `Engine` to the name. A namespaced class works only if its name ends with
-  the suffix and you leave the suffix out: `'Acme\Cache\Memory'` loads
-  `Acme\Cache\MemoryEngine`, while `MemoryEngine::class` looks for
-  `Acme\Cache\MemoryEngineEngine` and fails.
-- **Name used as an alias.** The name also becomes a property or a model
-  alias. A namespaced name then gives a property like
-  `$this->{'Acme\Model\Post'}` and an SQL alias with backslashes.
+- **`App::className()`.** For the settings that add a suffix such as
+  `Component` or `Engine`, `App::className($name, $type, $suffix)` finds the
+  class. A name with a backslash is a fully qualified class name, and the
+  suffix is added only when the name does not end with it: both
+  `MemoryEngine::class` and `'Acme\Cache\Memory'` give
+  `Acme\Cache\MemoryEngine`. A short name (`'Memory'` or `'MyPlugin.Memory'`)
+  is looked up in the namespace of the plugin or in
+  [`App.namespace`](#app-namespace) as
+  `<Namespace>\<Type>\<Name><Suffix>`, then as the global class
+  `<Name><Suffix>`.
+- **Name used as an alias.** For components, helpers, behaviors and models,
+  the name also becomes a property or a model alias. A namespaced name then
+  gives a property like `$this->{'Acme\Model\Post'}` and an SQL alias with
+  backslashes, so give a short alias.
 
 ## Summary
 
@@ -63,15 +73,15 @@ CakePHP resolves a configured class in one of four ways:
 | `Acl.classname` | As given | Yes | `NullAcl::class` |
 | `'engine'` of `TextHelper`, `NumberHelper`, `TimeHelper` | As given | Yes | `['engine' => Text::class]` |
 | `CakeEmail::$_configClass` (in a subclass) | As given | Yes | `EmailConfig::class` |
-| `CakeLog` `'engine'` | Suffix `Log`, unless the name ends with it | Yes, if the class name ends with `Log` | `MemoryLog::class` |
-| `Cache` `'engine'` | Suffix `Engine` | Without the suffix | `'Acme\Cache\Memory'` |
-| `CakeEmail` `'transport'` | Suffix `Transport` | Without the suffix | `'Acme\Mail\Memory'` |
-| `AuthComponent` `authenticate`, `authorize`; `passwordHasher` | Suffix `Authenticate`, `Authorize`, `PasswordHasher` | Without the suffix | `['Acme\Auth\Token']` |
-| `Controller::$viewClass`, `RequestHandlerComponent::viewClassMap()` | Suffix `View` | Without the suffix | `'Acme\View\Csv'` |
-| `$components`, `$helpers`, `$actsAs` | Suffix, and the name is the alias | Without the suffix, with `className` | `'Greeting' => ['className' => 'Acme\Controller\Component\Greeting']` |
-| `ClassRegistry::init()`, association `'className'` | As given | Yes, with an alias and `$name` | `['class' => Post::class, 'alias' => 'Post']` |
-| `Controller::$uses`, `loadModel()` | The name is the alias | No | Use `ClassRegistry::init()` |
-| Controllers, shells, `App::uses()` | Global class names | No | |
+| `CakeLog` `'engine'` | Suffix `Log`, unless the name ends with it | Yes | `MemoryLog::class` |
+| `Cache` `'engine'` | `App::className()`, suffix `Engine` | Yes | `MemoryEngine::class` |
+| `CakeEmail` `'transport'` | `App::className()`, suffix `Transport` | Yes | `SesTransport::class` |
+| `AuthComponent` `authenticate`, `authorize`; `passwordHasher` | `App::className()`, suffix `Authenticate`, `Authorize`, `PasswordHasher` | Yes | `[TokenAuthenticate::class]` |
+| `Controller::$viewClass`, `RequestHandlerComponent::viewClassMap()` | `App::className()`, suffix `View` | Yes | `CsvView::class` |
+| `$components`, `$helpers`, `$actsAs` | `App::className()`, and the name is the alias | Yes, with an alias and `className` | `'Greeting' => ['className' => GreetingComponent::class]` |
+| `ClassRegistry::init()`, association `'className'` | `App::className()` | Yes, with an alias | `['class' => Post::class, 'alias' => 'Post']` |
+| `Controller::$uses`, `loadModel()` | The name is the alias | Short names in `App.namespace` | `public $uses = ['Post'];` |
+| Controllers, shells | `App::className()` from the URL or the command line | Short names in `App.namespace` | `App\Controller\PostsController` for `/posts` |
 
 ## Callables and Class Names as Given
 
@@ -121,68 +131,92 @@ string is treated as a class name.
 
 `Cache::_buildEngine()`, `CakeEmail::transportClass()`,
 `AuthComponent::constructAuthenticate()` and `constructAuthorize()`,
-`BaseAuthenticate::passwordHasher()` and `Controller::_getViewObject()` append
-a suffix to the configured name. Name the class with the suffix, and configure
-it without the suffix as a string:
+`BaseAuthenticate::passwordHasher()`, `Controller::_getViewObject()` and
+`RequestHandlerComponent::renderAs()` find the class with `App::className()`.
+Give the fully qualified class name, with or without the suffix:
 
 ```php
-// lib/Cache/MemoryEngine.php: class Acme\Cache\MemoryEngine
-Cache::config('memory', ['engine' => 'Acme\Cache\Memory']);
+// config/bootstrap.php
+use Acme\Cache\MemoryEngine;
+use Acme\Mail\SesTransport;
 
-// lib/Mail/SesTransport.php: class Acme\Mail\SesTransport
-$email = new CakeEmail(['transport' => 'Acme\Mail\Ses']);
+Cache::config('memory', ['engine' => MemoryEngine::class]);
 
-// lib/Auth/TokenAuthenticate.php: class Acme\Auth\TokenAuthenticate
-public $components = [
-    'Auth' => [
-        'authenticate' => ['Acme\Auth\Token'],
-        'authorize' => ['Acme\Auth\Admin'],
-    ],
-];
+$email = new CakeEmail(['transport' => SesTransport::class]);
 ```
 
+```php
+// src/Controller/AppController.php
+use Acme\Auth\AdminAuthorize;
+use Acme\Auth\TokenAuthenticate;
+
+class AppController extends Controller
+{
+    public $components = [
+        'Auth' => [
+            'authenticate' => [TokenAuthenticate::class],
+            'authorize' => [AdminAuthorize::class],
+        ],
+    ];
+}
+```
+
+The name without the suffix, such as `'Acme\Cache\Memory'`, keeps working.
 `CakeLog` (`LogEngineCollection::_getLogger()`) appends `Log` only when the
 name does not end with it, so `MemoryLog::class` works as well as
 `'Acme\Log\Memory'`.
 
-`RequestHandlerComponent::viewClassMap()` takes the same name without the
-`View` suffix as `Controller::$viewClass`, for example
-`$this->RequestHandler->viewClassMap('csv', 'Acme\View\Csv')` for
-`Acme\View\CsvView`.
+`RequestHandlerComponent::viewClassMap()` takes the same names as
+`Controller::$viewClass`, for example
+`$this->RequestHandler->viewClassMap('csv', CsvView::class)`.
 
 ## Components, Helpers and Behaviors
 
 `ComponentCollection::load()`, `HelperCollection::load()` and
-`BehaviorCollection::load()` append `Component`, `Helper` or `Behavior`, and
-use the name as the alias: the property of the controller or view, and the
-name in `Behaviors->loaded()`. Give a short alias as the key and the
-namespaced name without the suffix in `className`:
+`BehaviorCollection::load()` find the class with `App::className()` and use
+the name as the alias: the property of the controller or view, and the name
+in `Behaviors->loaded()`. Give a short alias as the key and the class in
+`className`:
 
 ```php
 // src/Controller/PostsController.php
-public $components = [
-    'Greeting' => ['className' => 'Acme\Controller\Component\Greeting'],
-];
-public $helpers = [
-    'Badge' => ['className' => 'Acme\View\Helper\Badge'],
-];
+use Acme\Controller\Component\GreetingComponent;
+use Acme\View\Helper\BadgeHelper;
+
+class PostsController extends AppController
+{
+    public $components = [
+        'Greeting' => ['className' => GreetingComponent::class],
+    ];
+
+    public $helpers = [
+        'Badge' => ['className' => BadgeHelper::class],
+    ];
+}
 ```
 
 ```php
 // src/Model/Post.php
-public $actsAs = [
-    'Stamp' => ['className' => 'Acme\Model\Behavior\Stamp'],
-];
+use Acme\Model\Behavior\StampBehavior;
+
+class Post extends AppModel
+{
+    public $actsAs = [
+        'Stamp' => ['className' => StampBehavior::class],
+    ];
+}
 ```
 
 `$this->Greeting` is then an `Acme\Controller\Component\GreetingComponent`.
-`GreetingComponent::class` in `className` does not work, because the suffix is
-appended again.
+A fully qualified class name as the key, without `className`, becomes an alias
+with backslashes. With [`App.namespace`](#app-namespace), a short name finds
+the class in your namespace: `public $components = ['Greeting'];`.
 
 ## Models
 
-`ClassRegistry::init()` and the `'className'` of an association use the class
-name as given, so namespaced models work when they have a plain alias:
+`ClassRegistry::init()` and the `'className'` of an association find the class
+with `App::className()`, so namespaced models work when they have a plain
+alias:
 
 ```php
 // lib/Model/Post.php
@@ -192,8 +226,6 @@ use AppModel;
 
 class Post extends AppModel
 {
-    public $name = 'Post';
-
     public $belongsTo = [
         'Author' => ['className' => Author::class],
     ];
@@ -204,21 +236,57 @@ class Post extends AppModel
 $Post = ClassRegistry::init(['class' => Post::class, 'alias' => 'Post']);
 ```
 
-Set `$name` in the model. Without it, the name is the class name with its
-namespace, and the default alias and table name are derived from it
-(`acme\model\posts`).
+The name of the model is the class name without its namespace (`Post`), and
+the table name is derived from it (`posts`). In CakePHP 2.12.10 and earlier,
+the name kept the namespace, so set `$name` in models that must also work
+there.
 
 `Controller::$uses` and `Controller::loadModel()` use the configured name as
-the property and the model alias, so a namespaced name there gives
-`$this->{'Acme\Model\Post'}` and queries with an `Acme\Model\Post` alias. Load
-namespaced models with `ClassRegistry::init()` instead, for example in
-`beforeFilter()`.
+the property and the model alias, so a fully qualified name there gives
+`$this->{'Acme\Model\Post'}` and queries with an `Acme\Model\Post` alias. Use
+short names with [`App.namespace`](#app-namespace), or load the models with
+`ClassRegistry::init()`, for example in `beforeFilter()`.
+
+<a id="app-namespace"></a>
+
+## App.namespace
+
+Set `App.namespace` to the namespace of your application, for example in
+`config/bootstrap.php`:
+
+```php
+Configure::write('App.namespace', 'App');
+```
+
+CakePHP then looks for the classes in that namespace first, and for the global
+classes after them:
+
+| Name | Class in the namespace |
+|---|---|
+| `/posts` (URL), `PostsController` | `App\Controller\PostsController` |
+| `bin/cake report` | `App\Console\Command\ReportShell` |
+| `ClassRegistry::init('Post')`, `$uses = ['Post']` | `App\Model\Post` |
+| `$components = ['Greeting']` | `App\Controller\Component\GreetingComponent` |
+| `$helpers = ['Badge']` | `App\View\Helper\BadgeHelper` |
+| `$actsAs = ['Stamp']` | `App\Model\Behavior\StampBehavior` |
+| `Cache` `'engine' => 'Memory'` | `App\Cache\Engine\MemoryEngine` |
+
+The namespace follows the package of each class (`<Namespace>\<Type>\<Name><Suffix>`).
+Register it with PSR-4 in `composer.json`, for example `"App\\": "src/"`.
+A controller in the namespace merges `$components` and `$helpers` with the
+`AppController` of the namespace (`App\Controller\AppController`), as a global
+controller does with the global `AppController`. The global classes of the
+framework, such as `AuthComponent` or `FileEngine`, are still found when the
+namespace has no class of that name.
+
+A name with a plugin prefix (`'MyPlugin.Greeting'`) is looked up in the
+namespace of the plugin (`MyPlugin\Controller\Component\GreetingComponent`)
+instead of `App.namespace`, then as the global class of the plugin.
 
 ## What Does Not Work
 
-- Controllers are found from the URL as `PostsController`
-  (`Dispatcher::_loadController()`), and shells from the command line as
-  `PostsShell`; they must be global classes.
 - `App::uses()` does not load namespaced classes: `App::load()` would look for
   a file named after the whole name in the package. Composer loads them, so
   `App::uses()` is not needed.
+- Fully qualified class names as the keys of `$uses`, `$components`,
+  `$helpers` and `$actsAs` become aliases with backslashes. Use short aliases.

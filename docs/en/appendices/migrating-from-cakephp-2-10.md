@@ -26,6 +26,25 @@ Before migrating to this fork, ensure:
 4. **Upgrade PHP**: Update your PHP version to 8.0 or newer
 5. **Test Thoroughly**: Run your application's test suite to ensure compatibility
 
+## Unreleased
+
+Changes in the next release that may affect applications already running on the fork.
+
+### Classes in a namespace: `App::className()` and `App.namespace` ([PR #91](https://github.com/pieceofcake2/cakephp/pull/91)) {#app-classname}
+
+- Settings with a suffix take fully qualified class names with the suffix:
+  `MemoryEngine::class` for a cache engine, `SesTransport::class` for a
+  transport, and the same for Auth objects, password hashers, view classes,
+  components, helpers, behaviors, shell tasks and shell helpers. The names
+  without the suffix (`'Acme\Cache\Memory'`) keep working.
+- `App.namespace` is new and not set by default. When it is set, controllers,
+  shells, models and the classes above are first looked up in that namespace
+  by their short name, e.g. `App\Controller\PostsController` for `/posts`.
+- `Controller::$name`, `Model::$name` and `Shell::$name` of a class in a
+  namespace no longer contain the namespace, e.g. `Post` instead of
+  `Acme\Model\Post`. Set `$name` if you relied on the old value.
+  See [Namespaced Classes](/development/namespaced-classes).
+
 ## v2.12.10
 
 Changes in v2.12.10 that may affect applications already running on the fork.

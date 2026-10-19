@@ -98,6 +98,38 @@ So basically the second param should simply match the folder path of the class f
 > files that are not available through Composer and do not follow
 > conventions, use `App::import()`.
 
+### Finding a class name
+
+`static` App::**className**(string $class, string $type = '', string $suffix = '')
+
+Return type: `string|null`
+
+Returns the name of the class that CakePHP uses for a name in its
+configuration, or `null` when the class does not exist (since the release
+after CakePHP 2.12.10). CakePHP uses it for components, helpers, behaviors,
+cache engines, email transports, view classes, controllers, shells and
+models:
+
+```php
+App::className('Auth', 'Controller/Component', 'Component');
+// 'AuthComponent'
+
+App::className(MemoryEngine::class, 'Cache/Engine', 'Engine');
+App::className('Acme\Cache\Memory', 'Cache/Engine', 'Engine');
+// both 'Acme\Cache\MemoryEngine'
+
+Configure::write('App.namespace', 'App');
+App::className('Post', 'Model');
+// 'App\Model\Post' if that class exists, else 'Post'
+```
+
+A name with a backslash is a fully qualified class name; the suffix is added
+only when the name does not end with it. Other names are looked up in the
+namespace of the plugin or of `App.namespace` as
+`<Namespace>\<Type>\<Name><Suffix>`, then as the global class
+`<Name><Suffix>` declared with `App::uses()` in the `<Type>` package. See
+[Namespaced Classes](/development/namespaced-classes).
+
 ### Loading files from plugins
 
 Loading classes in plugins works much the same as loading app and

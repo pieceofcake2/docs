@@ -94,6 +94,36 @@ Utilities
 > `App::uses()` や `App::import()` は必要ありません。Composer で入手できず、
 > 規則にも従っていない一部のファイルには `App::import()` を使ってください。
 
+### クラス名を探す
+
+`static` App::**className**(string $class, string $type = '', string $suffix = '')
+
+戻り値の型: `string|null`
+
+CakePHP の設定に書いた名前から、CakePHP が使うクラスの名前を返します。クラスが無ければ `null`
+を返します (CakePHP 2.12.10 の次のリリースから)。CakePHP は、コンポーネント、ヘルパー、
+ビヘイビア、キャッシュエンジン、メールのトランスポート、ビュークラス、コントローラー、シェル、
+モデルを探すときにこれを使います。
+
+```php
+App::className('Auth', 'Controller/Component', 'Component');
+// 'AuthComponent'
+
+App::className(MemoryEngine::class, 'Cache/Engine', 'Engine');
+App::className('Acme\Cache\Memory', 'Cache/Engine', 'Engine');
+// どちらも 'Acme\Cache\MemoryEngine'
+
+Configure::write('App.namespace', 'App');
+App::className('Post', 'Model');
+// クラスがあれば 'App\Model\Post'、無ければ 'Post'
+```
+
+バックスラッシュを含む名前は完全なクラス名として扱い、名前がサフィックスで終わらないときだけ
+サフィックスを付けます。ほかの名前は、プラグインの名前空間か `App.namespace` で
+`<名前空間>\<種類>\<名前><サフィックス>` を探し、次に `<種類>` のパッケージに `App::uses()`
+で宣言したグローバルなクラス `<名前><サフィックス>` を探します。
+[名前空間のあるクラス](/ja/development/namespaced-classes) を参照してください。
+
 ### プラグイン内のファイルをロードする
 
 プラグインからのクラスのローディングは、ロード元になるプラグインを指定する以外は、app や
