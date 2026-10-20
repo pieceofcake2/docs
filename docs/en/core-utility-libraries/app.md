@@ -118,12 +118,12 @@ App::className('Auth', 'Controller/Component', 'Component');
 // 'AuthComponent'
 
 App::className(MemoryEngine::class, 'Cache/Engine', 'Engine');
-App::className('Acme\Cache\Memory', 'Cache/Engine', 'Engine');
-// both 'Acme\Cache\MemoryEngine'
+App::className('Acme\Cache\Engine\Memory', 'Cache/Engine', 'Engine');
+// both 'Acme\Cache\Engine\MemoryEngine'
 
 Configure::write('App.namespace', 'App');
 App::className('Post', 'Model');
-// 'App\Model\Post' if that class exists, else 'Post'
+// 'App\Model\Post' if that class exists, else the global 'Post', else null
 ```
 
 A name with a backslash is a fully qualified class name; the suffix is added

@@ -14,16 +14,17 @@ PSR-4 の設定を書き、`composer dump-autoload` を実行します。
 ```
 
 これで、`Acme\Error\Renderer` のようなクラスを、最初に使うときに Composer が
-`lib/Error/Renderer.php` から読み込みます。`App::uses()` は要りません。CakePHP の設定に
-クラス名を書く場所には、名前空間のあるクラスを `Foo::class` で書けます。このページでは、
-pieceofcake2/cakephp の設定項目と、それぞれで CakePHP がクラスを探す方法をまとめます。
-また、`App.namespace` を設定して、コントローラーやモデルなどのクラスをアプリケーションの
-名前空間から短い名前で探す方法も説明します。
+`lib/Error/Renderer.php` から読み込みます。`App::uses()` は要りません。
+
+CakePHP の設定にクラス名を書く場所には、名前空間のあるクラスを `Foo::class` で書けます。
+このページでは、pieceofcake2/cakephp の設定項目と、それぞれで CakePHP がクラスを探す方法を
+まとめます。また、`App.namespace` を設定して、コントローラーやモデルなどのクラスを
+アプリケーションの名前空間から短い名前で探す方法も説明します。
 
 ::: pieceofcake2 Added in version 2.13.0
 `App::className()` と `App.namespace` ([#91](https://github.com/pieceofcake2/cakephp/pull/91))。
 CakePHP 2.12 までは、サフィックスの付く設定には名前空間のある名前をサフィックスを省いてしか書けず
-(`MemoryEngine::class` ではなく `'Acme\Cache\Memory'`)、コントローラー、シェル、`$uses` のモデルは
+(`MemoryEngine::class` ではなく `'Acme\Cache\Engine\Memory'`)、コントローラー、シェル、`$uses` のモデルは
 グローバルなクラスにする必要があります。
 :::
 
@@ -82,7 +83,7 @@ CakePHP は、設定されたクラスを次の 4 つのどれかの方法で解
 - **`App::className()`。** `Component` や `Engine` のようなサフィックスを付ける設定では、
   `App::className($name, $type, $suffix)` がクラスを探します。バックスラッシュを含む名前は
   完全なクラス名として扱い、名前がサフィックスで終わらないときだけサフィックスを付けます。
-  `MemoryEngine::class` と `'Acme\Cache\Memory'` のどちらも `Acme\Cache\MemoryEngine`
+  `MemoryEngine::class` と `'Acme\Cache\Engine\Memory'` のどちらも `Acme\Cache\Engine\MemoryEngine`
   になります。短い名前 (`'Memory'` や `'MyPlugin.Memory'`) は、プラグインの名前空間か
   [`App.namespace`](#app-namespace) で `<名前空間>\<種類>\<名前><サフィックス>` を探し、
   次にグローバルなクラス `<名前><サフィックス>` を探します。
@@ -98,16 +99,19 @@ CakePHP は、設定されたクラスを次の 4 つのどれかの方法で解
 | 設定 | 探し方 | `Foo::class` | 例 |
 |---|---|---|---|
 | `Error.handler`、`Exception.handler`、`Error.consoleHandler`、`Exception.consoleHandler` | コーラブル | 使える | `[Handler::class, 'handleError']` |
-| `Exception.renderer` | 書いたまま | 使える | `Renderer::class` |
+| `Exception.renderer` | `App::className()` | 使える | `Renderer::class` |
 | `Exception.skipLog` | `instanceof` | 使える | `[NotFoundException::class, MyException::class]` |
-| `Dispatcher.filters` | 書いたまま、またはコーラブル | 使える | `[HeaderFilter::class => ['header' => 'X-Frame-Options']]` |
-| データソースの `'datasource'` | 書いたまま | 使える | `'datasource' => MemorySource::class` |
-| `Session.handler.engine` | 書いたまま | 使える | `MemoryHandler::class` |
-| `'routeClass'`、`Router::defaultRouteClass()` | 書いたまま | 使える | `['routeClass' => SlugRoute::class]` |
-| `Acl.classname` | 書いたまま | 使える | `NullAcl::class` |
-| `TextHelper`、`NumberHelper`、`TimeHelper` の `'engine'` | 書いたまま | 使える | `['engine' => Text::class]` |
+| `Dispatcher.filters` | `App::className()`、またはコーラブル | 使える | `[HeaderFilter::class => ['header' => 'X-Frame-Options']]` |
+| データソースの `'datasource'` | `App::className()` | 使える | `'datasource' => MemorySource::class` |
+| `Session.handler.engine` | `App::className()` | 使える | `MemoryHandler::class` |
+| `'routeClass'`、`Router::defaultRouteClass()` | `App::className()` | 使える | `['routeClass' => SlugRoute::class]` |
+| `Acl.classname` | `App::className()` | 使える | `NullAcl::class` |
+| `TextHelper`、`NumberHelper`、`TimeHelper` の `'engine'` | `App::className()` | 使える | `['engine' => Text::class]` |
 | `CakeEmail::$_configClass` (サブクラスで) | 書いたまま | 使える | `EmailConfig::class` |
-| `CakeLog` の `'engine'` | 名前が `Log` で終わらなければサフィックス `Log` | 使える | `MemoryLog::class` |
+| `CakeLog` の `'engine'` | `App::className()`。名前が `Log` で終わらなければサフィックス `Log` | 使える | `MemoryLog::class` |
+| `HtmlHelper::loadConfig()` のリーダー | `App::className()`、サフィックス `Reader` | 使える | `['tags', TagReader::class]` |
+| `Validation` の地域ごとのルール (`$country`) | `App::className()`、サフィックス `Validation` | 使える | `Validation::postal($check, null, NlValidation::class)` |
+| `HttpSocket::$responseClass`、`configAuth()`、`configProxy()` | `App::className()`。認証の方式はサフィックス `Authentication` | 使える | `TokenAuthentication::class` |
 | `Cache` の `'engine'` | `App::className()`、サフィックス `Engine` | 使える | `MemoryEngine::class` |
 | `CakeEmail` の `'transport'` | `App::className()`、サフィックス `Transport` | 使える | `SesTransport::class` |
 | `AuthComponent` の `authenticate`、`authorize`、`passwordHasher` | `App::className()`、サフィックス `Authenticate`、`Authorize`、`PasswordHasher` | 使える | `[TokenAuthenticate::class]` |
@@ -128,7 +132,7 @@ CakePHP は、設定されたクラスを次の 4 つのどれかの方法で解
 use Acme\Error\Handler;
 use Acme\Error\Renderer;
 use Acme\Routing\Filter\HeaderFilter;
-use Acme\Session\DynamoDbHandler;
+use Acme\Model\Datasource\Session\DynamoDbHandler;
 
 Configure::write('Error', [
     'handler' => [Handler::class, 'handleError'],
@@ -152,7 +156,8 @@ Configure::write('Dispatcher.filters', [
 `Exception.renderer` は `ErrorHandler::handleException()`、`Session.handler.engine` は
 `CakeSession::_getHandler()`、データソースは `ConnectionManager::loadDataSource()`、ルートクラスは
 `Router::_validateRouteClass()`、`Acl.classname` は `AclComponent::__construct()` で読み込まれます。
-どれも設定した名前をそのまま使います。
+どれも `App::className()` でクラスを探します。完全なクラス名はそのまま使い、短い名前はプラグインの名前空間か
+[`App.namespace`](#app-namespace) で探し、これまでどおりグローバルなクラスも探します。
 
 `Dispatcher.filters` (`Dispatcher::_attachFilters()`) には、クラス名、設定の配列のキーにした
 クラス名、`'callable'` キーのある配列を書けます。`'callable'` キーには、クラス名か、`'on'` と
@@ -173,8 +178,8 @@ Configure::write('Dispatcher.filters', [
 
 ```php
 // config/bootstrap.php
-use Acme\Cache\MemoryEngine;
-use Acme\Mail\SesTransport;
+use Acme\Cache\Engine\MemoryEngine;
+use Acme\Network\Email\SesTransport;
 
 Cache::config('memory', ['engine' => MemoryEngine::class]);
 
@@ -183,8 +188,8 @@ $email = new CakeEmail(['transport' => SesTransport::class]);
 
 ```php
 // src/Controller/AppController.php
-use Acme\Auth\AdminAuthorize;
-use Acme\Auth\TokenAuthenticate;
+use Acme\Controller\Component\Auth\AdminAuthorize;
+use Acme\Controller\Component\Auth\TokenAuthenticate;
 
 class AppController extends Controller
 {
@@ -197,9 +202,9 @@ class AppController extends Controller
 }
 ```
 
-`'Acme\Cache\Memory'` のようにサフィックスを省いた名前も、これまでどおり使えます。
+`'Acme\Cache\Engine\Memory'` のようにサフィックスを省いた名前も、これまでどおり使えます。
 `CakeLog` (`LogEngineCollection::_getLogger()`) は、名前が `Log` で終わらないときだけ `Log` を
-付けるので、`'Acme\Log\Memory'` だけでなく `MemoryLog::class` も使えます。
+付けるので、`'Acme\Log\Engine\Memory'` だけでなく `MemoryLog::class` も使えます。
 
 `RequestHandlerComponent::viewClassMap()` には、`Controller::$viewClass` と同じ名前を書きます。
 たとえば `$this->RequestHandler->viewClassMap('csv', CsvView::class)` です。
@@ -292,6 +297,7 @@ CakePHP 2.12 までは名前が名前空間を含み (`Acme\Model\Post`)、テ�
 ## App.namespace
 
 ::: pieceofcake2 Added in version 2.13.0
+`App.namespace` の設定 ([#91](https://github.com/pieceofcake2/cakephp/pull/91))。
 :::
 
 `App.namespace` に、アプリケーションの名前空間を設定します。たとえば
@@ -314,11 +320,9 @@ CakePHP は、まずその名前空間のクラスを探し、無ければグロ
 | `Cache` の `'engine' => 'Memory'` | `App\Cache\Engine\MemoryEngine` |
 
 名前空間は、それぞれのクラスのパッケージに合わせます (`<名前空間>\<種類>\<名前><サフィックス>`)。
-`composer.json` の PSR-4 に、たとえば `"App\\": "src/"` と登録します。名前空間のコントローラーは、
-グローバルなコントローラーがグローバルな `AppController` とするのと同じように、名前空間の
-`AppController` (`App\Controller\AppController`) と `$components` と `$helpers` を
-マージします。`AuthComponent` や `FileEngine` のようなフレームワークのグローバルなクラスは、
-名前空間に同じ名前のクラスが無ければ、これまでどおり使われます。
+`composer.json` の PSR-4 に、たとえば `"App\\": "src/"` と登録します。`AuthComponent` や
+`FileEngine` のようなフレームワークのグローバルなクラスは、名前空間に同じ名前のクラスが無ければ、
+これまでどおり使われます。
 
 > [!NOTE]
 > `App.namespace` に既定値はありません。設定しなければ、これまでどおりグローバルなクラスだけを探します。
@@ -333,13 +337,49 @@ CakePHP は、まずその名前空間のクラスを探し、無ければグロ
 名前空間 (`MyPlugin\Controller\Component\GreetingComponent`) で探し、次にプラグインの
 グローバルなクラスを探します。
 
+### AppController と AppModel
+
+名前空間のコントローラーは、親クラスの `AppController` (`App\Controller\AppController`) と
+`$components` と `$helpers` をマージします。グローバルなコントローラーがグローバルな
+`AppController` とマージするのと同じです。親クラスは、名前が `AppController` であれば、
+`App.namespace` を設定していなくても、どの名前空間のクラスでもかまいません。プラグインの
+コントローラーは、プラグインの名前空間の `AppController`
+(`MyPlugin\Controller\MyPluginAppController`) ともマージします。名前空間のモデルも同じように、
+`App\Model\AppModel` と `$actsAs` と `$findMethods` をマージします。
+
+`CakeErrorController` のように、フレームワークには、グローバルな `AppController`、`AppModel`、
+`AppHelper`、`AppShell` を継承するクラスがあります。アプリケーションにこれらのクラスが
+`App.namespace` にしかないときは、`App::load()` がそのクラスにグローバルな名前を付けます。
+グローバルなクラスがあれば、そちらが使われます。
+
+### フィクスチャー
+
+フィクスチャーも名前空間のクラスにできます。`$fixtures` の名前から、次のクラスを探し、
+無ければこれまでどおりグローバルなクラスを探します。
+
+| 名前 | 名前空間のクラス |
+|---|---|
+| `'app.article'` | `App\Test\Fixture\ArticleFixture` (`App.namespace` の名前空間) |
+| `'plugin.my_plugin.article'` | `MyPlugin\Test\Fixture\ArticleFixture` |
+| `'core.article'` | `Cake\Test\Fixture\ArticleFixture` |
+
+フィクスチャーの名前とテーブル名は、名前空間を除いたクラス名から作られます
+(`ArticleFixture` なら `Article` と `articles`)。
+
+### キャッシュしたビュー
+
+`Controller::$controllerClass` と `View::$controllerClass` は、コントローラーのクラス名
+(`App\Controller\PostsController` など) です。`CacheHelper` がキャッシュするビューは、この名前で
+名前空間のコントローラーを作ります。
+
 <a id="what-does-not-work"></a>
 
 ## 使えないもの
 
 - `App::uses()` では名前空間のあるクラスを読み込めません。`App::load()` は、名前全体を
   ファイル名にしてパッケージの中を探します。名前空間のあるクラスは Composer が読み込むので、
-  `App::uses()` は要りません。
+  `App::uses()` は要りません。`App::import()` は、名前空間のあるクラスも
+  [`App::className()`](/ja/core-utility-libraries/app) で探します。
 
 > [!WARNING]
 > `$uses`、`$components`、`$helpers`、`$actsAs` のキーに完全なクラス名を書くと、エイリアスが

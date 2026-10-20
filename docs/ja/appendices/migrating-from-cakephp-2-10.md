@@ -54,16 +54,23 @@ v2.13.0 の変更のうち、すでにフォークで動いているアプリケ
 - サフィックスの付く設定に、サフィックスの付いた完全なクラス名を書けます。キャッシュエンジンなら
   `MemoryEngine::class`、トランスポートなら `SesTransport::class` です。Auth のオブジェクト、
   パスワードハッシャー、ビュークラス、コンポーネント、ヘルパー、ビヘイビア、シェルのタスク、
-  シェルヘルパーも同じです。サフィックスを省いた名前 (`'Acme\Cache\Memory'`) も、これまでどおり
+  シェルヘルパーも同じです。サフィックスを省いた名前 (`'Acme\Cache\Engine\Memory'`) も、これまでどおり
   使えます。
 - `App.namespace` は新しい設定で、既定では設定されていません。設定すると、コントローラー、シェル、
   モデルと上のクラスを、まずその名前空間から短い名前で探します。たとえば `/posts` なら
   `App\Controller\PostsController` です。
   [名前空間のあるクラス](/ja/development/namespaced-classes) を参照してください。
 
+- `Controller` と `View` に公開プロパティ `$controllerClass` が加わり、コントローラーからビューに渡す
+  変数にも含まれます。同じ名前のプロパティを持つサブクラスは、名前を変えてください。
+
 > [!WARNING]
 > 名前空間のあるクラスの `Controller::$name`、`Model::$name`、`Shell::$name` は、名前空間を含まなくなります。
 > たとえば `Acme\Model\Post` ではなく `Post` です。前の値に頼っていた場合は `$name` を書いてください。
+
+> [!WARNING]
+> 名前空間のあるコントローラーは、`App.namespace` を設定していなくても、親クラスの `AppController`
+> (どの名前空間でも) と `$components` と `$helpers` をマージするようになります。
 
 ## v2.12.11
 

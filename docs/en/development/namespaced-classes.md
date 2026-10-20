@@ -25,7 +25,7 @@ in your namespace by their short names.
 `App::className()` and `App.namespace`
 ([#91](https://github.com/pieceofcake2/cakephp/pull/91)). In CakePHP 2.12, the
 settings with a suffix take a namespaced name only without the suffix
-(`'Acme\Cache\Memory'`, not `MemoryEngine::class`), and controllers, shells
+(`'Acme\Cache\Engine\Memory'`, not `MemoryEngine::class`), and controllers, shells
 and models in `$uses` must be global classes.
 :::
 
@@ -87,8 +87,8 @@ CakePHP resolves a configured class in one of four ways:
   `Component` or `Engine`, `App::className($name, $type, $suffix)` finds the
   class. A name with a backslash is a fully qualified class name, and the
   suffix is added only when the name does not end with it: both
-  `MemoryEngine::class` and `'Acme\Cache\Memory'` give
-  `Acme\Cache\MemoryEngine`. A short name (`'Memory'` or `'MyPlugin.Memory'`)
+  `MemoryEngine::class` and `'Acme\Cache\Engine\Memory'` give
+  `Acme\Cache\Engine\MemoryEngine`. A short name (`'Memory'` or `'MyPlugin.Memory'`)
   is looked up in the namespace of the plugin or in
   [`App.namespace`](#app-namespace) as
   `<Namespace>\<Type>\<Name><Suffix>`, then as the global class
@@ -103,16 +103,19 @@ CakePHP resolves a configured class in one of four ways:
 | Configuration | Lookup | `Foo::class` | Example |
 |---|---|---|---|
 | `Error.handler`, `Exception.handler`, `Error.consoleHandler`, `Exception.consoleHandler` | Callable | Yes | `[Handler::class, 'handleError']` |
-| `Exception.renderer` | As given | Yes | `Renderer::class` |
+| `Exception.renderer` | `App::className()` | Yes | `Renderer::class` |
 | `Exception.skipLog` | `instanceof` | Yes | `[NotFoundException::class, MyException::class]` |
-| `Dispatcher.filters` | As given, or a callable | Yes | `[HeaderFilter::class => ['header' => 'X-Frame-Options']]` |
-| Datasource `'datasource'` | As given | Yes | `'datasource' => MemorySource::class` |
-| `Session.handler.engine` | As given | Yes | `MemoryHandler::class` |
-| `'routeClass'`, `Router::defaultRouteClass()` | As given | Yes | `['routeClass' => SlugRoute::class]` |
-| `Acl.classname` | As given | Yes | `NullAcl::class` |
-| `'engine'` of `TextHelper`, `NumberHelper`, `TimeHelper` | As given | Yes | `['engine' => Text::class]` |
+| `Dispatcher.filters` | `App::className()`, or a callable | Yes | `[HeaderFilter::class => ['header' => 'X-Frame-Options']]` |
+| Datasource `'datasource'` | `App::className()` | Yes | `'datasource' => MemorySource::class` |
+| `Session.handler.engine` | `App::className()` | Yes | `MemoryHandler::class` |
+| `'routeClass'`, `Router::defaultRouteClass()` | `App::className()` | Yes | `['routeClass' => SlugRoute::class]` |
+| `Acl.classname` | `App::className()` | Yes | `NullAcl::class` |
+| `'engine'` of `TextHelper`, `NumberHelper`, `TimeHelper` | `App::className()` | Yes | `['engine' => Text::class]` |
 | `CakeEmail::$_configClass` (in a subclass) | As given | Yes | `EmailConfig::class` |
-| `CakeLog` `'engine'` | Suffix `Log`, unless the name ends with it | Yes | `MemoryLog::class` |
+| `CakeLog` `'engine'` | `App::className()`, suffix `Log` unless the name ends with it | Yes | `MemoryLog::class` |
+| `HtmlHelper::loadConfig()` reader | `App::className()`, suffix `Reader` | Yes | `['tags', TagReader::class]` |
+| Localized `Validation` rules (`$country`) | `App::className()`, suffix `Validation` | Yes | `Validation::postal($check, null, NlValidation::class)` |
+| `HttpSocket::$responseClass`, `configAuth()`, `configProxy()` | `App::className()`, suffix `Authentication` for the methods | Yes | `TokenAuthentication::class` |
 | `Cache` `'engine'` | `App::className()`, suffix `Engine` | Yes | `MemoryEngine::class` |
 | `CakeEmail` `'transport'` | `App::className()`, suffix `Transport` | Yes | `SesTransport::class` |
 | `AuthComponent` `authenticate`, `authorize`; `passwordHasher` | `App::className()`, suffix `Authenticate`, `Authorize`, `PasswordHasher` | Yes | `[TokenAuthenticate::class]` |
@@ -131,7 +134,7 @@ These settings accept `Foo::class`:
 use Acme\Error\Handler;
 use Acme\Error\Renderer;
 use Acme\Routing\Filter\HeaderFilter;
-use Acme\Session\DynamoDbHandler;
+use Acme\Model\Datasource\Session\DynamoDbHandler;
 
 Configure::write('Error', [
     'handler' => [Handler::class, 'handleError'],
@@ -156,7 +159,10 @@ Configure::write('Dispatcher.filters', [
 `Session.handler.engine` in `CakeSession::_getHandler()`, the datasource in
 `ConnectionManager::loadDataSource()`, the route class in
 `Router::_validateRouteClass()` and `Acl.classname` in
-`AclComponent::__construct()`. All of them use the configured name unchanged.
+`AclComponent::__construct()`. All of them find the class with
+`App::className()`: a fully qualified name as given, or a short name in the
+namespace of a plugin, in [`App.namespace`](#app-namespace) or as a global
+class, as before.
 
 `Dispatcher.filters` (`Dispatcher::_attachFilters()`) takes a class name, a
 class name as the key of its settings, or an array with a `'callable'` key.
@@ -176,8 +182,8 @@ Give the fully qualified class name, with or without the suffix:
 
 ```php
 // config/bootstrap.php
-use Acme\Cache\MemoryEngine;
-use Acme\Mail\SesTransport;
+use Acme\Cache\Engine\MemoryEngine;
+use Acme\Network\Email\SesTransport;
 
 Cache::config('memory', ['engine' => MemoryEngine::class]);
 
@@ -186,8 +192,8 @@ $email = new CakeEmail(['transport' => SesTransport::class]);
 
 ```php
 // src/Controller/AppController.php
-use Acme\Auth\AdminAuthorize;
-use Acme\Auth\TokenAuthenticate;
+use Acme\Controller\Component\Auth\AdminAuthorize;
+use Acme\Controller\Component\Auth\TokenAuthenticate;
 
 class AppController extends Controller
 {
@@ -200,10 +206,10 @@ class AppController extends Controller
 }
 ```
 
-The name without the suffix, such as `'Acme\Cache\Memory'`, keeps working.
+The name without the suffix, such as `'Acme\Cache\Engine\Memory'`, keeps working.
 `CakeLog` (`LogEngineCollection::_getLogger()`) appends `Log` only when the
 name does not end with it, so `MemoryLog::class` works as well as
-`'Acme\Log\Memory'`.
+`'Acme\Log\Engine\Memory'`.
 
 `RequestHandlerComponent::viewClassMap()` takes the same names as
 `Controller::$viewClass`, for example
@@ -295,6 +301,7 @@ short names with [`App.namespace`](#app-namespace), or load the models with
 ## App.namespace
 
 ::: pieceofcake2 Added in version 2.13.0
+The `App.namespace` setting ([#91](https://github.com/pieceofcake2/cakephp/pull/91)).
 :::
 
 Set `App.namespace` to the namespace of your application, for example in
@@ -319,11 +326,8 @@ classes after them:
 
 The namespace follows the package of each class (`<Namespace>\<Type>\<Name><Suffix>`).
 Register it with PSR-4 in `composer.json`, for example `"App\\": "src/"`.
-A controller in the namespace merges `$components` and `$helpers` with the
-`AppController` of the namespace (`App\Controller\AppController`), as a global
-controller does with the global `AppController`. The global classes of the
-framework, such as `AuthComponent` or `FileEngine`, are still found when the
-namespace has no class of that name.
+The global classes of the framework, such as `AuthComponent` or `FileEngine`,
+are still found when the namespace has no class of that name.
 
 > [!NOTE]
 > `App.namespace` has no default value: when it is not set, CakePHP only looks
@@ -339,11 +343,48 @@ A name with a plugin prefix (`'MyPlugin.Greeting'`) is looked up in the
 namespace of the plugin (`MyPlugin\Controller\Component\GreetingComponent`)
 instead of `App.namespace`, then as the global class of the plugin.
 
+### AppController and AppModel
+
+A controller in the namespace merges `$components` and `$helpers` with its
+parent class `AppController` (`App\Controller\AppController`), as a global
+controller does with the global `AppController`. The parent class may be in any
+namespace, also without `App.namespace`, as long as it is named
+`AppController`. A plugin controller also merges them with the `AppController`
+of the namespace of its plugin (`MyPlugin\Controller\MyPluginAppController`).
+A model in the namespace merges `$actsAs` and `$findMethods` with
+`App\Model\AppModel` in the same way.
+
+Some classes of the framework, such as `CakeErrorController`, extend the global
+`AppController`, `AppModel`, `AppHelper` or `AppShell`. When the application
+has these classes only in `App.namespace`, `App::load()` gives the global name
+to that class. A global class is used when there is one.
+
+### Fixtures
+
+Fixtures may be namespaced classes too. For the names in `$fixtures`, CakePHP
+looks for these classes, then for the global classes as before:
+
+| Name | Class in the namespace |
+|---|---|
+| `'app.article'` | `App\Test\Fixture\ArticleFixture` (in `App.namespace`) |
+| `'plugin.my_plugin.article'` | `MyPlugin\Test\Fixture\ArticleFixture` |
+| `'core.article'` | `Cake\Test\Fixture\ArticleFixture` |
+
+The name and the table of a fixture come from the class name without the
+namespace (`Article` and `articles` for `ArticleFixture`).
+
+### Cached Views
+
+`Controller::$controllerClass` and `View::$controllerClass` hold the class name
+of the controller, such as `App\Controller\PostsController`. The views cached
+by `CacheHelper` create a namespaced controller by that name.
+
 ## What Does Not Work
 
 - `App::uses()` does not load namespaced classes: `App::load()` would look for
   a file named after the whole name in the package. Composer loads them, so
-  `App::uses()` is not needed.
+  `App::uses()` is not needed. `App::import()` also finds namespaced classes
+  with [`App::className()`](/en/core-utility-libraries/app).
 
 > [!WARNING]
 > Fully qualified class names as the keys of `$uses`, `$components`,
