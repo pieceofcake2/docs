@@ -52,10 +52,10 @@ CakePHP は、設定されたクラスを次の 4 つのどれかの方法で解
   になります。短い名前 (`'Memory'` や `'MyPlugin.Memory'`) は、プラグインの名前空間か
   [`App.namespace`](#app-namespace) で `<名前空間>\<種類>\<名前><サフィックス>` を探し、
   次にグローバルなクラス `<名前><サフィックス>` を探します。
-- **エイリアスとして使う名前。** コンポーネント、ヘルパー、ビヘイビア、モデルでは、名前が
-  プロパティ名やモデルのエイリアスにもなります。名前空間のある名前では、
-  `$this->{'Acme\Model\Post'}` のようなプロパティと、バックスラッシュを含む SQL の
-  エイリアスになるので、短いエイリアスを付けます。
+- **エイリアスとして使う名前。** コンポーネント、ヘルパー、ビヘイビア、シェルのタスク、モデルでは、
+  名前がプロパティ名やモデルのエイリアスにもなります。完全なクラス名では、名前空間とサフィックスを
+  除いたクラス名がエイリアスになります。`GreetingComponent::class` なら `$this->Greeting`、
+  `Post::class` ならエイリアス `Post` です。
 
 <a id="summary"></a>
 
@@ -81,9 +81,9 @@ CakePHP は、設定されたクラスを次の 4 つのどれかの方法で解
 | `CakeEmail` の `'transport'` | `App::className()`、サフィックス `Transport` | 使える | `SesTransport::class` |
 | `AuthComponent` の `authenticate`、`authorize`、`passwordHasher` | `App::className()`、サフィックス `Authenticate`、`Authorize`、`PasswordHasher` | 使える | `[TokenAuthenticate::class]` |
 | `Controller::$viewClass`、`RequestHandlerComponent::viewClassMap()` | `App::className()`、サフィックス `View` | 使える | `CsvView::class` |
-| `$components`、`$helpers`、`$actsAs` | `App::className()`。名前がエイリアスになる | エイリアスを付けて `className` で指定 | `'Greeting' => ['className' => GreetingComponent::class]` |
-| `ClassRegistry::init()`、アソシエーションの `'className'` | `App::className()` | エイリアスがあれば使える | `['class' => Post::class, 'alias' => 'Post']` |
-| `Controller::$uses`、`loadModel()` | 名前がエイリアスになる | `App.namespace` の短い名前 | `public $uses = ['Post'];` |
+| `$components`、`$helpers`、`$actsAs`、シェルの `$tasks` | `App::className()`。名前がエイリアスになる | 使える。エイリアスは短いクラス名 | `[GreetingComponent::class]` |
+| `ClassRegistry::init()`、アソシエーションのキーと `'className'`、`'with'` | `App::className()`。名前がエイリアスになる | 使える。エイリアスは短いクラス名 | `ClassRegistry::init(Post::class)` |
+| `Controller::$uses`、`loadModel()`、シェルの `$uses` | 名前がエイリアスになる | 使える。エイリアスは短いクラス名 | `public $uses = [Post::class];` |
 | コントローラー、シェル | URL やコマンドラインから `App::className()` | `App.namespace` の短い名前 | `/posts` なら `App\Controller\PostsController` |
 
 <a id="callables-and-class-names-as-given"></a>
@@ -178,10 +178,10 @@ class AppController extends Controller
 
 ## コンポーネント、ヘルパー、ビヘイビア
 
-`ComponentCollection::load()`、`HelperCollection::load()`、`BehaviorCollection::load()` は、
-`App::className()` でクラスを探し、名前をエイリアス (コントローラーやビューのプロパティ名、
-`Behaviors->loaded()` の名前) にします。キーに短いエイリアスを書き、`className` に
-クラスを書きます。
+`ComponentCollection::load()`、`HelperCollection::load()`、`BehaviorCollection::load()`、
+`TaskCollection::load()` は、`App::className()` でクラスを探し、名前をエイリアス (コントローラー、
+ビュー、シェルのプロパティ名や、`Behaviors->loaded()` の名前) にします。完全なクラス名を書くと、
+名前空間とサフィックスを除いたクラス名がエイリアスになります。
 
 ```php
 // src/Controller/PostsController.php
@@ -191,12 +191,10 @@ use Acme\View\Helper\BadgeHelper;
 class PostsController extends AppController
 {
     public $components = [
-        'Greeting' => ['className' => GreetingComponent::class],
+        GreetingComponent::class => ['greeting' => 'Hello'],
     ];
 
-    public $helpers = [
-        'Badge' => ['className' => BadgeHelper::class],
-    ];
+    public $helpers = [BadgeHelper::class];
 }
 ```
 
@@ -206,23 +204,45 @@ use Acme\Model\Behavior\StampBehavior;
 
 class Post extends AppModel
 {
-    public $actsAs = [
-        'Stamp' => ['className' => StampBehavior::class],
-    ];
+    public $actsAs = [StampBehavior::class];
 }
 ```
 
-これで `$this->Greeting` は `Acme\Controller\Component\GreetingComponent` になります。
-`className` を使わずに完全なクラス名をキーに書くと、エイリアスがバックスラッシュを含む名前に
-なります。[`App.namespace`](#app-namespace) を設定すれば、`public $components = ['Greeting'];`
+これで `$this->Greeting` は `Acme\Controller\Component\GreetingComponent` に、ビューの `$this->Badge` は
+`Acme\View\Helper\BadgeHelper` になり、ビヘイビアは `Stamp` という名前で読み込まれます。シェルの
+`$tasks` も同じで、`ReportTask::class` は `$this->Report` になります。
+`$this->Components->load(GreetingComponent::class)` のように `load()` に渡しても同じです。
+`enable()`、`disable()`、`unload()`、`loaded()`、`enabled()`、`set()` にも、エイリアスの代わりに
+完全なクラス名を渡せます。
+
+別のエイリアスを使うときは、これまでどおりキーにエイリアスを書き、`className` にクラスを書きます。
+たとえば `'Hello' => ['className' => GreetingComponent::class]` なら `$this->Hello` です。
+[`App.namespace`](#app-namespace) を設定すれば、`public $components = ['Greeting'];`
 のように短い名前で名前空間のクラスを使えます。
+
+親クラス (`AppController`、`AppModel`、プラグインの `AppController`、シェルの親クラス) とサブクラスの
+`$components`、`$helpers`、`$actsAs`、`$tasks` をマージするときは、完全なクラス名のキーをエイリアスに
+置き換え、クラス名を `className` に入れます。そのため、`AppController` の `'Greeting' => [...]` と
+`PostsController` の `GreetingComponent::class => [...]` は、短い名前どうしと同じように、設定を
+マージした 1 つの `Greeting` になります。
+
+クラスが見つからないときのエラーには、完全なクラス名がサフィックスで終わらないときだけサフィックスを
+付けた名前が出ます。たとえば `Acme\Controller\Component\GreetingComponent` です。
+
+::: pieceofcake2 Changed in version 2.13.0
+完全なクラス名のキーから、名前空間とサフィックスを除いたエイリアスを作ります
+([#91](https://github.com/pieceofcake2/cakephp/pull/91))。CakePHP 2.12 までは、エイリアスが
+バックスラッシュを含む名前になっていました。そのバージョンでも動かすコードでは、
+`'Greeting' => ['className' => GreetingComponent::class]` のように短いエイリアスを付けます。
+:::
 
 <a id="models"></a>
 
 ## モデル
 
 `ClassRegistry::init()` とアソシエーションの `'className'` は `App::className()` でクラスを
-探すので、名前空間のあるモデルも、普通のエイリアスを付ければ使えます。
+探します。エイリアスを付けずに完全なクラス名を書くと、短い名前と同じように、名前空間を除いた
+クラス名がエイリアスになります。
 
 ```php
 // lib/Model/Post.php
@@ -232,15 +252,25 @@ use AppModel;
 
 class Post extends AppModel
 {
-    public $belongsTo = [
-        'Author' => ['className' => Author::class],
+    public $belongsTo = [Author::class];
+
+    public $hasAndBelongsToMany = [
+        Tag::class => ['with' => PostsTag::class],
     ];
 }
 ```
 
 ```php
-$Post = ClassRegistry::init(['class' => Post::class, 'alias' => 'Post']);
+$Post = ClassRegistry::init(Post::class);
+$Post->alias; // 'Post'
 ```
+
+`belongsTo` の `Author::class` は、`'Author' => ['className' => Author::class]` と同じで、
+エイリアス `Author` のアソシエーションになります。別のエイリアスを使うときは、
+`'Writer' => ['className' => Author::class]` や
+`ClassRegistry::init(['class' => Post::class, 'alias' => 'Article'])` のように書きます。
+hasAndBelongsToMany の `'with' => PostsTag::class` は `'with' => 'PostsTag'` と同じで、データの取得、
+保存、バリデーション、削除に中間モデル `PostsTag` を使います。
 
 モデルの名前は、名前空間を除いたクラス名 (`Post`) になり、そこからテーブル名 (`posts`) が
 作られます。
@@ -251,11 +281,37 @@ CakePHP 2.12 までは名前が名前空間を含み (`Acme\Model\Post`)、テ�
 `Shell::$name` も同じです。
 :::
 
-`Controller::$uses` と `Controller::loadModel()` は、設定した名前をプロパティ名とモデルの
-エイリアスに使います。完全なクラス名を書くと、`$this->{'Acme\Model\Post'}` になり、
-`Acme\Model\Post` というエイリアスでクエリーが作られます。[`App.namespace`](#app-namespace)
-を設定して短い名前を書くか、`beforeFilter()` などで `ClassRegistry::init()` を使って
-読み込みます。
+`Controller::$uses`、`Controller::loadModel()`、シェルの `$uses` は、設定した名前から
+名前空間を除いたクラス名をプロパティ名とモデルのエイリアスに使います。
+
+```php
+// src/Controller/PostsController.php
+use Acme\Model\Post;
+
+class PostsController extends AppController
+{
+    public $uses = [Post::class];
+}
+```
+
+これで `$this->Post` は `Acme\Model\Post` で、`$this->modelClass` は `Post` です。
+`$this->loadModel(Post::class)` も同じです。
+
+`ClassRegistry::getObject()`、`isKeySet()`、`removeObject()` には、完全なクラス名も渡せます。
+クラス名から名前空間を除いた名前で登録されたオブジェクトがそのクラスであれば、それを使います。
+たとえば `ClassRegistry::getObject(Post::class)` は、エイリアス `Post` のモデルを返します。
+無ければ、ちょうどそのクラスのオブジェクトが 1 つだけのときに、そのオブジェクトを使います。
+たとえばエイリアス `Article` で作った `Post` です。そのクラスのオブジェクトが複数あれば、
+どれも見つかりません。
+
+::: pieceofcake2 Changed in version 2.13.0
+`$uses`、`loadModel()`、アソシエーションのキー、エイリアスの無い `ClassRegistry::init()` の
+完全なクラス名から、名前空間を除いたエイリアスを作ります
+([#91](https://github.com/pieceofcake2/cakephp/pull/91))。CakePHP 2.12 までは、
+`$this->{'Acme\Model\Post'}` のように、エイリアスがバックスラッシュを含む名前になっていました。
+そのバージョンでも動かすコードでは、`['class' => Post::class, 'alias' => 'Post']` や
+`'Author' => ['className' => Author::class]` のように短いエイリアスを付けます。
+:::
 
 <a id="app-namespace"></a>
 
@@ -345,7 +401,3 @@ CakePHP は、まずその名前空間のクラスを探し、無ければグロ
   ファイル名にしてパッケージの中を探します。名前空間のあるクラスは Composer が読み込むので、
   `App::uses()` は要りません。`App::import()` は、名前空間のあるクラスも
   [`App::className()`](/ja/core-utility-libraries/app) で探します。
-
-> [!WARNING]
-> `$uses`、`$components`、`$helpers`、`$actsAs` のキーに完全なクラス名を書くと、エイリアスが
-> バックスラッシュを含む名前になります。`className` を使って短いエイリアスを付けてください。

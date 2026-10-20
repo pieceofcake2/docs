@@ -56,10 +56,11 @@ CakePHP resolves a configured class in one of four ways:
   [`App.namespace`](#app-namespace) as
   `<Namespace>\<Type>\<Name><Suffix>`, then as the global class
   `<Name><Suffix>`.
-- **Name used as an alias.** For components, helpers, behaviors and models,
-  the name also becomes a property or a model alias. A namespaced name then
-  gives a property like `$this->{'Acme\Model\Post'}` and an SQL alias with
-  backslashes, so give a short alias.
+- **Name used as an alias.** For components, helpers, behaviors, shell tasks
+  and models, the name also becomes a property or a model alias. For a fully
+  qualified class name, the alias is the class name without the namespace and
+  the suffix: `GreetingComponent::class` gives `$this->Greeting`, and
+  `Post::class` the alias `Post`.
 
 ## Summary
 
@@ -83,9 +84,9 @@ CakePHP resolves a configured class in one of four ways:
 | `CakeEmail` `'transport'` | `App::className()`, suffix `Transport` | Yes | `SesTransport::class` |
 | `AuthComponent` `authenticate`, `authorize`; `passwordHasher` | `App::className()`, suffix `Authenticate`, `Authorize`, `PasswordHasher` | Yes | `[TokenAuthenticate::class]` |
 | `Controller::$viewClass`, `RequestHandlerComponent::viewClassMap()` | `App::className()`, suffix `View` | Yes | `CsvView::class` |
-| `$components`, `$helpers`, `$actsAs` | `App::className()`, and the name is the alias | Yes, with an alias and `className` | `'Greeting' => ['className' => GreetingComponent::class]` |
-| `ClassRegistry::init()`, association `'className'` | `App::className()` | Yes, with an alias | `['class' => Post::class, 'alias' => 'Post']` |
-| `Controller::$uses`, `loadModel()` | The name is the alias | Short names in `App.namespace` | `public $uses = ['Post'];` |
+| `$components`, `$helpers`, `$actsAs`, shell `$tasks` | `App::className()`, and the name is the alias | Yes, the alias is the short class name | `[GreetingComponent::class]` |
+| `ClassRegistry::init()`, association keys, `'className'` and `'with'` | `App::className()`, and the name is the alias | Yes, the alias is the short class name | `ClassRegistry::init(Post::class)` |
+| `Controller::$uses`, `loadModel()`, shell `$uses` | The name is the alias | Yes, the alias is the short class name | `public $uses = [Post::class];` |
 | Controllers, shells | `App::className()` from the URL or the command line | Short names in `App.namespace` | `App\Controller\PostsController` for `/posts` |
 
 ## Callables and Class Names as Given
@@ -180,11 +181,12 @@ name does not end with it, so `MemoryLog::class` works as well as
 
 ## Components, Helpers and Behaviors
 
-`ComponentCollection::load()`, `HelperCollection::load()` and
-`BehaviorCollection::load()` find the class with `App::className()` and use
-the name as the alias: the property of the controller or view, and the name
-in `Behaviors->loaded()`. Give a short alias as the key and the class in
-`className`:
+`ComponentCollection::load()`, `HelperCollection::load()`,
+`BehaviorCollection::load()` and `TaskCollection::load()` find the class with
+`App::className()` and use the name as the alias: the property of the
+controller, view or shell, and the name in `Behaviors->loaded()`. For a fully
+qualified class name, the alias is the class name without the namespace and
+the suffix:
 
 ```php
 // src/Controller/PostsController.php
@@ -194,12 +196,10 @@ use Acme\View\Helper\BadgeHelper;
 class PostsController extends AppController
 {
     public $components = [
-        'Greeting' => ['className' => GreetingComponent::class],
+        GreetingComponent::class => ['greeting' => 'Hello'],
     ];
 
-    public $helpers = [
-        'Badge' => ['className' => BadgeHelper::class],
-    ];
+    public $helpers = [BadgeHelper::class];
 }
 ```
 
@@ -209,22 +209,48 @@ use Acme\Model\Behavior\StampBehavior;
 
 class Post extends AppModel
 {
-    public $actsAs = [
-        'Stamp' => ['className' => StampBehavior::class],
-    ];
+    public $actsAs = [StampBehavior::class];
 }
 ```
 
-`$this->Greeting` is then an `Acme\Controller\Component\GreetingComponent`.
-A fully qualified class name as the key, without `className`, becomes an alias
-with backslashes. With [`App.namespace`](#app-namespace), a short name finds
+`$this->Greeting` is then an `Acme\Controller\Component\GreetingComponent`,
+`$this->Badge` in the view an `Acme\View\Helper\BadgeHelper`, and the
+behavior is loaded as `Stamp`. Shell `$tasks` work the same way:
+`ReportTask::class` gives `$this->Report`. The same applies to a class name
+given to `load()`, such as `$this->Components->load(GreetingComponent::class)`.
+`enable()`, `disable()`, `unload()`, `loaded()`, `enabled()` and `set()` also
+take the fully qualified class name instead of the alias.
+
+For another alias, give the alias as the key and the class in `className`, as
+before: `'Hello' => ['className' => GreetingComponent::class]` gives
+`$this->Hello`. With [`App.namespace`](#app-namespace), a short name finds
 the class in your namespace: `public $components = ['Greeting'];`.
+
+When the `$components`, `$helpers`, `$actsAs` or `$tasks` of a parent class
+(`AppController`, `AppModel`, the `AppController` of a plugin, the parent
+class of a shell) and of a subclass are merged, a fully qualified class name
+as the key is replaced by its alias, with the class name in `className`. So
+`'Greeting' => [...]` in `AppController` and `GreetingComponent::class => [...]`
+in `PostsController` give one `Greeting` with the merged settings, as two short
+names do.
+
+When the class is not found, the error shows the fully qualified class name
+with the suffix added only when the name does not end with it, for example
+`Acme\Controller\Component\GreetingComponent`.
+
+::: pieceofcake2 Changed in version 2.13.0
+A fully qualified class name as the key gives an alias without the namespace
+and the suffix ([#91](https://github.com/pieceofcake2/cakephp/pull/91)). In
+CakePHP 2.12, the alias was the name with the backslashes. In code that must
+also work there, give a short alias, as in
+`'Greeting' => ['className' => GreetingComponent::class]`.
+:::
 
 ## Models
 
 `ClassRegistry::init()` and the `'className'` of an association find the class
-with `App::className()`, so namespaced models work when they have a plain
-alias:
+with `App::className()`. A fully qualified class name without an alias gets the
+class name without the namespace as its alias, as a short name does:
 
 ```php
 // lib/Model/Post.php
@@ -234,15 +260,26 @@ use AppModel;
 
 class Post extends AppModel
 {
-    public $belongsTo = [
-        'Author' => ['className' => Author::class],
+    public $belongsTo = [Author::class];
+
+    public $hasAndBelongsToMany = [
+        Tag::class => ['with' => PostsTag::class],
     ];
 }
 ```
 
 ```php
-$Post = ClassRegistry::init(['class' => Post::class, 'alias' => 'Post']);
+$Post = ClassRegistry::init(Post::class);
+$Post->alias; // 'Post'
 ```
+
+`Author::class` in `belongsTo` is the same as
+`'Author' => ['className' => Author::class]`: an association with the alias
+`Author`. For another alias, write `'Writer' => ['className' => Author::class]`
+or `ClassRegistry::init(['class' => Post::class, 'alias' => 'Article'])`.
+`'with' => PostsTag::class` of a hasAndBelongsToMany association is the same as
+`'with' => 'PostsTag'`: the join model `PostsTag` is used to find, save,
+validate and delete the data.
 
 The name of the model is the class name without its namespace (`Post`), and
 the table name is derived from it (`posts`).
@@ -253,11 +290,39 @@ the table `acme\model\posts`. Set `$name` in models that must also work there.
 The same applies to `Controller::$name` and `Shell::$name`.
 :::
 
-`Controller::$uses` and `Controller::loadModel()` use the configured name as
-the property and the model alias, so a fully qualified name there gives
-`$this->{'Acme\Model\Post'}` and queries with an `Acme\Model\Post` alias. Use
-short names with [`App.namespace`](#app-namespace), or load the models with
-`ClassRegistry::init()`, for example in `beforeFilter()`.
+`Controller::$uses`, `Controller::loadModel()` and shell `$uses` use the
+configured name without the namespace as the property and the model alias:
+
+```php
+// src/Controller/PostsController.php
+use Acme\Model\Post;
+
+class PostsController extends AppController
+{
+    public $uses = [Post::class];
+}
+```
+
+`$this->Post` is then an `Acme\Model\Post`, and `$this->modelClass` is
+`Post`. `$this->loadModel(Post::class)` works the same way.
+
+`ClassRegistry::getObject()`, `isKeySet()` and `removeObject()` also take a
+fully qualified class name. They use the object stored under the class name
+without the namespace when it is of that class:
+`ClassRegistry::getObject(Post::class)` returns the model with the alias
+`Post`. Otherwise they use the only object of
+exactly that class, such as a `Post` created with the alias `Article`. When
+there are several objects of the class, none is found.
+
+::: pieceofcake2 Changed in version 2.13.0
+A fully qualified class name in `$uses`, `loadModel()`, the keys of the
+associations and `ClassRegistry::init()` without an alias gives an alias
+without the namespace ([#91](https://github.com/pieceofcake2/cakephp/pull/91)).
+In CakePHP 2.12, the alias was the name with the backslashes, as in
+`$this->{'Acme\Model\Post'}`. In code that must also work there, give a
+short alias, as in `['class' => Post::class, 'alias' => 'Post']` or
+`'Author' => ['className' => Author::class]`.
+:::
 
 <a id="app-namespace"></a>
 
@@ -348,8 +413,3 @@ by `CacheHelper` create a namespaced controller by that name.
   a file named after the whole name in the package. Composer loads them, so
   `App::uses()` is not needed. `App::import()` also finds namespaced classes
   with [`App::className()`](/core-utility-libraries/app).
-
-> [!WARNING]
-> Fully qualified class names as the keys of `$uses`, `$components`,
-> `$helpers` and `$actsAs` become aliases with backslashes. Use short aliases
-> with `className`.
