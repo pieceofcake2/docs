@@ -58,6 +58,7 @@ for example `plugins/Contacts/View/Contacts/index.ctp`. See
 ### Templates in the CakePHP 5 style
 
 ::: pieceofcake2 Added in version 2.13.0
+`.php` templates and the CakePHP 5 directories ([#94](https://github.com/pieceofcake2/cakephp/pull/94)).
 :::
 
 Templates in `templates/` (of the application, a plugin or a theme) can also be
@@ -80,7 +81,7 @@ mixed, so templates can be moved one by one.
 
 > [!NOTE]
 > `.php` templates are only looked up in `templates/`. The `View/` directories
-> of the legacy layout also hold the view and helper classes, so CakePHP never
+> of the CakePHP 2 layout also hold the view and helper classes, so CakePHP never
 > renders a `.php` file there as a template. A view class that sets
 > `$ext = '.php'` finds its templates everywhere, as before.
 

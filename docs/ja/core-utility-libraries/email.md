@@ -316,7 +316,7 @@ $Email->template('welcome', 'fancy')
 - `templates/Layouts/Emails/html/fancy.ctp`
 
 ::: pieceofcake2 Added in version 2.13.0
-テンプレートを CakePHP 5 のディレクトリに `.php` の拡張子で置くこともできます。
+テンプレートを CakePHP 5 のディレクトリに `.php` の拡張子で置くこともできます。たとえば
 `templates/email/html/welcome.php` と `templates/layout/email/html/fancy.php` です。
 [CakePHP 5 の形式のテンプレート](/ja/views#templates-in-the-cakephp-5-style) を参照してください。
 :::
