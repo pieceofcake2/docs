@@ -97,8 +97,8 @@ These settings accept `Foo::class`:
 // config/core.php
 use Acme\Error\Handler;
 use Acme\Error\Renderer;
-use Acme\Routing\Filter\HeaderFilter;
 use Acme\Model\Datasource\Session\DynamoDbHandler;
+use Acme\Routing\Filter\HeaderFilter;
 
 Configure::write('Error', [
     'handler' => [Handler::class, 'handleError'],
