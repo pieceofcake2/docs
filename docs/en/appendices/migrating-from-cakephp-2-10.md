@@ -36,6 +36,12 @@ Changes in v2.13.0 that may affect applications already running on the fork.
   `Cake\Controller\Controller`. The global names of CakePHP 2 are aliases of the
   same classes: code that extends, type-hints, catches or loads `Controller`,
   `CakeRequest` or `NotFoundException` keeps working.
+- The files of the framework moved from `src/Cake/` to `src/`, loaded by
+  Composer with PSR-4 (`Cake\` in `src/`), and `CAKE` points to `src/`.
+  `src/Cake/bootstrap.php`, which `webroot/index.php` requires, and
+  `src/Cake/TestSuite/Fixture/CakeFixtureInjector.php`, the listener of
+  `phpunit.xml.dist`, stay at their paths and keep working. If you include other
+  files of `vendor/pieceofcake2/cakephp/src/Cake/` by path, change them to `src/`.
 - Objects serialized before the update still unserialize. Objects serialized
   after it name the namespaced classes and cannot be read by an older version.
 - PHPStan needs pieceofcake2/phpstan-cakephp2 `^1.1`. See

@@ -40,7 +40,8 @@ The classes of the framework are in the `Cake` namespace, following their
 directories: `Cake\Controller\Controller`, `Cake\Network\CakeRequest`,
 `Cake\Utility\Hash`. The global names of CakePHP 2 are aliases of the same
 classes, so `Controller` and `Cake\Controller\Controller` can be used
-interchangeably, and existing code does not change. In a namespaced class,
+interchangeably, and existing code does not change. The files are in `src/`
+(`src/Controller/Controller.php`), loaded by Composer with PSR-4. In a namespaced class,
 import the classes of the framework like any other class:
 
 ```php

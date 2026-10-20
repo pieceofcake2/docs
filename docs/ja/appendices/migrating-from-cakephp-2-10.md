@@ -33,6 +33,11 @@ v2.13.0 の変更のうち、すでにフォークで動いているアプリケ
 - フレームワークのクラスは `Cake` 名前空間に移りました。たとえば `Cake\Controller\Controller` です。
   CakePHP 2 のグローバルな名前は同じクラスの別名なので、`Controller`、`CakeRequest`、
   `NotFoundException` を継承、型宣言、`catch`、読み込みに使っているコードはそのまま動きます。
+- フレームワークのファイルは `src/Cake/` から `src/` に移り、Composer が PSR-4 (`Cake\` が `src/`)
+  で読み込みます。`CAKE` 定数は `src/` を指します。`webroot/index.php` などが読み込む
+  `src/Cake/bootstrap.php` と、`phpunit.xml.dist` のリスナーの
+  `src/Cake/TestSuite/Fixture/CakeFixtureInjector.php` は元の場所に残っているので、そのまま動きます。
+  `vendor/pieceofcake2/cakephp/src/Cake/` のほかのファイルをパスで読み込んでいるときは、`src/` に直してください。
 - 更新前にシリアライズしたオブジェクトは、これまでどおりアンシリアライズできます。更新後に
   シリアライズしたオブジェクトは名前空間を含む名前になるので、前のバージョンでは読めません。
 - PHPStan には pieceofcake2/phpstan-cakephp2 の `^1.1` が必要です。

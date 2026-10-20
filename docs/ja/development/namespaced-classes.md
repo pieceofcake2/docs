@@ -39,7 +39,8 @@ CakePHP 2.12 までは、サフィックスの付く設定には名前空間の�
 フレームワークのクラスは、ディレクトリに合わせた `Cake` 名前空間にあります。たとえば
 `Cake\Controller\Controller`、`Cake\Network\CakeRequest`、`Cake\Utility\Hash` です。CakePHP 2 の
 グローバルな名前は同じクラスの別名なので、`Controller` と `Cake\Controller\Controller` はどちらを使っても
-同じで、これまでのコードは変わりません。名前空間のあるクラスでは、ほかのクラスと同じようにフレームワークの
+同じで、これまでのコードは変わりません。ファイルは `src/` にあり (`src/Controller/Controller.php`)、
+Composer が PSR-4 で読み込みます。名前空間のあるクラスでは、ほかのクラスと同じようにフレームワークの
 クラスを `use` します。
 
 ```php
