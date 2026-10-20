@@ -66,16 +66,19 @@ CakePHP resolves a configured class in one of four ways:
 | Configuration | Lookup | `Foo::class` | Example |
 |---|---|---|---|
 | `Error.handler`, `Exception.handler`, `Error.consoleHandler`, `Exception.consoleHandler` | Callable | Yes | `[Handler::class, 'handleError']` |
-| `Exception.renderer` | As given | Yes | `Renderer::class` |
+| `Exception.renderer` | `App::className()` | Yes | `Renderer::class` |
 | `Exception.skipLog` | `instanceof` | Yes | `[NotFoundException::class, MyException::class]` |
-| `Dispatcher.filters` | As given, or a callable | Yes | `[HeaderFilter::class => ['header' => 'X-Frame-Options']]` |
-| Datasource `'datasource'` | As given | Yes | `'datasource' => MemorySource::class` |
-| `Session.handler.engine` | As given | Yes | `MemoryHandler::class` |
-| `'routeClass'`, `Router::defaultRouteClass()` | As given | Yes | `['routeClass' => SlugRoute::class]` |
-| `Acl.classname` | As given | Yes | `NullAcl::class` |
-| `'engine'` of `TextHelper`, `NumberHelper`, `TimeHelper` | As given | Yes | `['engine' => Text::class]` |
+| `Dispatcher.filters` | `App::className()`, or a callable | Yes | `[HeaderFilter::class => ['header' => 'X-Frame-Options']]` |
+| Datasource `'datasource'` | `App::className()` | Yes | `'datasource' => MemorySource::class` |
+| `Session.handler.engine` | `App::className()` | Yes | `MemoryHandler::class` |
+| `'routeClass'`, `Router::defaultRouteClass()` | `App::className()` | Yes | `['routeClass' => SlugRoute::class]` |
+| `Acl.classname` | `App::className()` | Yes | `NullAcl::class` |
+| `'engine'` of `TextHelper`, `NumberHelper`, `TimeHelper` | `App::className()` | Yes | `['engine' => Text::class]` |
 | `CakeEmail::$_configClass` (in a subclass) | As given | Yes | `EmailConfig::class` |
-| `CakeLog` `'engine'` | Suffix `Log`, unless the name ends with it | Yes | `MemoryLog::class` |
+| `CakeLog` `'engine'` | `App::className()`, suffix `Log` unless the name ends with it | Yes | `MemoryLog::class` |
+| `HtmlHelper::loadConfig()` reader | `App::className()`, suffix `Reader` | Yes | `['tags', TagReader::class]` |
+| Localized `Validation` rules (`$country`) | `App::className()`, suffix `Validation` | Yes | `Validation::postal($check, null, NlValidation::class)` |
+| `HttpSocket::$responseClass`, `configAuth()`, `configProxy()` | `App::className()`, suffix `Authentication` for the methods | Yes | `TokenAuthentication::class` |
 | `Cache` `'engine'` | `App::className()`, suffix `Engine` | Yes | `MemoryEngine::class` |
 | `CakeEmail` `'transport'` | `App::className()`, suffix `Transport` | Yes | `SesTransport::class` |
 | `AuthComponent` `authenticate`, `authorize`; `passwordHasher` | `App::className()`, suffix `Authenticate`, `Authorize`, `PasswordHasher` | Yes | `[TokenAuthenticate::class]` |
@@ -119,7 +122,10 @@ Configure::write('Dispatcher.filters', [
 `Session.handler.engine` in `CakeSession::_getHandler()`, the datasource in
 `ConnectionManager::loadDataSource()`, the route class in
 `Router::_validateRouteClass()` and `Acl.classname` in
-`AclComponent::__construct()`. All of them use the configured name unchanged.
+`AclComponent::__construct()`. All of them find the class with
+`App::className()`: a fully qualified name as given, or a short name in the
+namespace of a plugin, in [`App.namespace`](#app-namespace) or as a global
+class, as before.
 
 `Dispatcher.filters` (`Dispatcher::_attachFilters()`) takes a class name, a
 class name as the key of its settings, or an array with a `'callable'` key.

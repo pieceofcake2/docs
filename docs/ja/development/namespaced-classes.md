@@ -63,16 +63,19 @@ CakePHP は、設定されたクラスを次の 4 つのどれかの方法で解
 | 設定 | 探し方 | `Foo::class` | 例 |
 |---|---|---|---|
 | `Error.handler`、`Exception.handler`、`Error.consoleHandler`、`Exception.consoleHandler` | コーラブル | 使える | `[Handler::class, 'handleError']` |
-| `Exception.renderer` | 書いたまま | 使える | `Renderer::class` |
+| `Exception.renderer` | `App::className()` | 使える | `Renderer::class` |
 | `Exception.skipLog` | `instanceof` | 使える | `[NotFoundException::class, MyException::class]` |
-| `Dispatcher.filters` | 書いたまま、またはコーラブル | 使える | `[HeaderFilter::class => ['header' => 'X-Frame-Options']]` |
-| データソースの `'datasource'` | 書いたまま | 使える | `'datasource' => MemorySource::class` |
-| `Session.handler.engine` | 書いたまま | 使える | `MemoryHandler::class` |
-| `'routeClass'`、`Router::defaultRouteClass()` | 書いたまま | 使える | `['routeClass' => SlugRoute::class]` |
-| `Acl.classname` | 書いたまま | 使える | `NullAcl::class` |
-| `TextHelper`、`NumberHelper`、`TimeHelper` の `'engine'` | 書いたまま | 使える | `['engine' => Text::class]` |
+| `Dispatcher.filters` | `App::className()`、またはコーラブル | 使える | `[HeaderFilter::class => ['header' => 'X-Frame-Options']]` |
+| データソースの `'datasource'` | `App::className()` | 使える | `'datasource' => MemorySource::class` |
+| `Session.handler.engine` | `App::className()` | 使える | `MemoryHandler::class` |
+| `'routeClass'`、`Router::defaultRouteClass()` | `App::className()` | 使える | `['routeClass' => SlugRoute::class]` |
+| `Acl.classname` | `App::className()` | 使える | `NullAcl::class` |
+| `TextHelper`、`NumberHelper`、`TimeHelper` の `'engine'` | `App::className()` | 使える | `['engine' => Text::class]` |
 | `CakeEmail::$_configClass` (サブクラスで) | 書いたまま | 使える | `EmailConfig::class` |
-| `CakeLog` の `'engine'` | 名前が `Log` で終わらなければサフィックス `Log` | 使える | `MemoryLog::class` |
+| `CakeLog` の `'engine'` | `App::className()`。名前が `Log` で終わらなければサフィックス `Log` | 使える | `MemoryLog::class` |
+| `HtmlHelper::loadConfig()` のリーダー | `App::className()`、サフィックス `Reader` | 使える | `['tags', TagReader::class]` |
+| `Validation` の地域ごとのルール (`$country`) | `App::className()`、サフィックス `Validation` | 使える | `Validation::postal($check, null, NlValidation::class)` |
+| `HttpSocket::$responseClass`、`configAuth()`、`configProxy()` | `App::className()`。認証の方式はサフィックス `Authentication` | 使える | `TokenAuthentication::class` |
 | `Cache` の `'engine'` | `App::className()`、サフィックス `Engine` | 使える | `MemoryEngine::class` |
 | `CakeEmail` の `'transport'` | `App::className()`、サフィックス `Transport` | 使える | `SesTransport::class` |
 | `AuthComponent` の `authenticate`、`authorize`、`passwordHasher` | `App::className()`、サフィックス `Authenticate`、`Authorize`、`PasswordHasher` | 使える | `[TokenAuthenticate::class]` |
@@ -117,7 +120,8 @@ Configure::write('Dispatcher.filters', [
 `Exception.renderer` は `ErrorHandler::handleException()`、`Session.handler.engine` は
 `CakeSession::_getHandler()`、データソースは `ConnectionManager::loadDataSource()`、ルートクラスは
 `Router::_validateRouteClass()`、`Acl.classname` は `AclComponent::__construct()` で読み込まれます。
-どれも設定した名前をそのまま使います。
+どれも `App::className()` でクラスを探します。完全なクラス名はそのまま使い、短い名前はプラグインの名前空間か
+[`App.namespace`](#app-namespace) で探し、これまでどおりグローバルなクラスも探します。
 
 `Dispatcher.filters` (`Dispatcher::_attachFilters()`) には、クラス名、設定の配列のキーにした
 クラス名、`'callable'` キーのある配列を書けます。`'callable'` キーには、クラス名か、`'on'` と
