@@ -113,8 +113,8 @@ App::className('Auth', 'Controller/Component', 'Component');
 // 'AuthComponent'
 
 App::className(MemoryEngine::class, 'Cache/Engine', 'Engine');
-App::className('Acme\Cache\Memory', 'Cache/Engine', 'Engine');
-// どちらも 'Acme\Cache\MemoryEngine'
+App::className('Acme\Cache\Engine\Memory', 'Cache/Engine', 'Engine');
+// どちらも 'Acme\Cache\Engine\MemoryEngine'
 
 Configure::write('App.namespace', 'App');
 App::className('Post', 'Model');

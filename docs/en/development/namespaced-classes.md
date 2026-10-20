@@ -25,7 +25,7 @@ in your namespace by their short names.
 `App::className()` and `App.namespace`
 ([#91](https://github.com/pieceofcake2/cakephp/pull/91)). In CakePHP 2.12, the
 settings with a suffix take a namespaced name only without the suffix
-(`'Acme\Cache\Memory'`, not `MemoryEngine::class`), and controllers, shells
+(`'Acme\Cache\Engine\Memory'`, not `MemoryEngine::class`), and controllers, shells
 and models in `$uses` must be global classes.
 :::
 
@@ -50,8 +50,8 @@ CakePHP resolves a configured class in one of four ways:
   `Component` or `Engine`, `App::className($name, $type, $suffix)` finds the
   class. A name with a backslash is a fully qualified class name, and the
   suffix is added only when the name does not end with it: both
-  `MemoryEngine::class` and `'Acme\Cache\Memory'` give
-  `Acme\Cache\MemoryEngine`. A short name (`'Memory'` or `'MyPlugin.Memory'`)
+  `MemoryEngine::class` and `'Acme\Cache\Engine\Memory'` give
+  `Acme\Cache\Engine\MemoryEngine`. A short name (`'Memory'` or `'MyPlugin.Memory'`)
   is looked up in the namespace of the plugin or in
   [`App.namespace`](#app-namespace) as
   `<Namespace>\<Type>\<Name><Suffix>`, then as the global class
@@ -94,7 +94,7 @@ These settings accept `Foo::class`:
 use Acme\Error\Handler;
 use Acme\Error\Renderer;
 use Acme\Routing\Filter\HeaderFilter;
-use Acme\Session\DynamoDbHandler;
+use Acme\Model\Datasource\Session\DynamoDbHandler;
 
 Configure::write('Error', [
     'handler' => [Handler::class, 'handleError'],
@@ -139,8 +139,8 @@ Give the fully qualified class name, with or without the suffix:
 
 ```php
 // config/bootstrap.php
-use Acme\Cache\MemoryEngine;
-use Acme\Mail\SesTransport;
+use Acme\Cache\Engine\MemoryEngine;
+use Acme\Network\Email\SesTransport;
 
 Cache::config('memory', ['engine' => MemoryEngine::class]);
 
@@ -149,8 +149,8 @@ $email = new CakeEmail(['transport' => SesTransport::class]);
 
 ```php
 // src/Controller/AppController.php
-use Acme\Auth\AdminAuthorize;
-use Acme\Auth\TokenAuthenticate;
+use Acme\Controller\Component\Auth\AdminAuthorize;
+use Acme\Controller\Component\Auth\TokenAuthenticate;
 
 class AppController extends Controller
 {
@@ -163,10 +163,10 @@ class AppController extends Controller
 }
 ```
 
-The name without the suffix, such as `'Acme\Cache\Memory'`, keeps working.
+The name without the suffix, such as `'Acme\Cache\Engine\Memory'`, keeps working.
 `CakeLog` (`LogEngineCollection::_getLogger()`) appends `Log` only when the
 name does not end with it, so `MemoryLog::class` works as well as
-`'Acme\Log\Memory'`.
+`'Acme\Log\Engine\Memory'`.
 
 `RequestHandlerComponent::viewClassMap()` takes the same names as
 `Controller::$viewClass`, for example

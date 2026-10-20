@@ -23,7 +23,7 @@ pieceofcake2/cakephp の設定項目と、それぞれで CakePHP がクラス�
 ::: pieceofcake2 Added in version 2.13.0
 `App::className()` と `App.namespace` ([#91](https://github.com/pieceofcake2/cakephp/pull/91))。
 CakePHP 2.12 までは、サフィックスの付く設定には名前空間のある名前をサフィックスを省いてしか書けず
-(`MemoryEngine::class` ではなく `'Acme\Cache\Memory'`)、コントローラー、シェル、`$uses` のモデルは
+(`MemoryEngine::class` ではなく `'Acme\Cache\Engine\Memory'`)、コントローラー、シェル、`$uses` のモデルは
 グローバルなクラスにする必要があります。
 :::
 
@@ -47,7 +47,7 @@ CakePHP は、設定されたクラスを次の 4 つのどれかの方法で解
 - **`App::className()`。** `Component` や `Engine` のようなサフィックスを付ける設定では、
   `App::className($name, $type, $suffix)` がクラスを探します。バックスラッシュを含む名前は
   完全なクラス名として扱い、名前がサフィックスで終わらないときだけサフィックスを付けます。
-  `MemoryEngine::class` と `'Acme\Cache\Memory'` のどちらも `Acme\Cache\MemoryEngine`
+  `MemoryEngine::class` と `'Acme\Cache\Engine\Memory'` のどちらも `Acme\Cache\Engine\MemoryEngine`
   になります。短い名前 (`'Memory'` や `'MyPlugin.Memory'`) は、プラグインの名前空間か
   [`App.namespace`](#app-namespace) で `<名前空間>\<種類>\<名前><サフィックス>` を探し、
   次にグローバルなクラス `<名前><サフィックス>` を探します。
@@ -93,7 +93,7 @@ CakePHP は、設定されたクラスを次の 4 つのどれかの方法で解
 use Acme\Error\Handler;
 use Acme\Error\Renderer;
 use Acme\Routing\Filter\HeaderFilter;
-use Acme\Session\DynamoDbHandler;
+use Acme\Model\Datasource\Session\DynamoDbHandler;
 
 Configure::write('Error', [
     'handler' => [Handler::class, 'handleError'],
@@ -138,8 +138,8 @@ Configure::write('Dispatcher.filters', [
 
 ```php
 // config/bootstrap.php
-use Acme\Cache\MemoryEngine;
-use Acme\Mail\SesTransport;
+use Acme\Cache\Engine\MemoryEngine;
+use Acme\Network\Email\SesTransport;
 
 Cache::config('memory', ['engine' => MemoryEngine::class]);
 
@@ -148,8 +148,8 @@ $email = new CakeEmail(['transport' => SesTransport::class]);
 
 ```php
 // src/Controller/AppController.php
-use Acme\Auth\AdminAuthorize;
-use Acme\Auth\TokenAuthenticate;
+use Acme\Controller\Component\Auth\AdminAuthorize;
+use Acme\Controller\Component\Auth\TokenAuthenticate;
 
 class AppController extends Controller
 {
@@ -162,9 +162,9 @@ class AppController extends Controller
 }
 ```
 
-`'Acme\Cache\Memory'` のようにサフィックスを省いた名前も、これまでどおり使えます。
+`'Acme\Cache\Engine\Memory'` のようにサフィックスを省いた名前も、これまでどおり使えます。
 `CakeLog` (`LogEngineCollection::_getLogger()`) は、名前が `Log` で終わらないときだけ `Log` を
-付けるので、`'Acme\Log\Memory'` だけでなく `MemoryLog::class` も使えます。
+付けるので、`'Acme\Log\Engine\Memory'` だけでなく `MemoryLog::class` も使えます。
 
 `RequestHandlerComponent::viewClassMap()` には、`Controller::$viewClass` と同じ名前を書きます。
 たとえば `$this->RequestHandler->viewClassMap('csv', CsvView::class)` です。

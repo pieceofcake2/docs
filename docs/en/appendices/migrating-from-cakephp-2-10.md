@@ -36,7 +36,7 @@ Changes in v2.13.0 that may affect applications already running on the fork.
   `MemoryEngine::class` for a cache engine, `SesTransport::class` for a
   transport, and the same for Auth objects, password hashers, view classes,
   components, helpers, behaviors, shell tasks and shell helpers. The names
-  without the suffix (`'Acme\Cache\Memory'`) keep working.
+  without the suffix (`'Acme\Cache\Engine\Memory'`) keep working.
 - `App.namespace` is new and not set by default. When it is set, controllers,
   shells, models and the classes above are first looked up in that namespace
   by their short name, e.g. `App\Controller\PostsController` for `/posts`.
