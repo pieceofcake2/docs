@@ -65,7 +65,17 @@ v2.13.0 の変更のうち、すでにフォークで動いているアプリケ
   モデルと上のクラスを、まずその名前空間から短い名前で探します。たとえば `/posts` なら
   `App\Controller\PostsController` です。
   [名前空間のあるクラス](/ja/development/namespaced-classes) を参照してください。
-
+- `$components`、`$helpers`、`$actsAs`、シェルの `$tasks`、`$uses`、モデルのアソシエーションのキーに
+  書いた完全なクラス名や、`load()`、`loadModel()`、エイリアスの無い `ClassRegistry::init()` に渡した
+  完全なクラス名は、名前空間とサフィックスを除いたクラス名がエイリアスになります。
+  `GreetingComponent::class` なら `$this->Greeting`、`Post::class` なら `$this->Post` です。
+  これまではバックスラッシュを含む名前がエイリアスでした。そのエイリアスを使っていたコードは、
+  短いエイリアスに直してください。親クラスとサブクラスで、同じオブジェクトを片方は完全なクラス名、
+  もう片方は短い名前で書いたときは、設定をマージした 1 つのエントリーになります。hasAndBelongsToMany の
+  `'with' => PostsTag::class` は中間モデル `PostsTag` を使い、`ClassRegistry::getObject()`、
+  `isKeySet()`、`removeObject()` は完全なクラス名でもオブジェクトを探します。
+  [名前空間のあるクラス](/ja/development/namespaced-classes#components-helpers-and-behaviors)
+  を参照してください。
 - `Controller` と `View` に公開プロパティ `$controllerClass` が加わり、コントローラーからビューに渡す
   変数にも含まれます。同じ名前のプロパティを持つサブクラスは、名前を変えてください。
 

@@ -70,7 +70,19 @@ Changes in v2.13.0 that may affect applications already running on the fork.
   shells, models and the classes above are first looked up in that namespace
   by their short name, e.g. `App\Controller\PostsController` for `/posts`.
   See [Namespaced Classes](/development/namespaced-classes).
-
+- Fully qualified class names as the keys of `$components`, `$helpers`,
+  `$actsAs`, shell `$tasks`, `$uses` and the model associations, or given to
+  `load()`, `loadModel()` and `ClassRegistry::init()` without an alias, get the
+  class name without the namespace and the suffix as their alias:
+  `GreetingComponent::class` gives `$this->Greeting`, and `Post::class` gives
+  `$this->Post`. Before, the alias was the name with the backslashes; code that
+  used such an alias must use the short alias. A parent class and a subclass
+  that name the same object, one by its class name and one by its short name,
+  now give one entry with the merged settings. `'with' => PostsTag::class` of a
+  hasAndBelongsToMany association finds the join model `PostsTag`, and
+  `ClassRegistry::getObject()`, `isKeySet()` and `removeObject()` also find
+  objects by their fully qualified class names. See
+  [Namespaced Classes](/development/namespaced-classes#components-helpers-and-behaviors).
 - `Controller` and `View` have the new public property `$controllerClass`,
   which is also passed from the controller to the view. Rename a property of
   that name in a subclass.
