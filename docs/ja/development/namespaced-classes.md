@@ -59,6 +59,10 @@ class GreetingComponent extends Component
 }
 ```
 
+設定にフレームワークのクラスを書くところには、グローバルな名前も名前空間を含む名前も書けます。
+たとえば `'routeClass' => RedirectRoute::class` や `Configure::write('Acl.classname', DbAcl::class)`
+です。
+
 > [!WARNING]
 > `get_class()`、`::class`、`ReflectionClass::getName()` は、`Cake\Network\CakeRequest` のように名前空間を
 > 含む名前を返し、エラーログ、`Debugger` の出力、デバッグ用のエラーページにもその名前が出ます。

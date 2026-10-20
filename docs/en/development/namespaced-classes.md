@@ -60,6 +60,10 @@ class GreetingComponent extends Component
 }
 ```
 
+Where the configuration names a class of the framework, both the global name
+and the namespaced name work, for example `'routeClass' => RedirectRoute::class`
+or `Configure::write('Acl.classname', DbAcl::class)`.
+
 > [!WARNING]
 > `get_class()`, `::class` and `ReflectionClass::getName()` return the
 > namespaced names, e.g. `Cake\Network\CakeRequest`, and the error log, the
