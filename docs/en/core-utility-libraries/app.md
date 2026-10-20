@@ -123,7 +123,7 @@ App::className('Acme\Cache\Engine\Memory', 'Cache/Engine', 'Engine');
 
 Configure::write('App.namespace', 'App');
 App::className('Post', 'Model');
-// 'App\Model\Post' if that class exists, else 'Post'
+// 'App\Model\Post' if that class exists, else the global 'Post', else null
 ```
 
 A name with a backslash is a fully qualified class name; the suffix is added

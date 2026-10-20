@@ -14,11 +14,12 @@ PSR-4 の設定を書き、`composer dump-autoload` を実行します。
 ```
 
 これで、`Acme\Error\Renderer` のようなクラスを、最初に使うときに Composer が
-`lib/Error/Renderer.php` から読み込みます。`App::uses()` は要りません。CakePHP の設定に
-クラス名を書く場所には、名前空間のあるクラスを `Foo::class` で書けます。このページでは、
-pieceofcake2/cakephp の設定項目と、それぞれで CakePHP がクラスを探す方法をまとめます。
-また、`App.namespace` を設定して、コントローラーやモデルなどのクラスをアプリケーションの
-名前空間から短い名前で探す方法も説明します。
+`lib/Error/Renderer.php` から読み込みます。`App::uses()` は要りません。
+
+CakePHP の設定にクラス名を書く場所には、名前空間のあるクラスを `Foo::class` で書けます。
+このページでは、pieceofcake2/cakephp の設定項目と、それぞれで CakePHP がクラスを探す方法を
+まとめます。また、`App.namespace` を設定して、コントローラーやモデルなどのクラスを
+アプリケーションの名前空間から短い名前で探す方法も説明します。
 
 ::: pieceofcake2 Added in version 2.13.0
 `App::className()` と `App.namespace` ([#91](https://github.com/pieceofcake2/cakephp/pull/91))。
@@ -261,6 +262,7 @@ CakePHP 2.12 までは名前が名前空間を含み (`Acme\Model\Post`)、テ�
 ## App.namespace
 
 ::: pieceofcake2 Added in version 2.13.0
+`App.namespace` の設定 ([#91](https://github.com/pieceofcake2/cakephp/pull/91))。
 :::
 
 `App.namespace` に、アプリケーションの名前空間を設定します。たとえば
@@ -283,11 +285,9 @@ CakePHP は、まずその名前空間のクラスを探し、無ければグロ
 | `Cache` の `'engine' => 'Memory'` | `App\Cache\Engine\MemoryEngine` |
 
 名前空間は、それぞれのクラスのパッケージに合わせます (`<名前空間>\<種類>\<名前><サフィックス>`)。
-`composer.json` の PSR-4 に、たとえば `"App\\": "src/"` と登録します。名前空間のコントローラーは、
-グローバルなコントローラーがグローバルな `AppController` とするのと同じように、名前空間の
-`AppController` (`App\Controller\AppController`) と `$components` と `$helpers` を
-マージします。`AuthComponent` や `FileEngine` のようなフレームワークのグローバルなクラスは、
-名前空間に同じ名前のクラスが無ければ、これまでどおり使われます。
+`composer.json` の PSR-4 に、たとえば `"App\\": "src/"` と登録します。`AuthComponent` や
+`FileEngine` のようなフレームワークのグローバルなクラスは、名前空間に同じ名前のクラスが無ければ、
+これまでどおり使われます。
 
 > [!NOTE]
 > `App.namespace` に既定値はありません。設定しなければ、これまでどおりグローバルなクラスだけを探します。
@@ -302,13 +302,49 @@ CakePHP は、まずその名前空間のクラスを探し、無ければグロ
 名前空間 (`MyPlugin\Controller\Component\GreetingComponent`) で探し、次にプラグインの
 グローバルなクラスを探します。
 
+### AppController と AppModel
+
+名前空間のコントローラーは、親クラスの `AppController` (`App\Controller\AppController`) と
+`$components` と `$helpers` をマージします。グローバルなコントローラーがグローバルな
+`AppController` とマージするのと同じです。親クラスは、名前が `AppController` であれば、
+`App.namespace` を設定していなくても、どの名前空間のクラスでもかまいません。プラグインの
+コントローラーは、プラグインの名前空間の `AppController`
+(`MyPlugin\Controller\MyPluginAppController`) ともマージします。名前空間のモデルも同じように、
+`App\Model\AppModel` と `$actsAs` と `$findMethods` をマージします。
+
+`CakeErrorController` のように、フレームワークには、グローバルな `AppController`、`AppModel`、
+`AppHelper`、`AppShell` を継承するクラスがあります。アプリケーションにこれらのクラスが
+`App.namespace` にしかないときは、`App::load()` がそのクラスにグローバルな名前を付けます。
+グローバルなクラスがあれば、そちらが使われます。
+
+### フィクスチャー
+
+フィクスチャーも名前空間のクラスにできます。`$fixtures` の名前から、次のクラスを探し、
+無ければこれまでどおりグローバルなクラスを探します。
+
+| 名前 | 名前空間のクラス |
+|---|---|
+| `'app.article'` | `App\Test\Fixture\ArticleFixture` (`App.namespace` の名前空間) |
+| `'plugin.my_plugin.article'` | `MyPlugin\Test\Fixture\ArticleFixture` |
+| `'core.article'` | `Cake\Test\Fixture\ArticleFixture` |
+
+フィクスチャーの名前とテーブル名は、名前空間を除いたクラス名から作られます
+(`ArticleFixture` なら `Article` と `articles`)。
+
+### キャッシュしたビュー
+
+`Controller::$controllerClass` と `View::$controllerClass` は、コントローラーのクラス名
+(`App\Controller\PostsController` など) です。`CacheHelper` がキャッシュするビューは、この名前で
+名前空間のコントローラーを作ります。
+
 <a id="what-does-not-work"></a>
 
 ## 使えないもの
 
 - `App::uses()` では名前空間のあるクラスを読み込めません。`App::load()` は、名前全体を
   ファイル名にしてパッケージの中を探します。名前空間のあるクラスは Composer が読み込むので、
-  `App::uses()` は要りません。
+  `App::uses()` は要りません。`App::import()` は、名前空間のあるクラスも
+  [`App::className()`](/ja/core-utility-libraries/app) で探します。
 
 > [!WARNING]
 > `$uses`、`$components`、`$helpers`、`$actsAs` のキーに完全なクラス名を書くと、エイリアスが

@@ -264,6 +264,7 @@ short names with [`App.namespace`](#app-namespace), or load the models with
 ## App.namespace
 
 ::: pieceofcake2 Added in version 2.13.0
+The `App.namespace` setting ([#91](https://github.com/pieceofcake2/cakephp/pull/91)).
 :::
 
 Set `App.namespace` to the namespace of your application, for example in
@@ -288,11 +289,8 @@ classes after them:
 
 The namespace follows the package of each class (`<Namespace>\<Type>\<Name><Suffix>`).
 Register it with PSR-4 in `composer.json`, for example `"App\\": "src/"`.
-A controller in the namespace merges `$components` and `$helpers` with the
-`AppController` of the namespace (`App\Controller\AppController`), as a global
-controller does with the global `AppController`. The global classes of the
-framework, such as `AuthComponent` or `FileEngine`, are still found when the
-namespace has no class of that name.
+The global classes of the framework, such as `AuthComponent` or `FileEngine`,
+are still found when the namespace has no class of that name.
 
 > [!NOTE]
 > `App.namespace` has no default value: when it is not set, CakePHP only looks
@@ -308,11 +306,48 @@ A name with a plugin prefix (`'MyPlugin.Greeting'`) is looked up in the
 namespace of the plugin (`MyPlugin\Controller\Component\GreetingComponent`)
 instead of `App.namespace`, then as the global class of the plugin.
 
+### AppController and AppModel
+
+A controller in the namespace merges `$components` and `$helpers` with its
+parent class `AppController` (`App\Controller\AppController`), as a global
+controller does with the global `AppController`. The parent class may be in any
+namespace, also without `App.namespace`, as long as it is named
+`AppController`. A plugin controller also merges them with the `AppController`
+of the namespace of its plugin (`MyPlugin\Controller\MyPluginAppController`).
+A model in the namespace merges `$actsAs` and `$findMethods` with
+`App\Model\AppModel` in the same way.
+
+Some classes of the framework, such as `CakeErrorController`, extend the global
+`AppController`, `AppModel`, `AppHelper` or `AppShell`. When the application
+has these classes only in `App.namespace`, `App::load()` gives the global name
+to that class. A global class is used when there is one.
+
+### Fixtures
+
+Fixtures may be namespaced classes too. For the names in `$fixtures`, CakePHP
+looks for these classes, then for the global classes as before:
+
+| Name | Class in the namespace |
+|---|---|
+| `'app.article'` | `App\Test\Fixture\ArticleFixture` (in `App.namespace`) |
+| `'plugin.my_plugin.article'` | `MyPlugin\Test\Fixture\ArticleFixture` |
+| `'core.article'` | `Cake\Test\Fixture\ArticleFixture` |
+
+The name and the table of a fixture come from the class name without the
+namespace (`Article` and `articles` for `ArticleFixture`).
+
+### Cached Views
+
+`Controller::$controllerClass` and `View::$controllerClass` hold the class name
+of the controller, such as `App\Controller\PostsController`. The views cached
+by `CacheHelper` create a namespaced controller by that name.
+
 ## What Does Not Work
 
 - `App::uses()` does not load namespaced classes: `App::load()` would look for
   a file named after the whole name in the package. Composer loads them, so
-  `App::uses()` is not needed.
+  `App::uses()` is not needed. `App::import()` also finds namespaced classes
+  with [`App::className()`](/en/core-utility-libraries/app).
 
 > [!WARNING]
 > Fully qualified class names as the keys of `$uses`, `$components`,

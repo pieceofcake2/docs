@@ -42,10 +42,18 @@ Changes in v2.13.0 that may affect applications already running on the fork.
   by their short name, e.g. `App\Controller\PostsController` for `/posts`.
   See [Namespaced Classes](/development/namespaced-classes).
 
+- `Controller` and `View` have the new public property `$controllerClass`,
+  which is also passed from the controller to the view. Rename a property of
+  that name in a subclass.
+
 > [!WARNING]
 > `Controller::$name`, `Model::$name` and `Shell::$name` of a class in a
 > namespace no longer contain the namespace, e.g. `Post` instead of
 > `Acme\Model\Post`. Set `$name` if you relied on the old value.
+
+> [!WARNING]
+> A namespaced controller now merges `$components` and `$helpers` with its
+> parent class `AppController` in any namespace, also without `App.namespace`.
 
 ## v2.12.11
 
