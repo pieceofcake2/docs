@@ -194,6 +194,7 @@ use Acme\Network\Email\SesTransport;
 Cache::config('memory', ['engine' => MemoryEngine::class]);
 
 $email = new CakeEmail(['transport' => SesTransport::class]);
+$email->send('Hello');
 ```
 
 ```php
