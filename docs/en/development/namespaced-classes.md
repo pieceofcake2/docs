@@ -347,7 +347,7 @@ by `CacheHelper` create a namespaced controller by that name.
 - `App::uses()` does not load namespaced classes: `App::load()` would look for
   a file named after the whole name in the package. Composer loads them, so
   `App::uses()` is not needed. `App::import()` also finds namespaced classes
-  with [`App::className()`](/en/core-utility-libraries/app).
+  with [`App::className()`](/core-utility-libraries/app).
 
 > [!WARNING]
 > Fully qualified class names as the keys of `$uses`, `$components`,
