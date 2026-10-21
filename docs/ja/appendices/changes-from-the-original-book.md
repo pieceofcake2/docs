@@ -105,7 +105,8 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - Hiawatha の節を削除
 - [CakePHP のフォルダ構造](/ja/getting-started/cakephp-folder-structure)
   - モダンな構成 (`bin`、`config`、`logs`、`plugins`、`resources/locales`、`src`、`templates`、`tests`、`tmp`、`vendor`、`webroot`) の説明に書き換え、従来の `app/` との対応表を追加
-  - 従来の `app/` 構成からモダンな構成へ移行する手順を追加
+  - モダンな構成と従来の `app/` 構成を別の節に分け、それぞれにツリーと各フォルダの短い説明を記載。2.13.0 の `.php` テンプレートと CakePHP 5 のテンプレートのディレクトリについての注記を追加
+  - モダンな構成へ移行する手順は [モダンな構成への移行](/ja/appendices/migrating-to-the-modern-layout) に任せ、そこへリンク
   - 開発時も運用時も `webroot/` だけをドキュメントルートにすることを明記
 - [CakePHP の規約](/ja/getting-started/cakephp-conventions)
   - ファイルの場所を `src/` と `templates/` に変更、String::uuid を CakeText::uuid() に変更

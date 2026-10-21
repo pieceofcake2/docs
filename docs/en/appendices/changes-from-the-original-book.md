@@ -107,7 +107,8 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - Removed the Hiawatha section
 - [CakePHP Folder Structure](/getting-started/cakephp-folder-structure)
   - Describes the modern layout (`bin`, `config`, `logs`, `plugins`, `resources/locales`, `src`, `templates`, `tests`, `tmp`, `vendor`, `webroot`) with a legacy `app/` mapping table
-  - Added steps for moving a legacy `app/` application to the modern layout
+  - The modern layout and the legacy `app/` layout in separate sections, each with a tree and a short description of each folder; a note on the `.php` templates and CakePHP 5 template directories of 2.13.0
+  - The steps for moving to the modern layout are left to [Migrating to the Modern Layout](/appendices/migrating-to-the-modern-layout), which the page links to
   - `webroot/` is the only document root, in development and production
 - [CakePHP Conventions](/getting-started/cakephp-conventions)
   - File locations use `src/` and `templates/`; String::uuid replaced by CakeText::uuid()
