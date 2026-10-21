@@ -28,6 +28,56 @@
 
 v2.13.0 の変更のうち、すでにフォークで動いているアプリケーションに影響する可能性があるものです。
 
+CakePHP 2.13 は機能を追加したリリースです。2.12 からは次の手順で更新します。
+
+1. `composer.json` の制約を `"pieceofcake2/cakephp": "^2.13"` にして、
+   `composer update pieceofcake2/cakephp` を実行します。
+2. pieceofcake2/phpstan-cakephp2 を使っている場合は、`Cake` 名前空間のクラスに対応した `^1.1`
+   に更新します。
+3. 下の項目、特にログや出力に出るクラス名と、クラス名を文字列で比べているコードを確かめてから、
+   テストを実行します。
+
+### CakePHP 5 の構成のプラグイン ([PR #88](https://github.com/pieceofcake2/cakephp/pull/88)) {#plugin-modern-layout}
+
+- アプリケーションと同じように、プラグインも名前空間のあるクラスを `src/` (プラグインの `psr-4` で
+  Composer が読み込みます)、テンプレートを `templates/`、翻訳を `resources/locales/`、ベンダーのファイルを
+  `vendor/`、bootstrap、routes、設定ファイル、スキーマを `config/` に置けます。CakePHP はこれらの
+  ディレクトリを先に探し、`Controller/`、`View/`、`Locale/`、`Vendor/`、`Config/` などの CakePHP 2 の
+  ディレクトリをその後に探します。これらのディレクトリが無いプラグインでは何も変わりません。
+  [プラグインの作成](/ja/plugins/how-to-create-plugins) を参照してください。
+
+> [!WARNING]
+> これらのディレクトリを別の目的ですでに使っているプラグインでは、そのファイルが先に見つかります。たとえば
+> `App::import('Vendor', ...)` は、開発用にチェックアウトしたプラグインの Composer の `vendor/` を先に探します。
+
+### CakePHP 5 の形式のテンプレート ([PR #94](https://github.com/pieceofcake2/cakephp/pull/94)) {#php-templates}
+
+- `templates/` のテンプレート、レイアウト、エレメントに、`.php` の拡張子と、CakePHP 5 のディレクトリ
+  `layout/`、`element/`、`email/`、`Error/` を使えます。たとえば `templates/email/html/welcome.php` です。
+- `.ctp` のテンプレートと、従来のレイアウトの `View/` ディレクトリは何も変わりません。
+  [CakePHP 5 の形式のテンプレート](/ja/views#templates-in-the-cakephp-5-style) を参照してください。
+
+> [!WARNING]
+> `templates/` で、同じ名前の `.ctp` の隣に `.php` のファイルがあると、`.php` が使われます。
+> `templates/` にテンプレート以外の `.php` のファイルが無いことを確かめてください。
+
+### PHP 8.1 から 8.5 の非推奨 ([PR #96](https://github.com/pieceofcake2/cakephp/pull/96)) {#php-deprecations}
+
+コアは、自身のコードで PHP 8.1 から 8.5 の非推奨の警告を出さなくなりました。ほとんどのアプリケーションは
+更新するだけで済みます。次の変更は影響する可能性があります。
+
+- `Xml::build()` の `loadEntities` オプションが無くなりました。このオプションは
+  `libxml_disable_entity_loader()` を呼ぶかどうかを決めるだけのものでした。この関数は PHP 8 で非推奨になり、
+  libxml 2.9 以降では何も変わりません。どちらにしても外部エンティティは読み込まれません。
+  オプションを指定しても無視されるので、呼び出しから削除できます。
+  [XML](/ja/core-utility-libraries/xml) を参照してください。
+- デコード関数を渡した `CakeRequest::input()` は、リクエストにボディが無いとき、デコード関数を呼ばずに
+  `null` を返します。`RequestHandlerComponent` が設定する空のデータは、これまでと同じです。
+  独自のデコード関数で空のボディを扱っていた場合は、代わりに `null` を扱ってください。
+  [リクエストとレスポンスオブジェクト](/ja/controllers/request-response) を参照してください。
+- コアは、PHP 8.0 から 8.3 で `Pdo\Mysql` の定数を使うために `symfony/polyfill-php84` を必要とします。
+  Composer がインストールします。
+
 ### 名前空間のあるクラス: `App::className()` と `App.namespace` ([PR #91](https://github.com/pieceofcake2/cakephp/pull/91)) {#app-classname}
 
 - サフィックスの付く設定に、サフィックスの付いた完全なクラス名を書けます。キャッシュエンジンなら

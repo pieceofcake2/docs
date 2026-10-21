@@ -323,6 +323,13 @@ This would use the following view files:
 - `templates/Emails/html/welcome.ctp`
 - `templates/Layouts/Emails/html/fancy.ctp`
 
+::: pieceofcake2 Added in version 2.13.0
+The templates can also be in the CakePHP 5 directories, with the `.php`
+extension, e.g. `templates/email/html/welcome.php` and
+`templates/layout/email/html/fancy.php`. See
+[Templates in the CakePHP 5 style](/views#templates-in-the-cakephp-5-style).
+:::
+
 When sending templated emails you have the option of sending either
 `text`, `html` or `both`.
 
