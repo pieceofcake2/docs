@@ -29,6 +29,7 @@ Before migrating to this fork, ensure:
 ## v2.13.0
 
 Changes in v2.13.0 that may affect applications already running on the fork.
+
 CakePHP 2.13 adds features; follow these steps to update from 2.12:
 
 1. Update the constraint in `composer.json` to `"pieceofcake2/cakephp": "^2.13"`
@@ -54,6 +55,18 @@ CakePHP 2.13 adds features; follow these steps to update from 2.12:
 > its files are now found first. For example, `App::import('Vendor', ...)`
 > looks first in the Composer `vendor/` directory of a plugin checked out for
 > development.
+
+### Templates in the CakePHP 5 style ([PR #94](https://github.com/pieceofcake2/cakephp/pull/94)) {#php-templates}
+
+- In `templates/`, templates, layouts and elements may use the `.php`
+  extension and the CakePHP 5 directories `layout/`, `element/`, `email/` and
+  `Error/`, e.g. `templates/email/html/welcome.php`.
+- Nothing changes for `.ctp` templates and for the `View/` directories of the
+  legacy layout. See [Templates in the CakePHP 5 style](/views#templates-in-the-cakephp-5-style).
+
+> [!WARNING]
+> A `.php` file next to a `.ctp` file of the same name in `templates/` is now
+> used instead of it. Check that `templates/` holds no other `.php` files.
 
 ## v2.12.11
 

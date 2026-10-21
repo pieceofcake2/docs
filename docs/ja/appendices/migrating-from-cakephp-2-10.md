@@ -27,6 +27,7 @@
 ## v2.13.0
 
 v2.13.0 の変更のうち、すでにフォークで動いているアプリケーションに影響する可能性があるものです。
+
 CakePHP 2.13 は機能を追加したリリースです。2.12 からは次の手順で更新します。
 
 1. `composer.json` の制約を `"pieceofcake2/cakephp": "^2.13"` にして、
@@ -48,6 +49,17 @@ CakePHP 2.13 は機能を追加したリリースです。2.12 からは次の�
 > [!WARNING]
 > これらのディレクトリを別の目的ですでに使っているプラグインでは、そのファイルが先に見つかります。たとえば
 > `App::import('Vendor', ...)` は、開発用にチェックアウトしたプラグインの Composer の `vendor/` を先に探します。
+
+### CakePHP 5 の形式のテンプレート ([PR #94](https://github.com/pieceofcake2/cakephp/pull/94)) {#php-templates}
+
+- `templates/` のテンプレート、レイアウト、エレメントに、`.php` の拡張子と、CakePHP 5 のディレクトリ
+  `layout/`、`element/`、`email/`、`Error/` を使えます。たとえば `templates/email/html/welcome.php` です。
+- `.ctp` のテンプレートと、従来のレイアウトの `View/` ディレクトリは何も変わりません。
+  [CakePHP 5 の形式のテンプレート](/ja/views#templates-in-the-cakephp-5-style) を参照してください。
+
+> [!WARNING]
+> `templates/` で、同じ名前の `.ctp` の隣に `.php` のファイルがあると、`.php` が使われます。
+> `templates/` にテンプレート以外の `.php` のファイルが無いことを確かめてください。
 
 ## v2.12.11
 
