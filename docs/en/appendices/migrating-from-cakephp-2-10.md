@@ -49,11 +49,6 @@ Changes in v2.13.0 that may affect applications already running on the fork.
   plugin, add a classmap or PSR-4 to the `composer.json` of the plugin. See
   [Removing App::uses() calls](/core-utility-libraries/app#removing-app-uses).
 
-> [!WARNING]
-> Overriding a core class with a file in `src/Lib` still needs `App::uses()`,
-> so it logs the deprecation. See
-> [Overriding classes in CakePHP](/core-utility-libraries/app#overriding-classes-in-cakephp).
-
 ### The framework classes in the `Cake` namespace ([PR #92](https://github.com/pieceofcake2/cakephp/pull/92)) {#cake-namespace}
 
 - The classes of the framework moved into the `Cake` namespace, e.g.

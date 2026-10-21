@@ -44,12 +44,6 @@ v2.13.0 の変更のうち、すでにフォークで動いているアプリケ
   PSR-4 を追加します。[`App::uses()` の呼び出しを削除する](/ja/core-utility-libraries/app#removing-app-uses)
   を参照してください。
 
-> [!WARNING]
-> `src/Lib` のファイルでコアのクラスをオーバーライドするには、引き続き `App::uses()` が必要なので、
-> 非推奨の警告がログに書かれます。
-> [CakePHP のクラスをオーバーライドする](/ja/core-utility-libraries/app#overriding-classes-in-cakephp)
-> を参照してください。
-
 ### フレームワークのクラスを `Cake` 名前空間に移動 ([PR #92](https://github.com/pieceofcake2/cakephp/pull/92)) {#cake-namespace}
 
 - フレームワークのクラスは `Cake` 名前空間に移りました。たとえば `Cake\Controller\Controller` です。

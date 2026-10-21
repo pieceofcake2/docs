@@ -394,11 +394,6 @@ warns that the name is already in use. Move your overrides to `src/Cake/` as
 shown above.
 :::
 
-> [!WARNING]
-> Overriding a class this way needs `App::uses()`, which is deprecated as of
-> 2.13.0: its first call logs a deprecation warning. See
-> [Loading classes](#loading-classes).
-
 ## Loading Vendor Files
 
 Libraries installed with Composer are autoloaded and need no extra code. This
