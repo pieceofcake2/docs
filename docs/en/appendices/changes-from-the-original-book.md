@@ -126,6 +126,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - New "Loading classes" section: Composer classmap autoloading replaces App::uses(); when App::uses() is still needed
 - [Request and Response objects](/controllers/request-response)
   - Dispatcher path is `webroot/index.php`; response mock example uses getMockBuilder() for PHPUnit 9
+  - Change note: `input()` with a decoding callback returns `null` for a request without a body (v2.13.0)
 - [The Pages Controller](/controllers/pages-controller)
   - Paths updated to `src/Controller` and `templates/Pages`; skel source is the app skeleton or the Bake plugin instead of `lib/Cake`
 - [Scaffolding](/controllers/scaffolding)
@@ -261,8 +262,9 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
 - [CakeTime](/core-utility-libraries/time)
   - strftime() formats now explained in the text (IntlDateFormatter via php81_bc/strftime, intl needed for non-English names); fixed syntax error and removed App::uses() in the example
 - [Xml](/core-utility-libraries/xml)
-  - Removed CakePHP 1.3 "old method" comparisons and App::uses(); documented Xml::build() options (return, loadEntities default false, readFile, parseHuge) and a warning about passing user input; fixed broken examples
+  - Removed CakePHP 1.3 "old method" comparisons and App::uses(); documented Xml::build() options (return, readFile, parseHuge) and a warning about passing user input; fixed broken examples
   - `readFile` disables both file and URL loading; user input example uses `'readFile' => false`; change note that https URLs were fetched before v2.12.3
+  - Change note: the `loadEntities` option is removed in v2.13.0
 
 ### Console & Shells
 
@@ -396,6 +398,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - Added the `Xml::build()` SSRF with `'readFile' => false` (fixed in 2.12.3); Cookie type set in `$components`; skeleton note for `Security.useOpenSsl`
   - Added the email header injection in SmtpTransport/MailTransport (GHSA-4f9q-3c4x-52cv), the path traversal in view, layout and element names (GHSA-w2mh-x92p-5p95) and the open redirect after login in AuthComponent (GHSA-x4p9-p4cx-gxwx), all fixed in 2.12.5; the table lists GHSA IDs; note that applications on the original CakePHP 2.x can switch to pieceofcake2/cakephp to get the fixes
   - Added the weak 'cipher' encryption and `Security.cipherSeed` (GHSA-65v5-h65v-8pgg): what 2.12.6 changed (deprecation warning, seed range warning, in-range default seed, `Cookie.type` / `Cookie.key`), that 'cipher' remains insecure, and switching to 'aes' with `Security.useOpenSsl`; link to the cipherSeed section of Configuration
+  - XML external entities: the `loadEntities` option is removed in v2.13.0 and has no effect
 - [Upstream Advisories](/security/upstream-advisories)
   - New page: status of the upstream CakePHP advisories that concern CakePHP 2.x (fixed in the fork, or not applicable), from the fork's CHANGELOG, `UPGRADE.md` and advisories
   - Note that the 'cipher' weakness (GHSA-65v5-h65v-8pgg) has no upstream advisory and affects the original CakePHP 2.x, where it will not be fixed

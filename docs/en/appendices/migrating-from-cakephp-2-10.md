@@ -68,6 +68,24 @@ CakePHP 2.13 adds features; follow these steps to update from 2.12:
 > A `.php` file next to a `.ctp` file of the same name in `templates/` is now
 > used instead of it. Check that `templates/` holds no other `.php` files.
 
+### PHP 8.1 to 8.5 deprecations ([PR #96](https://github.com/pieceofcake2/cakephp/pull/96)) {#php-deprecations}
+
+The core no longer triggers the deprecations of PHP 8.1 to 8.5 in its own
+code. Most applications only need to update. These changes may affect yours:
+
+- `Xml::build()` no longer has the `loadEntities` option. It only decided
+  whether `libxml_disable_entity_loader()` was called, which PHP 8 deprecates
+  and which no longer changes anything with libxml 2.9 and later: external
+  entities are not loaded either way. Passing the option is ignored, so you
+  can remove it from your calls. See [Xml](/core-utility-libraries/xml).
+- `CakeRequest::input()` with a decoding callback returns `null` without
+  calling the callback when the request has no body. `RequestHandlerComponent`
+  sets the same empty data as before. If your own callback handled an empty
+  body, handle `null` instead. See
+  [Request and Response objects](/controllers/request-response).
+- The core requires `symfony/polyfill-php84` for the `Pdo\Mysql` constants on
+  PHP 8.0 to 8.3. Composer installs it.
+
 ## v2.12.11
 
 ### Security fix: request URLs with extra leading slashes ([GHSA-wh43-gc93-wh4c](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-wh43-gc93-wh4c), [PR #90](https://github.com/pieceofcake2/cakephp/pull/90)) {#request-url-leading-slashes}

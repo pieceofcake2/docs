@@ -61,6 +61,23 @@ CakePHP 2.13 は機能を追加したリリースです。2.12 からは次の�
 > `templates/` で、同じ名前の `.ctp` の隣に `.php` のファイルがあると、`.php` が使われます。
 > `templates/` にテンプレート以外の `.php` のファイルが無いことを確かめてください。
 
+### PHP 8.1 から 8.5 の非推奨 ([PR #96](https://github.com/pieceofcake2/cakephp/pull/96)) {#php-deprecations}
+
+コアは、自身のコードで PHP 8.1 から 8.5 の非推奨の警告を出さなくなりました。ほとんどのアプリケーションは
+更新するだけで済みます。次の変更は影響する可能性があります。
+
+- `Xml::build()` の `loadEntities` オプションが無くなりました。このオプションは
+  `libxml_disable_entity_loader()` を呼ぶかどうかを決めるだけのものでした。この関数は PHP 8 で非推奨になり、
+  libxml 2.9 以降では何も変わりません。どちらにしても外部エンティティは読み込まれません。
+  オプションを指定しても無視されるので、呼び出しから削除できます。
+  [XML](/ja/core-utility-libraries/xml) を参照してください。
+- デコード関数を渡した `CakeRequest::input()` は、リクエストにボディが無いとき、デコード関数を呼ばずに
+  `null` を返します。`RequestHandlerComponent` が設定する空のデータは、これまでと同じです。
+  独自のデコード関数で空のボディを扱っていた場合は、代わりに `null` を扱ってください。
+  [リクエストとレスポンスオブジェクト](/ja/controllers/request-response) を参照してください。
+- コアは、PHP 8.0 から 8.3 で `Pdo\Mysql` の定数を使うために `symfony/polyfill-php84` を必要とします。
+  Composer がインストールします。
+
 ## v2.12.11
 
 ### セキュリティ修正: 先頭のスラッシュが多いリクエスト URL ([GHSA-wh43-gc93-wh4c](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-wh43-gc93-wh4c), [PR #90](https://github.com/pieceofcake2/cakephp/pull/90)) {#request-url-leading-slashes}
