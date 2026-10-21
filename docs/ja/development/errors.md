@@ -20,7 +20,8 @@ Configure を使って、好きなメソッドをデフォルトのエラーハ�
 // config/core.php
 Configure::write('Error', [
     'handler' => 'ErrorHandler::handleError',
-    'level' => E_ALL & ~E_DEPRECATED,
+    // Show the deprecations while debugging, and leave them out of the production logs
+    'level' => Configure::read('debug') ? E_ALL : E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED,
     'trace' => true,
 ]);
 ```
@@ -76,6 +77,46 @@ PHP 7 以降、未定義のメソッドの呼び出しや型の合わない引�
 これらは `Error.handler` には渡されません。キャッチされなかった場合は、ほかのキャッチされなかった
 例外と同じように、設定された `Exception.handler` に渡され、internal server error として
 レンダリングされます。詳しくは [例外(Exception)](../development/exceptions) を参照してください。
+
+## 環境ごとのエラーの扱い {#errors-in-each-environment}
+
+PHP のエラーは、開発、テスト、本番で扱いを分けます。
+
+| 環境 | エラー、警告、notice | 非推奨 |
+|---|---|---|
+| 開発 (`debug` が 1 以上) | 表示する | 表示する |
+| テスト | テストを失敗にする | 表示するが、テストは失敗にしない |
+| 本番 (`debug` が 0) | ログに書き、表示しない | 扱わない |
+
+### 開発
+
+非推奨も含めて、すべてのエラーを表示します。PHP やライブラリの新しいバージョンで非推奨がエラーに
+なる前に直せます。スケルトンは、`debug` が 1 以上のとき `Error.level` を `E_ALL` にします
+(上の設定を参照してください)。自分のマシンでデバッグモードにするには、`config/.env.local` に
+`APP_DEBUG` を設定します。
+
+### テスト
+
+PHPUnit は、エラー、警告、notice をテストの失敗にします。非推奨は、表示してもテストは失敗に
+しません。プラグインやライブラリの非推奨で、アプリケーションのテストが壊れないようにするためです。
+スケルトンの `phpunit.xml.dist` は、非推奨を標準エラー出力に表示します。
+
+```xml
+<php>
+    <ini name="display_errors" value="stderr"/>
+    <ini name="log_errors" value="0"/>
+</php>
+```
+
+非推奨でテストを失敗にするには、`<phpunit>` 要素に `convertDeprecationsToExceptions="true"` を
+設定します。
+
+### 本番
+
+利用者にエラーを表示しません。`debug` が 0 のとき、CakePHP はエラーを表示せずにログに書きます。
+スケルトンと同じく `Error.level` から非推奨を除き、エラーのログが非推奨で埋まらないようにします。
+CakePHP が動き出す前のエラーのために、サーバーの `php.ini` でも `display_errors = Off` を設定して
+ください。
 
 ## 独自のエラーハンドラを作成する
 

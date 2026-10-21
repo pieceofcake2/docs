@@ -22,7 +22,8 @@ default error handling configuration looks like:
 // config/core.php
 Configure::write('Error', [
     'handler' => 'ErrorHandler::handleError',
-    'level' => E_ALL & ~E_DEPRECATED,
+    // Show the deprecations while debugging, and leave them out of the production logs
+    'level' => Configure::read('debug') ? E_ALL : E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED,
     'trace' => true,
 ]);
 ```
@@ -84,6 +85,48 @@ PHP errors. PHP 8 converts even more warnings into thrown errors. These are not
 passed to `Error.handler`. If they are not caught, they reach the configured
 `Exception.handler` and are rendered as an internal server error, like any
 other uncaught exception. See [Exceptions](../development/exceptions).
+
+## Errors in Each Environment {#errors-in-each-environment}
+
+Handle PHP errors differently in development, in the tests and in production:
+
+| Environment | Errors, warnings and notices | Deprecations |
+|---|---|---|
+| Development (`debug` above 0) | Shown | Shown |
+| Tests | Fail the test | Shown, do not fail the test |
+| Production (`debug` 0) | Logged, not shown | Not reported |
+
+### Development
+
+Show every error, deprecations included. You then fix a deprecation before a
+new version of PHP or of a library turns it into an error. The skeleton sets
+`Error.level` to `E_ALL` while `debug` is above 0 (see above). Set `APP_DEBUG`
+in `config/.env.local` to turn on debug mode on your machine.
+
+### Tests
+
+PHPUnit turns errors, warnings and notices into test failures. Show the
+deprecations without failing the tests: a deprecation in a plugin or a library
+then does not break your tests. The `phpunit.xml.dist` of the skeleton shows
+them on stderr:
+
+```xml
+<php>
+    <ini name="display_errors" value="stderr"/>
+    <ini name="log_errors" value="0"/>
+</php>
+```
+
+To fail the tests on deprecations, set `convertDeprecationsToExceptions="true"`
+on the `<phpunit>` element.
+
+### Production
+
+Never show errors to the users. With `debug` 0, CakePHP logs the errors
+instead of showing them. Leave the deprecations out of `Error.level`, as the
+skeleton does, so that they do not fill the error log. Also set
+`display_errors = Off` in the `php.ini` of the server, for the errors that
+happen before CakePHP starts.
 
 ## Creating your own error handler
 
