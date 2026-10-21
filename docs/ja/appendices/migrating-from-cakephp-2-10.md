@@ -33,7 +33,8 @@ CakePHP 2.13 は機能を追加したリリースです。2.12 からは次の�
 1. `composer.json` の制約を `"pieceofcake2/cakephp": "^2.13"` にして、
    `composer update pieceofcake2/cakephp` を実行します。
 2. pieceofcake2/phpstan-cakephp2 を使っている場合は、`Cake` 名前空間のクラスに対応した `^1.1`
-   に更新します。
+   に更新します (`composer require --dev pieceofcake2/phpstan-cakephp2:^1.1`)。バージョン 1.0 のままでは、
+   これまで問題のなかったコードで PHPStan がエラーを出します。
 3. 下の項目、特にログや出力に出るクラス名と、クラス名を文字列で比べているコードを確かめてから、
    テストを実行します。
 
@@ -127,7 +128,9 @@ CakePHP 2.13 は機能を追加したリリースです。2.12 からは次の�
   コアのクラスをオーバーライドできなくなりました。代わりにコアのファイルを `src/Cake/` にコピーします。
   [CakePHP のクラスをオーバーライドする](/ja/core-utility-libraries/app#overriding-classes-in-cakephp) を参照してください。
 - PHPStan には pieceofcake2/phpstan-cakephp2 の `^1.1` が必要です。
-  [名前空間のあるクラス](/ja/development/namespaced-classes#the-classes-of-the-framework) を参照してください。
+  `composer require --dev pieceofcake2/phpstan-cakephp2:^1.1` を実行してください。バージョン 1.0 のままでは、
+  PHPStan がコンポーネント、モデル、タスク、ビヘイビアの型を見つけられなくなります。
+  [静的解析](/ja/development/static-analysis#installation) を参照してください。
 
 > [!WARNING]
 > `get_class()`、`::class`、`ReflectionClass::getName()` は名前空間を含む名前を返すので、

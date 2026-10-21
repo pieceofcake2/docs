@@ -35,7 +35,9 @@ CakePHP 2.13 adds features; follow these steps to update from 2.12:
 1. Update the constraint in `composer.json` to `"pieceofcake2/cakephp": "^2.13"`
    and run `composer update pieceofcake2/cakephp`.
 2. If you use pieceofcake2/phpstan-cakephp2, update it to `^1.1`, which knows
-   the classes of the `Cake` namespace.
+   the classes of the `Cake` namespace:
+   `composer require --dev pieceofcake2/phpstan-cakephp2:^1.1`. With version
+   1.0, PHPStan reports errors in code that worked before.
 3. Read the items below, especially the class names in logs and output and the
    comparisons of class names as strings, and run your tests.
 
@@ -141,8 +143,10 @@ code. Most applications only need to update. These changes may affect yours:
   class, because the framework uses the namespaced names. Copy the core file to
   `src/Cake/` instead. See
   [Overriding classes in CakePHP](/core-utility-libraries/app#overriding-classes-in-cakephp).
-- PHPStan needs pieceofcake2/phpstan-cakephp2 `^1.1`. See
-  [Namespaced Classes](/development/namespaced-classes#the-classes-of-the-framework).
+- PHPStan needs pieceofcake2/phpstan-cakephp2 `^1.1`: run
+  `composer require --dev pieceofcake2/phpstan-cakephp2:^1.1`. With version 1.0,
+  PHPStan no longer finds the type of components, models, tasks and behaviors.
+  See [Static Analysis](/development/static-analysis#installation).
 
 > [!WARNING]
 > `get_class()`, `::class` and `ReflectionClass::getName()` return the
