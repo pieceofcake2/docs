@@ -26,6 +26,35 @@ Before migrating to this fork, ensure:
 4. **Upgrade PHP**: Update your PHP version to 8.0 or newer
 5. **Test Thoroughly**: Run your application's test suite to ensure compatibility
 
+## v2.13.0
+
+Changes in v2.13.0 that may affect applications already running on the fork.
+CakePHP 2.13 adds features; follow these steps to update from 2.12:
+
+1. Update the constraint in `composer.json` to `"pieceofcake2/cakephp": "^2.13"`
+   and run `composer update pieceofcake2/cakephp`.
+2. If you use pieceofcake2/phpstan-cakephp2, update it to `^1.1`, which knows
+   the classes of the `Cake` namespace.
+3. Read the items below, especially the class names in logs and output and the
+   comparisons of class names as strings, and run your tests.
+
+### Plugins in the CakePHP 5 layout ([PR #88](https://github.com/pieceofcake2/cakephp/pull/88)) {#plugin-modern-layout}
+
+- A plugin can put namespaced classes in `src/` (loaded by Composer with the
+  plugin's `psr-4` entry), its templates in `templates/`, its translations in
+  `resources/locales/`, its vendor files in `vendor/` and its bootstrap, routes,
+  configuration files and schemas in `config/`, as the application does.
+- CakePHP searches these directories first, and `Controller/`, `View/`,
+  `Locale/`, `Vendor/`, `Config/` and the other CakePHP 2 directories after
+  them. Nothing changes for a plugin that does not have them. See
+  [How To Create Plugins](/plugins/how-to-create-plugins).
+
+> [!WARNING]
+> In a plugin that already has one of these directories for another purpose,
+> its files are now found first. For example, `App::import('Vendor', ...)`
+> looks first in the Composer `vendor/` directory of a plugin checked out for
+> development.
+
 ## v2.12.11
 
 ### Security fix: request URLs with extra leading slashes ([GHSA-wh43-gc93-wh4c](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-wh43-gc93-wh4c), [PR #90](https://github.com/pieceofcake2/cakephp/pull/90)) {#request-url-leading-slashes}

@@ -49,9 +49,15 @@ lives under `app/View/` instead:
 | Helpers | `src/View/Helper/` | `app/View/Helper/` |
 | View classes | `src/View/` | `app/View/` |
 
-Templates inside a plugin are always in the plugin's own `View/` directory,
-for example `plugins/Contacts/View/Contacts/index.ctp`. See
+Templates inside a plugin are in the plugin's own `View/` directory, for
+example `plugins/Contacts/View/Contacts/index.ctp`. See
 [CakePHP Folder Structure](/getting-started/cakephp-folder-structure) for the full mapping.
+
+::: pieceofcake2 Added in version 2.13.0
+A plugin can also keep its templates in `templates/`, as in CakePHP 5, for
+example `plugins/Contacts/templates/Contacts/index.ctp`. CakePHP looks there
+before `View/`. See [How To Create Plugins](/plugins/how-to-create-plugins).
+:::
 
 The view layer in CakePHP can be made up of a number of different
 parts. Each part has different uses, and will be covered in this
