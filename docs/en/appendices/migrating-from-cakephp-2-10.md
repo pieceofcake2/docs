@@ -35,7 +35,9 @@ CakePHP 2.13 adds features; follow these steps to update from 2.12:
 1. Update the constraint in `composer.json` to `"pieceofcake2/cakephp": "^2.13"`
    and run `composer update pieceofcake2/cakephp`.
 2. If you use pieceofcake2/phpstan-cakephp2, update it to `^1.1`, which knows
-   the classes of the `Cake` namespace.
+   the classes of the `Cake` namespace:
+   `composer require --dev pieceofcake2/phpstan-cakephp2:^1.1`. With version
+   1.0, PHPStan reports errors in code that worked before.
 3. Read the items below, especially the class names in logs and output and the
    comparisons of class names as strings, and run your tests.
 
@@ -122,6 +124,41 @@ code. Most applications only need to update. These changes may affect yours:
 > [!WARNING]
 > A namespaced controller now merges `$components` and `$helpers` with its
 > parent class `AppController` in any namespace, also without `App.namespace`.
+
+### The framework classes in the `Cake` namespace ([PR #92](https://github.com/pieceofcake2/cakephp/pull/92)) {#cake-namespace}
+
+- The classes of the framework moved into the `Cake` namespace, e.g.
+  `Cake\Controller\Controller`. The global names of CakePHP 2 are aliases of the
+  same classes: code that extends, type-hints, catches or loads `Controller`,
+  `CakeRequest` or `NotFoundException` keeps working.
+- The files of the framework moved from `src/Cake/` to `src/`, loaded by
+  Composer with PSR-4 (`Cake\` in `src/`), and `CAKE` points to `src/`.
+  `src/Cake/bootstrap.php`, which `webroot/index.php` requires, and
+  `src/Cake/TestSuite/Fixture/CakeFixtureInjector.php`, the listener of
+  `phpunit.xml.dist`, stay at their paths and keep working. If you include other
+  files of `vendor/pieceofcake2/cakephp/src/Cake/` by path, change them to `src/`.
+- Objects serialized before the update still unserialize. Objects serialized
+  after it name the namespaced classes and cannot be read by an older version.
+- A global class registered with `App::uses()` no longer overrides a core
+  class, because the framework uses the namespaced names. Copy the core file to
+  `src/Cake/` instead. See
+  [Overriding classes in CakePHP](/core-utility-libraries/app#overriding-classes-in-cakephp).
+- PHPStan needs pieceofcake2/phpstan-cakephp2 `^1.1`: run
+  `composer require --dev pieceofcake2/phpstan-cakephp2:^1.1`. With version 1.0,
+  PHPStan no longer finds the type of components, models, tasks and behaviors.
+  See [Static Analysis](/development/static-analysis#installation).
+
+> [!WARNING]
+> `get_class()`, `::class` and `ReflectionClass::getName()` return the
+> namespaced names, so a comparison like `get_class($x) === 'CakeRequest'` is
+> now false. The error log, `Debugger` output and the debug error pages show
+> the namespaced names too, e.g. `[Cake\Error\NotFoundException]`: update the
+> log filters and alerts that match the global names.
+
+> [!TIP]
+> `bin/cake upgrade rector --rules namespaced-classes src tests` of
+> [pieceofcake2/upgrade](https://github.com/pieceofcake2/upgrade) rewrites the
+> comparisons with `get_class()` and imports the namespaced classes.
 
 ## v2.12.11
 

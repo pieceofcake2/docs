@@ -20,6 +20,18 @@ PHPStan と拡張を開発用の依存パッケージとしてインストール
 composer require --dev phpstan/phpstan pieceofcake2/phpstan-cakephp2
 ```
 
+::: pieceofcake2 Changed in version 2.13.0
+CakePHP 2.13 はフレームワークのクラスを `Cake` 名前空間に移すため
+([#92](https://github.com/pieceofcake2/cakephp/pull/92))、pieceofcake2/phpstan-cakephp2 の `^1.1` が
+必要です。バージョン 1.0 のままでは、PHPStan がコンポーネント、モデル、タスク、ビヘイビアの型を
+見つけられなくなり、`Call to an undefined method Cake\Controller\Component::paginate()` のような
+エラーを出します。CakePHP を更新するときは、拡張も更新してください。
+
+```bash
+composer require --dev pieceofcake2/phpstan-cakephp2:^1.1
+```
+:::
+
 <a id="configuration"></a>
 
 ## 設定

@@ -71,7 +71,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - ページのタイトルを「入門」から「はじめに」に変更し、サイドバーの「はじめに」グループの先頭に移動。その他のページは、インストール、高度なインストール、Web サーバーの設定、フォルダ構造、規約、構造、典型的なリクエストの順に並べ替え
   - 「CakePHP 2.10 との違い」: バックポートの項目のリンク先を、GitHub のアップグレードガイドから [統合テスト](/ja/development/integration-testing) に変更
   - 「CakePHP 2.10 との違い」: バックポートの項目に、CakePHP 5 風のデバッグ用エラーページと `utf8` バリデーションルール (v2.12.6) を追加
-  - 「モダンな PHP から来た方へ」: 「名前空間がありません」の項目に、設定で名前空間のあるクラスを使うための [名前空間のあるクラス](/ja/development/namespaced-classes) へのリンクを追加
+  - 「モダンな PHP から来た方へ」: 「グローバルなクラス名」の項目 (以前の「名前空間がありません」) に、設定で名前空間のあるクラスを使うための [名前空間のあるクラス](/ja/development/namespaced-classes) へのリンクを追加
 - [インストール](/ja/installation)
   - 動作要件: PHP 8.0〜8.5、Composer、MySQL 5.6 以上など対応 DB、mbstring/intl/openssl の説明
   - `composer create-project pieceofcake2/app` による新規作成 (モダンな構成) と `database.php`、salt/cipherSeed の設定
@@ -227,7 +227,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
 
 - [App クラス](/ja/core-utility-libraries/app)
   - クラスのローディングを Composer の classmap オートロード前提に書き直し、App::uses() は Composer が把握しないクラス (classmap なしのアプリケーションクラス、Composer 非対応プラグイン) にのみ必要
-  - コアクラスのオーバーライドは `src/Lib` に置き App::uses() で登録、exclude-from-classmap の注意を追加
+  - コアクラスのオーバーライドは `src/Cake/` にコピーして classmap で読み込み、コアのファイルを exclude-from-classmap で除外 (v2.13.0)
   - ベンダーファイル: Composer のライブラリは読み込み不要、手作業で置くファイルは `vendors/`、プラグインのパスは `plugins/`、CakePHP 1.3 から 2.0 への移行に関する記述を削除
 - [CakeEmail](/ja/core-utility-libraries/email)
   - 設定は `config/email.php`、テンプレートは `templates/Emails` と `templates/Layouts/Emails`、独自トランスポートは `src/Lib/Network/Email`、EmailComponent との比較と App::uses() を削除

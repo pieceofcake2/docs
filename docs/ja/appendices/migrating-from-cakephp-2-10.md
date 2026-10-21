@@ -33,7 +33,8 @@ CakePHP 2.13 は機能を追加したリリースです。2.12 からは次の�
 1. `composer.json` の制約を `"pieceofcake2/cakephp": "^2.13"` にして、
    `composer update pieceofcake2/cakephp` を実行します。
 2. pieceofcake2/phpstan-cakephp2 を使っている場合は、`Cake` 名前空間のクラスに対応した `^1.1`
-   に更新します。
+   に更新します (`composer require --dev pieceofcake2/phpstan-cakephp2:^1.1`)。バージョン 1.0 のままでは、
+   これまで問題のなかったコードで PHPStan がエラーを出します。
 3. 下の項目、特にログや出力に出るクラス名と、クラス名を文字列で比べているコードを確かめてから、
    テストを実行します。
 
@@ -110,6 +111,37 @@ CakePHP 2.13 は機能を追加したリリースです。2.12 からは次の�
 > [!WARNING]
 > 名前空間のあるコントローラーは、`App.namespace` を設定していなくても、親クラスの `AppController`
 > (どの名前空間でも) と `$components` と `$helpers` をマージするようになります。
+
+### フレームワークのクラスを `Cake` 名前空間に移動 ([PR #92](https://github.com/pieceofcake2/cakephp/pull/92)) {#cake-namespace}
+
+- フレームワークのクラスは `Cake` 名前空間に移りました。たとえば `Cake\Controller\Controller` です。
+  CakePHP 2 のグローバルな名前は同じクラスの別名なので、`Controller`、`CakeRequest`、
+  `NotFoundException` を継承、型宣言、`catch`、読み込みに使っているコードはそのまま動きます。
+- フレームワークのファイルは `src/Cake/` から `src/` に移り、Composer が PSR-4 (`Cake\` が `src/`)
+  で読み込みます。`CAKE` 定数は `src/` を指します。`webroot/index.php` などが読み込む
+  `src/Cake/bootstrap.php` と、`phpunit.xml.dist` のリスナーの
+  `src/Cake/TestSuite/Fixture/CakeFixtureInjector.php` は元の場所に残っているので、そのまま動きます。
+  `vendor/pieceofcake2/cakephp/src/Cake/` のほかのファイルをパスで読み込んでいるときは、`src/` に直してください。
+- 更新前にシリアライズしたオブジェクトは、これまでどおりアンシリアライズできます。更新後に
+  シリアライズしたオブジェクトは名前空間を含む名前になるので、前のバージョンでは読めません。
+- フレームワークは名前空間付きの名前を使うため、 `App::uses()` で登録したグローバルなクラスでは
+  コアのクラスをオーバーライドできなくなりました。代わりにコアのファイルを `src/Cake/` にコピーします。
+  [CakePHP のクラスをオーバーライドする](/ja/core-utility-libraries/app#overriding-classes-in-cakephp) を参照してください。
+- PHPStan には pieceofcake2/phpstan-cakephp2 の `^1.1` が必要です。
+  `composer require --dev pieceofcake2/phpstan-cakephp2:^1.1` を実行してください。バージョン 1.0 のままでは、
+  PHPStan がコンポーネント、モデル、タスク、ビヘイビアの型を見つけられなくなります。
+  [静的解析](/ja/development/static-analysis#installation) を参照してください。
+
+> [!WARNING]
+> `get_class()`、`::class`、`ReflectionClass::getName()` は名前空間を含む名前を返すので、
+> `get_class($x) === 'CakeRequest'` のような比較は false になります。エラーログ、`Debugger` の出力、
+> デバッグ用のエラーページにも名前空間を含む名前が出ます (例: `[Cake\Error\NotFoundException]`)。
+> グローバルな名前に一致させているログのフィルターやアラートを直してください。
+
+> [!TIP]
+> [pieceofcake2/upgrade](https://github.com/pieceofcake2/upgrade) の
+> `bin/cake upgrade rector --rules namespaced-classes src tests` は、`get_class()` との比較を書き換え、
+> 名前空間のクラスを `use` します。
 
 ## v2.12.11
 

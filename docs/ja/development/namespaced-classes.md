@@ -28,11 +28,51 @@ CakePHP 2.12 までは、サフィックスの付く設定には名前空間の�
 グローバルなクラスにする必要があります。
 :::
 
-> [!NOTE]
-> フレームワーク自体のクラスは今もグローバルなクラスです。プルリクエスト
-> [#23](https://github.com/pieceofcake2/cakephp/pull/23) と
-> [#28](https://github.com/pieceofcake2/cakephp/pull/28) の `Cake\` 名前空間は、
-> `feature/phpstan-level5` ブランチにしかありません。
+<a id="the-classes-of-the-framework"></a>
+
+## フレームワークのクラス
+
+::: pieceofcake2 Added in version 2.13.0
+フレームワークのクラスは `Cake` 名前空間にあります ([#92](https://github.com/pieceofcake2/cakephp/pull/92))。
+:::
+
+フレームワークのクラスは、ディレクトリに合わせた `Cake` 名前空間にあります。たとえば
+`Cake\Controller\Controller`、`Cake\Network\CakeRequest`、`Cake\Utility\Hash` です。CakePHP 2 の
+グローバルな名前は同じクラスの別名なので、`Controller` と `Cake\Controller\Controller` はどちらを使っても
+同じで、これまでのコードは変わりません。ファイルは `src/` にあり (`src/Controller/Controller.php`)、
+Composer が PSR-4 で読み込みます。名前空間のあるクラスでは、ほかのクラスと同じようにフレームワークの
+クラスを `use` します。
+
+```php
+// lib/Controller/Component/GreetingComponent.php
+namespace Acme\Controller\Component;
+
+use Cake\Controller\Component;
+use Cake\Controller\Controller;
+
+class GreetingComponent extends Component
+{
+    public function startup(Controller $controller)
+    {
+        $controller->set('greeting', 'Hello');
+    }
+}
+```
+
+設定にフレームワークのクラスを書くところには、グローバルな名前も名前空間を含む名前も書けます。
+たとえば `'routeClass' => RedirectRoute::class` や `Configure::write('Acl.classname', DbAcl::class)`
+です。
+
+> [!WARNING]
+> `get_class()`、`::class`、`ReflectionClass::getName()` は、`Cake\Network\CakeRequest` のように名前空間を
+> 含む名前を返し、エラーログ、`Debugger` の出力、デバッグ用のエラーページにもその名前が出ます。
+> `get_class($request) === 'CakeRequest'` のような比較は false になるので、`instanceof` で比べるか、
+> クラスを `use` したファイルで `CakeRequest::class` と比べてください。
+
+> [!TIP]
+> [pieceofcake2/upgrade](https://github.com/pieceofcake2/upgrade) の
+> `bin/cake upgrade rector --rules namespaced-classes src tests` は、コードのグローバルな名前を `use` を付けた
+> 名前空間の名前に置き換え、`get_class()` と比べているグローバルな名前を `::class` に置き換えます。
 
 <a id="how-cakephp-looks-up-a-class"></a>
 

@@ -13,16 +13,13 @@ location in your application using `App::build('APackage/SubPackage', $paths)`
 to inform the framework where should each class be loaded. Almost every class in
 the CakePHP framework can be swapped with your own compatible implementation. If
 you wish to use your own class instead of the classes the framework provides,
-just add the class to your libs folder emulating the directory location of where
-CakePHP expects to find it.
+copy the class to `src/Cake/`, at the path of its namespace. For instance if
+you'd like to use your own HttpSocket class, put it under:
 
-For instance if you'd like to use your own HttpSocket class, put it under:
+    src/Cake/Network/Http/HttpSocket.php
 
-    src/Lib/Network/Http/HttpSocket.php
-
-and register it with `App::uses()` as described in
-[Overriding classes in CakePHP](#overriding-classes-in-cakephp). App will then
-load your override file instead of the file inside CakePHP.
+Composer then loads your file instead of the file inside CakePHP, as described
+in [Overriding classes in CakePHP](#overriding-classes-in-cakephp).
 
 ## Loading classes
 
@@ -345,32 +342,41 @@ Keep in mind:
 ## Overriding classes in CakePHP
 
 You can override almost every class in the framework, exceptions are the
-`App` and `Configure` classes. Whenever you like to
-perform such overriding, add your class to your `src/Lib` folder
-(`app/Lib` in the legacy layout) mimicking the internal structure of the
-framework, and register it with `App::uses()` before the class is first used,
-for example in `config/bootstrap.php`. Some examples to follow:
+`App` and `Configure` classes. Copy the file of the class from
+`vendor/pieceofcake2/cakephp/src/` to the same path below `src/Cake/` of your
+application, and change it there. Keep its namespace and the `class_alias()` at
+the end of the file. Some examples to follow:
 
-- To override the `Dispatcher` class, create `src/Lib/Routing/Dispatcher.php`
-  and call `App::uses('Dispatcher', 'Routing');`
-- To override the `CakeRoute` class, create `src/Lib/Routing/Route/CakeRoute.php`
-  and call `App::uses('CakeRoute', 'Routing/Route');`
-- To override the `Model` class, create `src/Lib/Model/Model.php`
-  and call `App::uses('Model', 'Model');`
+- To override the `Dispatcher` class, create `src/Cake/Routing/Dispatcher.php`
+  (`Cake\Routing\Dispatcher`)
+- To override the `CakeRoute` class, create `src/Cake/Routing/Route/CakeRoute.php`
+  (`Cake\Routing\Route\CakeRoute`)
+- To override the `Model` class, create `src/Cake/Model/Model.php`
+  (`Cake\Model\Model`)
 
-`App::load()` is registered in front of Composer's autoloader. For classes
-registered with `App::uses()`, it searches your application's folders,
-including `src/Lib`, before the core, so your files are loaded instead of the
-built-in core ones. Without the `App::uses()` call the
-core class is loaded by Composer. If your `composer.json` has a classmap for
-`src/`, exclude the override files with `exclude-from-classmap` to avoid
-Composer's "Ambiguous class resolution" warning.
+Composer loads your file with the classmap of `src/` of the application
+skeleton, before it looks in the core. Exclude the core file with
+`exclude-from-classmap`, so that `composer dump-autoload -o` does not warn about
+an "Ambiguous class resolution", and run `composer dump-autoload`:
 
-::: pieceofcake2
-Because the framework no longer calls
-`App::uses()` for its own classes, an override in `src/Lib` is used only when
-your application registers it with `App::uses()`. Check your overrides after
-upgrading.
+```json
+"autoload": {
+    "classmap": ["src/"],
+    "exclude-from-classmap": [
+        "vendor/pieceofcake2/cakephp/src/Routing/Dispatcher.php"
+    ]
+}
+```
+
+If your application loads `src/` only with PSR-4, add `"classmap": ["src/Cake/"]`.
+
+::: pieceofcake2 Changed in version 2.13.0
+The framework uses the namespaced names of its classes
+([#92](https://github.com/pieceofcake2/cakephp/pull/92)), so a global class
+registered with `App::uses()`, such as `Dispatcher` in
+`src/Lib/Routing/Dispatcher.php`, no longer replaces the core class, and PHP
+warns that the name is already in use. Move your overrides to `src/Cake/` as
+shown above.
 :::
 
 ## Loading Vendor Files

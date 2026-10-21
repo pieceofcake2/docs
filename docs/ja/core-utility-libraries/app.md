@@ -11,16 +11,14 @@ CakePHP はパッケージの考え方を中心に編成され、それぞれの
 フォルダに属します。それぞれのクラスをどの場所でロードするべきなのかをフレームワークに通知するため、
 `App::build('APackage/SubPackage', $paths)` を使用して各パッケージの場所を設定することができます。
 CakePHP のフレームワークのほぼすべてのクラスは、あなた独自の互換性のある実装と入れ替えることができます。
-フレームワークが提供するクラスの代わりに独自のクラスを使用したい場合は、ただ単に、CakePHP の探索が
-期待できるディレクトリの配置を模倣した libs フォルダにクラスを追加するだけです。
+フレームワークが提供するクラスの代わりに独自のクラスを使用したい場合は、そのクラスを `src/Cake/` の、
+名前空間に合わせたパスにコピーします。例えば、あなた独自の HttpSocket クラスを用いたいなら以下のように配置します:
 
-例えば、あなた独自の HttpSocket クラスを用いたいなら以下のように配置します:
+    src/Cake/Network/Http/HttpSocket.php
 
-    src/Lib/Network/Http/HttpSocket.php
+すると、後述の [CakePHP のクラスをオーバーライドする](#overriding-classes-in-cakephp) で説明しているように、Composer は CakePHP
+内部のファイルの代わりにあなたのファイルをロードします。
 
-そして後述の「CakePHP のクラスをオーバーライドする」で説明しているように
-`App::uses()` で登録すると、 App は CakePHP 内部のファイルの代わりにあなたが再定義したファイルを
-ロードします。
 
 ## クラスのローディング
 
@@ -328,31 +326,40 @@ App::uses() を用いた、正しいパッケージを参照したロードが�
 - ベンダーファイルのローディングはベンダーフォルダを再帰的に探索せず、
   ファイル名をアンダースコア形式に変換することもありません。
 
-## CakePHP のクラスをオーバーライドする
+## CakePHP のクラスをオーバーライドする {#overriding-classes-in-cakephp}
 
 フレームワークのほぼすべてのクラスはオーバーライドすることができます。例外は `App` と
-`Configure` クラスです。そのようにオーバーライドを実行したいならばどんな場合であれ、
-フレームワークの内部構造を真似て `src/Lib` フォルダ (レガシーレイアウトでは `app/Lib`) にクラスを追加し、
-そのクラスが最初に使われる前に `App::uses()` で登録します。登録は `config/bootstrap.php` などで行います。
-いくつかの例を挙げます:
+`Configure` クラスです。クラスのファイルを `vendor/pieceofcake2/cakephp/src/` からアプリケーションの
+`src/Cake/` の下の同じパスにコピーして、そこで変更します。名前空間と、ファイルの最後の
+`class_alias()` はそのまま残します。いくつかの例を挙げます:
 
-- `Dispatcher` クラスをオーバーライドするためには `src/Lib/Routing/Dispatcher.php` を作成し、
-  `App::uses('Dispatcher', 'Routing');` を呼び出します
-- `CakeRoute` クラスをオーバーライドするためには `src/Lib/Routing/Route/CakeRoute.php` を作成し、
-  `App::uses('CakeRoute', 'Routing/Route');` を呼び出します
-- `Model` クラスをオーバーライドするためには `src/Lib/Model/Model.php` を作成し、
-  `App::uses('Model', 'Model');` を呼び出します
+- `Dispatcher` クラスをオーバーライドするためには `src/Cake/Routing/Dispatcher.php`
+  (`Cake\Routing\Dispatcher`) を作成します
+- `CakeRoute` クラスをオーバーライドするためには `src/Cake/Routing/Route/CakeRoute.php`
+  (`Cake\Routing\Route\CakeRoute`) を作成します
+- `Model` クラスをオーバーライドするためには `src/Cake/Model/Model.php`
+  (`Cake\Model\Model`) を作成します
 
-`App::load()` は Composer のオートローダより前に登録されています。 `App::uses()` で登録されたクラスについては、
-`src/Lib` を含むアプリケーションのフォルダをコアより先に探すため、組み込みのコアクラスの代わりに
-あなたのファイルがロードされます。 `App::uses()` を呼び出さなかった場合は、Composer によってコアのクラスがロードされます。
-`composer.json` で `src/` を classmap に指定している場合は、Composer の "Ambiguous class resolution"
-警告を避けるため、オーバーライドするファイルを `exclude-from-classmap` で除外してください。
+Composer は、アプリケーションのスケルトンの `src/` の classmap で、コアより先にあなたのファイルを
+ロードします。 `composer dump-autoload -o` が "Ambiguous class resolution" の警告を出さないように、
+コアのファイルを `exclude-from-classmap` で除外し、 `composer dump-autoload` を実行してください:
 
-::: pieceofcake2
-フレームワークが自身のクラスに対して `App::uses()` を呼び出さなくなったため、
-`src/Lib` に置いたオーバーライドは、アプリケーションが `App::uses()` で登録した場合にだけ使われます。
-アップグレード後はオーバーライドが効いているか確認してください。
+```json
+"autoload": {
+    "classmap": ["src/"],
+    "exclude-from-classmap": [
+        "vendor/pieceofcake2/cakephp/src/Routing/Dispatcher.php"
+    ]
+}
+```
+
+アプリケーションが `src/` を PSR-4 だけでロードしている場合は、 `"classmap": ["src/Cake/"]` を追加します。
+
+::: pieceofcake2 Changed in version 2.13.0
+フレームワークは自身のクラスを名前空間付きの名前で使います
+([#92](https://github.com/pieceofcake2/cakephp/pull/92))。そのため、 `src/Lib/Routing/Dispatcher.php` の
+`Dispatcher` のように `App::uses()` で登録したグローバルなクラスは、コアのクラスの代わりに使われなくなり、
+PHP がその名前はすでに使われていると警告します。オーバーライドは上のとおり `src/Cake/` に移してください。
 :::
 
 ## Vendor ファイルをローディングする

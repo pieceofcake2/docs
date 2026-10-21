@@ -104,14 +104,16 @@ composer create-project pieceofcake2/app my_app
 CakePHP 2 は PHP 5.2 と 5.3 の時代に設計されました。CakePHP 5、Laravel、Symfony などに慣れている場合は、
 次の違いに注意してください。
 
-- **名前空間がありません。** フレームワークとアプリケーションのクラスはグローバルなクラスで、
+- **グローバルなクラス名。** アプリケーションのクラスはグローバルなクラスで、
   クラス名とファイルの場所は [規約](getting-started/cakephp-conventions#file-and-classname-conventions)
   で決まります。たとえば `PostsController` は `src/Controller/PostsController.php` に置きます。
   フォークでは Composer のクラスマップがこれらを読み込みます。`App::uses()` が必要なのは、
-  多くのプラグインのクラスのように、Composer が知らないクラスだけです。アプリケーションの
+  多くのプラグインのクラスのように、Composer が知らないクラスだけです。フレームワークのクラスは
+  `Cake` 名前空間にあり、CakePHP 2 の名前が別名になっています。たとえば `Controller` は
+  `Cake\Controller\Controller` の別名です (CakePHP 2.13)。アプリケーションの
   クラスには名前空間を使えます。CakePHP の設定で使える場所と、`App.namespace` でコントローラーや
-  モデルを名前空間から探す方法 (CakePHP 2.13) は、
-  [名前空間のあるクラス](development/namespaced-classes) を参照してください。
+  モデルを名前空間から探す方法は、[名前空間のあるクラス](development/namespaced-classes) を
+  参照してください。
 - **オブジェクトではなく配列。** `find()` はオプションを配列で受け取り、`$post['Post']['title']` のように
   モデルのエイリアスをキーにした入れ子の配列を返します。エンティティやコレクションではありません。
   [データを取得する](models/retrieving-your-data) を参照してください。フォームのデータ、

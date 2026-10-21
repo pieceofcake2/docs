@@ -29,11 +29,53 @@ settings with a suffix take a namespaced name only without the suffix
 and models in `$uses` must be global classes.
 :::
 
-> [!NOTE]
-> The classes of the framework itself are still global; the `Cake\` namespace
-> of pull requests [#23](https://github.com/pieceofcake2/cakephp/pull/23) and
-> [#28](https://github.com/pieceofcake2/cakephp/pull/28) is only on the
-> `feature/phpstan-level5` branch.
+## The Classes of the Framework
+
+::: pieceofcake2 Added in version 2.13.0
+The classes of the framework are in the `Cake` namespace
+([#92](https://github.com/pieceofcake2/cakephp/pull/92)).
+:::
+
+The classes of the framework are in the `Cake` namespace, following their
+directories: `Cake\Controller\Controller`, `Cake\Network\CakeRequest`,
+`Cake\Utility\Hash`. The global names of CakePHP 2 are aliases of the same
+classes, so `Controller` and `Cake\Controller\Controller` can be used
+interchangeably, and existing code does not change. The files are in `src/`
+(`src/Controller/Controller.php`), loaded by Composer with PSR-4. In a namespaced class,
+import the classes of the framework like any other class:
+
+```php
+// lib/Controller/Component/GreetingComponent.php
+namespace Acme\Controller\Component;
+
+use Cake\Controller\Component;
+use Cake\Controller\Controller;
+
+class GreetingComponent extends Component
+{
+    public function startup(Controller $controller)
+    {
+        $controller->set('greeting', 'Hello');
+    }
+}
+```
+
+Where the configuration names a class of the framework, both the global name
+and the namespaced name work, for example `'routeClass' => RedirectRoute::class`
+or `Configure::write('Acl.classname', DbAcl::class)`.
+
+> [!WARNING]
+> `get_class()`, `::class` and `ReflectionClass::getName()` return the
+> namespaced names, e.g. `Cake\Network\CakeRequest`, and the error log, the
+> `Debugger` output and the debug error pages show them. A comparison such as
+> `get_class($request) === 'CakeRequest'` is now false: compare with
+> `instanceof`, or with `CakeRequest::class` in a file that imports the class.
+
+> [!TIP]
+> `bin/cake upgrade rector --rules namespaced-classes src tests` of
+> [pieceofcake2/upgrade](https://github.com/pieceofcake2/upgrade) replaces the
+> global names in your code by the namespaced names with `use` statements, and
+> the global names compared with `get_class()` by `::class`.
 
 ## How CakePHP Looks Up a Class
 
