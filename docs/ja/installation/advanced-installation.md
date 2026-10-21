@@ -58,19 +58,15 @@ CakePHP はどちらの構成でもこのディレクトリからプラグイン
 
 ### クラスのオートロード
 
-CakePHP 自身のクラスは Composer でオートロードされるので、`App::uses()` は不要です。
-上記の `classmap` の設定を加えて、アプリケーションのクラスも Composer に読み込ませ、コントローラ、モデル、
-ヘルパー、シェルから `App::uses()` を取り除いてください。`App::uses()` は 2.13.0 で非推奨になりました。
-
-Composer の classmap は固定のファイル一覧なので、新しいクラスファイルを追加するたびに次のコマンドを実行してください。
+上の `classmap` の設定で、アプリケーションのクラスを Composer が読み込みます。
+Composer の classmap は固定のファイル一覧なので、クラスのファイルを追加するたびに次のコマンドを実行してください。
 
 ```bash
 composer dump-autoload
 ```
 
-Composer がオートロードしないプラグインは、2.13.0 で非推奨になった `App::uses()` を呼び出す代わりに、
-アプリケーションの classmap にプラグインのフォルダを追加してください。
-[`App::uses()` の呼び出しを削除する](/ja/core-utility-libraries/app#removing-app-uses) を参照してください。
+名前空間のあるクラス、従来の構成、プラグイン、ベンダーのファイルについては、
+[クラスの読み込み](../development/autoloading) を参照してください。
 
 `AppController` のように同じ名前のクラスがアプリケーションとパッケージの両方にあると、
 Composer がクラスの解決があいまいだという警告を出します。その場合は `composer.json` で

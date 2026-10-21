@@ -439,6 +439,10 @@
           "link": "/development/configuration"
         },
         {
+          "text": "Autoloading",
+          "link": "/development/autoloading"
+        },
+        {
           "text": "Namespaced Classes",
           "link": "/development/namespaced-classes"
         },

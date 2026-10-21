@@ -56,29 +56,23 @@ packages at the same time.
 
 Packages of type `cakephp-plugin` are installed by `composer/installers`. The
 `installer-paths` setting above installs them into `plugins/` at the project
-root, where CakePHP looks for plugins in both layouts (the legacy
-`app/Plugin/` directory is searched as well). Plugins still have to be loaded with
+root. CakePHP looks for plugins there in both layouts, and also in the legacy
+`app/Plugin/` directory. Plugins still have to be loaded with
 `CakePlugin::load()` in `config/bootstrap.php`. See
 [How To Install Plugins](../plugins/how-to-install-plugins).
 
 ### Autoloading Your Classes
 
-CakePHP's own classes are autoloaded by Composer, so you don't need
-`App::uses()` for them. Let Composer load your application classes too by
-adding the `classmap` autoload setting shown above, and remove the
-`App::uses()` calls from your controllers, models, helpers and shells:
-`App::uses()` is deprecated as of 2.13.0.
-
-Composer's classmap is a fixed list of files, so run the following each time
-you add a new class file:
+The `classmap` setting shown above lets Composer load the classes of your
+application. Composer's classmap is a fixed list of files, so run the
+following each time you add a class file:
 
 ```bash
 composer dump-autoload
 ```
 
-For a plugin that Composer does not autoload, add its folder to the classmap
-of your application instead of calling `App::uses()`, which is deprecated as
-of 2.13.0. See [Removing App::uses() calls](/core-utility-libraries/app#removing-app-uses).
+See [Autoloading](../development/autoloading) for namespaced classes, the
+legacy layout, plugins and vendor files.
 
 If Composer warns about an ambiguous class resolution, for example because a
 class such as `AppController` exists both in your application and in a package,

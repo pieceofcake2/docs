@@ -1,92 +1,131 @@
 # How To Create Plugins
 
 As a working example from the [How To Use Plugins](../plugins/how-to-use-plugins) section, let's
-begin to create a ContactManager plugin. To start out, we'll set up our plugin's
-basic directory structure. It should look like this:
+begin to create a ContactManager plugin.
 
-    /plugins
-        /ContactManager
-            /Controller
-                /Component
-            /Model
-                /Behavior
-            /View
-                /Helper
-                /Layouts
+Plugins live in the `plugins/` directory at the root of your project. In an
+application with the legacy `app/` layout, you can also use `app/Plugin/`.
+The name of the plugin folder, **ContactManager**, must be the same as the
+name of the plugin.
 
-Note the name of the plugin folder, **ContactManager**. It is important
-that this folder has the same name as the plugin.
+A plugin can use one of two layouts:
 
-Plugins live in the `plugins/` directory at the root of your project (in an
-application with the legacy `app/` layout you can also use `app/Plugin/`).
-Inside its folder, a plugin uses the CakePHP 2 structure shown above: PHP
-classes in `Controller/`, `Model/` and so on, and templates in `View/` next to
-`View/Helper/`. Plugin tests can use either `Test/Case/` and `Test/Fixture/` or
-`tests/TestCase/` and `tests/Fixture/`.
+- the [legacy plugin layout](#the-legacy-plugin-layout) of CakePHP 2
+- the [modern plugin layout](#the-modern-plugin-layout), the layout of the
+  application and of CakePHP 5
 
-::: pieceofcake2 Added in version 2.13.0
-A plugin can also use the layout of the application and of CakePHP 5:
+CakePHP searches the directories of the modern layout first, and the
+directories of the legacy layout after them. So a plugin can move to the
+modern layout one directory at a time.
 
-    /plugins
-        /ContactManager
-            /config
-                bootstrap.php
-                routes.php
-            /src
-                /Controller
-                    /Component
-                /Model
-                    /Behavior
-                /View
-                    /Helper
-            /templates
-                /Contacts
-                /Layouts
-            /resources
-                /locales
-            /webroot
-
-- `src/` holds the namespaced classes, as in CakePHP 5, for example
-  `ContactManager\Controller\Component\ContactsComponent` in
-  `src/Controller/Component/ContactsComponent.php`. Composer loads them with the
-  `psr-4` entry of the plugin's `composer.json` (`"ContactManager\\": "src/"`).
-  Name them in settings with the plugin prefix (`'ContactManager.Contacts'`) or
-  with `ContactsComponent::class`; see
-  [Namespaced Classes](/development/namespaced-classes).
-- `templates/`, `resources/locales/` and `vendor/` hold the templates, the
-  translations and the vendor files.
-- `config/` holds `bootstrap.php`, `routes.php`, the configuration files read
-  with `Configure::load('ContactManager.file')` and the schemas in
-  `config/Schema/`, like `Config/` of the CakePHP 2 layout.
-:::
-
-CakePHP searches the directories of the CakePHP 5 layout first, and the
-directories of the CakePHP 2 layout after them, so a plugin can move to the new
-layout one directory at a time.
-
-> [!NOTE]
-> `App::uses()` does not look in `src/`: the classes there are namespaced and
-> loaded by Composer. `src/` is not searched for templates, translations or
-> vendor files either, so the view classes in `src/View/` are never rendered
-> as templates.
-
-> [!WARNING]
-> A file in `templates/`, `resources/locales/` or `config/` is used instead of
-> the file of the same name in `View/`, `Locale/` or `Config/`. Before you add
-> one of these directories to a plugin, check that it does not already have one
-> for another purpose, for example a Composer `vendor/` directory of a plugin
-> checked out for development.
 The [pieceofcake2/plugin](https://github.com/pieceofcake2/plugin) skeleton is a
 good starting point for a new plugin.
 
-Inside the plugin folder, you'll notice it looks a lot like a CakePHP
-application, and that's basically what it is. You don't actually have to
-include any of those folders if you do not use them. Some plugins might
-only define a Component and a Behavior, and in that case they can completely
-omit the 'View' directory.
+## The Legacy Plugin Layout {#the-legacy-plugin-layout}
 
-A plugin can also have basically any of the other directories that your
-application can, such as Config, Console, Lib, webroot, etc.
+```text
+plugins/
+└── ContactManager/
+    ├── Config/
+    │   ├── bootstrap.php
+    │   └── routes.php
+    ├── Console/
+    ├── Controller/
+    │   └── Component/
+    ├── Lib/
+    ├── Locale/
+    ├── Model/
+    │   └── Behavior/
+    ├── Test/
+    │   ├── Case/
+    │   └── Fixture/
+    ├── Vendor/
+    ├── View/
+    │   ├── Helper/
+    │   └── Layouts/
+    ├── webroot/
+    └── composer.json
+```
+
+- The classes are global classes, in `Controller/`, `Model/`, `View/Helper/`
+  and so on. Composer loads them with a classmap in the plugin's
+  `composer.json` (see [Publish Your Plugin](#publish-your-plugin)).
+- The templates are in `View/`, next to `View/Helper/`.
+- `Config/` holds `bootstrap.php`, `routes.php`, the configuration files read
+  with `Configure::load('ContactManager.file')` and the schemas in
+  `Config/Schema/`.
+- `Locale/` holds the translations, and `Vendor/` the vendor files.
+- The tests are in `Test/Case/` and `Test/Fixture/`, or in `tests/TestCase/`
+  and `tests/Fixture/`.
+
+## The Modern Plugin Layout {#the-modern-plugin-layout}
+
+::: pieceofcake2 Added in version 2.13.0
+The modern plugin layout ([#88](https://github.com/pieceofcake2/cakephp/pull/88)).
+:::
+
+```text
+plugins/
+└── ContactManager/
+    ├── config/
+    │   ├── bootstrap.php
+    │   └── routes.php
+    ├── resources/
+    │   └── locales/
+    ├── src/
+    │   ├── Controller/
+    │   │   └── Component/
+    │   ├── Model/
+    │   │   └── Behavior/
+    │   └── View/
+    │       └── Helper/
+    ├── templates/
+    │   ├── Contacts/
+    │   └── Layouts/
+    ├── tests/
+    │   ├── Fixture/
+    │   └── TestCase/
+    ├── webroot/
+    └── composer.json
+```
+
+- `src/` holds only namespaced classes, as in CakePHP 5. For example,
+  `src/Controller/Component/ContactsComponent.php` holds
+  `ContactManager\Controller\Component\ContactsComponent`.
+  - Composer loads them with the PSR-4 entry of the plugin's `composer.json`
+    (`"ContactManager\\": "src/"`).
+  - Name them in settings with the plugin prefix (`'ContactManager.Contacts'`)
+    or with `ContactsComponent::class`. See
+    [Namespaced Classes](/development/namespaced-classes).
+- The global classes of the plugin stay in `Controller/`, `Model/`,
+  `View/Helper/` and so on, as in the legacy layout.
+- `templates/` holds the templates. CakePHP searches it before `View/`.
+- `config/` holds the same files as `Config/` of the legacy layout. When
+  `config/` exists, CakePHP reads the configuration of the plugin from it
+  instead of `Config/`.
+- `resources/locales/` holds the translations. CakePHP searches it before
+  `Locale/`.
+- `vendor/` holds the vendor files. CakePHP searches it before `Vendor/`.
+
+> [!NOTE]
+> `App::uses()` does not load the namespaced classes in `src/`; Composer loads
+> them. CakePHP does not search `src/` for templates, translations or vendor
+> files either, so the view classes in `src/View/` are never rendered as
+> templates.
+
+> [!WARNING]
+> A file in `templates/` or `resources/locales/` is used instead of the file of
+> the same name in `View/` or `Locale/`. Before you add one of these
+> directories, or `config/` or `vendor/`, check that the plugin does not
+> already have it for another purpose. For example, a plugin checked out for
+> development may have a Composer `vendor/` directory.
+
+## Plugin Folders
+
+A plugin looks a lot like a CakePHP application, and that's basically what it
+is. You don't have to include the folders that you do not use. Some plugins
+only define a Component and a Behavior, and can omit `View/` or `templates/`
+completely.
 
 > [!NOTE]
 > If you want to be able to access your plugin with a URL, defining
@@ -109,12 +148,13 @@ class ContactManagerAppModel extends AppModel
 }
 ```
 
-CakePHP finds `AppController`, `AppModel`, `AppHelper` and `AppShell` of the
-application and the plugin's own `ContactManagerAppController` and
-`ContactManagerAppModel` without `App::uses()`. Let Composer load the other
-classes of the plugin with a classmap in the plugin's `composer.json` (see
-[Publish Your Plugin](#publish-your-plugin)), instead of `App::uses()`
-statements, which are deprecated as of 2.13.0.
+CakePHP finds these classes without `App::uses()`:
+
+- `AppController`, `AppModel`, `AppHelper` and `AppShell` of the application
+- `ContactManagerAppController` and `ContactManagerAppModel` of the plugin
+
+Let Composer load the other classes of the plugin. See
+[Autoloading](/development/autoloading#plugins).
 
 If you forgot to define these special classes, CakePHP will hand
 you "Missing Controller" errors until you've done so.
@@ -140,13 +180,11 @@ Please refer to the chapter
 how to install and use Bake.
 
 > [!WARNING]
-> Plugins do not work as namespacing to separate code.
-> CakePHP 2 classes are not namespaced, so
-> you cannot have the same class,
-> or same filename, in your plugins.
-> Even if it is two different plugins.
-> So use unique classes and filenames, possible prefixing
-> the class and filename with the plugin name.
+> A plugin is not a namespace. Global classes of all plugins and of the
+> application share one set of names. Two plugins cannot have global classes or
+> files with the same name. Use unique names, for example with the plugin name
+> as a prefix, or namespaced classes in `src/` of the
+> [modern plugin layout](#the-modern-plugin-layout).
 
 ## Plugin Controllers
 
@@ -245,9 +283,9 @@ class Contact extends ContactManagerAppModel
 
 Views behave exactly as they do in normal applications. Just place
 them in the right folder inside of the `plugins/[PluginName]/View/`
-folder. For our ContactManager plugin, we'll need a view for our
-ContactsController::index() action, so let's include that as
-well:
+folder (`templates/` in the modern layout). For our ContactManager plugin,
+we'll need a view for our ContactsController::index() action, so let's
+include that as well:
 
 ```html
 <!-- plugins/ContactManager/View/Contacts/index.ctp: -->
@@ -467,7 +505,8 @@ applications:
   \[Plugin\]AppModel, you'll get missing Controller errors when trying
   to access a plugin controller.
 - You can define your own layouts for plugins, inside
-  `plugins/[Plugin]/View/Layouts`. Otherwise, plugins will use the
+  `plugins/[Plugin]/View/Layouts` (`templates/Layouts` in the modern
+  layout). Otherwise, plugins will use the
   layouts from the `templates/Layouts` folder by default.
 - You can do inter-plugin communication by using
   `$this->requestAction('/plugin_name/controller_name/action');` in your
@@ -481,12 +520,15 @@ applications:
 ## Publish Your Plugin
 
 To share your plugin, create a `composer.json` file and publish your plugin at
-[packagist.org](https://packagist.org/).
-This way it can easily be used through Composer. Set the package `type` to
-`cakephp-plugin`, require `composer/installers` so the plugin is installed into
-the application's plugin directory, set `installer-name` to the plugin's
-folder name, and list the folders with the classes of the plugin in the
-classmap of `autoload`, so that Composer loads them:
+[packagist.org](https://packagist.org/). Then it can easily be used through
+Composer. In `composer.json`:
+
+- Set the package `type` to `cakephp-plugin`.
+- Require `composer/installers`, so that the plugin is installed into the
+  plugin directory of the application.
+- Set `installer-name` to the folder name of the plugin.
+- List the folders with the classes of the plugin in the classmap of
+  `autoload`, so that Composer loads them.
 
 ```json
 {
@@ -507,7 +549,8 @@ classmap of `autoload`, so that Composer loads them:
 ```
 
 List only the folders that the plugin has: `composer dump-autoload` stops
-with an error for a folder that does not exist.
+with an error for a folder that does not exist. For the namespaced classes in
+`src/` of the modern layout, add a PSR-4 entry. See [Autoloading](/development/autoloading#plugins).
 
 Choose a semantically meaningful name for the package name. This should ideally
 be prefixed with the dependency, in this case "cakephp" as the framework.

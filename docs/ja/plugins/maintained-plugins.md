@@ -107,9 +107,8 @@ AI ツールから直接読み込めます。
 Composer がプラグインを `plugins/` にインストールします。
 
 コンポーネントやヘルパーなど、設定に書いたプラグインのクラスは CakePHP が見つけます。
-Composer がオートロードしないプラグインのそのほかのクラスは、2.13.0 で非推奨になった `App::uses()`
-を呼び出す代わりに、アプリケーションの classmap にプラグインのフォルダを追加してください。
-[`App::uses()` の呼び出しを削除する](/ja/core-utility-libraries/app#removing-app-uses) を参照してください。
+Composer が読み込まないプラグインのそのほかのクラスは、アプリケーションの classmap にプラグインのフォルダを追加してください。
+[クラスの読み込み](/ja/development/autoloading#plugins) を参照してください。
 
 ## 各パッケージの由来 {#origins}
 

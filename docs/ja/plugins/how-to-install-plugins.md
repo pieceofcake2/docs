@@ -122,8 +122,7 @@ CakePlugin::load('ContactManager'); // 一つのプラグインをロードす�
 ロードします。 `load()` は、似た動作をしますが、明示的に指定したプラグインのみ
 ロードします。
 
-Composer でオートロードされるプラグインのクラスは、そのまま使えます。また、`$helpers` の
-`'MyPlugin.MyPlugin'` のように設定に書いたプラグインのクラスは、CakePHP が見つけます。
-オートロードされないプラグインは、2.13.0 で非推奨になった `App::uses()` を呼び出す代わりに、
-アプリケーションの classmap にプラグインのフォルダを追加してください。
-[`App::uses()` の呼び出しを削除する](/ja/core-utility-libraries/app#removing-app-uses) を参照してください。
+Composer が読み込むプラグインのクラスは、そのまま使えます。
+`$helpers` の `'MyPlugin.MyPlugin'` のように設定に書いたプラグインのクラスも、CakePHP が見つけます。
+Composer が読み込まないプラグインは、アプリケーションの classmap にプラグインのフォルダを追加してください。
+[クラスの読み込み](../development/autoloading#plugins) を参照してください。

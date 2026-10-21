@@ -62,10 +62,9 @@ template, like any other exception that is not a `CakeException`.
 
 ## Built-in Exceptions for CakePHP
 
-There are several built-in exceptions inside CakePHP, outside of the
-internal framework exceptions, there are several
-exceptions for HTTP methods. They are defined in `src/Cake/Error/exceptions.php`
-of the framework package and are always available.
+Besides the internal exceptions of the framework, CakePHP has several
+exceptions for HTTP errors. They are in `src/Error/` of the framework
+package, one class per file, and are always available.
 
 | Exception | Description |
 |----|----|

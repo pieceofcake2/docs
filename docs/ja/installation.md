@@ -67,12 +67,15 @@ Composer をまだ入れていない場合は、[公式の Composer ドキュメ
 
 ## 既存のアプリケーションへの導入 {#adding-cakephp-to-an-existing-application}
 
-Composer で `cakephp/cakephp` を使っているアプリケーションでは、`composer.json` の `require` にある
-`cakephp/cakephp` を `pieceofcake2/cakephp` に置き換えます。
-また、[composer.json の設定](#configuring-composer-json) で説明する `config` と `extra` の設定が無ければ追加します。
-そのうえで `composer update` を実行します。`pieceofcake2/cakephp` は `cakephp/cakephp` を
-置き換える (replace する) パッケージとして宣言されているので、`cakephp/cakephp` 2.x に依存する
-プラグインやパッケージもそのままインストールでき、動作します。両方のパッケージを同時に require しないでください。
+Composer で `cakephp/cakephp` を使っているアプリケーションでは、次のようにします。
+
+1. `composer.json` の `require` にある `cakephp/cakephp` を `pieceofcake2/cakephp` に置き換えます。
+2. [composer.json の設定](#configuring-composer-json) で説明する `config` と `extra` の設定が無ければ追加します。
+3. `composer update` を実行します。
+
+`pieceofcake2/cakephp` は `cakephp/cakephp` を置き換える (replace する) パッケージとして宣言されています。
+そのため、`cakephp/cakephp` 2.x に依存するプラグインやパッケージもそのままインストールでき、動作します。
+両方のパッケージを同時に require しないでください。
 
 CakePHP は Composer のオートローダーからのみ読み込まれるため、アプリケーションのディスパッチャファイル
 (`index.php`、`test.php`、コンソールの `cake` スクリプト) を新しいものに置き換える必要があります。
@@ -218,9 +221,10 @@ CakePHP アプリケーションの最小限の `composer.json` は次のよう�
 CakePHP は `src/Plugin/` または `app/Plugin/` と、プロジェクト直下の `plugins/` からプラグインを探すため、
 従来の構成のアプリケーションで `plugins/` を使い続けることもできます。
 
-`classmap` の設定で、`src/` にあるアプリケーションのクラスを Composer でオートロードできるようになり、
-2.13.0 で非推奨になった `App::uses()` が不要になります。新しいクラスファイルを追加したら
-`composer dump-autoload` を実行してください。詳しくは [応用インストール](installation/advanced-installation) を参照してください。
+`classmap` の設定で、`src/` にあるクラスを Composer が読み込むので、`App::uses()` は要りません。
+クラスのファイルを追加したら `composer dump-autoload` を実行してください。
+ほかの設定は [クラスの読み込み](development/autoloading) を、Composer の設定の詳細は
+[応用インストール](installation/advanced-installation) を参照してください。
 
 <a id="permissions"></a>
 

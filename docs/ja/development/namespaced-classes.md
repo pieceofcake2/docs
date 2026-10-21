@@ -1,8 +1,9 @@
 # 名前空間のあるクラス
 
 CakePHP 2 のクラスは名前空間の無いグローバルなクラスですが、アプリケーションのコードでは
-名前空間を使えます。アプリケーションスケルトンのクラスマップと並べて `composer.json` に
-PSR-4 の設定を書き、`composer dump-autoload` を実行します。
+名前空間を使えます。名前空間のあるクラスは、アプリケーションスケルトンのクラスマップと並べて
+`composer.json` に書いた PSR-4 の設定で Composer が読み込みます
+([クラスの読み込み](autoloading#modern-layout) を参照)。
 
 ```json
 "autoload": {
@@ -13,13 +14,15 @@ PSR-4 の設定を書き、`composer dump-autoload` を実行します。
 }
 ```
 
-これで、`Acme\Error\Renderer` のようなクラスを、最初に使うときに Composer が
-`lib/Error/Renderer.php` から読み込みます。`App::uses()` は要りません。
+`composer dump-autoload` を実行すると、`Acme\Error\Renderer` のようなクラスを Composer が
+`lib/Error/Renderer.php` から読み込みます。
 
 CakePHP の設定にクラス名を書く場所には、名前空間のあるクラスを `Foo::class` で書けます。
-このページでは、pieceofcake2/cakephp の設定項目と、それぞれで CakePHP がクラスを探す方法を
-まとめます。また、`App.namespace` を設定して、コントローラーやモデルなどのクラスを
-アプリケーションの名前空間から短い名前で探す方法も説明します。
+このページでは、次のことを説明します。
+
+- pieceofcake2/cakephp の設定項目と、それぞれで CakePHP がクラスを探す方法
+- `App.namespace` を設定して、コントローラーやモデルなどのクラスをアプリケーションの名前空間から
+  短い名前で探す方法
 
 ::: pieceofcake2 Added in version 2.13.0
 `App::className()` と `App.namespace` ([#91](https://github.com/pieceofcake2/cakephp/pull/91))。
@@ -37,11 +40,13 @@ CakePHP 2.12 までは、サフィックスの付く設定には名前空間の�
 :::
 
 フレームワークのクラスは、ディレクトリに合わせた `Cake` 名前空間にあります。たとえば
-`Cake\Controller\Controller`、`Cake\Network\CakeRequest`、`Cake\Utility\Hash` です。CakePHP 2 の
-グローバルな名前は同じクラスの別名なので、`Controller` と `Cake\Controller\Controller` はどちらを使っても
-同じで、これまでのコードは変わりません。ファイルは `src/` にあり (`src/Controller/Controller.php`)、
-Composer が PSR-4 で読み込みます。名前空間のあるクラスでは、ほかのクラスと同じようにフレームワークの
-クラスを `use` します。
+`Cake\Controller\Controller`、`Cake\Network\CakeRequest`、`Cake\Utility\Hash` です。
+
+CakePHP 2 のグローバルな名前は、同じクラスの別名です。そのため、`Controller` と `Cake\Controller\Controller`
+はどちらを使っても同じで、これまでのコードは変わりません。どちらの名前も Composer が読み込みます。
+[クラスの読み込み](autoloading#the-core) を参照してください。
+
+名前空間のあるクラスでは、ほかのクラスと同じようにフレームワークのクラスを `use` します。
 
 ```php
 // lib/Controller/Component/GreetingComponent.php

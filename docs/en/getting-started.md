@@ -37,10 +37,10 @@ the points that changed:
 - **Composer only.** Install `pieceofcake2/cakephp` with Composer; archive,
   PEAR and `include_path` installations are gone. The package replaces
   `cakephp/cakephp`, so plugins that require `cakephp/cakephp` 2.x keep
-  installing. The framework lives in `vendor/pieceofcake2/cakephp/src/Cake/`
-  (formerly `lib/Cake/`), and its classes are loaded by Composer's classmap
-  instead of `App::uses()`. See [Installation](installation) and
-  [Loading classes](controllers#autoloading-classes).
+  installing. The framework lives in `vendor/pieceofcake2/cakephp/src/`
+  (formerly `lib/Cake/`), and Composer loads its classes instead of
+  `App::uses()`. See [Installation](installation) and
+  [Autoloading](development/autoloading).
 - **PHP 8.** The fork runs on PHP 8.0 to 8.5. A few APIs that do not work on
   current PHP versions were removed, for example the `String` class (use
   `CakeText`) and the Xcache and Wincache cache engines. See

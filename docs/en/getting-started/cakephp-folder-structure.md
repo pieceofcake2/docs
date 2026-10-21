@@ -1,112 +1,184 @@
 # CakePHP Folder Structure
 
-After you've created a new application from the
-[pieceofcake2/app](https://pieceofcake2.github.io/app/) skeleton (see
-[Installation](../installation)), these are the files and folders you should
-see:
+An application can use one of two layouts:
 
-- bin
-- config
-- logs
-- plugins
-- resources
-- src
-- templates
-- tests
-- tmp
-- vendor
-- webroot
-- composer.json
+- The **modern layout** keeps `config/`, `src/`, `templates/`, `tests/` and the
+  other folders at the project root, as in CakePHP 5. The
+  [pieceofcake2/app](https://pieceofcake2.github.io/app/) skeleton uses it (see
+  [Installation](../installation)).
+- The **legacy `app/` layout** keeps the code in an `app/` folder. Applications
+  created with older versions of CakePHP 2 use it.
 
-You'll notice a few main folders:
+CakePHP detects which layout an application uses. Both layouts work with the
+same version of CakePHP.
 
-- The *src*, *config* and *templates* folders will be where you work your
-  magic: they're where your application's files will be placed.
-- The *vendor* folder is managed by Composer. It contains CakePHP itself
-  (`vendor/pieceofcake2/cakephp`) and any third-party PHP libraries you add
-  with Composer. Make a personal commitment **not** to edit files in this
-  folder. We can't help you if you've modified the core. Instead, look into
-  modifying [Application Extensions](../getting-started/cakephp-structure#application-extensions).
-- The *webroot* folder is the document root of your application.
+In both layouts, Composer installs CakePHP itself and the third-party libraries
+into `vendor/`. Make a personal commitment **not** to edit files in this
+folder. We can't help you if you've modified the core. Instead, look into
+modifying [Application Extensions](../getting-started/cakephp-structure#application-extensions).
 
-## The Application Folders
+## The Modern Layout {#the-modern-layout}
 
-Let's look a little closer at the folders of the application.
+```text
+my_app/
+├── bin/
+│   └── cake
+├── config/
+├── logs/
+├── plugins/
+├── resources/
+│   └── locales/
+├── src/
+│   ├── Console/
+│   ├── Controller/
+│   ├── Lib/
+│   ├── Model/
+│   └── View/
+│       └── Helper/
+├── templates/
+├── tests/
+│   ├── Fixture/
+│   └── TestCase/
+├── tmp/
+├── vendor/
+├── webroot/
+└── composer.json
+```
+
+You will mostly work in `src/`, `config/` and `templates/`.
 
 bin  
-Contains the `cake` console script, which runs the shells of CakePHP and of
-your application, for example `bin/cake server` or `bin/cake test`. For more
-information see [Shells, Tasks & Console Tools](../console-and-shells).
+Contains the `cake` console script. It runs the shells of CakePHP and of your
+application, for example `bin/cake server` or `bin/cake test`. See
+[Shells, Tasks & Console Tools](../console-and-shells).
 
 config  
-Holds the (few) configuration files CakePHP uses. Database
-connection details, bootstrapping, core configuration files and
-more should be stored here. `config/define.php` defines the paths of the
+Holds the configuration files: the database connection, the bootstrap, the
+core configuration and more. `config/define.php` defines the paths of the
 application folders.
 
 logs  
 CakePHP writes its log files here. See [Logging](../core-libraries/logging).
 
 plugins  
-Contains plugin packages. Plugins installed with Composer are placed here.
+Contains the plugins. Composer installs plugins here.
 
 resources/locales  
-Stores string files for internationalization.
+Stores the translations for internationalization.
 
 src  
-Contains the PHP code of your application:
+Contains the PHP classes of your application. Composer loads them; see
+[Autoloading](../development/autoloading).
 
-- `src/Console/Command` contains the console commands (shells) and, in
-  `Task/`, the console tasks for your application. `src/Console/Templates`
-  can contain templates to customize the output of bake.
-- `src/Controller` contains your application's controllers and, in
-  `Component/`, their components.
-- `src/Lib` contains libraries that do not come from 3rd parties or
-  external vendors. This allows you to separate your organization's
-  internal libraries from vendor libraries.
-- `src/Model` contains your application's models and, in `Behavior/` and
-  `Datasource/`, behaviors and datasources.
-- `src/View/Helper` contains your application's helpers.
+- `src/Console/Command/` contains the shells, and `Task/` the shell tasks.
+  `src/Console/Templates/` can contain templates that change the output of
+  bake.
+- `src/Controller/` contains the controllers, and `Component/` the
+  components.
+- `src/Lib/` contains your own libraries. This keeps them apart from
+  third-party libraries.
+- `src/Model/` contains the models, `Behavior/` the behaviors and
+  `Datasource/` the datasources.
+- `src/View/Helper/` contains the helpers.
 
 templates  
-Presentational files are placed here: view files in a folder per controller
-(for example `templates/Posts/index.ctp`), elements in `Elements/`, error pages
-in `Errors/`, layouts in `Layouts/` and email templates in `Emails/`.
+Contains the templates:
+
+- views in a folder per controller, for example `templates/Posts/index.ctp`
+- elements in `Elements/`
+- error pages in `Errors/`
+- layouts in `Layouts/`
+- email templates in `Emails/`
+
+::: pieceofcake2 Added in version 2.13.0
+`.php` templates and the CakePHP 5 directories `layout/`, `element/`, `email/`
+and `Error/`. See [Views](../views#templates-in-the-cakephp-5-style).
+:::
 
 tests  
-This directory contains all the test cases and test fixtures for your
-application. The `tests/TestCase` directory should mirror your application and
-contain one or more test cases per class in your application. Fixtures are
-stored in `tests/Fixture`. For more information on test cases and test fixtures,
-refer to the [Testing](../development/testing) documentation.
+Contains the tests. `tests/TestCase/` mirrors your application and contains
+one or more test cases per class. `tests/Fixture/` contains the fixtures. See
+[Testing](../development/testing).
 
 tmp  
-This is where CakePHP stores temporary data. The actual data it
-stores depends on how you have CakePHP configured, but this folder
-is usually used to store model descriptions, cached views, and sometimes
-session information.
+CakePHP stores temporary data here, such as model descriptions, cached views
+and sometimes sessions. What it stores depends on your configuration.
 
-Make sure that this folder exists and is writable,
-or the performance of your application will be severely
-impacted. In debug mode, CakePHP will warn you if the folder is
-absent or not writable.
+Make sure that this folder exists and is writable. Otherwise the performance
+of your application suffers badly. In debug mode, CakePHP warns you if the
+folder is missing or not writable.
 
 vendor  
-Contains the packages installed by Composer, including CakePHP itself. Add
-third-party libraries with `composer require` and they are autoloaded
-through `vendor/autoload.php`. Don't edit or add files here by hand.
+Contains the packages that Composer installs, including CakePHP itself
+(`vendor/pieceofcake2/cakephp`). Add libraries with `composer require`. Don't
+edit or add files here by hand.
 
 webroot  
-This folder, and only this folder, should serve as the document
-root for your application, in development as well as in production.
-Folders here also serve as holding
-places for CSS stylesheets, images, and JavaScript files.
+The document root of your application, in development as well as in
+production. Only this folder may be served by the web server. It also holds
+the CSS stylesheets, images and JavaScript files.
 
-## The Legacy `app/` Layout
+## The Legacy `app/` Layout {#the-legacy-app-layout}
 
-Applications created with older versions of CakePHP 2 keep all of their code in
-an `app/` folder. CakePHP supports this layout as well, and detects which
-layout an application uses. The folders correspond as follows:
+```text
+my_app/
+├── app/
+│   ├── Config/
+│   ├── Console/
+│   │   ├── Command/
+│   │   └── cake
+│   ├── Controller/
+│   ├── Lib/
+│   ├── Locale/
+│   ├── Model/
+│   ├── Plugin/
+│   ├── Test/
+│   │   ├── Case/
+│   │   └── Fixture/
+│   ├── tmp/
+│   │   └── logs/
+│   ├── Vendor/
+│   ├── View/
+│   │   └── Helper/
+│   └── webroot/
+├── vendor/
+└── composer.json
+```
+
+The folders hold the same things as in the modern layout:
+
+app/Config  
+The configuration files, like `config/`.
+
+app/Console  
+The shells and shell tasks in `Command/`, and the `cake` console script.
+
+app/Controller, app/Lib, app/Model  
+The controllers, libraries and models, like the folders of `src/`.
+
+app/Locale  
+The translations, like `resources/locales/`.
+
+app/Plugin  
+The plugins. CakePHP also looks for plugins in `plugins/` at the project root.
+
+app/Test  
+The test cases in `Case/` and the fixtures in `Fixture/`.
+
+app/tmp  
+The temporary data, and the log files in `logs/`.
+
+app/Vendor  
+Files of third-party libraries that are not installed with Composer.
+
+app/View  
+The templates, in the same folders as in `templates/`. `View/Helper/` holds
+the helpers, so the templates and the helper classes share a folder.
+
+app/webroot  
+The document root.
+
+## How the Layouts Correspond {#how-the-layouts-correspond}
 
 | Legacy (`app/`)           | Modern                             |
 |---------------------------|------------------------------------|
@@ -121,29 +193,10 @@ layout an application uses. The folders correspond as follows:
 | `app/Test/Case`, `app/Test/Fixture` | `tests/TestCase/`, `tests/Fixture/` |
 | `app/tmp`                 | `tmp/`                             |
 | `app/tmp/logs`            | `logs/`                            |
-| `app/Vendor`              | `vendor/` (managed by Composer)    |
+| `app/Vendor`              | `vendors/` (Composer packages are in `vendor/`) |
 | `app/View` (`.ctp` files) | `templates/`                       |
 | `app/View/Helper`         | `src/View/Helper/`                 |
 | `app/webroot`             | `webroot/`                         |
 
-### Moving to the Modern Layout
-
 You can move a legacy application to the modern layout gradually, while it
-keeps running on CakePHP 2:
-
-1. Copy `config/define.php`, `bin/cake`, `webroot/index.php` and
-   `webroot/test.php` from the [pieceofcake2/app](https://github.com/pieceofcake2/app)
-   skeleton. `config/define.php` sets `APP_DIR` to `src`.
-2. Move your files according to the table above, for example configuration
-   files first, then the PHP code in `src/`, then the templates, and finally
-   the tests. The code itself, including `App::uses()` calls, does not need
-   to change. Tests can stay in `app/Test/` for a while, because the test
-   suite finds tests in both `Test/Case/` and `tests/TestCase/`.
-3. Install plugins and third-party libraries with Composer instead of keeping
-   them in `app/Plugin/` and `app/Vendor/`.
-4. Add `"classmap": ["src/"]` to the `autoload` section of `composer.json`,
-   run `composer dump-autoload`, and remove the `App::uses()` calls for your
-   own classes: `App::uses()` is deprecated as of 2.13.0.
-
-Because the modern layout matches the one used by CakePHP 5, moving to it first
-lets you separate the folder restructuring from a later upgrade of the code.
+keeps running. See [Migrating to the Modern Layout](../appendices/migrating-to-the-modern-layout).

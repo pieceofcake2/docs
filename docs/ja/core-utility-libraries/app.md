@@ -7,12 +7,12 @@ App クラスはパスの管理、クラスのロケーション、そしてク�
 
 ## パッケージ
 
-CakePHP はパッケージの考え方を中心に編成され、それぞれのクラスは他のクラスが存在するパッケージや
-フォルダに属します。それぞれのクラスをどの場所でロードするべきなのかをフレームワークに通知するため、
-`App::build('APackage/SubPackage', $paths)` を使用して各パッケージの場所を設定することができます。
-CakePHP のフレームワークのほぼすべてのクラスは、あなた独自の互換性のある実装と入れ替えることができます。
-フレームワークが提供するクラスの代わりに独自のクラスを使用したい場合は、そのクラスを `src/Cake/` の、
-名前空間に合わせたパスにコピーします。例えば、あなた独自の HttpSocket クラスを用いたいなら以下のように配置します:
+CakePHP はパッケージを中心に編成されています。それぞれのクラスは、同じ種類のクラスを置くフォルダであるパッケージに属します。
+`App::build('APackage/SubPackage', $paths)` で、パッケージのクラスを探す場所をフレームワークに伝えられます。
+
+フレームワークのほぼすべてのクラスは、互換性のある独自の実装と入れ替えられます。
+そのクラスを `src/Cake/` の、名前空間に合わせたパスにコピーします。
+例えば、独自の HttpSocket クラスを使うなら、次のように配置します。
 
     src/Cake/Network/Http/HttpSocket.php
 
@@ -21,21 +21,13 @@ CakePHP のフレームワークのほぼすべてのクラスは、あなた独
 
 ## クラスのローディング {#loading-classes}
 
-CakePHP ではクラスは遅延ロードされます。CakePHP のクラス、アプリケーションのクラス、Composer で
-インストールしたプラグインのクラスは Composer が読み込むため、宣言する必要はありません。
-アプリケーションスケルトン (pieceofcake2/app) は、`composer.json` の classmap で `src/` を読み込みます。
+クラスは最初に使うときに読み込まれます。CakePHP、アプリケーション、プラグインのクラスは Composer が読み込みます。
+`composer.json` の設定は [クラスの読み込み](../development/autoloading) を参照してください。
 
-```json
-"autoload": {
-    "classmap": ["src/"]
-}
-```
+CakePHP は、次のクラスもそれぞれのパッケージから探します。
 
-classmap を使う場合は、新しいクラスファイルを追加したら `composer dump-autoload` を実行してください。
-
-`$components`、`$helpers`、`$uses`、アソシエーション、キャッシュエンジンなど、設定に書いたクラスも、
-CakePHP がそれぞれのパッケージから探します。基底クラスの `AppController`、`AppModel`、`AppHelper`、
-`AppShell` も同様です。
+- `$components`、`$helpers`、`$uses`、アソシエーション、キャッシュエンジンなど、設定に書いたクラス
+- 基底クラスの `AppController`、`AppModel`、`AppHelper`、`AppShell`
 
 `static` App::**uses**(string $class, string $package)
 
@@ -54,8 +46,8 @@ CakePHP がそれぞれのパッケージから探します。基底クラスの
 
 ### `App::uses()` の呼び出しを削除する {#removing-app-uses}
 
-1. Composer でクラスを読み込むようにします。
-   - アプリケーションでは、上の `src/` の classmap を `composer.json` に追加します。
+1. [クラスの読み込み](../development/autoloading) のとおり、Composer でクラスを読み込むようにします。
+   - アプリケーションでは、`src/` (従来の構成では `app/` の各フォルダ) の classmap を `composer.json` に追加します。
    - プラグインでは、プラグインの `composer.json` に classmap か PSR-4 を追加します。
      それが無いプラグインは、アプリケーションの classmap にプラグインのフォルダを追加することもできます。
      例: `"classmap": ["src/", "plugins/MyPlugin/"]`
@@ -141,8 +133,9 @@ App::className('Post', 'Model');
 ### プラグイン内のファイルをロードする
 
 プラグインの `composer.json` に classmap か PSR-4 があれば、プラグインのクラスは Composer が
-読み込みます。無い場合は `App::uses()` で、ロード元になるプラグインを指定する以外は、app の
-クラスと同じようにロードします:
+読み込みます ([プラグイン](../development/autoloading#plugins) を参照)。
+無い場合は、アプリケーションのクラスと同じく `App::uses()` で読み込みます。
+パッケージの前にプラグイン名を書きます。
 
 ```php
 // plugins/PluginName/Model/Comment.php にある Comment クラスをロードする
@@ -372,7 +365,7 @@ Composer は、アプリケーションのスケルトンの `src/` の classmap
 PHP がその名前はすでに使われていると警告します。オーバーライドは上のとおり `src/Cake/` に移してください。
 :::
 
-## Vendor ファイルをローディングする
+## Vendor ファイルをローディングする {#loading-vendor-files}
 
 Composer でインストールしたライブラリはオートロードされるため、特別なコードは不要です。
 この節は、手作業でプロジェクトにコピーしたファイルを対象としています。それらのファイルは、

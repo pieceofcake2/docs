@@ -73,14 +73,17 @@ The examples in this book assume that the `composer` command is in your
 
 ## Adding CakePHP to an Existing Application
 
-If your application already uses Composer with `cakephp/cakephp`, replace it
-with `pieceofcake2/cakephp` in the `require` section of your `composer.json`,
-and add the `config` and `extra` settings described in
-[Configuring composer.json](#configuring-composer-json) if they are missing.
-Then run `composer update`. `pieceofcake2/cakephp` declares that it replaces
-`cakephp/cakephp`, so plugins and packages that require `cakephp/cakephp`
-2.x keep installing and working. Do not require both packages at the same
-time.
+If your application already uses Composer with `cakephp/cakephp`:
+
+1. Replace it with `pieceofcake2/cakephp` in the `require` section of your
+   `composer.json`.
+2. Add the `config` and `extra` settings described in
+   [Configuring composer.json](#configuring-composer-json) if they are missing.
+3. Run `composer update`.
+
+`pieceofcake2/cakephp` declares that it replaces `cakephp/cakephp`. So plugins
+and packages that require `cakephp/cakephp` 2.x keep installing and working.
+Do not require both packages at the same time.
 
 CakePHP is loaded only through Composer's autoloader, so the dispatcher files of
 your application (`index.php`, `test.php` and the `cake` console script) must
@@ -245,10 +248,11 @@ In an application that uses the legacy `app/` layout, install plugins into
 CakePHP looks for plugins in `src/Plugin/` or `app/Plugin/` and in `plugins/`
 at the project root, so a legacy application can also keep using `plugins/`.
 
-The `classmap` setting lets Composer autoload your own classes in `src/`, so
-you don't need `App::uses()`, which is deprecated as of 2.13.0. Run
-`composer dump-autoload` after adding a new class file. See
-[Advanced Installation](installation/advanced-installation) for more details.
+The `classmap` setting lets Composer load your classes in `src/`, so you don't
+need `App::uses()`. Run `composer dump-autoload` after you add a class file.
+See [Autoloading](development/autoloading) for the other settings, and
+[Advanced Installation](installation/advanced-installation) for more on the
+Composer setup.
 
 ## Permissions
 
