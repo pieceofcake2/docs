@@ -86,8 +86,9 @@ public function beforeFilter()
 
 ### Loading classes
 
-The examples in this book don't start with `App::uses()` statements. CakePHP's
-own classes are autoloaded by Composer, and the application skeleton
+The examples in this book don't start with `App::uses()` statements, which are
+deprecated as of 2.13.0. CakePHP's own classes are autoloaded by Composer, and
+the application skeleton
 ([pieceofcake2/app](https://pieceofcake2.github.io/app/)) registers your
 application classes with a Composer classmap in `composer.json`:
 
@@ -101,11 +102,12 @@ With this setting you don't need `App::uses()` for your controllers, models,
 components, behaviors, helpers and shells. Run `composer dump-autoload` whenever
 you add a new class file, so that Composer picks it up.
 
-If your application doesn't use a classmap (for example an older application in
-the `app/` layout), keep loading your own classes with `App::uses()` as before,
-for example `App::uses('AppController', 'Controller');` at the top of each
-controller file. Plugin classes that aren't autoloaded by Composer also still
-need `App::uses()`, for example `App::uses('MyPluginHelper', 'MyPlugin.View/Helper');`.
+In an older application in the `app/` layout, list the folders of your classes
+in the classmap instead, for example
+`"classmap": ["app/Console/", "app/Controller/", "app/Lib/", "app/Model/", "app/View/"]`,
+then remove the `App::uses()` lines. For a plugin that Composer does not
+autoload, add its folder to the classmap of your application instead of
+calling `App::uses()`. See [Removing App::uses() calls](/core-utility-libraries/app#removing-app-uses).
 
 ## Request parameters
 

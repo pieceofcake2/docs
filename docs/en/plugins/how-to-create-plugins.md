@@ -44,8 +44,6 @@ application can, such as Config, Console, Lib, webroot, etc.
 
 ```php
 // In plugins/ContactManager/Controller/ContactManagerAppController.php
-App::uses('AppController', 'Controller');
-
 class ContactManagerAppController extends AppController
 {
 }
@@ -53,18 +51,17 @@ class ContactManagerAppController extends AppController
 
 ```php
 // In plugins/ContactManager/Model/ContactManagerAppModel.php
-App::uses('AppModel', 'Model');
-
 class ContactManagerAppModel extends AppModel
 {
 }
 ```
 
-Unlike the classes in your application's `src/` directory, plugin classes are
-not part of your application's Composer classmap. CakePHP loads them with its
-own class loader, so code inside a plugin keeps the `App::uses()` statements
-for the classes it depends on. This also keeps the plugin working in
-applications that don't use classmap autoloading.
+CakePHP finds `AppController`, `AppModel`, `AppHelper` and `AppShell` of the
+application and the plugin's own `ContactManagerAppController` and
+`ContactManagerAppModel` without `App::uses()`. Let Composer load the other
+classes of the plugin with a classmap in the plugin's `composer.json` (see
+[Publish Your Plugin](#publish-your-plugin)), instead of `App::uses()`
+statements, which are deprecated as of 2.13.0.
 
 If you forgot to define these special classes, CakePHP will hand
 you "Missing Controller" errors until you've done so.
@@ -302,14 +299,8 @@ public $components = ['ContactManager.Example'];
 The same technique applies to Helpers and Behaviors.
 
 > [!NOTE]
-> As with the plugin's AppController and AppModel, declare the classes your
-> plugin's helpers depend on with `App::uses()`, so that the plugin also
-> works in applications without classmap autoloading:
->
-> ``` php
-> // Declare use of AppHelper for your Plugin's Helper
-> App::uses('AppHelper', 'View/Helper');
-> ```
+> As with the plugin's AppController and AppModel, a helper of the plugin
+> can extend `AppHelper` without `App::uses()`.
 
 ## Registering DSN Schemes
 
@@ -440,8 +431,9 @@ To share your plugin, create a `composer.json` file and publish your plugin at
 [packagist.org](https://packagist.org/).
 This way it can easily be used through Composer. Set the package `type` to
 `cakephp-plugin`, require `composer/installers` so the plugin is installed into
-the application's plugin directory, and set `installer-name` to the plugin's
-folder name:
+the application's plugin directory, set `installer-name` to the plugin's
+folder name, and list the folders with the classes of the plugin in the
+classmap of `autoload`, so that Composer loads them:
 
 ```json
 {
@@ -451,6 +443,9 @@ folder name:
         "php": ">=8.0",
         "composer/installers": "*",
         "pieceofcake2/cakephp": "^2.12"
+    },
+    "autoload": {
+        "classmap": ["Controller/", "Lib/", "Model/", "View/"]
     },
     "extra": {
         "installer-name": "Logging"

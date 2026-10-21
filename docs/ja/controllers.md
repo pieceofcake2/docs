@@ -76,7 +76,7 @@ public function beforeFilter()
 
 ### クラスの読み込み
 
-このマニュアルのサンプルコードには `App::uses()` を書いていません。CakePHP 自身のクラスは
+このマニュアルのサンプルコードには、2.13.0 で非推奨になった `App::uses()` を書いていません。CakePHP 自身のクラスは
 Composer によってオートロードされます。また、アプリケーションスケルトン
 ([pieceofcake2/app](https://pieceofcake2.github.io/app/ja/)) では、 `composer.json` の
 classmap 設定でアプリケーションのクラスを登録しています。
@@ -91,11 +91,12 @@ classmap 設定でアプリケーションのクラスを登録しています�
 `App::uses()` は必要ありません。新しいクラスファイルを追加したときは、Composer に認識させるために
 `composer dump-autoload` を実行してください。
 
-classmap を使っていないアプリケーション (たとえば `app/` レイアウトの古いアプリケーション) では、
-これまでどおり `App::uses()` で自分のクラスを読み込みます。たとえば、各コントローラファイルの先頭に
-`App::uses('AppController', 'Controller');` と書きます。Composer でオートロードされない
-プラグインのクラスも、 `App::uses('MyPluginHelper', 'MyPlugin.View/Helper');` のように
-`App::uses()` で読み込む必要があります。
+`app/` レイアウトの古いアプリケーションでは、代わりにクラスのあるフォルダを classmap に並べます。
+たとえば `"classmap": ["app/Console/", "app/Controller/", "app/Lib/", "app/Model/", "app/View/"]`
+と書き、`App::uses()` の行を削除します。
+Composer がオートロードしないプラグインは、`App::uses()` を呼び出す代わりに、
+アプリケーションの classmap にプラグインのフォルダを追加してください。
+[`App::uses()` の呼び出しを削除する](/ja/core-utility-libraries/app#removing-app-uses) を参照してください。
 
 ## リクエストパラメータ
 

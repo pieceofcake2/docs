@@ -619,8 +619,7 @@ require_once $class;
 ```
 
 ほとんどの場合、クラスのファイルを読み込む必要はありません。クラスは Composer の
-オートローダーで読み込まれ、プラグインのクラスなどオートローダーが知らないクラスは
-`App::uses()` で読み込みます。クラスやライブラリを含むファイルを読み込む場合は、
+オートローダーで読み込まれるか、CakePHP がパッケージから見つけます。クラスやライブラリを含むファイルを読み込む場合は、
 常に `require_once` を使ってください。
 
 ## PHP タグ
@@ -795,7 +794,7 @@ CakePHP 5 の規約は、名前空間とネイティブの型宣言を使うコ�
 
 | ルール | 理由 |
 |--------|------|
-| `PSR1.Classes.ClassDeclaration.MissingNamespace`、`PSR1.Files.SideEffects.FoundWithSymbols`、`Squiz.Classes.ClassFileName.NoMatch` | クラスはグローバル名前空間にあり、`App::uses()` で読み込まれることがあります。PSR-1 はこれを副作用とみなします。ファイル名は CakePHP 2 の規約に従います。 |
+| `PSR1.Classes.ClassDeclaration.MissingNamespace`、`PSR1.Files.SideEffects.FoundWithSymbols`、`Squiz.Classes.ClassFileName.NoMatch` | クラスはグローバル名前空間にあり、古いコードではファイルの先頭で `App::uses()` を使って読み込みます。PSR-1 はこれを副作用とみなします。ファイル名は CakePHP 2 の規約に従います。 |
 | `SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedNameWithoutNamespace`、`SlevomatCodingStandard.Namespaces.FullyQualifiedClassNameInAnnotation.NonFullyQualifiedClassName` | 名前空間がないので、`use` 文やアノテーション内の完全修飾名は不要です。 |
 | `SlevomatCodingStandard.TypeHints.PropertyTypeHint`、`SlevomatCodingStandard.TypeHints.ParameterTypeHint`、`SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint`、`SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing` | CakePHP 2 の API はネイティブの型宣言を使いません。 |
 | `Zend.NamingConventions.ValidVariableName.StringVarNotCamelCaps`、`Zend.NamingConventions.ValidVariableName.PublicHasUnderscore`、`Zend.NamingConventions.ValidVariableName.PublicVarHasUnderscore` | CakePHP 2 は `$Model` や `$_locale` のような名前や、アンダースコアで始まる public プロパティを使います。 |

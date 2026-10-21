@@ -84,10 +84,8 @@ CakePHP resolves a configured class in one of four ways:
 - **Callable.** The value is passed to PHP as a callable, for example to
   `set_error_handler()`. Any callable works, including
   `[Acme\Error\Handler::class, 'handleError']`.
-- **Class name as given.** CakePHP calls `pluginSplit()` and `App::uses()` on
-  the name, then `class_exists()` and `new`. `pluginSplit()` only splits at a
-  dot, so a namespaced name passes through unchanged, and `class_exists()`
-  lets Composer load it. `Foo::class` works.
+- **Class name as given.** CakePHP calls `class_exists()` and `new` with the
+  name, and `class_exists()` lets Composer load it. `Foo::class` works.
 - **`App::className()`.** For the settings that add a suffix such as
   `Component` or `Engine`, `App::className($name, $type, $suffix)` finds the
   class. A name with a backslash is a fully qualified class name, and the

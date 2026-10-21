@@ -82,9 +82,8 @@ CakePHP は、設定されたクラスを次の 4 つのどれかの方法で解
 
 - **コーラブル。** 値をコーラブルとして PHP に渡します。たとえば `set_error_handler()` です。
   `[Acme\Error\Handler::class, 'handleError']` を含め、どのコーラブルも使えます。
-- **書いたままのクラス名。** 名前に `pluginSplit()` と `App::uses()` を呼び、`class_exists()`
-  と `new` を使います。`pluginSplit()` はドットでしか分割しないので、名前空間のある名前は
-  そのまま残り、`class_exists()` で Composer が読み込みます。`Foo::class` が使えます。
+- **書いたままのクラス名。** 名前で `class_exists()` と `new` を使います。`class_exists()`
+  で Composer が読み込みます。`Foo::class` が使えます。
 - **`App::className()`。** `Component` や `Engine` のようなサフィックスを付ける設定では、
   `App::className($name, $type, $suffix)` がクラスを探します。バックスラッシュを含む名前は
   完全なクラス名として扱い、名前がサフィックスで終わらないときだけサフィックスを付けます。

@@ -141,9 +141,9 @@ keeps running on CakePHP 2:
    suite finds tests in both `Test/Case/` and `tests/TestCase/`.
 3. Install plugins and third-party libraries with Composer instead of keeping
    them in `app/Plugin/` and `app/Vendor/`.
-4. Optionally, add `"classmap": ["src/"]` to the `autoload` section of
-   `composer.json` and run `composer dump-autoload`, so you can remove
-   `App::uses()` calls for your own classes.
+4. Add `"classmap": ["src/"]` to the `autoload` section of `composer.json`,
+   run `composer dump-autoload`, and remove the `App::uses()` calls for your
+   own classes: `App::uses()` is deprecated as of 2.13.0.
 
 Because the modern layout matches the one used by CakePHP 5, moving to it first
 lets you separate the folder restructuring from a later upgrade of the code.

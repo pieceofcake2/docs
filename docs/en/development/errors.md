@@ -95,9 +95,6 @@ need to be done:
 // config/core.php
 Configure::write('Error.handler', 'AppError::handleError');
 
-// config/bootstrap.php
-App::uses('AppError', 'Lib');
-
 // src/Lib/AppError.php
 class AppError
 {
@@ -120,11 +117,9 @@ class AppError
 ```
 
 This class/method will print out 'There has been an error!' each time an error
-occurs. The error handlers are registered after `config/bootstrap.php` has been
-loaded, so loading the class there with `App::uses()` is enough. If your
-`composer.json` autoloads `src/` with a classmap, as in
-[pieceofcake2/app](https://pieceofcake2.github.io/app/), the class is also
-found by Composer after you run `composer dump-autoload`.
+occurs. Composer loads the class when your `composer.json` autoloads `src/`
+with a classmap, as in [pieceofcake2/app](https://pieceofcake2.github.io/app/).
+Run `composer dump-autoload` after adding the file.
 
 PHP 8 no longer passes the fifth `$context` argument to error handlers, so
 keep it optional. Since you can define an error handler as any callback type,
@@ -150,9 +145,6 @@ If you do not want to show the cake error page, you can override it like:
 ```php
 // config/core.php
 Configure::write('Error.handler', 'AppError::handleError');
-
-// config/bootstrap.php
-App::uses('AppError', 'Lib');
 
 // src/Lib/AppError.php
 class AppError

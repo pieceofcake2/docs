@@ -98,7 +98,8 @@ define('VENDORS', ROOT . DS . 'vendor' . DS);
 
 `webroot/index.php`、`webroot/test.php`、`bin/cake` がこのファイルを読み込みます。
 既存のアプリケーションコード（`App::uses()`、コントローラー、モデル、ビュー）は、
-どちらの構成でも変更せずに動作します。
+どちらの構成でも変更せずに動作します。`App::uses()` は 2.13.0 で非推奨になったので、
+後述の手順 5 で呼び出しを削除してください。
 
 ## CakePHP 5 への段階的な移行
 
@@ -161,9 +162,9 @@ Step 3: CakePHP 5.x 風の構成の CakePHP 5.x
    4. テスト: `app/Test/*` → `tests/`
    5. 依存パッケージ: プラグインとベンダーは Composer で管理
 4. アプリケーションが引き続き動作することを **確認します**。
-5. **必要に応じて Composer のオートロードを使います**: `"classmap": ["src/"]` を設定して
-   `composer dump-autoload` を実行すれば、コントローラー、モデル、ヘルパー、シェルから
-   `App::uses()` を削除できます。
+5. **Composer のオートロードを使います**: `"classmap": ["src/"]` を設定して
+   `composer dump-autoload` を実行し、コントローラー、モデル、ヘルパー、シェルから
+   `App::uses()` を削除します。`App::uses()` は 2.13.0 で非推奨になりました。
 
    ```php
    // 変更前
@@ -184,8 +185,8 @@ Step 3: CakePHP 5.x 風の構成の CakePHP 5.x
 ::: warning
 新しいクラスファイルを作るたびに `composer dump-autoload` を実行してください。
 classmap を再生成しないと、新しいクラスは見つかりません。
-Composer のオートロードに対応していないプラグインでは、引き続き `App::uses()` か
-`CakePlugin::load()` が必要です。
+プラグインは引き続き `CakePlugin::load()` で読み込む必要があります。Composer がオートロードしない
+プラグインは、classmap にプラグインのフォルダを追加してください。
 :::
 
 ### Step 3: CakePHP 5 にアップグレードする

@@ -12,7 +12,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
 | Composer でのプラグイン | 任意 | `composer/installers` の設定が必須 | [composer.json の設定](/ja/installation#configuring-composer-json) |
 | アプリケーションの構成 | `app/` | モダン構成（`src/`、`templates/`、`config/` など）または `app/` | [CakePHP のフォルダ構造](/ja/getting-started/cakephp-folder-structure) |
 | フレームワークの配置 | `lib/Cake/` | `vendor/pieceofcake2/cakephp/src/Cake/` | [CakePHP 2.10 からの移行](/ja/appendices/migrating-from-cakephp-2-10) |
-| クラスの読み込み | `App::uses()` | Composer の classmap。`App::uses()` は Composer が知らないクラスにのみ使用 | [コントローラ](/ja/controllers#autoloading-classes) |
+| クラスの読み込み | `App::uses()` | Composer のオートロード。`App::uses()` は非推奨 (2.13) | [コントローラ](/ja/controllers#autoloading-classes) |
 | Bake | コアのシェル | [pieceofcake2/bake](https://pieceofcake2.github.io/bake/ja/) プラグイン | [Bake でコード生成](/ja/console-and-shells/code-generation-with-bake) |
 | UpgradeShell | コアのシェル | [pieceofcake2/upgrade](https://pieceofcake2.github.io/upgrade/ja/) プラグイン | [アップグレードシェル](/ja/console-and-shells/upgrade-shell) |
 | キャッシュエンジン | Xcache と Wincache を含む | Xcache と Wincache を削除 | [キャッシュ](/ja/core-libraries/caching) |

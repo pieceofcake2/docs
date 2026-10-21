@@ -13,7 +13,7 @@ and lists the pages of this book that were changed from the original.
 | Plugins via Composer | Optional | `composer/installers` settings are required | [Configuring composer.json](/installation#configuring-composer-json) |
 | Application layout | `app/` | Modern layout (`src/`, `templates/`, `config/`, ...) or `app/` | [Folder Structure](/getting-started/cakephp-folder-structure) |
 | Framework layout | `lib/Cake/` | `vendor/pieceofcake2/cakephp/src/Cake/` | [Migrating from CakePHP 2.10](/appendices/migrating-from-cakephp-2-10) |
-| Class loading | `App::uses()` | Composer classmap; `App::uses()` only for classes Composer does not know | [Controllers](/controllers#autoloading-classes) |
+| Class loading | `App::uses()` | Composer autoloading; `App::uses()` deprecated (2.13) | [Controllers](/controllers#autoloading-classes) |
 | Bake | Core shell | [pieceofcake2/bake](https://pieceofcake2.github.io/bake/) plugin | [Code Generation with Bake](/console-and-shells/code-generation-with-bake) |
 | UpgradeShell | Core shell | [pieceofcake2/upgrade](https://pieceofcake2.github.io/upgrade/) plugin | [Upgrade Shell](/console-and-shells/upgrade-shell) |
 | Cache engines | Includes Xcache and Wincache | Xcache and Wincache removed | [Caching](/core-libraries/caching) |

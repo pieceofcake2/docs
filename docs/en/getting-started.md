@@ -125,8 +125,8 @@ Symfony, expect these differences:
   class name and the file location follow
   [conventions](getting-started/cakephp-conventions#file-and-classname-conventions),
   for example `PostsController` in `src/Controller/PostsController.php`. On the
-  fork, Composer's classmap loads them; `App::uses()` is only needed for classes
-  Composer does not know, such as most plugin classes. The framework classes
+  fork, Composer's classmap loads them, and `App::uses()` is deprecated
+  (CakePHP 2.13). The framework classes
   are in the `Cake` namespace with their CakePHP 2 names as aliases, such as
   `Controller` for `Cake\Controller\Controller` (CakePHP 2.13). Your own
   classes can use namespaces; [Namespaced Classes](development/namespaced-classes) lists where CakePHP

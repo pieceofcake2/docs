@@ -63,11 +63,11 @@ root, where CakePHP looks for plugins in both layouts (the legacy
 
 ### Autoloading Your Classes
 
-CakePHP's own classes are autoloaded through Composer's classmap, so you don't
-need `App::uses()` for them. Your application classes can still be loaded with
-`App::uses()`, or you can let Composer load them by adding the `classmap`
-autoload setting shown above. With the classmap you can remove `App::uses()`
-calls from your controllers, models, helpers and shells.
+CakePHP's own classes are autoloaded by Composer, so you don't need
+`App::uses()` for them. Let Composer load your application classes too by
+adding the `classmap` autoload setting shown above, and remove the
+`App::uses()` calls from your controllers, models, helpers and shells:
+`App::uses()` is deprecated as of 2.13.0.
 
 Composer's classmap is a fixed list of files, so run the following each time
 you add a new class file:
@@ -76,8 +76,9 @@ you add a new class file:
 composer dump-autoload
 ```
 
-Plugins that don't support Composer autoloading still need `App::uses()`, for
-example `App::uses('MyPluginHelper', 'MyPlugin.View/Helper');`.
+For a plugin that Composer does not autoload, add its folder to the classmap
+of your application instead of calling `App::uses()`, which is deprecated as
+of 2.13.0. See [Removing App::uses() calls](/core-utility-libraries/app#removing-app-uses).
 
 If Composer warns about an ambiguous class resolution, for example because a
 class such as `AppController` exists both in your application and in a package,

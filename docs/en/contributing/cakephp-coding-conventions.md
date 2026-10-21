@@ -650,8 +650,8 @@ require_once $class;
 ```
 
 In most cases you do not need to include class files at all. Classes are
-loaded by Composer's autoloader, or with `App::uses()` for classes that the
-autoloader does not know about, such as plugin classes. When you include files
+loaded by Composer's autoloader, or found by CakePHP in their packages. When
+you include files
 with classes or libraries, always use `require_once`.
 
 ## PHP Tags
@@ -828,7 +828,7 @@ The `CakePHP2` standard of [pieceofcake2/phpcs-cakephp2](https://pieceofcake2.gi
 
 | Rules | Why |
 |-------|-----|
-| `PSR1.Classes.ClassDeclaration.MissingNamespace`, `PSR1.Files.SideEffects.FoundWithSymbols`, `Squiz.Classes.ClassFileName.NoMatch` | Classes live in the global namespace and may be loaded with `App::uses()`, which PSR-1 sees as a side effect. File names follow CakePHP 2 conventions. |
+| `PSR1.Classes.ClassDeclaration.MissingNamespace`, `PSR1.Files.SideEffects.FoundWithSymbols`, `Squiz.Classes.ClassFileName.NoMatch` | Classes live in the global namespace, and older code loads them with `App::uses()` at the top of the file, which PSR-1 sees as a side effect. File names follow CakePHP 2 conventions. |
 | `SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedNameWithoutNamespace`, `SlevomatCodingStandard.Namespaces.FullyQualifiedClassNameInAnnotation.NonFullyQualifiedClassName` | Without namespaces, `use` statements and fully qualified names in annotations are not needed. |
 | `SlevomatCodingStandard.TypeHints.PropertyTypeHint`, `SlevomatCodingStandard.TypeHints.ParameterTypeHint`, `SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint`, `SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing` | CakePHP 2 APIs do not use native type declarations. |
 | `Zend.NamingConventions.ValidVariableName.StringVarNotCamelCaps`, `Zend.NamingConventions.ValidVariableName.PublicHasUnderscore`, `Zend.NamingConventions.ValidVariableName.PublicVarHasUnderscore` | CakePHP 2 uses names such as `$Model` and `$_locale`, and public properties with an underscore prefix. |

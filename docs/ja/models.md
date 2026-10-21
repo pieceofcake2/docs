@@ -48,8 +48,8 @@ AppModel は CakePHP 内部の Model クラスを extend しています。
 `composer.json` で `src/` を classmap に指定していれば
 ([pieceofcake2/app](https://pieceofcake2.github.io/app/ja/) スケルトンの設定です)、
 AppModel は Composer によって自動的に読み込まれます。
-classmap を使わない場合は、ファイルの先頭に `App::uses('AppModel', 'Model');` を書いて、
-必要なときにクラスが読み込まれるようにしてください。
+classmap を使わない場合も、CakePHP が `Model` パッケージから `AppModel` を見つけるので、
+ファイルに `App::uses()` を書く必要はありません。
 
 中間クラスの AppModel はアプリケーションの `src/Model/AppModel.php` にあり、
 最初は空のクラスです。CakePHP のコアには AppModel が含まれていないため、
