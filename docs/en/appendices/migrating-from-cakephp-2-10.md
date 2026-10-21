@@ -41,6 +41,65 @@ CakePHP 2.13 adds features; follow these steps to update from 2.12:
 3. Read the items below, especially the class names in logs and output and the
    comparisons of class names as strings, and run your tests.
 
+### Variadic arguments ([PR #89](https://github.com/pieceofcake2/cakephp/pull/89)) {#variadic-arguments}
+
+- The methods that read a variable number of arguments with `func_get_args()`
+  now declare them as a variadic parameter. The calls do not change:
+  `$this->Auth->allow('index', 'view')` and `$this->Post->query($sql, $params)`
+  work as before.
+- A class that **overrides** one of these methods must declare the same
+  variadic parameter. PHP refuses an override with fewer parameters and stops
+  when the class is loaded:
+  `Declaration of AppModel::query($sql) must be compatible with Model::query($sql, ...$params)`.
+
+  | Method | New signature |
+  | --- | --- |
+  | `Shell::dispatchShell()` | `dispatchShell(...$args)` |
+  | `AuthComponent::allow()`, `deny()` | `allow(...$args)`, `deny(...$args)` |
+  | `SecurityComponent::requirePost()`, `requireGet()`, `requirePut()`, `requireDelete()`, `requireSecure()`, `requireAuth()` | `requirePost(...$args)`, ... |
+  | `Controller::setAction()` | `setAction($action, ...$args)` |
+  | `Controller::validate()`, `validateErrors()` | `validate(...$args)`, `validateErrors(...$objects)` |
+  | `ContainableBehavior::contain()` | `contain(Model $Model, ...$args)` |
+  | `DboSource::query()` | `query(...$args)` |
+  | `Model::isUnique()` | `isUnique($fields, $or = true, ...$args)` |
+  | `Model::query()` | `query($sql, ...$params)` |
+  | `CakeRequest::data()`, `param()` | `data($name, ...$args)`, `param($name, ...$args)` |
+  | `CakeRequest::input()` | `input($callback = null, ...$args)` |
+  | `CakeRequest::allowMethod()`, `onlyAllow()` | `allowMethod($methods, ...$args)`, `onlyAllow($methods, ...$args)` |
+  | `Router::parseExtensions()` | `parseExtensions(...$extensions)` |
+  | `CakeTestCase::loadFixtures()` | `loadFixtures(...$args)` |
+  | `Hash::merge()` | `merge(array $data, $merge, ...$args)` |
+  | `Sanitize::stripTags()` | `stripTags($str, ...$tags)` |
+  | `Set::merge()` | `merge($data, $merge = null, ...$args)` |
+  | `HtmlHelper::css()` | `css($path, $options = [], ...$args)` |
+  | `HtmlHelper::useTag()` | `useTag($tag, ...$args)` |
+
+  ```php
+  // Before
+  public function query($sql)
+  {
+      return parent::query(...func_get_args());
+  }
+
+  // After
+  public function query($sql, ...$params)
+  {
+      return parent::query($sql, ...$params);
+  }
+  ```
+
+- The `rector` command of pieceofcake2/upgrade adds the parameters for you.
+  The changed code also runs on the versions before, so run it before you
+  update:
+
+  ```bash
+  bin/cake upgrade rector --rules variadic-arguments src tests
+  ```
+
+  See [Rector rules](/console-and-shells/upgrade-shell#rector-rules).
+- `CakeRequest::input(null)` now returns the raw input, as `input()` does.
+  It called `null` before.
+
 ### Plugins in the CakePHP 5 layout ([PR #88](https://github.com/pieceofcake2/cakephp/pull/88)) {#plugin-modern-layout}
 
 - A plugin can put namespaced classes in `src/` (loaded by Composer with the
@@ -205,65 +264,6 @@ code. Most applications only need to update. These changes may affect yours:
   ```
 
   See [HTML5 Tags](/core-libraries/helpers/html#html5).
-
-### Variadic arguments ([PR #89](https://github.com/pieceofcake2/cakephp/pull/89)) {#variadic-arguments}
-
-- The methods that read a variable number of arguments with `func_get_args()`
-  now declare them as a variadic parameter. The calls do not change:
-  `$this->Auth->allow('index', 'view')` and `$this->Post->query($sql, $params)`
-  work as before.
-- A class that **overrides** one of these methods must declare the same
-  variadic parameter. PHP refuses an override with fewer parameters and stops
-  when the class is loaded:
-  `Declaration of AppModel::query($sql) must be compatible with Model::query($sql, ...$params)`.
-
-  | Method | New signature |
-  | --- | --- |
-  | `Shell::dispatchShell()` | `dispatchShell(...$args)` |
-  | `AuthComponent::allow()`, `deny()` | `allow(...$args)`, `deny(...$args)` |
-  | `SecurityComponent::requirePost()`, `requireGet()`, `requirePut()`, `requireDelete()`, `requireSecure()`, `requireAuth()` | `requirePost(...$args)`, ... |
-  | `Controller::setAction()` | `setAction($action, ...$args)` |
-  | `Controller::validate()`, `validateErrors()` | `validate(...$args)`, `validateErrors(...$objects)` |
-  | `ContainableBehavior::contain()` | `contain(Model $Model, ...$args)` |
-  | `DboSource::query()` | `query(...$args)` |
-  | `Model::isUnique()` | `isUnique($fields, $or = true, ...$args)` |
-  | `Model::query()` | `query($sql, ...$params)` |
-  | `CakeRequest::data()`, `param()` | `data($name, ...$args)`, `param($name, ...$args)` |
-  | `CakeRequest::input()` | `input($callback = null, ...$args)` |
-  | `CakeRequest::allowMethod()`, `onlyAllow()` | `allowMethod($methods, ...$args)`, `onlyAllow($methods, ...$args)` |
-  | `Router::parseExtensions()` | `parseExtensions(...$extensions)` |
-  | `CakeTestCase::loadFixtures()` | `loadFixtures(...$args)` |
-  | `Hash::merge()` | `merge(array $data, $merge, ...$args)` |
-  | `Sanitize::stripTags()` | `stripTags($str, ...$tags)` |
-  | `Set::merge()` | `merge($data, $merge = null, ...$args)` |
-  | `HtmlHelper::css()` | `css($path, $options = [], ...$args)` |
-  | `HtmlHelper::useTag()` | `useTag($tag, ...$args)` |
-
-  ```php
-  // Before
-  public function query($sql)
-  {
-      return parent::query(...func_get_args());
-  }
-
-  // After
-  public function query($sql, ...$params)
-  {
-      return parent::query($sql, ...$params);
-  }
-  ```
-
-- The `rector` command of pieceofcake2/upgrade adds the parameters for you.
-  The changed code also runs on the versions before, so run it before you
-  update:
-
-  ```bash
-  bin/cake upgrade rector --rules variadic-arguments src tests
-  ```
-
-  See [Rector rules](/console-and-shells/upgrade-shell#rector-rules).
-- `CakeRequest::input(null)` now returns the raw input, as `input()` does.
-  It called `null` before.
 
 ## v2.12.10
 
