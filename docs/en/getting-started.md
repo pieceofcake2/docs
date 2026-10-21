@@ -129,7 +129,8 @@ Symfony, expect these differences:
   fork, Composer's classmap loads them; `App::uses()` is only needed for classes
   Composer does not know, such as most plugin classes. Your own classes can use
   namespaces; [Namespaced Classes](development/namespaced-classes) lists where
-  CakePHP accepts them in its configuration.
+  CakePHP accepts them in its configuration, and how `App.namespace` finds
+  controllers and models in your namespace (CakePHP 2.13).
 - **Arrays instead of objects.** `find()` takes an array of options and
   returns nested arrays keyed by model alias, such as
   `$post['Post']['title']`, not entities or collections. See

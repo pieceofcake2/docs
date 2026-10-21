@@ -86,6 +86,43 @@ code. Most applications only need to update. These changes may affect yours:
 - The core requires `symfony/polyfill-php84` for the `Pdo\Mysql` constants on
   PHP 8.0 to 8.3. Composer installs it.
 
+### Classes in a namespace: `App::className()` and `App.namespace` ([PR #91](https://github.com/pieceofcake2/cakephp/pull/91)) {#app-classname}
+
+- Settings with a suffix take fully qualified class names with the suffix:
+  `MemoryEngine::class` for a cache engine, `SesTransport::class` for a
+  transport, and the same for Auth objects, password hashers, view classes,
+  components, helpers, behaviors, shell tasks and shell helpers. The names
+  without the suffix (`'Acme\Cache\Engine\Memory'`) keep working.
+- `App.namespace` is new and not set by default. When it is set, controllers,
+  shells, models and the classes above are first looked up in that namespace
+  by their short name, e.g. `App\Controller\PostsController` for `/posts`.
+  See [Namespaced Classes](/development/namespaced-classes).
+- Fully qualified class names as the keys of `$components`, `$helpers`,
+  `$actsAs`, shell `$tasks`, `$uses` and the model associations, or given to
+  `load()`, `loadModel()` and `ClassRegistry::init()` without an alias, get the
+  class name without the namespace and the suffix as their alias:
+  `GreetingComponent::class` gives `$this->Greeting`, and `Post::class` gives
+  `$this->Post`. Before, the alias was the name with the backslashes; code that
+  used such an alias must use the short alias. A parent class and a subclass
+  that name the same object, one by its class name and one by its short name,
+  now give one entry with the merged settings. `'with' => PostsTag::class` of a
+  hasAndBelongsToMany association finds the join model `PostsTag`, and
+  `ClassRegistry::getObject()`, `isKeySet()` and `removeObject()` also find
+  objects by their fully qualified class names. See
+  [Namespaced Classes](/development/namespaced-classes#components-helpers-and-behaviors).
+- `Controller` and `View` have the new public property `$controllerClass`,
+  which is also passed from the controller to the view. Rename a property of
+  that name in a subclass.
+
+> [!WARNING]
+> `Controller::$name`, `Model::$name` and `Shell::$name` of a class in a
+> namespace no longer contain the namespace, e.g. `Post` instead of
+> `Acme\Model\Post`. Set `$name` if you relied on the old value.
+
+> [!WARNING]
+> A namespaced controller now merges `$components` and `$helpers` with its
+> parent class `AppController` in any namespace, also without `App.namespace`.
+
 ## v2.12.11
 
 ### Security fix: request URLs with extra leading slashes ([GHSA-wh43-gc93-wh4c](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-wh43-gc93-wh4c), [PR #90](https://github.com/pieceofcake2/cakephp/pull/90)) {#request-url-leading-slashes}
