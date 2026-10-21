@@ -28,6 +28,28 @@
 
 v2.13.0 の変更のうち、すでにフォークで動いているアプリケーションに影響する可能性があるものです。
 
+CakePHP 2.13 は機能を追加したリリースです。2.12 からは次の手順で更新します。
+
+1. `composer.json` の制約を `"pieceofcake2/cakephp": "^2.13"` にして、
+   `composer update pieceofcake2/cakephp` を実行します。
+2. pieceofcake2/phpstan-cakephp2 を使っている場合は、`Cake` 名前空間のクラスに対応した `^1.1`
+   に更新します。
+3. 下の項目、特にログや出力に出るクラス名と、クラス名を文字列で比べているコードを確かめてから、
+   テストを実行します。
+
+### CakePHP 5 の構成のプラグイン ([PR #88](https://github.com/pieceofcake2/cakephp/pull/88)) {#plugin-modern-layout}
+
+- アプリケーションと同じように、プラグインも名前空間のあるクラスを `src/` (プラグインの `psr-4` で
+  Composer が読み込みます)、テンプレートを `templates/`、翻訳を `resources/locales/`、ベンダーのファイルを
+  `vendor/`、bootstrap、routes、設定ファイル、スキーマを `config/` に置けます。CakePHP はこれらの
+  ディレクトリを先に探し、`Controller/`、`View/`、`Locale/`、`Vendor/`、`Config/` などの CakePHP 2 の
+  ディレクトリをその後に探します。これらのディレクトリが無いプラグインでは何も変わりません。
+  [プラグインの作成](/ja/plugins/how-to-create-plugins) を参照してください。
+
+> [!WARNING]
+> これらのディレクトリを別の目的ですでに使っているプラグインでは、そのファイルが先に見つかります。たとえば
+> `App::import('Vendor', ...)` は、開発用にチェックアウトしたプラグインの Composer の `vendor/` を先に探します。
+
 ### CakePHP 5 の形式のテンプレート ([PR #94](https://github.com/pieceofcake2/cakephp/pull/94)) {#php-templates}
 
 - `templates/` のテンプレート、レイアウト、エレメントに、`.php` の拡張子と、CakePHP 5 のディレクトリ

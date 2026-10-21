@@ -19,10 +19,63 @@ that this folder has the same name as the plugin.
 
 Plugins live in the `plugins/` directory at the root of your project (in an
 application with the legacy `app/` layout you can also use `app/Plugin/`).
-Unlike the application itself, a plugin keeps the CakePHP 2 structure
-*inside* its folder: PHP classes in `Controller/`, `Model/` and so on, and
-templates in `View/` next to `View/Helper/`. Plugin tests can use either
-`Test/Case/` and `Test/Fixture/` or `tests/TestCase/` and `tests/Fixture/`.
+Inside its folder, a plugin uses the CakePHP 2 structure shown above: PHP
+classes in `Controller/`, `Model/` and so on, and templates in `View/` next to
+`View/Helper/`. Plugin tests can use either `Test/Case/` and `Test/Fixture/` or
+`tests/TestCase/` and `tests/Fixture/`.
+
+::: pieceofcake2 Added in version 2.13.0
+A plugin can also use the layout of the application and of CakePHP 5:
+
+    /plugins
+        /ContactManager
+            /config
+                bootstrap.php
+                routes.php
+            /src
+                /Controller
+                    /Component
+                /Model
+                    /Behavior
+                /View
+                    /Helper
+            /templates
+                /Contacts
+                /Layouts
+            /resources
+                /locales
+            /webroot
+
+- `src/` holds the namespaced classes, as in CakePHP 5, for example
+  `ContactManager\Controller\Component\ContactsComponent` in
+  `src/Controller/Component/ContactsComponent.php`. Composer loads them with the
+  `psr-4` entry of the plugin's `composer.json` (`"ContactManager\\": "src/"`).
+  Name them in settings with the plugin prefix (`'ContactManager.Contacts'`) or
+  with `ContactsComponent::class`; see
+  [Namespaced Classes](/development/namespaced-classes).
+- `templates/`, `resources/locales/` and `vendor/` hold the templates, the
+  translations and the vendor files.
+- `config/` holds `bootstrap.php`, `routes.php`, the configuration files read
+  with `Configure::load('ContactManager.file')` and the schemas in
+  `config/Schema/`, like `Config/` of the CakePHP 2 layout.
+:::
+
+CakePHP searches the directories of the CakePHP 5 layout first, and the
+directories of the CakePHP 2 layout after them, so a plugin can move to the new
+layout one directory at a time.
+
+> [!NOTE]
+> `App::uses()` does not look in `src/`: the classes there are namespaced and
+> loaded by Composer. `src/` is not searched for templates, translations or
+> vendor files either, so the view classes in `src/View/` are never rendered
+> as templates.
+
+> [!WARNING]
+> A file in `templates/`, `resources/locales/` or `config/` is used instead of
+> the file of the same name in `View/`, `Locale/` or `Config/`. Before you add
+> one of these directories to a plugin, check that it does not already have one
+> for another purpose, for example a Composer `vendor/` directory of a plugin
+> checked out for development.
 The [pieceofcake2/plugin](https://github.com/pieceofcake2/plugin) skeleton is a
 good starting point for a new plugin.
 
