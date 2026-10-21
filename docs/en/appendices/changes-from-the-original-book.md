@@ -446,6 +446,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - Bake commands use `bin/cake` with the Bake plugin; added the missing asset plugin-syntax example; removed `flash/` asset folder
   - Publishing: removed plugins.cakephp.org/awesome-cakephp; added a `composer.json` example (type cakephp-plugin, composer/installers, installer-name)
   - New "Registering DSN Schemes" section (v2.12.7): `setDsnClassMap()` / `getDsnClassMap()` of `ConnectionManager` and `CakeEmail` in the plugin bootstrap, class names and callables, `null` removal, the `method_exists()` guard and when the maps are read
+  - The legacy plugin layout and the modern plugin layout (v2.13.0) in separate sections, each with a tree; the modern layout keeps only namespaced classes in `src/`; the publishing section lists the `composer.json` settings and links to [Autoloading](/development/autoloading#plugins)
 - [How To Install Plugins](/plugins/how-to-install-plugins)
   - Composer is the primary method (pieceofcake2/debug_kit example, composer/installers and installer-paths for `plugins/`); manual and Git installs use `plugins/` and https URLs
   - Plugins are loaded in `config/bootstrap.php`; when App::uses() is still needed for plugin classes

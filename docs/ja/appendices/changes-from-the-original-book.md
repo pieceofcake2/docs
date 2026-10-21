@@ -441,6 +441,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - Bake のコマンドを Bake プラグインの `bin/cake` に変更し、欠けていたアセットのプラグイン記法の例を追加、`flash/` フォルダを削除
   - 公開方法: plugins.cakephp.org と awesome-cakephp への言及を削除し、`composer.json` の例 (type cakephp-plugin、composer/installers、installer-name) を追加
   - 「DSN スキームの登録」の節を追加 (v2.12.7): プラグインのブートストラップで使う `ConnectionManager` と `CakeEmail` の `setDsnClassMap()` と `getDsnClassMap()`、クラス名と callable、`null` による削除、`method_exists()` によるガード、マップが読まれるタイミング
+  - 従来のプラグインの構成とモダンなプラグインの構成 (v2.13.0) を別の節に分け、それぞれにツリーを記載。モダンな構成の `src/` には名前空間のあるクラスだけを置くことを記載。公開の節で `composer.json` の設定を箇条書きにし、[クラスの読み込み](/ja/development/autoloading#plugins) へのリンクを追加
 - [プラグインのインストール](/ja/plugins/how-to-install-plugins)
   - Composer を標準のインストール方法とし (pieceofcake2/debug_kit の例、`plugins/` 用の composer/installers と installer-paths)、手動や Git でのインストールも `plugins/` と https の URL に変更
   - プラグインは `config/bootstrap.php` でロードすることと、プラグインのクラスに App::uses() が必要な場合を記載

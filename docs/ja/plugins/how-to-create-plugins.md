@@ -1,89 +1,119 @@
 # プラグインの作成
 
 動作サンプルとして、 [プラグインの使い方](../plugins/how-to-use-plugins) セクションを参考に ContactManager
-プラグインを作りましょう。 先ず始めに、プラグインの基本ディレクトリ構成を準備します。
-それはこのようになります。
+プラグインを作りましょう。
 
-    /plugins
-        /ContactManager
-            /Controller
-                /Component
-            /Model
-                /Behavior
-            /View
-                /Helper
-                /Layouts
+プラグインはプロジェクトルートの `plugins/` ディレクトリに置きます。従来の `app/` 構成のアプリケーションでは
+`app/Plugin/` も使えます。プラグインフォルダーの名前 **ContactManager** は、プラグインの名前と同じにします。
 
-プラグインフォルダーの名前は、 **ContactManager** となります。 プラグインと同じ
-名前のフォルダになることが重要です。
+プラグインの構成には、次の 2 つがあります。
 
-プラグインはプロジェクトルートの `plugins/` ディレクトリに置きます (従来の `app/` レイアウトの
-アプリケーションでは `app/Plugin/` も使えます)。プラグインの中は、上のような CakePHP 2 の構成です。
-PHP のクラスは `Controller/` や `Model/` などに置き、テンプレートは `View/Helper/` と並べて
-`View/` に置きます。プラグインのテストには `Test/Case/` と `Test/Fixture/`、または
-`tests/TestCase/` と `tests/Fixture/` のどちらも使えます。
+- CakePHP 2 の [従来のプラグインの構成](#the-legacy-plugin-layout)
+- アプリケーションや CakePHP 5 と同じ [モダンなプラグインの構成](#the-modern-plugin-layout)
+
+CakePHP はモダンな構成のディレクトリを先に探し、従来の構成のディレクトリをその後に探します。
+そのため、プラグインを 1 ディレクトリずつモダンな構成に移せます。
+
+新しくプラグインを作るときは、 [pieceofcake2/plugin](https://github.com/pieceofcake2/plugin)
+スケルトンをひな形にするとよいでしょう。
+
+## 従来のプラグインの構成 {#the-legacy-plugin-layout}
+
+```text
+plugins/
+└── ContactManager/
+    ├── Config/
+    │   ├── bootstrap.php
+    │   └── routes.php
+    ├── Console/
+    ├── Controller/
+    │   └── Component/
+    ├── Lib/
+    ├── Locale/
+    ├── Model/
+    │   └── Behavior/
+    ├── Test/
+    │   ├── Case/
+    │   └── Fixture/
+    ├── Vendor/
+    ├── View/
+    │   ├── Helper/
+    │   └── Layouts/
+    ├── webroot/
+    └── composer.json
+```
+
+- クラスはグローバルなクラスで、`Controller/`、`Model/`、`View/Helper/` などに置きます。
+  プラグインの `composer.json` のクラスマップで Composer が読み込みます ([プラグインの公開](#publish-your-plugin) を参照)。
+- テンプレートは、`View/Helper/` と並べて `View/` に置きます。
+- `Config/` には、`bootstrap.php`、`routes.php`、`Configure::load('ContactManager.file')` で読む設定ファイル、
+  `Config/Schema/` のスキーマを置きます。
+- `Locale/` には翻訳を、`Vendor/` にはベンダーのファイルを置きます。
+- テストは `Test/Case/` と `Test/Fixture/`、または `tests/TestCase/` と `tests/Fixture/` に置きます。
+
+## モダンなプラグインの構成 {#the-modern-plugin-layout}
 
 ::: pieceofcake2 Added in version 2.13.0
-アプリケーションや CakePHP 5 と同じ構成も使えます。
-
-    /plugins
-        /ContactManager
-            /config
-                bootstrap.php
-                routes.php
-            /src
-                /Controller
-                    /Component
-                /Model
-                    /Behavior
-                /View
-                    /Helper
-            /templates
-                /Contacts
-                /Layouts
-            /resources
-                /locales
-            /webroot
-
-- `src/` には、CakePHP 5 と同じく名前空間のあるクラスを置きます。たとえば
-  `src/Controller/Component/ContactsComponent.php` には
-  `ContactManager\Controller\Component\ContactsComponent` を置きます。プラグインの `composer.json` の
-  `psr-4` (`"ContactManager\\": "src/"`) で Composer が読み込みます。設定にはプラグインの接頭辞を付けた
-  名前 (`'ContactManager.Contacts'`) か `ContactsComponent::class` を書きます。
-  [名前空間のあるクラス](/ja/development/namespaced-classes) を参照してください。
-- `templates/`、`resources/locales/`、`vendor/` には、テンプレート、翻訳、ベンダーのファイルを置きます。
-- `config/` には、CakePHP 2 の構成の `Config/` と同じく、`bootstrap.php`、`routes.php`、
-  `Configure::load('ContactManager.file')` で読む設定ファイル、`config/Schema/` のスキーマを置きます。
+モダンなプラグインの構成 ([#88](https://github.com/pieceofcake2/cakephp/pull/88))。
 :::
 
-CakePHP は CakePHP 5 の構成のディレクトリを先に探し、CakePHP 2 の構成のディレクトリをその後に探します。
-そのため、プラグインを 1 ディレクトリずつ新しい構成に移せます。
+```text
+plugins/
+└── ContactManager/
+    ├── config/
+    │   ├── bootstrap.php
+    │   └── routes.php
+    ├── resources/
+    │   └── locales/
+    ├── src/
+    │   ├── Controller/
+    │   │   └── Component/
+    │   ├── Model/
+    │   │   └── Behavior/
+    │   └── View/
+    │       └── Helper/
+    ├── templates/
+    │   ├── Contacts/
+    │   └── Layouts/
+    ├── tests/
+    │   ├── Fixture/
+    │   └── TestCase/
+    ├── webroot/
+    └── composer.json
+```
+
+- `src/` には、CakePHP 5 と同じく名前空間のあるクラスだけを置きます。たとえば
+  `src/Controller/Component/ContactsComponent.php` には `ContactManager\Controller\Component\ContactsComponent` を置きます。
+  - プラグインの `composer.json` の PSR-4 (`"ContactManager\\": "src/"`) で Composer が読み込みます。
+  - 設定には、プラグインの接頭辞を付けた名前 (`'ContactManager.Contacts'`) か `ContactsComponent::class` を書きます。
+    [名前空間のあるクラス](/ja/development/namespaced-classes) を参照してください。
+- プラグインのグローバルなクラスは、従来の構成と同じく `Controller/`、`Model/`、`View/Helper/` などに置きます。
+- `templates/` にはテンプレートを置きます。CakePHP は `View/` より先にここを探します。
+- `config/` には、従来の構成の `Config/` と同じファイルを置きます。`config/` があると、CakePHP はプラグインの設定を
+  `Config/` ではなく `config/` から読みます。
+- `resources/locales/` には翻訳を置きます。CakePHP は `Locale/` より先にここを探します。
+- `vendor/` にはベンダーのファイルを置きます。CakePHP は `Vendor/` より先にここを探します。
 
 > [!NOTE]
-> `App::uses()` は `src/` を探しません。`src/` のクラスは名前空間のあるクラスで、Composer が読み込みます。
+> `App::uses()` は `src/` の名前空間のあるクラスを読み込みません。Composer が読み込みます。
 > `src/` はテンプレート、翻訳、ベンダーのファイルを探す場所でもないので、`src/View/` のビュークラスを
 > テンプレートとして描画することはありません。
 
 > [!WARNING]
-> `templates/`、`resources/locales/`、`config/` のファイルは、`View/`、`Locale/`、`Config/` にある同じ名前の
-> ファイルより先に使われます。これらのディレクトリをプラグインに足す前に、別の目的ですでに使っていないかを
-> 確かめてください。たとえば、開発用にチェックアウトしたプラグインには Composer の `vendor/` があります。
-新しくプラグインを作るときは、 [pieceofcake2/plugin](https://github.com/pieceofcake2/plugin)
-スケルトンをひな形にするとよいでしょう。
+> `templates/`、`resources/locales/` のファイルは、`View/`、`Locale/` にある同じ名前のファイルの代わりに使われます。
+> これらのディレクトリや `config/`、`vendor/` をプラグインに足す前に、別の目的ですでに使っていないかを確かめてください。
+> たとえば、開発用にチェックアウトしたプラグインには Composer の `vendor/` があることがあります。
 
-プラグインフォルダー内では、CakePHP アプリケーションのような構成が多くあるのに気づくと
-思いますが、 それが基本的な構成です。 使わないフォルダには、何も入れる必要はありません。
-コンポーネントとビヘイビアだけで定義されるプラグインもあれば、 'View' ディレクトリが
-完全に省略されるプラグインもあります。
+## プラグインのフォルダ
 
-プラグインは、アプリケーションが持つ Config, Console, Lib, webroot 等といった
-ディレクトリも設置できます。
+プラグインは CakePHP アプリケーションによく似ていて、実際ほぼ同じものです。使わないフォルダは作る必要はありません。
+コンポーネントとビヘイビアだけを定義するプラグインでは、`View/` や `templates/` をまったく持たなくても構いません。
 
 > [!NOTE]
 > URL でプラグインにアクセスできるようにしたい場合、AppController と AppModel への
-> 定義が必要です。 この２つの特別なクラスはプラグインの後に名前をつけて、
+> 定義が必要です。この 2 つの特別なクラスにはプラグインにちなんだ名前を付け、
 > アプリケーションの AppController と AppModel を継承します。
-> ContacktManager の例ではこうなります。
+> ContactManager の例ではこうなります。
 
 ```php
 // plugins/ContactManager/Controller/ContactManagerAppController.php の中で
@@ -99,11 +129,13 @@ class ContactManagerAppModel extends AppModel
 }
 ```
 
-アプリケーションの `AppController`、`AppModel`、`AppHelper`、`AppShell` と、プラグインの
-`ContactManagerAppController`、`ContactManagerAppModel` は、`App::uses()` が無くても CakePHP
-が見つけます。プラグインのそのほかのクラスは、2.13.0 で非推奨になった `App::uses()` を書く代わりに、
-プラグインの `composer.json` の classmap で Composer に読み込ませてください
-([プラグインの公開](#publish-your-plugin) を参照)。
+次のクラスは、`App::uses()` が無くても CakePHP が見つけます。
+
+- アプリケーションの `AppController`、`AppModel`、`AppHelper`、`AppShell`
+- プラグインの `ContactManagerAppController`、`ContactManagerAppModel`
+
+プラグインのそのほかのクラスは Composer に読み込ませてください。
+[クラスの読み込み](/ja/development/autoloading#plugins) を参照してください。
 
 もしこれらの特別なクラスの定義を忘れると、”Missing Controller” エラーがでます。
 
@@ -221,7 +253,7 @@ class Contact extends ContactManagerAppModel
 ## プラグインビュー
 
 ビューは通常のアプリケーション内での動作として振る舞います。
-`plugins/[PluginName]/View/` フォルダー内に設置するだけです。
+`plugins/[PluginName]/View/` フォルダー (モダンな構成では `templates/`) 内に設置するだけです。
 ContactManager プラグインでは、ContactsController::index()
 アクションのビューが必要になるので、 このような内容になります。
 
@@ -428,7 +460,7 @@ CakePHP アプリケーションで動作するプラグインの最後の tips 
 
 - \[Plugin\]AppController と \[Plugin\]AppModel が無ければ、
   プラグインコントローラにアクセスしようとすると、 missing Controller エラーになります。
-- プラグインのレイアウトは定義可能で、 `plugins/[Plugin]/View/Layouts` に含まれます。
+- プラグインのレイアウトは定義可能で、 `plugins/[Plugin]/View/Layouts` (モダンな構成では `templates/Layouts`) に含まれます。
   一方でプラグインは、デフォルトは `templates/Layouts` フォルダからレイアウトを利用します。
 - コントローラ内で `$this->requestAction('/plugin_name/controller_name/action');`
   と書くと 内部プラグインとコミュニケーションができます。
@@ -441,11 +473,12 @@ CakePHP アプリケーションで動作するプラグインの最後の tips 
 
 プラグインを共有するには、 `composer.json` ファイルを作成し、あなたのプラグインを
 [packagist.org](https://packagist.org/) に公開します。
-これで Composer を通して簡単にあなたのプラグインが使用できるようになります。
-パッケージの `type` を `cakephp-plugin` にし、アプリケーションのプラグインディレクトリに
-インストールされるように `composer/installers` を require に追加して、 `installer-name` に
-プラグインのフォルダ名を指定します。また、Composer がプラグインのクラスを読み込むように、
-`autoload` の classmap にクラスのあるフォルダを並べます。
+これで Composer を通して簡単にあなたのプラグインが使用できるようになります。`composer.json` では次のように設定します。
+
+- パッケージの `type` を `cakephp-plugin` にします。
+- アプリケーションのプラグインディレクトリにインストールされるように、`composer/installers` を require に追加します。
+- `installer-name` にプラグインのフォルダ名を指定します。
+- Composer がプラグインのクラスを読み込むように、`autoload` の classmap にクラスのあるフォルダを並べます。
 
 ```json
 {
@@ -466,7 +499,8 @@ CakePHP アプリケーションで動作するプラグインの最後の tips 
 ```
 
 classmap には、プラグインにあるフォルダだけを並べてください。無いフォルダがあると、
-`composer dump-autoload` がエラーで止まります。
+`composer dump-autoload` がエラーで止まります。モダンな構成の `src/` にある名前空間のあるクラスには、PSR-4 の設定を追加します。
+[クラスの読み込み](/ja/development/autoloading#plugins) を参照してください。
 
 パッケージ名にセマンティックな意味のある名前を選んでください。これは、理想を言えば、
 "cakephp" をフレームワークとして依存関係を設定するべきです。
