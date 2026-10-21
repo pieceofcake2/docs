@@ -157,6 +157,11 @@ plugins/DebugKit/Locale/por/LC_MESSAGES/debug_kit.po (ポルトガル語)
 
 プラグインの翻訳ファイルは、どちらのレイアウトでもプラグイン自身の `Locale/` ディレクトリに置きます。
 
+::: pieceofcake2 Added in version 2.13.0
+CakePHP 5 と同じく、`plugins/DebugKit/resources/locales/fra/LC_MESSAGES/debug_kit.po` のように
+`resources/locales/` にも置けます。CakePHP は `Locale/` より先にそこを探します。
+:::
+
 CakePHP が翻訳ドメインと比較のためにプラグイン名を小文字化してアンダースコア区切りにして
 使用します。もし、与えられた翻訳ファイルにマッチする場合、プラグインの中を参照します。
 

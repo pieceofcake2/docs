@@ -42,9 +42,51 @@ CSV ファイルを出力する必要があるかもしれません。
 | ヘルパー | `src/View/Helper/` | `app/View/Helper/` |
 | ビュークラス | `src/View/` | `app/View/` |
 
-プラグイン内のテンプレートは、常にプラグイン自身の `View/` ディレクトリに置きます。
+プラグイン内のテンプレートは、プラグイン自身の `View/` ディレクトリに置きます。
 たとえば `plugins/Contacts/View/Contacts/index.ctp` です。対応関係の全体は
 [CakePHP のフォルダ構造](/ja/getting-started/cakephp-folder-structure) を参照してください。
+
+::: pieceofcake2 Added in version 2.13.0
+CakePHP 5 と同じく、`plugins/Contacts/templates/Contacts/index.ctp` のように `templates/` にも置けます。
+CakePHP は `View/` より先にそこを探します。[プラグインの作成](/ja/plugins/how-to-create-plugins) を
+参照してください。
+:::
+
+<a id="templates-in-the-cakephp-5-style"></a>
+
+### CakePHP 5 の形式のテンプレート
+
+::: pieceofcake2 Added in version 2.13.0
+`.php` のテンプレートと CakePHP 5 のディレクトリ ([#94](https://github.com/pieceofcake2/cakephp/pull/94))。
+:::
+
+(アプリケーション、プラグイン、テーマの) `templates/` のテンプレートを、CakePHP 5 と同じ形で書くことも
+できます。
+
+| CakePHP 2 | CakePHP 5 の形式 |
+|---|---|
+| `templates/Products/view.ctp` | `templates/Products/view.php` |
+| `templates/Layouts/default.ctp` | `templates/layout/default.php` |
+| `templates/Elements/menu.ctp` | `templates/element/menu.php` |
+| `templates/Emails/html/welcome.ctp` | `templates/email/html/welcome.php` |
+| `templates/Layouts/Emails/html/default.ctp` | `templates/layout/email/html/default.php` |
+| `templates/Errors/error400.ctp` | `templates/Error/error400.php` |
+
+CakePHP は、それぞれのディレクトリで `.ctp` より先に `.php` を、CakePHP 2 のディレクトリより先に
+CakePHP 5 のディレクトリを探します。ディレクトリを探す順番は変わらないので、テーマやプラグインは、
+拡張子に関係なく、これまでどおりアプリケーションのテンプレートを上書きします。両方の形式を混ぜて
+使えるので、テンプレートを 1 つずつ移せます。
+
+> [!NOTE]
+> `.php` のテンプレートは `templates/` でだけ探します。CakePHP 2 の構成の `View/` ディレクトリには
+> ビュークラスやヘルパークラスも置かれているので、そこにある `.php` のファイルをテンプレートとして
+> 描画することはありません。`$ext = '.php'` を設定したビュークラスは、これまでどおりどこでも
+> テンプレートを探します。
+
+> [!WARNING]
+> `templates/` では、同じ名前の `.ctp` の隣にある `.php` のファイルが使われ、`Layouts/`、`Elements/`、
+> `Emails/`、`Errors/` より `layout/`、`element/`、`email/`、`Error/` が使われます。`templates/` には
+> テンプレートだけを置いてください。
 
 CakePHP のビューレイヤーはいくつかの異なるパーツによって作り上げられています。
 各パーツはそれぞれ役割を持っており、この章で説明していきます。

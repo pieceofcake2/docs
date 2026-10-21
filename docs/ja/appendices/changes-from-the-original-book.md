@@ -124,6 +124,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - 「クラスの読み込み」節を追加: Composer の classmap オートロードにより App::uses() が不要になること、引き続き必要な場合
 - [リクエストとレスポンスオブジェクト](/ja/controllers/request-response)
   - ディスパッチャのパスを `webroot/index.php` に変更し、レスポンスのモック例を PHPUnit 9 の getMockBuilder() に変更
+  - デコード関数を渡した `input()` が、ボディの無いリクエストでは `null` を返すことを変更点として記載 (v2.13.0)
 - [ページコントローラ](/ja/controllers/pages-controller)
   - パスを `src/Controller` と `templates/Pages` に変更し、コピー元を `lib/Cake` から app スケルトンまたは Bake プラグインに変更
 - [Scaffolding](/ja/controllers/scaffolding)
@@ -256,8 +257,9 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
 - [CakeTime](/ja/core-utility-libraries/time)
   - strftime() 形式のフォーマットを本文で説明 (php81_bc/strftime 経由の IntlDateFormatter、英語以外には intl が必要)、例の構文エラーを修正し App::uses() を削除
 - [XML](/ja/core-utility-libraries/xml)
-  - CakePHP 1.3 の「今までの方法」との比較と App::uses() を削除、Xml::build() のオプション (return、デフォルト false の loadEntities、readFile、parseHuge) とユーザー入力を渡す際の警告を追記、誤った例を修正
+  - CakePHP 1.3 の「今までの方法」との比較と App::uses() を削除、Xml::build() のオプション (return、readFile、parseHuge) とユーザー入力を渡す際の警告を追記、誤った例を修正
   - `readFile` でファイルと URL の両方の読み込みを無効にできることを記載し、ユーザー入力の例で `'readFile' => false` を使用。v2.12.3 より前は https の URL が取得されていたことを変更点として記載
+  - v2.13.0 で `loadEntities` オプションが削除されたことを変更点として記載
 
 ### コンソール & シェル
 
@@ -391,6 +393,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - `'readFile' => false` を指定した `Xml::build()` の SSRF (2.12.3 で修正) を追加。Cookie のタイプを `$components` で設定。`Security.useOpenSsl` のスケルトンについての注記
   - SmtpTransport/MailTransport のメールヘッダーインジェクション (GHSA-4f9q-3c4x-52cv)、ビュー・レイアウト・エレメント名のパストラバーサル (GHSA-w2mh-x92p-5p95)、AuthComponent のログイン後のオープンリダイレクト (GHSA-x4p9-p4cx-gxwx) を追加 (いずれも 2.12.5 で修正)。表に GHSA の ID を記載。本家の CakePHP 2.x を使うアプリケーションは pieceofcake2/cakephp に切り替えると修正を適用できることを記載
   - 'cipher' 暗号化と `Security.cipherSeed` の弱さ (GHSA-65v5-h65v-8pgg) を追加: 2.12.6 での変更 (非推奨の警告、シードの範囲の警告、範囲内のデフォルトのシード、`Cookie.type` / `Cookie.key`)、'cipher' は安全でないままであること、`Security.useOpenSsl` を有効にした 'aes' への移行。構成設定の cipherSeed の節へのリンク
+  - XML の外部エンティティ: `loadEntities` オプションが v2.13.0 で削除され、効果が無いことを記載
 - [本家のアドバイザリ](/ja/security/upstream-advisories)
   - 新しいページ: CakePHP 2.x に関係する本家 CakePHP のアドバイザリの対応状況 (フォークで修正済み、または対象外)。フォークの CHANGELOG、`UPGRADE.md`、アドバイザリに基づく
   - 'cipher' の弱さ (GHSA-65v5-h65v-8pgg) には本家のアドバイザリがなく、本家の CakePHP 2.x にも影響し、修正されないことを記載

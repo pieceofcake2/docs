@@ -153,6 +153,13 @@ in additional parameters as well:
 $data = $this->request->input('Xml::build', ['return' => 'domdocument']);
 ```
 
+::: pieceofcake2 Changed in version 2.13.0
+With a decoding callback, `input()` returns `null` without calling the
+callback when the request has no body. Before, the callback was called with
+the empty string. If your own callback handled an empty body, check for `null`
+instead.
+:::
+
 ## Accessing path information
 
 `CakeRequest` also provides useful information about the paths in your
