@@ -62,6 +62,9 @@ v2.13.0 の変更のうち、すでにフォークで動いているアプリケ
   `vendor/pieceofcake2/cakephp/src/Cake/` のほかのファイルをパスで読み込んでいるときは、`src/` に直してください。
 - 更新前にシリアライズしたオブジェクトは、これまでどおりアンシリアライズできます。更新後に
   シリアライズしたオブジェクトは名前空間を含む名前になるので、前のバージョンでは読めません。
+- フレームワークは名前空間付きの名前を使うため、 `App::uses()` で登録したグローバルなクラスでは
+  コアのクラスをオーバーライドできなくなりました。代わりにコアのファイルを `src/Cake/` にコピーします。
+  [CakePHP のクラスをオーバーライドする](/ja/core-utility-libraries/app#overriding-classes-in-cakephp) を参照してください。
 - PHPStan には pieceofcake2/phpstan-cakephp2 の `^1.1` が必要です。
   [名前空間のあるクラス](/ja/development/namespaced-classes#the-classes-of-the-framework) を参照してください。
 

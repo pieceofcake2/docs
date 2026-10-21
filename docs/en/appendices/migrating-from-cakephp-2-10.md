@@ -68,6 +68,10 @@ Changes in v2.13.0 that may affect applications already running on the fork.
   files of `vendor/pieceofcake2/cakephp/src/Cake/` by path, change them to `src/`.
 - Objects serialized before the update still unserialize. Objects serialized
   after it name the namespaced classes and cannot be read by an older version.
+- A global class registered with `App::uses()` no longer overrides a core
+  class, because the framework uses the namespaced names. Copy the core file to
+  `src/Cake/` instead. See
+  [Overriding classes in CakePHP](/core-utility-libraries/app#overriding-classes-in-cakephp).
 - PHPStan needs pieceofcake2/phpstan-cakephp2 `^1.1`. See
   [Namespaced Classes](/development/namespaced-classes#the-classes-of-the-framework).
 
