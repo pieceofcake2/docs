@@ -108,8 +108,11 @@ See each plugin's documentation site for the package name and setup. With the
 [modern layout](/appendices/migrating-to-the-modern-layout), Composer installs plugins
 into `plugins/` through the `installer-paths` setting.
 
-Plugins that don't support Composer autoloading still need `App::uses()` for
-their classes, for example `App::uses('MyPluginHelper', 'MyPlugin.View/Helper')`.
+CakePHP finds the classes of a plugin that you name in the configuration, such
+as its components and helpers. For the other classes of a plugin that Composer
+does not autoload, add its folder to the classmap of your application instead
+of calling `App::uses()`, which is deprecated as of 2.13.0. See
+[Removing App::uses() calls](/core-utility-libraries/app#removing-app-uses).
 
 ## Origins {#origins}
 

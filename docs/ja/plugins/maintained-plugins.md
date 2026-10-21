@@ -106,8 +106,10 @@ AI ツールから直接読み込めます。
 [モダン構成](/ja/appendices/migrating-to-the-modern-layout) では、`installer-paths` の設定により
 Composer がプラグインを `plugins/` にインストールします。
 
-Composer のオートロードに対応していないプラグインでは、そのクラスに対して引き続き `App::uses()`
-が必要です。たとえば `App::uses('MyPluginHelper', 'MyPlugin.View/Helper')` のように書きます。
+コンポーネントやヘルパーなど、設定に書いたプラグインのクラスは CakePHP が見つけます。
+Composer がオートロードしないプラグインのそのほかのクラスは、2.13.0 で非推奨になった `App::uses()`
+を呼び出す代わりに、アプリケーションの classmap にプラグインのフォルダを追加してください。
+[`App::uses()` の呼び出しを削除する](/ja/core-utility-libraries/app#removing-app-uses) を参照してください。
 
 ## 各パッケージの由来 {#origins}
 

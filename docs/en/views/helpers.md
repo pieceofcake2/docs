@@ -202,9 +202,8 @@ class LinkHelper extends AppHelper
 
 As with other application classes, the helper is found by Composer's classmap
 autoloading, so no `App::uses()` statement is needed. Run
-`composer dump-autoload` after adding the file. If your application doesn't
-use classmap autoloading, add `App::uses('AppHelper', 'View/Helper');` at the
-top of the file; see [Loading classes](../controllers#autoloading-classes).
+`composer dump-autoload` after adding the file. CakePHP also finds `AppHelper`
+without a classmap; see [Loading classes](../controllers#autoloading-classes).
 
 ### Including other Helpers
 

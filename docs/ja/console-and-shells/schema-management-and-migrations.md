@@ -55,13 +55,11 @@ $ bin/cake schema dump --write filename.sql
 データを posts テーブルへ加える例は以下のようになります。
 
 ```php
-App::uses('Post', 'Model');
 public function after($event = [])
 {
     if (isset($event['create'])) {
         switch ($event['create']) {
             case 'posts':
-                App::uses('ClassRegistry', 'Utility');
                 $post = ClassRegistry::init('Post');
                 $post->create();
                 $post->save([

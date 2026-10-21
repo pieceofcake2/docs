@@ -269,8 +269,9 @@ In the next few sections, we will detail the various approaches and the benefits
 ## Create your own Exception handler with `Exception.handler`
 
 Creating your own exception handler gives you full control over the exception
-handling process. The class you choose should be loaded in your
-`config/bootstrap.php`, so it's available to handle any exceptions. You can
+handling process. The class you choose should be loaded by Composer, e.g. with
+a classmap of `src/` in your `composer.json`, so it's available to handle any
+exceptions. You can
 define the handler as any callback type. By settings `Exception.handler` CakePHP
 will ignore all other Exception settings. A sample custom exception handling setup
 could look like:
@@ -278,9 +279,6 @@ could look like:
 ```php
 // config/core.php
 Configure::write('Exception.handler', 'AppExceptionHandler::handle');
-
-// config/bootstrap.php
-App::uses('AppExceptionHandler', 'Lib');
 
 // src/Lib/AppExceptionHandler.php
 class AppExceptionHandler
@@ -357,7 +355,7 @@ how exceptions are rendered you can use `Configure::write('Exception.renderer', 
 By default `ExceptionRenderer` is used. Your custom exception
 renderer class should be placed in `src/Lib/Error/` (`app/Lib/Error/` in the
 legacy layout), or an `Error` directory in any bootstrapped Lib path.
-`ErrorHandler` loads it with `App::uses()` from the `Error` package, so you
+`ErrorHandler` finds it in the `Error` package with `App::className()`, so you
 don't need to load it yourself. Use the `Plugin.ClassName` syntax to use a
 renderer from a plugin. In a custom exception rendering class
 you can provide specialized handling for application specific errors:
@@ -402,8 +400,6 @@ class AppExceptionRenderer extends ExceptionRenderer
 {
     protected function _getController($exception)
     {
-        App::uses('SuperCustomErrorController', 'Controller');
-
         return new SuperCustomErrorController();
     }
 }

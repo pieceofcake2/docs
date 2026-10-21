@@ -87,8 +87,6 @@ CakePHP は CakePHP 5 の構成のディレクトリを先に探し、CakePHP 2 
 
 ```php
 // plugins/ContactManager/Controller/ContactManagerAppController.php の中で
-App::uses('AppController', 'Controller');
-
 class ContactManagerAppController extends AppController
 {
 }
@@ -96,18 +94,16 @@ class ContactManagerAppController extends AppController
 
 ```php
 // plugins/ContactManager/Model/ContactManagerAppModel.php の中で
-App::uses('AppModel', 'Model');
-
 class ContactManagerAppModel extends AppModel
 {
 }
 ```
 
-アプリケーションの `src/` ディレクトリにあるクラスとは異なり、プラグインのクラスは
-アプリケーションの Composer classmap には含まれません。プラグインのクラスは CakePHP 自身の
-クラスローダーで読み込まれるため、プラグイン内のコードでは、依存するクラスを `App::uses()` で
-宣言しておきます。こうしておけば、classmap オートロードを使っていないアプリケーションでも
-プラグインが動作します。
+アプリケーションの `AppController`、`AppModel`、`AppHelper`、`AppShell` と、プラグインの
+`ContactManagerAppController`、`ContactManagerAppModel` は、`App::uses()` が無くても CakePHP
+が見つけます。プラグインのそのほかのクラスは、2.13.0 で非推奨になった `App::uses()` を書く代わりに、
+プラグインの `composer.json` の classmap で Composer に読み込ませてください
+([プラグインの公開](#publish-your-plugin) を参照)。
 
 もしこれらの特別なクラスの定義を忘れると、”Missing Controller” エラーがでます。
 
@@ -324,14 +320,8 @@ public $components = ['ContactManager.Example'];
 同じテクニックはヘルパーとビヘイビアにも使えます。
 
 > [!NOTE]
-> プラグインの AppController や AppModel と同じく、プラグインのヘルパーが依存するクラスも
-> `App::uses()` で宣言してください。そうすれば、classmap オートロードを使っていない
-> アプリケーションでもプラグインが動作します。
->
-> ``` php
-> // プラグインのヘルパーで AppHelper を使うことを宣言する
-> App::uses('AppHelper', 'View/Helper');
-> ```
+> プラグインの AppController や AppModel と同じく、プラグインのヘルパーも `App::uses()`
+> を書かずに `AppHelper` を継承できます。
 
 <a id="registering-dsn-schemes"></a>
 
@@ -447,14 +437,15 @@ CakePHP アプリケーションで動作するプラグインの最後の tips 
 - 拡張子であなたのプラグインへのルーティングを追加するとき、アプリケーションのルーティングを
   上書きせずに、必ず `Router::setExtensions()` を使用してください。
 
-## プラグインの公開
+## プラグインの公開 {#publish-your-plugin}
 
 プラグインを共有するには、 `composer.json` ファイルを作成し、あなたのプラグインを
 [packagist.org](https://packagist.org/) に公開します。
 これで Composer を通して簡単にあなたのプラグインが使用できるようになります。
 パッケージの `type` を `cakephp-plugin` にし、アプリケーションのプラグインディレクトリに
 インストールされるように `composer/installers` を require に追加して、 `installer-name` に
-プラグインのフォルダ名を指定します。
+プラグインのフォルダ名を指定します。また、Composer がプラグインのクラスを読み込むように、
+`autoload` の classmap にクラスのあるフォルダを並べます。
 
 ```json
 {
@@ -465,11 +456,17 @@ CakePHP アプリケーションで動作するプラグインの最後の tips 
         "composer/installers": "*",
         "pieceofcake2/cakephp": "^2.12"
     },
+    "autoload": {
+        "classmap": ["Controller/", "Lib/", "Model/", "View/"]
+    },
     "extra": {
         "installer-name": "Logging"
     }
 }
 ```
+
+classmap には、プラグインにあるフォルダだけを並べてください。無いフォルダがあると、
+`composer dump-autoload` がエラーで止まります。
 
 パッケージ名にセマンティックな意味のある名前を選んでください。これは、理想を言えば、
 "cakephp" をフレームワークとして依存関係を設定するべきです。

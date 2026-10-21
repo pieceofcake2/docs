@@ -204,8 +204,6 @@ class ProgressHelper extends AppHelper
 
 ```php
 // tests/TestCase/View/Helper/ProgressHelperTest.php
-App::uses('ProgressHelper', 'View/Helper');
-
 class ProgressHelperTest extends CakeTestCase
 {
     public $Progress;
@@ -220,8 +218,9 @@ class ProgressHelperTest extends CakeTestCase
 }
 ```
 
-`Controller` や `View` といった CakePHP 自体のクラスは Composer のオートローダーで
-読み込まれるので、`App::uses()` が必要なのはアプリケーションのクラスだけです。
+`Controller` や `View` といった CakePHP 自体のクラスは Composer が読み込みます。
+`composer.json` で `src/` をクラスマップでオートロードしていれば、`ProgressHelper` のような
+アプリケーションのクラスも Composer が読み込むので、テストケースに `App::uses()` は必要ありません。
 
 ここからすぐに中身を増やしていきます。まずはメソッドを2つ加えました。
 ひとつは `setUp()` です。このメソッドはこのテストケースクラスのテストメソッドが
@@ -850,8 +849,6 @@ class Article extends AppModel
 
 ```php
 // tests/TestCase/Model/ArticleTest.php
-App::uses('Article', 'Model');
-
 class ArticleTest extends CakeTestCase
 {
     public $fixtures = ['app.article'];
@@ -873,8 +870,6 @@ class ArticleTest extends CakeTestCase
 
 ```php
 // tests/TestCase/Model/ArticleTest.php
-App::uses('Article', 'Model');
-
 class ArticleTest extends CakeTestCase
 {
     public $fixtures = ['app.article'];
@@ -1002,8 +997,6 @@ public function testInvalidKey()
 
 ```php
 // src/Controller/ArticlesController.php
-App::uses('AppController', 'Controller');
-
 class ArticlesController extends AppController
 {
     public $helpers = ['Form', 'Html'];
@@ -1100,8 +1093,6 @@ risky として報告します。実際のテストでは `debug()` の代わり
 例を示します。
 
 ```php
-App::uses('AppController', 'Controller');
-
 class ArticlesController extends AppController
 {
     public function add()
@@ -1120,8 +1111,6 @@ class ArticlesController extends AppController
 実行されてしまいます。代わりに、このようなコードを書くべきです。
 
 ```php
-App::uses('AppController', 'Controller');
-
 class ArticlesController extends AppController
 {
     public function add()
@@ -1392,8 +1381,6 @@ class PagematronComponent extends Component
 
 ```php
 // tests/TestCase/Controller/Component/PagematronComponentTest.php
-App::uses('PagematronComponent', 'Controller/Component');
-
 // テストの対象となる偽物のコントローラー
 class TestPagematronController extends Controller
 {
@@ -1466,8 +1453,6 @@ class CurrencyRendererHelper extends AppHelper
 
 ```php
 // tests/TestCase/View/Helper/CurrencyRendererHelperTest.php
-App::uses('CurrencyRendererHelper', 'View/Helper');
-
 class CurrencyRendererHelperTest extends CakeTestCase
 {
     public $CurrencyRenderer = null;
@@ -1590,8 +1575,6 @@ CakePHP はプラグイン内に `tests/TestCase` と `tests/Fixture` があれ�
 
 ```php
 // plugins/Blog/tests/TestCase/Model/BlogPostTest.php
-App::uses('BlogPost', 'Blog.Model');
-
 class BlogPostTest extends CakeTestCase
 {
     // プラグインのフィクスチャは plugins/Blog/tests/Fixture/ に配置される

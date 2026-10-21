@@ -87,9 +87,6 @@ PHP 7 以降、未定義のメソッドの呼び出しや型の合わない引�
 // config/core.php
 Configure::write('Error.handler', 'AppError::handleError');
 
-// config/bootstrap.php
-App::uses('AppError', 'Lib');
-
 // src/Lib/AppError.php
 class AppError
 {
@@ -111,11 +108,10 @@ class AppError
 }
 ```
 
-このクラス／メソッドはエラーが発生するたびに「エラー発生！」と表示します。エラーハンドラは
-`config/bootstrap.php` が読み込まれたあとに登録されるので、そこで `App::uses()` を使って
-クラスを読み込んでおけば十分です。[pieceofcake2/app](https://pieceofcake2.github.io/app/ja/)
-のように `composer.json` で `src/` をクラスマップでオートロードしている場合は、
-`composer dump-autoload` を実行すれば Composer からもクラスが見つかるようになります。
+このクラス／メソッドはエラーが発生するたびに「エラー発生！」と表示します。
+[pieceofcake2/app](https://pieceofcake2.github.io/app/ja/) のように `composer.json` で `src/`
+をクラスマップでオートロードしていれば、このクラスは Composer が読み込みます。ファイルを追加したら
+`composer dump-autoload` を実行してください。
 
 PHP 8 ではエラーハンドラに 5 番目の引数 `$context` が渡されなくなったため、この引数は省略可能に
 しておいてください。どのような種類のコールバックでも定義することができますので、
@@ -141,9 +137,6 @@ Configure::write('Error.handler', function ($code, $description, $file = null, $
 ```php
 // config/core.php
 Configure::write('Error.handler', 'AppError::handleError');
-
-// config/bootstrap.php
-App::uses('AppError', 'Lib');
 
 // src/Lib/AppError.php
 class AppError

@@ -143,6 +143,22 @@ CakePHP 2.13 は機能を追加したリリースです。2.12 からは次の�
 > `bin/cake upgrade rector --rules namespaced-classes src tests` は、`get_class()` との比較を書き換え、
 > 名前空間のクラスを `use` します。
 
+### `App::uses()` を非推奨に ([PR #98](https://github.com/pieceofcake2/cakephp/pull/98)) {#app-uses-deprecated}
+
+- コアのクラス、アプリケーションのクラス (pieceofcake2/app は `src/` を classmap で読み込みます)、
+  Composer でインストールしたプラグインのクラスは Composer が読み込みます。設定に書いたクラス
+  (`$components`、`$helpers`、`$uses`、アソシエーション、エンジンなどの設定) は、これまでどおり
+  `App::uses()` が無くても見つかります。
+- プロセスで最初に `App::uses()` を呼び出したとき、呼び出したファイルと行を含む警告がログに書かれます。
+  `debug` が 0 より大きいときは `E_USER_DEPRECATED` も発生します。呼び出しはこれまでどおり動作します。
+- コアは `App::uses()` を呼び出さなくなりました。アプリケーションの `AppController`、`AppModel`、
+  `AppHelper`、`AppShell` は、`App::uses()` が無くてもそれぞれのパッケージから見つかります。
+- 呼び出しを削除するには、Composer でクラスを読み込むようにしてから `App::uses()` の行を削除します。
+  アプリケーションでは `composer.json` の `autoload` に `"classmap": ["src/"]` を追加して
+  `composer dump-autoload` を実行します。プラグインでは、プラグインの `composer.json` に classmap か
+  PSR-4 を追加します。[`App::uses()` の呼び出しを削除する](/ja/core-utility-libraries/app#removing-app-uses)
+  を参照してください。
+
 ## v2.12.11
 
 ### セキュリティ修正: 先頭のスラッシュが多いリクエスト URL ([GHSA-wh43-gc93-wh4c](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-wh43-gc93-wh4c), [PR #90](https://github.com/pieceofcake2/cakephp/pull/90)) {#request-url-leading-slashes}

@@ -123,9 +123,8 @@ class ArticlesControllerTest extends CakeTestCase
 }
 ```
 
-The classes are autoloaded with the Composer classmap of the framework, so
-`App::uses('IntegrationTestTrait', 'TestSuite')` and
-`App::uses('EmailTrait', 'TestSuite')` are optional.
+The traits are autoloaded by Composer with the framework, so they need no
+`App::uses()`.
 
 Both application layouts work the same way; only the location of the tests
 differs:

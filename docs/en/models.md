@@ -46,9 +46,8 @@ functionality onto your Ingredient model.
 
 If your `composer.json` has a classmap for `src/` (as in the
 [pieceofcake2/app](https://pieceofcake2.github.io/app/) skeleton), `AppModel`
-is loaded automatically by Composer. Without a classmap, add
-`App::uses('AppModel', 'Model');` at the top of the file so that the class is
-loaded when it is needed.
+is loaded automatically by Composer. Without a classmap, CakePHP finds
+`AppModel` in the `Model` package, so the file needs no `App::uses()`.
 
 The intermediate class, AppModel, lives in your application in
 `src/Model/AppModel.php` and starts out empty. The CakePHP core does not ship
