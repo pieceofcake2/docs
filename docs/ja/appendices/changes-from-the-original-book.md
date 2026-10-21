@@ -12,7 +12,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
 | Composer でのプラグイン | 任意 | `composer/installers` の設定が必須 | [composer.json の設定](/ja/installation#configuring-composer-json) |
 | アプリケーションの構成 | `app/` | モダン構成（`src/`、`templates/`、`config/` など）または `app/` | [CakePHP のフォルダ構造](/ja/getting-started/cakephp-folder-structure) |
 | フレームワークの配置 | `lib/Cake/` | `vendor/pieceofcake2/cakephp/src/Cake/` | [CakePHP 2.10 からの移行](/ja/appendices/migrating-from-cakephp-2-10) |
-| クラスの読み込み | `App::uses()` | Composer のオートロード。`App::uses()` は非推奨 (2.13) | [コントローラ](/ja/controllers#autoloading-classes) |
+| クラスの読み込み | `App::uses()` | Composer のオートロード。`App::uses()` は非推奨 (2.13) | [クラスの読み込み](/ja/development/autoloading) |
 | Bake | コアのシェル | [pieceofcake2/bake](https://pieceofcake2.github.io/bake/ja/) プラグイン | [Bake でコード生成](/ja/console-and-shells/code-generation-with-bake) |
 | UpgradeShell | コアのシェル | [pieceofcake2/upgrade](https://pieceofcake2.github.io/upgrade/ja/) プラグイン | [アップグレードシェル](/ja/console-and-shells/upgrade-shell) |
 | キャッシュエンジン | Xcache と Wincache を含む | Xcache と Wincache を削除 | [キャッシュ](/ja/core-libraries/caching) |
@@ -62,6 +62,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
 - [継続的インテグレーション](/ja/development/continuous-integration) (静的解析のページにあった CI のジョブサマリーの節をここに移動)
 - [AWS Lambda へのデプロイ](/ja/deployment/aws-lambda)
 - [名前空間のあるクラス](/ja/development/namespaced-classes)
+- [クラスの読み込み](/ja/development/autoloading) (Composer によるコア、モダンな構成と従来の構成のクラス、プラグイン、ベンダーのファイルの読み込み)
 
 ### はじめに
 
@@ -85,10 +86,12 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - Apache のバーチャルホスト: `Options -Indexes -MultiViews +FollowSymLinks` を追加し、ドキュメントルートをプロジェクトのディレクトリにしないよう警告、Apache 2.2 の書き方へのリンクを追加
   - 新規アプリケーション: `Security.salt` と `Security.cipherSeed` を生成するコマンドを記載。シードで Cookie の 'cipher' タイプが安全になるわけではないことを追記
   - 設定の手順で、データベースの接続を `DATABASE_URL` (`config/.env.test` ではテスト用データベース)、メールのトランスポートを `MAILER_DSN` でセット
+  - `classmap` の設定の説明を短くし、[クラスの読み込み](/ja/development/autoloading) へのリンクを追加
 - [応用インストール](/ja/installation/advanced-installation)
   - PEAR でのインストール、旧来の Composer/bake によるプロジェクト作成、CAKE_CORE_INCLUDE_PATH によるコア共有を削除
   - Composer 設定の詳細を追加: replace、プラグインの installer-paths、classmap オートロード、exclude-from-classmap
   - パスの変更は `config/define.php` (ROOT、APP_DIR、WEBROOT_DIR、WWW_ROOT、VENDORS) で行う方法に書き換え、webroot を移動する例を追加
+  - 「クラスのオートロード」を短くし、[クラスの読み込み](/ja/development/autoloading) へのリンクを追加
 - [Web サーバーの設定](/ja/installation/url-rewriting)
   - 例はドキュメントルートを `webroot/` とする前提に変更、`.htaccess` をスケルトンの内容に更新、従来の構成の `.htaccess` は簡単な説明のみに
   - nginx の例を PHP-FPM ソケット向けに更新、IIS の `web.config` を `webroot/` に配置、リンク切れ (Web Platform Installer、virtualhostx、Apache wiki) を削除
@@ -229,6 +232,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - クラスのローディングを Composer の classmap オートロード前提に書き直し、App::uses() は Composer が把握しないクラス (classmap なしのアプリケーションクラス、Composer 非対応プラグイン) にのみ必要
   - コアクラスのオーバーライドは `src/Cake/` にコピーして classmap で読み込み、コアのファイルを exclude-from-classmap で除外 (v2.13.0)
   - ベンダーファイル: Composer のライブラリは読み込み不要、手作業で置くファイルは `vendors/`、プラグインのパスは `plugins/`、CakePHP 1.3 から 2.0 への移行に関する記述を削除
+  - 「クラスのローディング」を短くし、[クラスの読み込み](/ja/development/autoloading) へのリンクを追加。「Vendor ファイルをローディングする」に英語版と同じアンカーを追加
 - [CakeEmail](/ja/core-utility-libraries/email)
   - 設定は `config/email.php`、テンプレートは `templates/Emails` と `templates/Layouts/Emails`、独自トランスポートは `src/Lib/Network/Email`、EmailComponent との比較と App::uses() を削除
   - Gmail は廃止された「安全性の低いアプリ」設定の代わりにアプリパスワードを使用、STARTTLS の例はポート 587、MailTransport::_mail() の型付きシグネチャの変更点を注記
@@ -440,11 +444,13 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - Composer を標準のインストール方法とし (pieceofcake2/debug_kit の例、`plugins/` 用の composer/installers と installer-paths)、手動や Git でのインストールも `plugins/` と https の URL に変更
   - プラグインは `config/bootstrap.php` でロードすることと、プラグインのクラスに App::uses() が必要な場合を記載
   - プラグインを `plugins/<Name>/` にインストールするために `composer.json` の installer-paths と allow-plugins (composer/installers、Composer 2.2 以降) の設定が必須であることを明記
+  - Composer が読み込まないプラグインについて [クラスの読み込み](/ja/development/autoloading#plugins) へのリンクを追加
 - [プラグインの使い方](/ja/plugins/how-to-use-plugins)
   - プラグインのロードを `config/bootstrap.php` で行うことと、プラグインの `Config/` 内のファイルの場所を記載し、schema コマンドを `bin/cake` に変更
   - DSN のスキームを登録するプラグインのブートストラップを記載
 - [メンテナンスされているプラグイン](/ja/plugins/maintained-plugins)
   - AsyncAws プラグインを Aws プラグインより軽量な代替として紹介
+  - 「プラグインのインストール」に [クラスの読み込み](/ja/development/autoloading#plugins) へのリンクを追加
 
 ### 貢献
 

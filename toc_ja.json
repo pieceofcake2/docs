@@ -439,6 +439,10 @@
           "link": "/ja/development/configuration"
         },
         {
+          "text": "クラスの読み込み",
+          "link": "/ja/development/autoloading"
+        },
+        {
           "text": "名前空間のあるクラス",
           "link": "/ja/development/namespaced-classes"
         },

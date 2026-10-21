@@ -110,9 +110,8 @@ into `plugins/` through the `installer-paths` setting.
 
 CakePHP finds the classes of a plugin that you name in the configuration, such
 as its components and helpers. For the other classes of a plugin that Composer
-does not autoload, add its folder to the classmap of your application instead
-of calling `App::uses()`, which is deprecated as of 2.13.0. See
-[Removing App::uses() calls](/core-utility-libraries/app#removing-app-uses).
+does not load, add its folder to the classmap of your application. See
+[Autoloading](/development/autoloading#plugins).
 
 ## Origins {#origins}
 

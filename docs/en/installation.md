@@ -245,10 +245,11 @@ In an application that uses the legacy `app/` layout, install plugins into
 CakePHP looks for plugins in `src/Plugin/` or `app/Plugin/` and in `plugins/`
 at the project root, so a legacy application can also keep using `plugins/`.
 
-The `classmap` setting lets Composer autoload your own classes in `src/`, so
-you don't need `App::uses()`, which is deprecated as of 2.13.0. Run
-`composer dump-autoload` after adding a new class file. See
-[Advanced Installation](installation/advanced-installation) for more details.
+The `classmap` setting lets Composer load your classes in `src/`, so you don't
+need `App::uses()`. Run `composer dump-autoload` after you add a class file.
+See [Autoloading](development/autoloading) for the other settings, and
+[Advanced Installation](installation/advanced-installation) for more on the
+Composer setup.
 
 ## Permissions
 

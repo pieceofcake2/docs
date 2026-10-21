@@ -1,8 +1,9 @@
 # Namespaced Classes
 
 CakePHP 2 classes are global classes without a namespace, but your own code can
-use namespaces. Register them with a PSR-4 entry in `composer.json`, next to
-the classmap of the application skeleton, and run `composer dump-autoload`:
+use namespaces. Composer loads your namespaced classes with a PSR-4 entry in
+`composer.json`, next to the classmap of the application skeleton (see
+[Autoloading](autoloading#modern-layout)):
 
 ```json
 "autoload": {
@@ -13,13 +14,16 @@ the classmap of the application skeleton, and run `composer dump-autoload`:
 }
 ```
 
-Composer then loads a class such as `Acme\Error\Renderer` from
-`lib/Error/Renderer.php` on first use, without `App::uses()`. Where CakePHP
-takes a class name in its configuration, you can give it a namespaced class
-as `Foo::class`. This page lists the configuration points of
-pieceofcake2/cakephp and how CakePHP finds the class for each of them, and
-how `App.namespace` lets CakePHP find controllers, models and other classes
-in your namespace by their short names.
+After `composer dump-autoload`, Composer loads a class such as
+`Acme\Error\Renderer` from `lib/Error/Renderer.php`.
+
+Where CakePHP takes a class name in its configuration, you can give it a
+namespaced class as `Foo::class`. This page describes:
+
+- the configuration points of pieceofcake2/cakephp, and how CakePHP finds the
+  class for each of them
+- how `App.namespace` lets CakePHP find controllers, models and other classes
+  in your namespace by their short names
 
 ::: pieceofcake2 Added in version 2.13.0
 `App::className()` and `App.namespace`

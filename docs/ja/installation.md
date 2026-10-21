@@ -218,9 +218,10 @@ CakePHP アプリケーションの最小限の `composer.json` は次のよう�
 CakePHP は `src/Plugin/` または `app/Plugin/` と、プロジェクト直下の `plugins/` からプラグインを探すため、
 従来の構成のアプリケーションで `plugins/` を使い続けることもできます。
 
-`classmap` の設定で、`src/` にあるアプリケーションのクラスを Composer でオートロードできるようになり、
-2.13.0 で非推奨になった `App::uses()` が不要になります。新しいクラスファイルを追加したら
-`composer dump-autoload` を実行してください。詳しくは [応用インストール](installation/advanced-installation) を参照してください。
+`classmap` の設定で、`src/` にあるクラスを Composer が読み込むので、`App::uses()` は要りません。
+クラスのファイルを追加したら `composer dump-autoload` を実行してください。
+ほかの設定は [クラスの読み込み](development/autoloading) を、Composer の設定の詳細は
+[応用インストール](installation/advanced-installation) を参照してください。
 
 <a id="permissions"></a>
 

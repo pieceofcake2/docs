@@ -23,23 +23,15 @@ in [Overriding classes in CakePHP](#overriding-classes-in-cakephp).
 
 ## Loading classes {#loading-classes}
 
-Classes are lazily loaded in CakePHP. Composer loads the classes of CakePHP,
-of your application and of the plugins installed with Composer, so you don't
-need to declare them. The application skeleton (pieceofcake2/app) loads `src/`
-with a classmap in its `composer.json`:
+Classes are loaded when they are first used. Composer loads the classes of
+CakePHP, of your application and of its plugins. See
+[Autoloading](../development/autoloading) for the settings in `composer.json`.
 
-```json
-"autoload": {
-    "classmap": ["src/"]
-}
-```
+CakePHP also finds some classes in their packages:
 
-With a classmap, run `composer dump-autoload` after adding a new class file.
-
-CakePHP also finds the classes named in the configuration, such as
-`$components`, `$helpers`, `$uses`, the associations and the cache engines, in
-their packages, and the base classes `AppController`, `AppModel`, `AppHelper`
-and `AppShell`.
+- the classes named in the configuration, such as `$components`, `$helpers`,
+  `$uses`, the associations and the cache engines
+- the base classes `AppController`, `AppModel`, `AppHelper` and `AppShell`
 
 `static` App::**uses**(string $class, string $package)
 
@@ -58,9 +50,10 @@ can locate the file and load it the first time the class is used.
 
 ### Removing `App::uses()` calls {#removing-app-uses}
 
-1. Let Composer load the classes:
-   - In an application, add the classmap of `src/` shown above to its
-     `composer.json`.
+1. Let Composer load the classes, as described in
+   [Autoloading](../development/autoloading):
+   - In an application, add a classmap of `src/` (or of the `app/` folders in
+     the legacy layout) to its `composer.json`.
    - In a plugin, add a classmap or PSR-4 to the `composer.json` of the
      plugin. For a plugin without one, you can add its folder to the classmap
      of your application, e.g. `"classmap": ["src/", "plugins/MyPlugin/"]`.
@@ -148,8 +141,9 @@ namespace of the plugin or of `App.namespace` as
 ### Loading files from plugins
 
 Composer loads the classes of a plugin when the plugin's `composer.json`
-has a classmap or PSR-4. Otherwise, `App::uses()` loads them the same way as
-app classes, except you must specify the plugin you are loading from:
+has a classmap or PSR-4 (see [Plugins](../development/autoloading#plugins)).
+Otherwise, `App::uses()` loads them as it loads the classes of the
+application. Give the plugin name before the package:
 
 ```php
 // Load the class Comment in plugins/PluginName/Model/Comment.php

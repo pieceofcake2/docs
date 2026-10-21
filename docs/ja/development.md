@@ -3,6 +3,7 @@
 本章では、様々な角度からの開発を紹介します。例えば、コンフィグレーション、エラーハンドリング、例外、デバッグ、テストなどです。
 
 - [構成設定](development/configuration)
+- [クラスの読み込み](development/autoloading)
 - [名前空間のあるクラス](development/namespaced-classes)
 - [ルーティング](development/routing)
 - [セッション](development/sessions)

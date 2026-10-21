@@ -13,7 +13,7 @@ and lists the pages of this book that were changed from the original.
 | Plugins via Composer | Optional | `composer/installers` settings are required | [Configuring composer.json](/installation#configuring-composer-json) |
 | Application layout | `app/` | Modern layout (`src/`, `templates/`, `config/`, ...) or `app/` | [Folder Structure](/getting-started/cakephp-folder-structure) |
 | Framework layout | `lib/Cake/` | `vendor/pieceofcake2/cakephp/src/Cake/` | [Migrating from CakePHP 2.10](/appendices/migrating-from-cakephp-2-10) |
-| Class loading | `App::uses()` | Composer autoloading; `App::uses()` deprecated (2.13) | [Controllers](/controllers#autoloading-classes) |
+| Class loading | `App::uses()` | Composer autoloading; `App::uses()` deprecated (2.13) | [Autoloading](/development/autoloading) |
 | Bake | Core shell | [pieceofcake2/bake](https://pieceofcake2.github.io/bake/) plugin | [Code Generation with Bake](/console-and-shells/code-generation-with-bake) |
 | UpgradeShell | Core shell | [pieceofcake2/upgrade](https://pieceofcake2.github.io/upgrade/) plugin | [Upgrade Shell](/console-and-shells/upgrade-shell) |
 | Cache engines | Includes Xcache and Wincache | Xcache and Wincache removed | [Caching](/core-libraries/caching) |
@@ -64,6 +64,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
 - [Continuous Integration](/development/continuous-integration) (the CI job summaries subsection moved here from Static Analysis)
 - [Deploying to AWS Lambda](/deployment/aws-lambda)
 - [Namespaced Classes](/development/namespaced-classes)
+- [Autoloading](/development/autoloading) (how Composer loads the core, the classes of the modern and legacy layouts, plugins and vendor files)
 
 ### Getting Started
 
@@ -87,10 +88,12 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - Apache virtual host: `Options -Indexes -MultiViews +FollowSymLinks`, a warning against a project-root document root and a link to the Apache 2.2 syntax
   - New application: commands to generate `Security.salt` and `Security.cipherSeed`, noting that the seed does not make the 'cipher' cookie type secure
   - Database connection from `DATABASE_URL` (the test database in `config/.env.test`) and the email transport from `MAILER_DSN` in the configuration steps
+  - The note on the `classmap` setting is shorter and links to [Autoloading](/development/autoloading)
 - [Advanced Installation](/installation/advanced-installation)
   - Removed PEAR installation, the old Composer/bake project setup and CAKE_CORE_INCLUDE_PATH core sharing
   - Added Composer setup details: replace directive, plugin installer-paths, classmap autoloading, exclude-from-classmap
   - Custom paths are now configured in `config/define.php` (ROOT, APP_DIR, WEBROOT_DIR, WWW_ROOT, VENDORS) with a moved-webroot example
+  - "Autoloading Your Classes" shortened, with a link to [Autoloading](/development/autoloading)
 - [Web Server Configuration](/installation/url-rewriting)
   - Examples assume the document root is `webroot/`; `.htaccess` updated to the skeleton version; legacy root/app `.htaccess` explained briefly
   - nginx example updated for PHP-FPM sockets; IIS `web.config` placed in `webroot/`; removed dead links (Web Platform Installer, virtualhostx, Apache wiki)
@@ -234,6 +237,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - Loading classes rewritten around Composer classmap autoloading; App::uses() only for classes Composer does not know (app classes without classmap, non-Composer plugins)
   - Overriding core classes: a copy in `src/Cake/` loaded by the classmap, with the core file in exclude-from-classmap (v2.13.0)
   - Vendor files: Composer libraries need no loading; hand-copied files in `vendors/`; plugin paths in `plugins/`; removed CakePHP 1.3 to 2.0 migration notes
+  - "Loading classes" shortened, with links to [Autoloading](/development/autoloading)
 - [CakeEmail](/core-utility-libraries/email)
   - Config in `config/email.php`, templates in `templates/Emails` and `templates/Layouts/Emails`, custom transports in `src/Lib/Network/Email`; removed EmailComponent comparisons and App::uses()
   - Gmail: app password instead of the defunct "less secure apps" setting; STARTTLS example uses port 587; change note for the typed MailTransport::_mail() signature
@@ -445,11 +449,13 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - Composer is the primary method (pieceofcake2/debug_kit example, composer/installers and installer-paths for `plugins/`); manual and Git installs use `plugins/` and https URLs
   - Plugins are loaded in `config/bootstrap.php`; when App::uses() is still needed for plugin classes
   - `composer.json` installer-paths and allow-plugins (composer/installers, Composer 2.2+) documented as required so plugins land in `plugins/<Name>/`
+  - Plugins that Composer does not load link to [Autoloading](/development/autoloading#plugins)
 - [How To Use Plugins](/plugins/how-to-use-plugins)
   - Plugin loading shown in `config/bootstrap.php` with plugin `Config/` file locations; schema command uses `bin/cake`
   - Plugin bootstraps that register DSN schemes
 - [Maintained Plugins](/plugins/maintained-plugins)
   - The AsyncAws plugin is described as a lighter alternative to the Aws plugin
+  - "Installing a plugin" links to [Autoloading](/development/autoloading#plugins)
 
 ### Contributing
 
