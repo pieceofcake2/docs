@@ -73,14 +73,17 @@ The examples in this book assume that the `composer` command is in your
 
 ## Adding CakePHP to an Existing Application
 
-If your application already uses Composer with `cakephp/cakephp`, replace it
-with `pieceofcake2/cakephp` in the `require` section of your `composer.json`,
-and add the `config` and `extra` settings described in
-[Configuring composer.json](#configuring-composer-json) if they are missing.
-Then run `composer update`. `pieceofcake2/cakephp` declares that it replaces
-`cakephp/cakephp`, so plugins and packages that require `cakephp/cakephp`
-2.x keep installing and working. Do not require both packages at the same
-time.
+If your application already uses Composer with `cakephp/cakephp`:
+
+1. Replace it with `pieceofcake2/cakephp` in the `require` section of your
+   `composer.json`.
+2. Add the `config` and `extra` settings described in
+   [Configuring composer.json](#configuring-composer-json) if they are missing.
+3. Run `composer update`.
+
+`pieceofcake2/cakephp` declares that it replaces `cakephp/cakephp`. So plugins
+and packages that require `cakephp/cakephp` 2.x keep installing and working.
+Do not require both packages at the same time.
 
 CakePHP is loaded only through Composer's autoloader, so the dispatcher files of
 your application (`index.php`, `test.php` and the `cake` console script) must

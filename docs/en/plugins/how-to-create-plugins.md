@@ -180,13 +180,11 @@ Please refer to the chapter
 how to install and use Bake.
 
 > [!WARNING]
-> Plugins do not work as namespacing to separate code.
-> CakePHP 2 classes are not namespaced, so
-> you cannot have the same class,
-> or same filename, in your plugins.
-> Even if it is two different plugins.
-> So use unique classes and filenames, possible prefixing
-> the class and filename with the plugin name.
+> A plugin is not a namespace. Global classes of all plugins and of the
+> application share one set of names. Two plugins cannot have global classes or
+> files with the same name. Use unique names, for example with the plugin name
+> as a prefix, or namespaced classes in `src/` of the
+> [modern plugin layout](#the-modern-plugin-layout).
 
 ## Plugin Controllers
 

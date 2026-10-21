@@ -89,11 +89,13 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - New application: commands to generate `Security.salt` and `Security.cipherSeed`, noting that the seed does not make the 'cipher' cookie type secure
   - Database connection from `DATABASE_URL` (the test database in `config/.env.test`) and the email transport from `MAILER_DSN` in the configuration steps
   - The note on the `classmap` setting is shorter and links to [Autoloading](/development/autoloading)
+  - "Adding CakePHP to an Existing Application": the steps as a numbered list
 - [Advanced Installation](/installation/advanced-installation)
   - Removed PEAR installation, the old Composer/bake project setup and CAKE_CORE_INCLUDE_PATH core sharing
   - Added Composer setup details: replace directive, plugin installer-paths, classmap autoloading, exclude-from-classmap
   - Custom paths are now configured in `config/define.php` (ROOT, APP_DIR, WEBROOT_DIR, WWW_ROOT, VENDORS) with a moved-webroot example
   - "Autoloading Your Classes" shortened, with a link to [Autoloading](/development/autoloading)
+  - "Plugin Location" split into shorter sentences
 - [Web Server Configuration](/installation/url-rewriting)
   - Examples assume the document root is `webroot/`; `.htaccess` updated to the skeleton version; legacy root/app `.htaccess` explained briefly
   - nginx example updated for PHP-FPM sockets; IIS `web.config` placed in `webroot/`; removed dead links (Web Platform Installer, virtualhostx, Apache wiki)
@@ -239,6 +241,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - Overriding core classes: a copy in `src/Cake/` loaded by the classmap, with the core file in exclude-from-classmap (v2.13.0)
   - Vendor files: Composer libraries need no loading; hand-copied files in `vendors/`; plugin paths in `plugins/`; removed CakePHP 1.3 to 2.0 migration notes
   - "Loading classes" shortened, with links to [Autoloading](/development/autoloading)
+  - "Packages" split into shorter sentences
 - [CakeEmail](/core-utility-libraries/email)
   - Config in `config/email.php`, templates in `templates/Emails` and `templates/Layouts/Emails`, custom transports in `src/Lib/Network/Email`; removed EmailComponent comparisons and App::uses()
   - Gmail: app password instead of the defunct "less secure apps" setting; STARTTLS example uses port 587; change note for the typed MailTransport::_mail() signature
@@ -447,6 +450,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - Publishing: removed plugins.cakephp.org/awesome-cakephp; added a `composer.json` example (type cakephp-plugin, composer/installers, installer-name)
   - New "Registering DSN Schemes" section (v2.12.7): `setDsnClassMap()` / `getDsnClassMap()` of `ConnectionManager` and `CakeEmail` in the plugin bootstrap, class names and callables, `null` removal, the `method_exists()` guard and when the maps are read
   - The legacy plugin layout and the modern plugin layout (v2.13.0) in separate sections, each with a tree; the modern layout keeps only namespaced classes in `src/`; the publishing section lists the `composer.json` settings and links to [Autoloading](/development/autoloading#plugins)
+  - The warning on plugins and namespaces rewritten in short sentences, with the namespaced classes of the modern layout as an alternative; the modern template paths in "Plugin Views" and "Plugin Tips"
 - [How To Install Plugins](/plugins/how-to-install-plugins)
   - Composer is the primary method (pieceofcake2/debug_kit example, composer/installers and installer-paths for `plugins/`); manual and Git installs use `plugins/` and https URLs
   - Plugins are loaded in `config/bootstrap.php`; when App::uses() is still needed for plugin classes

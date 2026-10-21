@@ -7,14 +7,13 @@ Make sure you follow the [File And Classname Conventions](../getting-started/cak
 
 ## Packages
 
-CakePHP is organized around the idea of packages, each class belongs to a
-package or folder where other classes reside. You can configure each package
-location in your application using `App::build('APackage/SubPackage', $paths)`
-to inform the framework where should each class be loaded. Almost every class in
-the CakePHP framework can be swapped with your own compatible implementation. If
-you wish to use your own class instead of the classes the framework provides,
-copy the class to `src/Cake/`, at the path of its namespace. For instance if
-you'd like to use your own HttpSocket class, put it under:
+CakePHP is organized around packages. Each class belongs to a package, the
+folder of the classes of its kind. `App::build('APackage/SubPackage', $paths)`
+tells the framework where to find the classes of a package.
+
+Almost every class of the framework can be swapped with your own compatible
+implementation. Copy the class to `src/Cake/`, at the path of its namespace.
+For instance, to use your own HttpSocket class, put it under:
 
     src/Cake/Network/Http/HttpSocket.php
 

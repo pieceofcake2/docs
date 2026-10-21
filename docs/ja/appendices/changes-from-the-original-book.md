@@ -87,6 +87,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - 新規アプリケーション: `Security.salt` と `Security.cipherSeed` を生成するコマンドを記載。シードで Cookie の 'cipher' タイプが安全になるわけではないことを追記
   - 設定の手順で、データベースの接続を `DATABASE_URL` (`config/.env.test` ではテスト用データベース)、メールのトランスポートを `MAILER_DSN` でセット
   - `classmap` の設定の説明を短くし、[クラスの読み込み](/ja/development/autoloading) へのリンクを追加
+  - 「既存のアプリケーションへの導入」の手順を番号付きの箇条書きに変更
 - [応用インストール](/ja/installation/advanced-installation)
   - PEAR でのインストール、旧来の Composer/bake によるプロジェクト作成、CAKE_CORE_INCLUDE_PATH によるコア共有を削除
   - Composer 設定の詳細を追加: replace、プラグインの installer-paths、classmap オートロード、exclude-from-classmap
@@ -234,6 +235,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - コアクラスのオーバーライドは `src/Cake/` にコピーして classmap で読み込み、コアのファイルを exclude-from-classmap で除外 (v2.13.0)
   - ベンダーファイル: Composer のライブラリは読み込み不要、手作業で置くファイルは `vendors/`、プラグインのパスは `plugins/`、CakePHP 1.3 から 2.0 への移行に関する記述を削除
   - 「クラスのローディング」を短くし、[クラスの読み込み](/ja/development/autoloading) へのリンクを追加。「Vendor ファイルをローディングする」に英語版と同じアンカーを追加
+  - 「パッケージ」の文を短く分割
 - [CakeEmail](/ja/core-utility-libraries/email)
   - 設定は `config/email.php`、テンプレートは `templates/Emails` と `templates/Layouts/Emails`、独自トランスポートは `src/Lib/Network/Email`、EmailComponent との比較と App::uses() を削除
   - Gmail は廃止された「安全性の低いアプリ」設定の代わりにアプリパスワードを使用、STARTTLS の例はポート 587、MailTransport::_mail() の型付きシグネチャの変更点を注記
@@ -442,6 +444,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - 公開方法: plugins.cakephp.org と awesome-cakephp への言及を削除し、`composer.json` の例 (type cakephp-plugin、composer/installers、installer-name) を追加
   - 「DSN スキームの登録」の節を追加 (v2.12.7): プラグインのブートストラップで使う `ConnectionManager` と `CakeEmail` の `setDsnClassMap()` と `getDsnClassMap()`、クラス名と callable、`null` による削除、`method_exists()` によるガード、マップが読まれるタイミング
   - 従来のプラグインの構成とモダンなプラグインの構成 (v2.13.0) を別の節に分け、それぞれにツリーを記載。モダンな構成の `src/` には名前空間のあるクラスだけを置くことを記載。公開の節で `composer.json` の設定を箇条書きにし、[クラスの読み込み](/ja/development/autoloading#plugins) へのリンクを追加
+  - プラグインと名前空間についての警告を短い文で書き直し、モダンな構成の名前空間のあるクラスを代わりの方法として記載。「プラグインビュー」と「プラグイン Tips」にモダンな構成のテンプレートのパスを追加。AppController と AppModel の注記の誤訳と誤字を修正
 - [プラグインのインストール](/ja/plugins/how-to-install-plugins)
   - Composer を標準のインストール方法とし (pieceofcake2/debug_kit の例、`plugins/` 用の composer/installers と installer-paths)、手動や Git でのインストールも `plugins/` と https の URL に変更
   - プラグインは `config/bootstrap.php` でロードすることと、プラグインのクラスに App::uses() が必要な場合を記載

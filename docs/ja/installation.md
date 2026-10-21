@@ -67,12 +67,15 @@ Composer をまだ入れていない場合は、[公式の Composer ドキュメ
 
 ## 既存のアプリケーションへの導入 {#adding-cakephp-to-an-existing-application}
 
-Composer で `cakephp/cakephp` を使っているアプリケーションでは、`composer.json` の `require` にある
-`cakephp/cakephp` を `pieceofcake2/cakephp` に置き換えます。
-また、[composer.json の設定](#configuring-composer-json) で説明する `config` と `extra` の設定が無ければ追加します。
-そのうえで `composer update` を実行します。`pieceofcake2/cakephp` は `cakephp/cakephp` を
-置き換える (replace する) パッケージとして宣言されているので、`cakephp/cakephp` 2.x に依存する
-プラグインやパッケージもそのままインストールでき、動作します。両方のパッケージを同時に require しないでください。
+Composer で `cakephp/cakephp` を使っているアプリケーションでは、次のようにします。
+
+1. `composer.json` の `require` にある `cakephp/cakephp` を `pieceofcake2/cakephp` に置き換えます。
+2. [composer.json の設定](#configuring-composer-json) で説明する `config` と `extra` の設定が無ければ追加します。
+3. `composer update` を実行します。
+
+`pieceofcake2/cakephp` は `cakephp/cakephp` を置き換える (replace する) パッケージとして宣言されています。
+そのため、`cakephp/cakephp` 2.x に依存するプラグインやパッケージもそのままインストールでき、動作します。
+両方のパッケージを同時に require しないでください。
 
 CakePHP は Composer のオートローダーからのみ読み込まれるため、アプリケーションのディスパッチャファイル
 (`index.php`、`test.php`、コンソールの `cake` スクリプト) を新しいものに置き換える必要があります。

@@ -56,8 +56,8 @@ packages at the same time.
 
 Packages of type `cakephp-plugin` are installed by `composer/installers`. The
 `installer-paths` setting above installs them into `plugins/` at the project
-root, where CakePHP looks for plugins in both layouts (the legacy
-`app/Plugin/` directory is searched as well). Plugins still have to be loaded with
+root. CakePHP looks for plugins there in both layouts, and also in the legacy
+`app/Plugin/` directory. Plugins still have to be loaded with
 `CakePlugin::load()` in `config/bootstrap.php`. See
 [How To Install Plugins](../plugins/how-to-install-plugins).
 
