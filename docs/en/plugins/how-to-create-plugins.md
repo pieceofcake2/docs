@@ -453,6 +453,9 @@ classmap of `autoload`, so that Composer loads them:
 }
 ```
 
+List only the folders that the plugin has: `composer dump-autoload` stops
+with an error for a folder that does not exist.
+
 Choose a semantically meaningful name for the package name. This should ideally
 be prefixed with the dependency, in this case "cakephp" as the framework.
 The vendor name will usually be your GitHub username.
