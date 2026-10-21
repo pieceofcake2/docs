@@ -19,6 +19,19 @@ Install PHPStan and the extension as development dependencies:
 composer require --dev phpstan/phpstan pieceofcake2/phpstan-cakephp2
 ```
 
+::: pieceofcake2 Changed in version 2.13.0
+CakePHP 2.13 moves the classes of the framework into the `Cake` namespace
+([#92](https://github.com/pieceofcake2/cakephp/pull/92)) and needs
+pieceofcake2/phpstan-cakephp2 `^1.1`. With version 1.0, PHPStan no longer
+finds the type of components, models, tasks and behaviors, and reports errors
+such as `Call to an undefined method Cake\Controller\Component::paginate()`.
+When you update CakePHP, update the extension too:
+
+```bash
+composer require --dev pieceofcake2/phpstan-cakephp2:^1.1
+```
+:::
+
 ## Configuration
 
 PHPStan reads its configuration from `phpstan.neon` in the project root. The

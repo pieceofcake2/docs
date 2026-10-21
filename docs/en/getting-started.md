@@ -79,7 +79,8 @@ the points that changed:
   `raw()`, see [raw()](core-libraries/global-constants-and-functions#raw)
   (CakePHP 2.12.10).
 - **Bake and plugins.** Bake and the upgrade shell moved out of the core into
-  plugins, and the major CakePHP 2 plugins are maintained for PHP 8. See
+  plugins, and the major CakePHP 2 plugins are maintained for PHP 8. Plugins
+  can use the `src/` and `templates/` layout of CakePHP 5 (CakePHP 2.13). See
   [Code Generation with Bake](console-and-shells/code-generation-with-bake) and
   [Maintained Plugins](/plugins/maintained-plugins).
 
@@ -125,12 +126,11 @@ Symfony, expect these differences:
   class name and the file location follow
   [conventions](getting-started/cakephp-conventions#file-and-classname-conventions),
   for example `PostsController` in `src/Controller/PostsController.php`. On the
-  fork, Composer's classmap loads them; `App::uses()` is only needed for classes
-  Composer does not know, such as most plugin classes. The framework classes
+  fork, Composer's classmap loads them, and `App::uses()` is deprecated
+  (CakePHP 2.13). The framework classes
   are in the `Cake` namespace with their CakePHP 2 names as aliases, such as
-  `Controller` for `Cake\Controller\Controller` (the release after CakePHP
-  2.12.10). Your own classes can use namespaces;
-  [Namespaced Classes](development/namespaced-classes) lists where CakePHP
+  `Controller` for `Cake\Controller\Controller` (CakePHP 2.13). Your own
+  classes can use namespaces; [Namespaced Classes](development/namespaced-classes) lists where CakePHP
   accepts them in its configuration, and how `App.namespace` finds controllers
   and models in your namespace.
 - **Arrays instead of objects.** `find()` takes an array of options and

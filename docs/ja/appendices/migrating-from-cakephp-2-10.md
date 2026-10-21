@@ -24,39 +24,164 @@
 4. **PHP をアップグレードする**: PHP 8.0 以降に更新します
 5. **十分にテストする**: アプリケーションのテストスイートを実行し、互換性を確認します
 
-## 未リリース
+## v2.13.0
 
-次のリリースの変更のうち、すでにフォークで動いているアプリケーションに影響する可能性があるものです。
+v2.13.0 の変更のうち、すでにフォークで動いているアプリケーションに影響する可能性があるものです。
 
-### フレームワークのクラスを `Cake` 名前空間に移動 ([PR #92](https://github.com/pieceofcake2/cakephp/pull/92)) {#cake-namespace}
+CakePHP 2.13 は機能を追加したリリースです。2.12 からは次の手順で更新します。
 
-- フレームワークのクラスは `Cake` 名前空間に移りました。たとえば `Cake\Controller\Controller` です。
-  CakePHP 2 のグローバルな名前は同じクラスの別名なので、`Controller`、`CakeRequest`、
-  `NotFoundException` を継承、型宣言、`catch`、読み込みに使っているコードはそのまま動きます。
-- `get_class()`、`::class`、`ReflectionClass::getName()` は名前空間を含む名前を返します。
-  `get_class($x) === 'CakeRequest'` のような比較は `instanceof` に書き換えてください。
-- エラーログ、`Debugger` の出力、デバッグ用のエラーページには名前空間を含む名前が出ます。たとえば
-  `[Cake\Error\NotFoundException]` です。グローバルな名前に一致させているログのフィルターや
-  アラートを直してください。
-- 更新前にシリアライズしたオブジェクトは、これまでどおりアンシリアライズできます。更新後に
-  シリアライズしたオブジェクトは名前空間を含む名前になるので、前のバージョンでは読めません。
-- PHPStan には、名前空間のクラスに対応した pieceofcake2/phpstan-cakephp2 が必要です。
-  [名前空間のあるクラス](/ja/development/namespaced-classes#the-classes-of-the-framework) を参照してください。
+1. `composer.json` の制約を `"pieceofcake2/cakephp": "^2.13"` にして、
+   `composer update pieceofcake2/cakephp` を実行します。
+2. pieceofcake2/phpstan-cakephp2 を使っている場合は、`Cake` 名前空間のクラスに対応した `^1.1`
+   に更新します (`composer require --dev pieceofcake2/phpstan-cakephp2:^1.1`)。バージョン 1.0 のままでは、
+   これまで問題のなかったコードで PHPStan がエラーを出します。
+3. 下の項目、特にログや出力に出るクラス名と、クラス名を文字列で比べているコードを確かめてから、
+   テストを実行します。
+
+### CakePHP 5 の構成のプラグイン ([PR #88](https://github.com/pieceofcake2/cakephp/pull/88)) {#plugin-modern-layout}
+
+- アプリケーションと同じように、プラグインも名前空間のあるクラスを `src/` (プラグインの `psr-4` で
+  Composer が読み込みます)、テンプレートを `templates/`、翻訳を `resources/locales/`、ベンダーのファイルを
+  `vendor/`、bootstrap、routes、設定ファイル、スキーマを `config/` に置けます。CakePHP はこれらの
+  ディレクトリを先に探し、`Controller/`、`View/`、`Locale/`、`Vendor/`、`Config/` などの CakePHP 2 の
+  ディレクトリをその後に探します。これらのディレクトリが無いプラグインでは何も変わりません。
+  [プラグインの作成](/ja/plugins/how-to-create-plugins) を参照してください。
+
+> [!WARNING]
+> これらのディレクトリを別の目的ですでに使っているプラグインでは、そのファイルが先に見つかります。たとえば
+> `App::import('Vendor', ...)` は、開発用にチェックアウトしたプラグインの Composer の `vendor/` を先に探します。
+
+### CakePHP 5 の形式のテンプレート ([PR #94](https://github.com/pieceofcake2/cakephp/pull/94)) {#php-templates}
+
+- `templates/` のテンプレート、レイアウト、エレメントに、`.php` の拡張子と、CakePHP 5 のディレクトリ
+  `layout/`、`element/`、`email/`、`Error/` を使えます。たとえば `templates/email/html/welcome.php` です。
+- `.ctp` のテンプレートと、従来のレイアウトの `View/` ディレクトリは何も変わりません。
+  [CakePHP 5 の形式のテンプレート](/ja/views#templates-in-the-cakephp-5-style) を参照してください。
+
+> [!WARNING]
+> `templates/` で、同じ名前の `.ctp` の隣に `.php` のファイルがあると、`.php` が使われます。
+> `templates/` にテンプレート以外の `.php` のファイルが無いことを確かめてください。
+
+### PHP 8.1 から 8.5 の非推奨 ([PR #96](https://github.com/pieceofcake2/cakephp/pull/96)) {#php-deprecations}
+
+コアは、自身のコードで PHP 8.1 から 8.5 の非推奨の警告を出さなくなりました。ほとんどのアプリケーションは
+更新するだけで済みます。次の変更は影響する可能性があります。
+
+- `Xml::build()` の `loadEntities` オプションが無くなりました。このオプションは
+  `libxml_disable_entity_loader()` を呼ぶかどうかを決めるだけのものでした。この関数は PHP 8 で非推奨になり、
+  libxml 2.9 以降では何も変わりません。どちらにしても外部エンティティは読み込まれません。
+  オプションを指定しても無視されるので、呼び出しから削除できます。
+  [XML](/ja/core-utility-libraries/xml) を参照してください。
+- デコード関数を渡した `CakeRequest::input()` は、リクエストにボディが無いとき、デコード関数を呼ばずに
+  `null` を返します。`RequestHandlerComponent` が設定する空のデータは、これまでと同じです。
+  独自のデコード関数で空のボディを扱っていた場合は、代わりに `null` を扱ってください。
+  [リクエストとレスポンスオブジェクト](/ja/controllers/request-response) を参照してください。
+- コアは、PHP 8.0 から 8.3 で `Pdo\Mysql` の定数を使うために `symfony/polyfill-php84` を必要とします。
+  Composer がインストールします。
 
 ### 名前空間のあるクラス: `App::className()` と `App.namespace` ([PR #91](https://github.com/pieceofcake2/cakephp/pull/91)) {#app-classname}
 
 - サフィックスの付く設定に、サフィックスの付いた完全なクラス名を書けます。キャッシュエンジンなら
   `MemoryEngine::class`、トランスポートなら `SesTransport::class` です。Auth のオブジェクト、
   パスワードハッシャー、ビュークラス、コンポーネント、ヘルパー、ビヘイビア、シェルのタスク、
-  シェルヘルパーも同じです。サフィックスを省いた名前 (`'Acme\Cache\Memory'`) も、これまでどおり
+  シェルヘルパーも同じです。サフィックスを省いた名前 (`'Acme\Cache\Engine\Memory'`) も、これまでどおり
   使えます。
 - `App.namespace` は新しい設定で、既定では設定されていません。設定すると、コントローラー、シェル、
   モデルと上のクラスを、まずその名前空間から短い名前で探します。たとえば `/posts` なら
   `App\Controller\PostsController` です。
-- 名前空間のあるクラスの `Controller::$name`、`Model::$name`、`Shell::$name` は、名前空間を
-  含まなくなります。たとえば `Acme\Model\Post` ではなく `Post` です。前の値に頼っていた場合は
-  `$name` を書いてください。[名前空間のあるクラス](/ja/development/namespaced-classes) を
-  参照してください。
+  [名前空間のあるクラス](/ja/development/namespaced-classes) を参照してください。
+- `$components`、`$helpers`、`$actsAs`、シェルの `$tasks`、`$uses`、モデルのアソシエーションのキーに
+  書いた完全なクラス名や、`load()`、`loadModel()`、エイリアスの無い `ClassRegistry::init()` に渡した
+  完全なクラス名は、名前空間とサフィックスを除いたクラス名がエイリアスになります。
+  `GreetingComponent::class` なら `$this->Greeting`、`Post::class` なら `$this->Post` です。
+  これまではバックスラッシュを含む名前がエイリアスでした。そのエイリアスを使っていたコードは、
+  短いエイリアスに直してください。親クラスとサブクラスで、同じオブジェクトを片方は完全なクラス名、
+  もう片方は短い名前で書いたときは、設定をマージした 1 つのエントリーになります。hasAndBelongsToMany の
+  `'with' => PostsTag::class` は中間モデル `PostsTag` を使い、`ClassRegistry::getObject()`、
+  `isKeySet()`、`removeObject()` は完全なクラス名でもオブジェクトを探します。
+  [名前空間のあるクラス](/ja/development/namespaced-classes#components-helpers-and-behaviors)
+  を参照してください。
+- `Controller` と `View` に公開プロパティ `$controllerClass` が加わり、コントローラーからビューに渡す
+  変数にも含まれます。同じ名前のプロパティを持つサブクラスは、名前を変えてください。
+
+> [!WARNING]
+> 名前空間のあるクラスの `Controller::$name`、`Model::$name`、`Shell::$name` は、名前空間を含まなくなります。
+> たとえば `Acme\Model\Post` ではなく `Post` です。前の値に頼っていた場合は `$name` を書いてください。
+
+> [!WARNING]
+> 名前空間のあるコントローラーは、`App.namespace` を設定していなくても、親クラスの `AppController`
+> (どの名前空間でも) と `$components` と `$helpers` をマージするようになります。
+
+### フレームワークのクラスを `Cake` 名前空間に移動 ([PR #92](https://github.com/pieceofcake2/cakephp/pull/92)) {#cake-namespace}
+
+- フレームワークのクラスは `Cake` 名前空間に移りました。たとえば `Cake\Controller\Controller` です。
+  CakePHP 2 のグローバルな名前は同じクラスの別名なので、`Controller`、`CakeRequest`、
+  `NotFoundException` を継承、型宣言、`catch`、読み込みに使っているコードはそのまま動きます。
+- フレームワークのファイルは `src/Cake/` から `src/` に移り、Composer が PSR-4 (`Cake\` が `src/`)
+  で読み込みます。`CAKE` 定数は `src/` を指します。`webroot/index.php` などが読み込む
+  `src/Cake/bootstrap.php` と、`phpunit.xml.dist` のリスナーの
+  `src/Cake/TestSuite/Fixture/CakeFixtureInjector.php` は元の場所に残っているので、そのまま動きます。
+  `vendor/pieceofcake2/cakephp/src/Cake/` のほかのファイルをパスで読み込んでいるときは、`src/` に直してください。
+- 更新前にシリアライズしたオブジェクトは、これまでどおりアンシリアライズできます。更新後に
+  シリアライズしたオブジェクトは名前空間を含む名前になるので、前のバージョンでは読めません。
+- フレームワークは名前空間付きの名前を使うため、 `App::uses()` で登録したグローバルなクラスでは
+  コアのクラスをオーバーライドできなくなりました。代わりにコアのファイルを `src/Cake/` にコピーします。
+  [CakePHP のクラスをオーバーライドする](/ja/core-utility-libraries/app#overriding-classes-in-cakephp) を参照してください。
+- PHPStan には pieceofcake2/phpstan-cakephp2 の `^1.1` が必要です。
+  `composer require --dev pieceofcake2/phpstan-cakephp2:^1.1` を実行してください。バージョン 1.0 のままでは、
+  PHPStan がコンポーネント、モデル、タスク、ビヘイビアの型を見つけられなくなります。
+  [静的解析](/ja/development/static-analysis#installation) を参照してください。
+
+> [!WARNING]
+> `get_class()`、`::class`、`ReflectionClass::getName()` は名前空間を含む名前を返すので、
+> `get_class($x) === 'CakeRequest'` のような比較は false になります。エラーログ、`Debugger` の出力、
+> デバッグ用のエラーページにも名前空間を含む名前が出ます (例: `[Cake\Error\NotFoundException]`)。
+> グローバルな名前に一致させているログのフィルターやアラートを直してください。
+
+> [!TIP]
+> [pieceofcake2/upgrade](https://github.com/pieceofcake2/upgrade) の
+> `bin/cake upgrade rector --rules namespaced-classes src tests` は、`get_class()` との比較を書き換え、
+> 名前空間のクラスを `use` します。
+
+### `App::uses()` を非推奨に ([PR #98](https://github.com/pieceofcake2/cakephp/pull/98)) {#app-uses-deprecated}
+
+- コアのクラス、アプリケーションのクラス (pieceofcake2/app は `src/` を classmap で読み込みます)、
+  Composer でインストールしたプラグインのクラスは Composer が読み込みます。設定に書いたクラス
+  (`$components`、`$helpers`、`$uses`、アソシエーション、エンジンなどの設定) は、これまでどおり
+  `App::uses()` が無くても見つかります。
+- プロセスで最初に `App::uses()` を呼び出したとき、呼び出したファイルと行を含む警告がログに書かれます。
+  `debug` が 0 より大きいときは `E_USER_DEPRECATED` も発生します。呼び出しはこれまでどおり動作します。
+- コアは `App::uses()` を呼び出さなくなりました。アプリケーションの `AppController`、`AppModel`、
+  `AppHelper`、`AppShell` は、`App::uses()` が無くてもそれぞれのパッケージから見つかります。
+- 呼び出しを削除するには、Composer でクラスを読み込むようにしてから `App::uses()` の行を削除します。
+  アプリケーションでは `composer.json` の `autoload` に `"classmap": ["src/"]` を追加して
+  `composer dump-autoload` を実行します。プラグインでは、プラグインの `composer.json` に classmap か
+  PSR-4 を追加します。[`App::uses()` の呼び出しを削除する](/ja/core-utility-libraries/app#removing-app-uses)
+  を参照してください。
+
+## v2.12.11
+
+### セキュリティ修正: 先頭のスラッシュが多いリクエスト URL ([GHSA-wh43-gc93-wh4c](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-wh43-gc93-wh4c), [PR #90](https://github.com/pieceofcake2/cakephp/pull/90)) {#request-url-leading-slashes}
+
+- `CakeRequest` は、リクエスト URL の先頭のスラッシュとバックスラッシュを、最初の 1 つだけでなくすべて取り除きます。
+  `//posts/view/1` へのリクエストはこれまでどおりルーティングされますが、`$this->request->url` は `/posts/view/1`
+  ではなく `posts/view/1` に、`here` はプロトコル相対の `//posts/view/1` ではなく `/posts/view/1` になります。
+  `here()` も、返す値の先頭のスラッシュを 1 つにまとめます。
+  先頭のスラッシュが 1 つの URL は変わりません。[脆弱性への対応](/ja/security/fixes#request-here) を参照してください。
+
+### HTML5 の script、link、style のタグ ([PR #86](https://github.com/pieceofcake2/cakephp/pull/86)) {#html5-tags}
+
+- HtmlHelper は HTML5 のタグを出力します: `<script src="...">`、`<link rel="stylesheet" href="...">`、`<style>`、
+  `type="text/javascript"` も CDATA も付けないスクリプトブロック。ブラウザはどちらも同じに扱うので、ページの見た目や
+  動きは変わりません。
+- ページやヘルパーの HTML を比べるテストは、新しいタグに合わせる必要があるかもしれません。
+- XHTML で配信するページなど、元の出力のままにするには、ヘルパーの設定で `html5` を `false` にします。
+
+  ```php
+  public $helpers = ['Html' => ['html5' => false]];
+  ```
+
+  [HTML5 のタグ](/ja/core-libraries/helpers/html#html5) を参照してください。
 
 ### 可変長引数 ([PR #89](https://github.com/pieceofcake2/cakephp/pull/89)) {#variadic-arguments}
 

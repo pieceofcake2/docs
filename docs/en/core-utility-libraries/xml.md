@@ -268,8 +268,6 @@ path, URL or array. The following options are available:
 
 - `return` Either `'simplexml'` (default) to return a SimpleXMLElement or
   `'domdocument'` to return a DOMDocument.
-- `loadEntities` Whether to load `<!ENTITY` definitions. Defaults to `false`
-  for security reasons. Only enable it for XML from trusted sources.
 - `readFile` Whether a local file path or a URL is read. Defaults to `true`.
   Set it to `false` when the input may come from users; an `XmlException` is
   then thrown for a file path or URL.
@@ -279,6 +277,13 @@ path, URL or array. The following options are available:
 Since v2.12.3, `'readFile' => false` also blocks URLs. Earlier versions (and the
 original CakePHP 2.6.6 and later) still fetched `https://` URLs; see
 [Security Fixes](/security/fixes#xml-build-ssrf).
+:::
+
+::: pieceofcake2 Changed in version 2.13.0
+The `loadEntities` option is removed, and passing it is ignored. It only
+decided whether `libxml_disable_entity_loader()` was called, which no longer
+changes anything with libxml 2.9 and later: external entities are not loaded
+either way.
 :::
 
 When the input is an array, the options of `Xml::fromArray()` (such as

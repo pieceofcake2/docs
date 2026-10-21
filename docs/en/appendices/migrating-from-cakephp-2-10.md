@@ -26,26 +26,67 @@ Before migrating to this fork, ensure:
 4. **Upgrade PHP**: Update your PHP version to 8.0 or newer
 5. **Test Thoroughly**: Run your application's test suite to ensure compatibility
 
-## Unreleased
+## v2.13.0
 
-Changes in the next release that may affect applications already running on the fork.
+Changes in v2.13.0 that may affect applications already running on the fork.
 
-### The framework classes in the `Cake` namespace ([PR #92](https://github.com/pieceofcake2/cakephp/pull/92)) {#cake-namespace}
+CakePHP 2.13 adds features; follow these steps to update from 2.12:
 
-- The classes of the framework moved into the `Cake` namespace, e.g.
-  `Cake\Controller\Controller`. The global names of CakePHP 2 are aliases of the
-  same classes: code that extends, type-hints, catches or loads `Controller`,
-  `CakeRequest` or `NotFoundException` keeps working.
-- `get_class()`, `::class` and `ReflectionClass::getName()` return the
-  namespaced names. Replace comparisons like `get_class($x) === 'CakeRequest'`
-  with `instanceof`.
-- The error log, `Debugger` output and the debug error pages show the
-  namespaced names, e.g. `[Cake\Error\NotFoundException]`. Update log filters
-  and alerts that match the global names.
-- Objects serialized before the update still unserialize. Objects serialized
-  after it name the namespaced classes and cannot be read by an older version.
-- PHPStan needs a version of pieceofcake2/phpstan-cakephp2 that supports the
-  namespaced classes. See [Namespaced Classes](/development/namespaced-classes#the-classes-of-the-framework).
+1. Update the constraint in `composer.json` to `"pieceofcake2/cakephp": "^2.13"`
+   and run `composer update pieceofcake2/cakephp`.
+2. If you use pieceofcake2/phpstan-cakephp2, update it to `^1.1`, which knows
+   the classes of the `Cake` namespace:
+   `composer require --dev pieceofcake2/phpstan-cakephp2:^1.1`. With version
+   1.0, PHPStan reports errors in code that worked before.
+3. Read the items below, especially the class names in logs and output and the
+   comparisons of class names as strings, and run your tests.
+
+### Plugins in the CakePHP 5 layout ([PR #88](https://github.com/pieceofcake2/cakephp/pull/88)) {#plugin-modern-layout}
+
+- A plugin can put namespaced classes in `src/` (loaded by Composer with the
+  plugin's `psr-4` entry), its templates in `templates/`, its translations in
+  `resources/locales/`, its vendor files in `vendor/` and its bootstrap, routes,
+  configuration files and schemas in `config/`, as the application does.
+- CakePHP searches these directories first, and `Controller/`, `View/`,
+  `Locale/`, `Vendor/`, `Config/` and the other CakePHP 2 directories after
+  them. Nothing changes for a plugin that does not have them. See
+  [How To Create Plugins](/plugins/how-to-create-plugins).
+
+> [!WARNING]
+> In a plugin that already has one of these directories for another purpose,
+> its files are now found first. For example, `App::import('Vendor', ...)`
+> looks first in the Composer `vendor/` directory of a plugin checked out for
+> development.
+
+### Templates in the CakePHP 5 style ([PR #94](https://github.com/pieceofcake2/cakephp/pull/94)) {#php-templates}
+
+- In `templates/`, templates, layouts and elements may use the `.php`
+  extension and the CakePHP 5 directories `layout/`, `element/`, `email/` and
+  `Error/`, e.g. `templates/email/html/welcome.php`.
+- Nothing changes for `.ctp` templates and for the `View/` directories of the
+  legacy layout. See [Templates in the CakePHP 5 style](/views#templates-in-the-cakephp-5-style).
+
+> [!WARNING]
+> A `.php` file next to a `.ctp` file of the same name in `templates/` is now
+> used instead of it. Check that `templates/` holds no other `.php` files.
+
+### PHP 8.1 to 8.5 deprecations ([PR #96](https://github.com/pieceofcake2/cakephp/pull/96)) {#php-deprecations}
+
+The core no longer triggers the deprecations of PHP 8.1 to 8.5 in its own
+code. Most applications only need to update. These changes may affect yours:
+
+- `Xml::build()` no longer has the `loadEntities` option. It only decided
+  whether `libxml_disable_entity_loader()` was called, which PHP 8 deprecates
+  and which no longer changes anything with libxml 2.9 and later: external
+  entities are not loaded either way. Passing the option is ignored, so you
+  can remove it from your calls. See [Xml](/core-utility-libraries/xml).
+- `CakeRequest::input()` with a decoding callback returns `null` without
+  calling the callback when the request has no body. `RequestHandlerComponent`
+  sets the same empty data as before. If your own callback handled an empty
+  body, handle `null` instead. See
+  [Request and Response objects](/controllers/request-response).
+- The core requires `symfony/polyfill-php84` for the `Pdo\Mysql` constants on
+  PHP 8.0 to 8.3. Composer installs it.
 
 ### Classes in a namespace: `App::className()` and `App.namespace` ([PR #91](https://github.com/pieceofcake2/cakephp/pull/91)) {#app-classname}
 
@@ -53,14 +94,117 @@ Changes in the next release that may affect applications already running on the 
   `MemoryEngine::class` for a cache engine, `SesTransport::class` for a
   transport, and the same for Auth objects, password hashers, view classes,
   components, helpers, behaviors, shell tasks and shell helpers. The names
-  without the suffix (`'Acme\Cache\Memory'`) keep working.
+  without the suffix (`'Acme\Cache\Engine\Memory'`) keep working.
 - `App.namespace` is new and not set by default. When it is set, controllers,
   shells, models and the classes above are first looked up in that namespace
   by their short name, e.g. `App\Controller\PostsController` for `/posts`.
-- `Controller::$name`, `Model::$name` and `Shell::$name` of a class in a
-  namespace no longer contain the namespace, e.g. `Post` instead of
-  `Acme\Model\Post`. Set `$name` if you relied on the old value.
   See [Namespaced Classes](/development/namespaced-classes).
+- Fully qualified class names as the keys of `$components`, `$helpers`,
+  `$actsAs`, shell `$tasks`, `$uses` and the model associations, or given to
+  `load()`, `loadModel()` and `ClassRegistry::init()` without an alias, get the
+  class name without the namespace and the suffix as their alias:
+  `GreetingComponent::class` gives `$this->Greeting`, and `Post::class` gives
+  `$this->Post`. Before, the alias was the name with the backslashes; code that
+  used such an alias must use the short alias. A parent class and a subclass
+  that name the same object, one by its class name and one by its short name,
+  now give one entry with the merged settings. `'with' => PostsTag::class` of a
+  hasAndBelongsToMany association finds the join model `PostsTag`, and
+  `ClassRegistry::getObject()`, `isKeySet()` and `removeObject()` also find
+  objects by their fully qualified class names. See
+  [Namespaced Classes](/development/namespaced-classes#components-helpers-and-behaviors).
+- `Controller` and `View` have the new public property `$controllerClass`,
+  which is also passed from the controller to the view. Rename a property of
+  that name in a subclass.
+
+> [!WARNING]
+> `Controller::$name`, `Model::$name` and `Shell::$name` of a class in a
+> namespace no longer contain the namespace, e.g. `Post` instead of
+> `Acme\Model\Post`. Set `$name` if you relied on the old value.
+
+> [!WARNING]
+> A namespaced controller now merges `$components` and `$helpers` with its
+> parent class `AppController` in any namespace, also without `App.namespace`.
+
+### The framework classes in the `Cake` namespace ([PR #92](https://github.com/pieceofcake2/cakephp/pull/92)) {#cake-namespace}
+
+- The classes of the framework moved into the `Cake` namespace, e.g.
+  `Cake\Controller\Controller`. The global names of CakePHP 2 are aliases of the
+  same classes: code that extends, type-hints, catches or loads `Controller`,
+  `CakeRequest` or `NotFoundException` keeps working.
+- The files of the framework moved from `src/Cake/` to `src/`, loaded by
+  Composer with PSR-4 (`Cake\` in `src/`), and `CAKE` points to `src/`.
+  `src/Cake/bootstrap.php`, which `webroot/index.php` requires, and
+  `src/Cake/TestSuite/Fixture/CakeFixtureInjector.php`, the listener of
+  `phpunit.xml.dist`, stay at their paths and keep working. If you include other
+  files of `vendor/pieceofcake2/cakephp/src/Cake/` by path, change them to `src/`.
+- Objects serialized before the update still unserialize. Objects serialized
+  after it name the namespaced classes and cannot be read by an older version.
+- A global class registered with `App::uses()` no longer overrides a core
+  class, because the framework uses the namespaced names. Copy the core file to
+  `src/Cake/` instead. See
+  [Overriding classes in CakePHP](/core-utility-libraries/app#overriding-classes-in-cakephp).
+- PHPStan needs pieceofcake2/phpstan-cakephp2 `^1.1`: run
+  `composer require --dev pieceofcake2/phpstan-cakephp2:^1.1`. With version 1.0,
+  PHPStan no longer finds the type of components, models, tasks and behaviors.
+  See [Static Analysis](/development/static-analysis#installation).
+
+> [!WARNING]
+> `get_class()`, `::class` and `ReflectionClass::getName()` return the
+> namespaced names, so a comparison like `get_class($x) === 'CakeRequest'` is
+> now false. The error log, `Debugger` output and the debug error pages show
+> the namespaced names too, e.g. `[Cake\Error\NotFoundException]`: update the
+> log filters and alerts that match the global names.
+
+> [!TIP]
+> `bin/cake upgrade rector --rules namespaced-classes src tests` of
+> [pieceofcake2/upgrade](https://github.com/pieceofcake2/upgrade) rewrites the
+> comparisons with `get_class()` and imports the namespaced classes.
+
+### `App::uses()` is deprecated ([PR #98](https://github.com/pieceofcake2/cakephp/pull/98)) {#app-uses-deprecated}
+
+- Composer loads the classes of the core, of the application (pieceofcake2/app
+  loads `src/` with a classmap) and of the plugins installed with Composer.
+  The classes named in the configuration (`$components`, `$helpers`, `$uses`,
+  the associations, the engines and the other settings) are found without
+  `App::uses()`, as before.
+- The first call of `App::uses()` in a process logs a warning with the file
+  and line of the call. With `debug` above 0, it also triggers
+  `E_USER_DEPRECATED`. The call still works.
+- The core no longer calls `App::uses()`. `AppController`, `AppModel`,
+  `AppHelper` and `AppShell` of the application are found in their packages
+  without it.
+- To remove the calls, let Composer load your classes, then delete the
+  `App::uses()` lines: in an application, add `"classmap": ["src/"]` to the
+  `autoload` of its `composer.json` and run `composer dump-autoload`; in a
+  plugin, add a classmap or PSR-4 to the `composer.json` of the plugin. See
+  [Removing App::uses() calls](/core-utility-libraries/app#removing-app-uses).
+
+## v2.12.11
+
+### Security fix: request URLs with extra leading slashes ([GHSA-wh43-gc93-wh4c](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-wh43-gc93-wh4c), [PR #90](https://github.com/pieceofcake2/cakephp/pull/90)) {#request-url-leading-slashes}
+
+- `CakeRequest` removes all the leading slashes and backslashes of the request
+  URL, not only the first one. A request to `//posts/view/1` is routed as
+  before, but `$this->request->url` is now `posts/view/1` instead of
+  `/posts/view/1`, and `here` is `/posts/view/1` instead of the
+  protocol-relative `//posts/view/1`. `here()` also collapses the leading
+  slashes of its result. URLs with a single leading slash are not affected. See [Security Fixes](/security/fixes#request-here).
+
+### HTML5 script, link and style tags ([PR #86](https://github.com/pieceofcake2/cakephp/pull/86)) {#html5-tags}
+
+- HtmlHelper outputs the tags of HTML5: `<script src="...">`,
+  `<link rel="stylesheet" href="...">`, `<style>`, and script blocks without
+  `type="text/javascript"` and without CDATA. Browsers treat both forms the
+  same, so the pages do not change.
+- Tests that compare the HTML of a page or of a helper may need the new tags.
+- To keep the former output, e.g. for pages served as XHTML, set `html5` to
+  `false` in the settings of the helper:
+
+  ```php
+  public $helpers = ['Html' => ['html5' => false]];
+  ```
+
+  See [HTML5 Tags](/core-libraries/helpers/html#html5).
 
 ### Variadic arguments ([PR #89](https://github.com/pieceofcake2/cakephp/pull/89)) {#variadic-arguments}
 

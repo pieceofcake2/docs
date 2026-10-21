@@ -11,26 +11,19 @@ CakePHP はパッケージの考え方を中心に編成され、それぞれの
 フォルダに属します。それぞれのクラスをどの場所でロードするべきなのかをフレームワークに通知するため、
 `App::build('APackage/SubPackage', $paths)` を使用して各パッケージの場所を設定することができます。
 CakePHP のフレームワークのほぼすべてのクラスは、あなた独自の互換性のある実装と入れ替えることができます。
-フレームワークが提供するクラスの代わりに独自のクラスを使用したい場合は、ただ単に、CakePHP の探索が
-期待できるディレクトリの配置を模倣した libs フォルダにクラスを追加するだけです。
+フレームワークが提供するクラスの代わりに独自のクラスを使用したい場合は、そのクラスを `src/Cake/` の、
+名前空間に合わせたパスにコピーします。例えば、あなた独自の HttpSocket クラスを用いたいなら以下のように配置します:
 
-例えば、あなた独自の HttpSocket クラスを用いたいなら以下のように配置します:
+    src/Cake/Network/Http/HttpSocket.php
 
-    src/Lib/Network/Http/HttpSocket.php
+すると、後述の [CakePHP のクラスをオーバーライドする](#overriding-classes-in-cakephp) で説明しているように、Composer は CakePHP
+内部のファイルの代わりにあなたのファイルをロードします。
 
-そして後述の「CakePHP のクラスをオーバーライドする」で説明しているように
-`App::uses()` で登録すると、 App は CakePHP 内部のファイルの代わりにあなたが再定義したファイルを
-ロードします。
+## クラスのローディング {#loading-classes}
 
-## クラスのローディング
-
-`static` App::**uses**(string $class, string $package)
-
-戻り値の型: `void`
-
-CakePHP ではクラスは遅延ロードされます。CakePHP 自身のクラスは Composer の classmap
-オートローダで読み込まれるため、宣言する必要はありません。アプリケーションスケルトンのように
-`composer.json` でアプリケーションのクラスを classmap に指定している場合も同様です。
+CakePHP ではクラスは遅延ロードされます。CakePHP のクラス、アプリケーションのクラス、Composer で
+インストールしたプラグインのクラスは Composer が読み込むため、宣言する必要はありません。
+アプリケーションスケルトン (pieceofcake2/app) は、`composer.json` の classmap で `src/` を読み込みます。
 
 ```json
 "autoload": {
@@ -40,16 +33,34 @@ CakePHP ではクラスは遅延ロードされます。CakePHP 自身のクラ�
 
 classmap を使う場合は、新しいクラスファイルを追加したら `composer dump-autoload` を実行してください。
 
-`App::uses()` が必要なのは、Composer が把握していないクラスです。つまり classmap を使っていない場合の
-アプリケーションのクラスと、Composer のオートロードに対応していないプラグインのクラスです。
-どのパッケージでクラスを発見できるのかを App に伝えることで、あるクラスを初めて使用するときに
-適切にファイルを見つけることができるのです。
+`$components`、`$helpers`、`$uses`、アソシエーション、キャッシュエンジンなど、設定に書いたクラスも、
+CakePHP がそれぞれのパッケージから探します。基底クラスの `AppController`、`AppModel`、`AppHelper`、
+`AppShell` も同様です。
 
-::: pieceofcake2
-フレームワークのクラスは Composer の classmap オートローダで読み込まれ、
-クラス同士で `App::uses()` を呼び出さなくなりました。既存の `App::uses()` 呼び出しはそのまま動作します。
-詳しくは [CakePHP 2.10 からの移行](/ja/appendices/migrating-from-cakephp-2-10) を参照してください。
+`static` App::**uses**(string $class, string $package)
+
+戻り値の型: `void`
+
+::: pieceofcake2 Deprecated in version 2.13.0
+代わりに Composer でクラスを読み込んでください
+([#98](https://github.com/pieceofcake2/cakephp/pull/98))。プロセスで最初に `App::uses()`
+を呼び出したとき、呼び出したファイルと行を含む警告がログに書かれます。`debug` が 0 より大きいときは
+`E_USER_DEPRECATED` も発生します。呼び出しはこれまでどおり動作します。フレームワークは
+`App::uses()` を呼び出しません。
 :::
+
+`App::uses()` は、クラスがどのパッケージにあるかを App に伝えます。これにより App は、
+そのクラスを初めて使うときにファイルを見つけてロードできます。
+
+### `App::uses()` の呼び出しを削除する {#removing-app-uses}
+
+1. Composer でクラスを読み込むようにします。
+   - アプリケーションでは、上の `src/` の classmap を `composer.json` に追加します。
+   - プラグインでは、プラグインの `composer.json` に classmap か PSR-4 を追加します。
+     それが無いプラグインは、アプリケーションの classmap にプラグインのフォルダを追加することもできます。
+     例: `"classmap": ["src/", "plugins/MyPlugin/"]`
+2. `composer dump-autoload` を実行します。
+3. `App::uses()` の行を削除します。
 
 一般的なクラスの例をいくつか挙げます:
 
@@ -100,34 +111,38 @@ Utilities
 
 戻り値の型: `string|null`
 
+::: pieceofcake2 Added in version 2.13.0
+CakePHP 3 以降からのバックポートです。
+:::
+
 CakePHP の設定に書いた名前から、CakePHP が使うクラスの名前を返します。クラスが無ければ `null`
-を返します (CakePHP 2.12.10 の次のリリースから)。CakePHP は、コンポーネント、ヘルパー、
-ビヘイビア、キャッシュエンジン、メールのトランスポート、ビュークラス、コントローラー、シェル、
-モデルを探すときにこれを使います。
+を返します。CakePHP は、コンポーネント、ヘルパー、ビヘイビア、キャッシュエンジン、メールの
+トランスポート、ビュークラス、コントローラー、シェル、モデルを探すときにこれを使います。
 
 ```php
 App::className('Auth', 'Controller/Component', 'Component');
 // 'AuthComponent'
 
 App::className(MemoryEngine::class, 'Cache/Engine', 'Engine');
-App::className('Acme\Cache\Memory', 'Cache/Engine', 'Engine');
-// どちらも 'Acme\Cache\MemoryEngine'
+App::className('Acme\Cache\Engine\Memory', 'Cache/Engine', 'Engine');
+// どちらも 'Acme\Cache\Engine\MemoryEngine'
 
 Configure::write('App.namespace', 'App');
 App::className('Post', 'Model');
-// クラスがあれば 'App\Model\Post'、無ければ 'Post'
+// 'App\Model\Post' があればそれ、無ければグローバルな 'Post'、どちらも無ければ null
 ```
 
 バックスラッシュを含む名前は完全なクラス名として扱い、名前がサフィックスで終わらないときだけ
 サフィックスを付けます。ほかの名前は、プラグインの名前空間か `App.namespace` で
-`<名前空間>\<種類>\<名前><サフィックス>` を探し、次に `<種類>` のパッケージに `App::uses()`
-で宣言したグローバルなクラス `<名前><サフィックス>` を探します。
+`<名前空間>\<種類>\<名前><サフィックス>` を探し、次にグローバルなクラス `<名前><サフィックス>`
+を、Composer か `<種類>` のパッケージから探します。
 [名前空間のあるクラス](/ja/development/namespaced-classes) を参照してください。
 
 ### プラグイン内のファイルをロードする
 
-プラグインからのクラスのローディングは、ロード元になるプラグインを指定する以外は、app や
-core のクラスのローディングとまったく同じように動作します:
+プラグインの `composer.json` に classmap か PSR-4 があれば、プラグインのクラスは Composer が
+読み込みます。無い場合は `App::uses()` で、ロード元になるプラグインを指定する以外は、app の
+クラスと同じようにロードします:
 
 ```php
 // plugins/PluginName/Model/Comment.php にある Comment クラスをロードする
@@ -311,10 +326,6 @@ $Users = new UsersController();
 $Users->constructClasses();
 ```
 
-**かつて App::import('Core', \$class) を用いてロードされたすべてのクラスは、
-App::uses() を用いた、正しいパッケージを参照したロードが必要になりました。
-この変更は、フレームワークに大きなパフォーマンスの向上をもたらしました。**
-
 次の点に注意してください。
 
 - このメソッドはファイルを再帰的に検索せず、 `App::build()`
@@ -325,31 +336,40 @@ App::uses() を用いた、正しいパッケージを参照したロードが�
 - ベンダーファイルのローディングはベンダーフォルダを再帰的に探索せず、
   ファイル名をアンダースコア形式に変換することもありません。
 
-## CakePHP のクラスをオーバーライドする
+## CakePHP のクラスをオーバーライドする {#overriding-classes-in-cakephp}
 
 フレームワークのほぼすべてのクラスはオーバーライドすることができます。例外は `App` と
-`Configure` クラスです。そのようにオーバーライドを実行したいならばどんな場合であれ、
-フレームワークの内部構造を真似て `src/Lib` フォルダ (レガシーレイアウトでは `app/Lib`) にクラスを追加し、
-そのクラスが最初に使われる前に `App::uses()` で登録します。登録は `config/bootstrap.php` などで行います。
-いくつかの例を挙げます:
+`Configure` クラスです。クラスのファイルを `vendor/pieceofcake2/cakephp/src/` からアプリケーションの
+`src/Cake/` の下の同じパスにコピーして、そこで変更します。名前空間と、ファイルの最後の
+`class_alias()` はそのまま残します。いくつかの例を挙げます:
 
-- `Dispatcher` クラスをオーバーライドするためには `src/Lib/Routing/Dispatcher.php` を作成し、
-  `App::uses('Dispatcher', 'Routing');` を呼び出します
-- `CakeRoute` クラスをオーバーライドするためには `src/Lib/Routing/Route/CakeRoute.php` を作成し、
-  `App::uses('CakeRoute', 'Routing/Route');` を呼び出します
-- `Model` クラスをオーバーライドするためには `src/Lib/Model/Model.php` を作成し、
-  `App::uses('Model', 'Model');` を呼び出します
+- `Dispatcher` クラスをオーバーライドするためには `src/Cake/Routing/Dispatcher.php`
+  (`Cake\Routing\Dispatcher`) を作成します
+- `CakeRoute` クラスをオーバーライドするためには `src/Cake/Routing/Route/CakeRoute.php`
+  (`Cake\Routing\Route\CakeRoute`) を作成します
+- `Model` クラスをオーバーライドするためには `src/Cake/Model/Model.php`
+  (`Cake\Model\Model`) を作成します
 
-`App::load()` は Composer のオートローダより前に登録されています。 `App::uses()` で登録されたクラスについては、
-`src/Lib` を含むアプリケーションのフォルダをコアより先に探すため、組み込みのコアクラスの代わりに
-あなたのファイルがロードされます。 `App::uses()` を呼び出さなかった場合は、Composer によってコアのクラスがロードされます。
-`composer.json` で `src/` を classmap に指定している場合は、Composer の "Ambiguous class resolution"
-警告を避けるため、オーバーライドするファイルを `exclude-from-classmap` で除外してください。
+Composer は、アプリケーションのスケルトンの `src/` の classmap で、コアより先にあなたのファイルを
+ロードします。 `composer dump-autoload -o` が "Ambiguous class resolution" の警告を出さないように、
+コアのファイルを `exclude-from-classmap` で除外し、 `composer dump-autoload` を実行してください:
 
-::: pieceofcake2
-フレームワークが自身のクラスに対して `App::uses()` を呼び出さなくなったため、
-`src/Lib` に置いたオーバーライドは、アプリケーションが `App::uses()` で登録した場合にだけ使われます。
-アップグレード後はオーバーライドが効いているか確認してください。
+```json
+"autoload": {
+    "classmap": ["src/"],
+    "exclude-from-classmap": [
+        "vendor/pieceofcake2/cakephp/src/Routing/Dispatcher.php"
+    ]
+}
+```
+
+アプリケーションが `src/` を PSR-4 だけでロードしている場合は、 `"classmap": ["src/Cake/"]` を追加します。
+
+::: pieceofcake2 Changed in version 2.13.0
+フレームワークは自身のクラスを名前空間付きの名前で使います
+([#92](https://github.com/pieceofcake2/cakephp/pull/92))。そのため、 `src/Lib/Routing/Dispatcher.php` の
+`Dispatcher` のように `App::uses()` で登録したグローバルなクラスは、コアのクラスの代わりに使われなくなり、
+PHP がその名前はすでに使われていると警告します。オーバーライドは上のとおり `src/Cake/` に移してください。
 :::
 
 ## Vendor ファイルをローディングする
@@ -358,21 +378,13 @@ Composer でインストールしたライブラリはオートロードされ�
 この節は、手作業でプロジェクトにコピーしたファイルを対象としています。それらのファイルは、
 Composer が管理しないプロジェクトの `vendors/` ディレクトリ (レガシーレイアウトでは `app/Vendor/`) に置きます。
 
-`App::uses()` をベンダーのディレクトリ内のクラスをロードするのに使うことが出来ます。
-これは他のファイルを読み込むのと同じ規則に従います:
+それでも `vendors/` とそのサブディレクトリにあるクラスは Composer で読み込めます。
+`composer.json` の classmap にディレクトリを追加し、`composer dump-autoload` を実行してください。
 
-```php
-// vendors/Geshi.php 内の Geshi クラスをロードする
-App::uses('Geshi', 'Vendor');
-```
-
-サブディレクトリ内のクラスをロードするには、それらのパスを `App::build()` で追加する必要があります:
-
-```php
-// vendors/SomePackage/ClassInSomePackage.php 内の
-// ClassInSomePackage クラスをロードする
-App::build(['Vendor' => [ROOT . DS . 'vendors' . DS . 'SomePackage' . DS]]);
-App::uses('ClassInSomePackage', 'Vendor');
+```json
+"autoload": {
+    "classmap": ["src/", "vendors/"]
+}
 ```
 
 ベンダーのファイルは、規則に従っていなかったり、ファイル名と異なるクラスを持っていたり、
@@ -456,7 +468,7 @@ App のキャッシュを初期化し、シャットダウン関数を登録し�
 戻り値の型: `boolean`
 
 自動的なクラスローディングを処理するメソッド。これは、`App::uses()`
-を使用して定義された各クラスのパッケージを探し出し、その情報を元に、クラスをロードするための
+で定義されたか `App::className()` が見つけた各クラスのパッケージを探し出し、その情報を元に、クラスをロードするための
 フルパスとしてパッケージ名を解決します。各クラスのファイル名はクラス名に従ってください。
 たとえばクラス名が `MyCustomClass` である場合、ファイル名は `MyCustomClass.php`
 でなければなりません。

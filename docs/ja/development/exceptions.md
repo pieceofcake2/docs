@@ -252,7 +252,7 @@ throw new MissingWidgetHelperException('それはここではありません', 5
 ## `Exception.handler` を使って独自の例外ハンドラを作成する
 
 あなた独自の例外ハンドラを作成すれば、例外ハンドリング処理のすべてを完全に制御できるようになります。
-選択したクラスは、あなたの `config/bootstrap.php` でロードすべきものですので、
+選択したクラスは、`composer.json` の `src/` のクラスマップなどで Composer が読み込むようにしておくと、
 どんな例外でもハンドリングすることができます。どのようなコールバックタイプでも定義することができます。
 `Exception.handler` をセットすることにより、CakePHP は他のすべての例外設定を無視します。
 独自の例外ハンドリングをセットアップする場合は次のようになります:
@@ -260,9 +260,6 @@ throw new MissingWidgetHelperException('それはここではありません', 5
 ```php
 // config/core.php
 Configure::write('Exception.handler', 'AppExceptionHandler::handle');
-
-// config/bootstrap.php
-App::uses('AppExceptionHandler', 'Lib');
 
 // src/Lib/AppExceptionHandler.php
 class AppExceptionHandler
@@ -339,7 +336,7 @@ class AppController extends Controller
 `ExceptionRenderer` が使われます。独自の例外レンダラクラスは
 `src/Lib/Error/`（レガシー構成では `app/Lib/Error/`）の中に置いてください。もしくは、
 bootstrap にて指定された Lib のパスの中にある、 `Error` ディレクトリ内に置いてください。
-`ErrorHandler` が `Error` パッケージから `App::uses()` で読み込むので、自分で読み込む必要は
+`ErrorHandler` が `App::className()` で `Error` パッケージから探すので、自分で読み込む必要は
 ありません。プラグインのレンダラを使う場合は `Plugin.ClassName` の形式で指定します。
 独自の例外レンダリングクラスの中であなたはアプリケーション固有のエラーに特化したハンドリングを
 提供することができます:
@@ -383,8 +380,6 @@ class AppExceptionRenderer extends ExceptionRenderer
 {
     protected function _getController($exception)
     {
-        App::uses('SuperCustomErrorController', 'Controller');
-
         return new SuperCustomErrorController();
     }
 }

@@ -1363,10 +1363,8 @@ class NlValidation
 
 このファイルは `src/Validation/NlValidation.php` やプラグインの `Validation/`
 フォルダに置きます。バリデーションの実行時にクラスを読み込める必要があります。
-`src/` を Composer の classmap に指定していれば自動的に読み込まれます。
-そうでない場合は、利用する前に `App::uses('NlValidation', 'Validation')`
-(プラグインの場合は `App::uses('NlValidation', 'PluginName.Validation')`)
-でインポートしておいてください。その後、あなたのモデルの
+`src/` を Composer の classmap に指定していれば (プラグインではプラグインの `composer.json`
+で指定していれば) 自動的に読み込まれます。その後、あなたのモデルの
 バリデーションで、以下のように NlValidation を利用できます。
 
 ```php

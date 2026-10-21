@@ -13,27 +13,20 @@ location in your application using `App::build('APackage/SubPackage', $paths)`
 to inform the framework where should each class be loaded. Almost every class in
 the CakePHP framework can be swapped with your own compatible implementation. If
 you wish to use your own class instead of the classes the framework provides,
-just add the class to your libs folder emulating the directory location of where
-CakePHP expects to find it.
+copy the class to `src/Cake/`, at the path of its namespace. For instance if
+you'd like to use your own HttpSocket class, put it under:
 
-For instance if you'd like to use your own HttpSocket class, put it under:
+    src/Cake/Network/Http/HttpSocket.php
 
-    src/Lib/Network/Http/HttpSocket.php
+Composer then loads your file instead of the file inside CakePHP, as described
+in [Overriding classes in CakePHP](#overriding-classes-in-cakephp).
 
-and register it with `App::uses()` as described in
-[Overriding classes in CakePHP](#overriding-classes-in-cakephp). App will then
-load your override file instead of the file inside CakePHP.
+## Loading classes {#loading-classes}
 
-## Loading classes
-
-`static` App::**uses**(string $class, string $package)
-
-Return type: `void`
-
-Classes are lazily loaded in CakePHP. CakePHP's own classes are loaded by
-Composer's classmap autoloader, so you never need to declare them. The same
-applies to your application classes when your `composer.json` has a classmap
-for them, as in the application skeleton:
+Classes are lazily loaded in CakePHP. Composer loads the classes of CakePHP,
+of your application and of the plugins installed with Composer, so you don't
+need to declare them. The application skeleton (pieceofcake2/app) loads `src/`
+with a classmap in its `composer.json`:
 
 ```json
 "autoload": {
@@ -43,17 +36,36 @@ for them, as in the application skeleton:
 
 With a classmap, run `composer dump-autoload` after adding a new class file.
 
-`App::uses()` is needed for classes that Composer does not know about: your
-application classes when you don't use a classmap, and classes of plugins that
-don't support Composer autoloading. By telling App which package a class can be
-found in, it can properly locate the file and load it the first time a class
-is used.
+CakePHP also finds the classes named in the configuration, such as
+`$components`, `$helpers`, `$uses`, the associations and the cache engines, in
+their packages, and the base classes `AppController`, `AppModel`, `AppHelper`
+and `AppShell`.
 
-::: pieceofcake2
-Framework classes are loaded by Composer's
-classmap autoloader and no longer call `App::uses()` for each other. Existing
-`App::uses()` calls keep working. See the [migration guide](/appendices/migrating-from-cakephp-2-10).
+`static` App::**uses**(string $class, string $package)
+
+Return type: `void`
+
+::: pieceofcake2 Deprecated in version 2.13.0
+Let Composer load your classes instead
+([#98](https://github.com/pieceofcake2/cakephp/pull/98)). The first call of
+`App::uses()` in a process logs a warning with the file and line of the call,
+and with `debug` above 0 also triggers `E_USER_DEPRECATED`. The call still
+works. The framework does not call it.
 :::
+
+`App::uses()` tells App which package a class can be found in, so that App
+can locate the file and load it the first time the class is used.
+
+### Removing `App::uses()` calls {#removing-app-uses}
+
+1. Let Composer load the classes:
+   - In an application, add the classmap of `src/` shown above to its
+     `composer.json`.
+   - In a plugin, add a classmap or PSR-4 to the `composer.json` of the
+     plugin. For a plugin without one, you can add its folder to the classmap
+     of your application, e.g. `"classmap": ["src/", "plugins/MyPlugin/"]`.
+2. Run `composer dump-autoload`.
+3. Delete the `App::uses()` lines.
 
 Some examples for common types of classes are:
 
@@ -104,37 +116,40 @@ So basically the second param should simply match the folder path of the class f
 
 Return type: `string|null`
 
+::: pieceofcake2 Added in version 2.13.0
+Backported from CakePHP 3 and later.
+:::
+
 Returns the name of the class that CakePHP uses for a name in its
-configuration, or `null` when the class does not exist (since the release
-after CakePHP 2.12.10). CakePHP uses it for components, helpers, behaviors,
-cache engines, email transports, view classes, controllers, shells and
-models:
+configuration, or `null` when the class does not exist. CakePHP uses it for
+components, helpers, behaviors, cache engines, email transports, view classes,
+controllers, shells and models:
 
 ```php
 App::className('Auth', 'Controller/Component', 'Component');
 // 'AuthComponent'
 
 App::className(MemoryEngine::class, 'Cache/Engine', 'Engine');
-App::className('Acme\Cache\Memory', 'Cache/Engine', 'Engine');
-// both 'Acme\Cache\MemoryEngine'
+App::className('Acme\Cache\Engine\Memory', 'Cache/Engine', 'Engine');
+// both 'Acme\Cache\Engine\MemoryEngine'
 
 Configure::write('App.namespace', 'App');
 App::className('Post', 'Model');
-// 'App\Model\Post' if that class exists, else 'Post'
+// 'App\Model\Post' if that class exists, else the global 'Post', else null
 ```
 
 A name with a backslash is a fully qualified class name; the suffix is added
 only when the name does not end with it. Other names are looked up in the
 namespace of the plugin or of `App.namespace` as
 `<Namespace>\<Type>\<Name><Suffix>`, then as the global class
-`<Name><Suffix>` declared with `App::uses()` in the `<Type>` package. See
+`<Name><Suffix>`, loaded by Composer or from the `<Type>` package. See
 [Namespaced Classes](/development/namespaced-classes).
 
 ### Loading files from plugins
 
-Loading classes in plugins works much the same as loading app and
-core classes except you must specify the plugin you are loading
-from:
+Composer loads the classes of a plugin when the plugin's `composer.json`
+has a classmap or PSR-4. Otherwise, `App::uses()` loads them the same way as
+app classes, except you must specify the plugin you are loading from:
 
 ```php
 // Load the class Comment in plugins/PluginName/Model/Comment.php
@@ -342,32 +357,41 @@ Keep in mind:
 ## Overriding classes in CakePHP
 
 You can override almost every class in the framework, exceptions are the
-`App` and `Configure` classes. Whenever you like to
-perform such overriding, add your class to your `src/Lib` folder
-(`app/Lib` in the legacy layout) mimicking the internal structure of the
-framework, and register it with `App::uses()` before the class is first used,
-for example in `config/bootstrap.php`. Some examples to follow:
+`App` and `Configure` classes. Copy the file of the class from
+`vendor/pieceofcake2/cakephp/src/` to the same path below `src/Cake/` of your
+application, and change it there. Keep its namespace and the `class_alias()` at
+the end of the file. Some examples to follow:
 
-- To override the `Dispatcher` class, create `src/Lib/Routing/Dispatcher.php`
-  and call `App::uses('Dispatcher', 'Routing');`
-- To override the `CakeRoute` class, create `src/Lib/Routing/Route/CakeRoute.php`
-  and call `App::uses('CakeRoute', 'Routing/Route');`
-- To override the `Model` class, create `src/Lib/Model/Model.php`
-  and call `App::uses('Model', 'Model');`
+- To override the `Dispatcher` class, create `src/Cake/Routing/Dispatcher.php`
+  (`Cake\Routing\Dispatcher`)
+- To override the `CakeRoute` class, create `src/Cake/Routing/Route/CakeRoute.php`
+  (`Cake\Routing\Route\CakeRoute`)
+- To override the `Model` class, create `src/Cake/Model/Model.php`
+  (`Cake\Model\Model`)
 
-`App::load()` is registered in front of Composer's autoloader. For classes
-registered with `App::uses()`, it searches your application's folders,
-including `src/Lib`, before the core, so your files are loaded instead of the
-built-in core ones. Without the `App::uses()` call the
-core class is loaded by Composer. If your `composer.json` has a classmap for
-`src/`, exclude the override files with `exclude-from-classmap` to avoid
-Composer's "Ambiguous class resolution" warning.
+Composer loads your file with the classmap of `src/` of the application
+skeleton, before it looks in the core. Exclude the core file with
+`exclude-from-classmap`, so that `composer dump-autoload -o` does not warn about
+an "Ambiguous class resolution", and run `composer dump-autoload`:
 
-::: pieceofcake2
-Because the framework no longer calls
-`App::uses()` for its own classes, an override in `src/Lib` is used only when
-your application registers it with `App::uses()`. Check your overrides after
-upgrading.
+```json
+"autoload": {
+    "classmap": ["src/"],
+    "exclude-from-classmap": [
+        "vendor/pieceofcake2/cakephp/src/Routing/Dispatcher.php"
+    ]
+}
+```
+
+If your application loads `src/` only with PSR-4, add `"classmap": ["src/Cake/"]`.
+
+::: pieceofcake2 Changed in version 2.13.0
+The framework uses the namespaced names of its classes
+([#92](https://github.com/pieceofcake2/cakephp/pull/92)), so a global class
+registered with `App::uses()`, such as `Dispatcher` in
+`src/Lib/Routing/Dispatcher.php`, no longer replaces the core class, and PHP
+warns that the name is already in use. Move your overrides to `src/Cake/` as
+shown above.
 :::
 
 ## Loading Vendor Files
@@ -377,22 +401,14 @@ section applies to files that you copy into your project by hand. Put them in
 the `vendors/` directory of your project (`app/Vendor/` in the legacy layout),
 which Composer does not manage.
 
-You can use `App::uses()` to load classes in vendors directories. It follows
-the same conventions as loading other files:
+Composer can still load the classes in `vendors/` and its subdirectories:
+add the directory to the classmap in your `composer.json`, then run
+`composer dump-autoload`:
 
-```php
-// Load the class Geshi in vendors/Geshi.php
-App::uses('Geshi', 'Vendor');
-```
-
-To load classes in subdirectories, you'll need to add those paths
-with `App::build()`:
-
-```php
-// Load the class ClassInSomePackage in
-// vendors/SomePackage/ClassInSomePackage.php
-App::build(['Vendor' => [ROOT . DS . 'vendors' . DS . 'SomePackage' . DS]]);
-App::uses('ClassInSomePackage', 'Vendor');
+```json
+"autoload": {
+    "classmap": ["src/", "vendors/"]
+}
 ```
 
 Your vendor files may not follow conventions, have a class that differs from
@@ -478,7 +494,8 @@ Initializes the cache for App, registers a shutdown function.
 Return type: `boolean`
 
 Method to handle the automatic class loading. It will look for each class'
-package defined using `App::uses()` and with this information it
+package defined using `App::uses()` or found by `App::className()`, and with
+this information it
 will resolve the package name to a full path to load the class from. File
 name for each class should follow the class name. For instance, if a class
 is name `MyCustomClass` the file name should be `MyCustomClass.php`

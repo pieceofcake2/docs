@@ -37,7 +37,12 @@ level `Session` key, and a number of options are available:
   handling features of previous versions
 - `Session.cacheLimiter` - Allows you define the cache control headers used
   for the session cookie. The default is `must-revalidate`. This option was
-  added in 2.8.0.
+  added in 2.8.0. `must-revalidate`, kept for Internet Explorer 8 and before,
+  is not a cache limiter of PHP, so PHP sends no cache header with the pages
+  that start a session. Set it to `'nocache'`, as the application skeleton
+  v2.5.3 and later do, so that PHP sends
+  `Cache-Control: no-store, no-cache, must-revalidate`. See
+  [Hardening](/security/hardening#cookies-and-sessions).
 
 CakePHP's defaults to setting `session.cookie_secure` to true, when your
 application is on an SSL protocol. If your application serves from both SSL and

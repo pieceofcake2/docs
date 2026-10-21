@@ -19,6 +19,7 @@ CakePHP 2.x は 2021年6月にサポートが終了し、CakePHP チームによ
 | [GHSA-w2mh-x92p-5p95](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-w2mh-x92p-5p95) | ビュー・レイアウト・エレメント名のパストラバーサル（CVE-2026-48820 に相当する CakePHP 2 の脆弱性） | 2.12.5 |
 | [GHSA-x4p9-p4cx-gxwx](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-x4p9-p4cx-gxwx) | プロトコル相対 URL の `Auth.redirect` によるログイン後のオープンリダイレクト | 2.12.5 |
 | [GHSA-65v5-h65v-8pgg](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-65v5-h65v-8pgg) | `'cipher'` 暗号化と `Security.cipherSeed` の弱さ: `CookieComponent` のデフォルトのタイプが安全でなく、長いシードの多くがシード 0 になる（警告付きで非推奨に。`'aes'` へ移行が必要） | 2.12.6 |
+| [GHSA-wh43-gc93-wh4c](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-wh43-gc93-wh4c) | `//` で始まるリクエスト URL により、フォームの送信先や現在の URL へのリダイレクトが別のホストになる（`CakeRequest::here()` がプロトコル相対 URL になる） | 2.12.11 |
 
 いずれの脆弱性も本家の CakePHP 2.10.24 に存在し、CakePHP チームによる修正はリリースされません。
 `cakephp/cakephp` を使っているアプリケーションは、`pieceofcake2/cakephp` に切り替えると修正を適用できます。
@@ -158,6 +159,36 @@ CakePHP 2 についての本家のアドバイザリはありません。`cakeph
 置き換えてください。2.12.5 以前では、タイプとキーをコントローラーで設定してください。詳細と移行の手順は
 [cipherSeed と Cookie の 'cipher' タイプ](/ja/development/configuration#cipher-seed) を参照してください。
 
+### `//` で始まるリクエスト URL で `here` がプロトコル相対 URL になる {#request-here}
+
+`CakeRequest` は、リクエスト URL の先頭のスラッシュを 1 つだけ取り除いていました。`//example.com/posts`
+へのリクエストは `/example.com/posts` と同じようにルーティングされますが、`CakeRequest::$here` と `here()` は
+プロトコル相対 URL の `//example.com/posts` になり、ブラウザーはこれをホスト `example.com` の URL として扱います。
+その結果、次の問題がありました。
+
+- `url` を指定しない `FormHelper::create()` が `<form action="//example.com/posts">` を出力し、個人情報や
+  添付ファイルを含むフォームが別のホストに送信される
+- `$this->redirect($this->request->here(false))` が別のホストにリダイレクトする（オープンリダイレクト）
+- ベースパスがあるときも `/base//example.com/posts` の `here(false)` で同じ問題が起き、`/\example.com` も
+  `//example.com` と同じように扱われる
+
+`pieceofcake2/cakephp` 2.12.10 以前、`cakephp/cakephp` の 2.x の全リリースと 3.0 から 3.3 が影響を受けます。
+CakePHP 3.4 以降は、zend/laminas-diactoros がパスの先頭のスラッシュを 1 つにまとめるため影響を受けません。
+修正（[GHSA-wh43-gc93-wh4c](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-wh43-gc93-wh4c)、[PR #90](https://github.com/pieceofcake2/cakephp/pull/90)）では、リクエスト URL の先頭のスラッシュとバックスラッシュをすべて取り除きます。
+`CakeRequest::$url` が `/` や `\` で始まることはなくなり、`here` はベースパスの後に 1 つのスラッシュで始まります。
+`here()` も、返す値の先頭のスラッシュとバックスラッシュを 1 つにまとめるため、アプリケーションが `$here` を書き換えてもプロトコル相対の URL にはなりません。
+ルーティングは変わりません。
+
+**必要な対応:** 修正を含むリリースに更新してください。コードの変更は不要です。すぐに更新できない場合は、
+`FormHelper::create()` に `url` を明示し、先頭のスラッシュをまとめずに `here()` へリダイレクトしないでください。
+たとえば `AppController::beforeFilter()` で次のようにします。
+
+```php
+if (preg_match('#^[/\\\\]{2}#', $this->request->here(false))) {
+    return $this->redirect('/' . ltrim($this->request->url, '/\\'));
+}
+```
+
 ## その他のセキュリティ関連の変更
 
 ### SSL/TLS 証明書の検証
@@ -221,8 +252,14 @@ Cookie は `'cipher'` で暗号化されていました。
 
 ### XML の外部エンティティ
 
-`Xml::build()` は、`'loadEntities' => true` を指定しない限り `<!ENTITY` の定義を読み込みません。
-信頼できない XML を解析するときは、既定値のまま使ってください。
+`Xml::build()` は、信頼できない XML を解析するときも、外部エンティティ (ファイルや URL を参照する
+`<!ENTITY` の定義) を読み込みません。
+
+::: pieceofcake2 Changed in version 2.13.0
+`'loadEntities'` オプションは削除され、効果はありません。指定しても無視されます。これまでも
+`'loadEntities' => true` は、`Xml::build()` が `libxml_disable_entity_loader()` を呼ばないようにするだけで、
+PHP 8 が必要とする libxml 2.9 以降では何も変わりませんでした。どちらにしても外部エンティティは読み込まれません。
+:::
 
 `Xml::build()` は、入力がファイルパスや URL の場合、ローカルファイルを読み込んだり URL から取得したりします。
 ユーザーの入力を `Xml::build()` に渡す場合は、`'readFile' => false` を指定するか（[上記](#xml-build-ssrf) を参照）、

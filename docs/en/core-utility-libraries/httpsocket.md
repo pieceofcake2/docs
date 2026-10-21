@@ -180,8 +180,8 @@ $http = new HttpSocket();
 $http->responseClass = 'YourResponse';
 ```
 
-HttpSocket registers the class with `App::uses()` in the `Network/Http`
-package, so without a Composer classmap it is looked up in
+HttpSocket finds the class with `App::className()` in the `Network/Http`
+package, so when Composer does not load it, it is looked up in
 `src/Lib/Network/Http/`, or in a plugin's `Lib/Network/Http/` folder when you
 use plugin syntax such as `'MyPlugin.YourResponse'`.
 

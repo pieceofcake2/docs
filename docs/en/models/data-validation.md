@@ -1366,9 +1366,8 @@ class NlValidation
 
 This file could be placed in `src/Validation/NlValidation.php` or in a
 plugin's `Validation/` folder. The class must be loadable when the validation
-runs: with a Composer classmap for `src/` it is loaded automatically, otherwise
-import it with `App::uses('NlValidation', 'Validation')` (or
-`App::uses('NlValidation', 'PluginName.Validation')`) before using it. In your model validation you could use your NlValidation
+runs: with a Composer classmap for `src/`, or for the plugin in its
+`composer.json`, it is loaded automatically. In your model validation you could use your NlValidation
 class by doing the following:
 
 ```php

@@ -509,11 +509,12 @@ adding a classmap to your application's `composer.json`, as the
 }
 ```
 
-With this in place, `App::uses()` calls for your controllers, models,
-helpers and other classes in `src/` can be removed. Run
-`composer dump-autoload` every time you add a new class file, so that the
-classmap includes it. Plugins that do not support Composer autoloading still
-need `App::uses()` (for example `App::uses('MyPluginHelper', 'MyPlugin.View/Helper')`).
+With this in place, remove the `App::uses()` calls for your controllers,
+models, helpers and other classes in `src/`: `App::uses()` is deprecated as of
+2.13.0. Run `composer dump-autoload` every time you add a new class file, so
+that the classmap includes it. For a plugin that Composer does not autoload,
+add its folder to the classmap of your application instead of calling
+`App::uses()`. See [Removing App::uses() calls](/core-utility-libraries/app#removing-app-uses).
 
 ::: pieceofcake2
 The framework is loaded through Composer's
@@ -521,8 +522,8 @@ classmap instead of include paths and its own `App::uses()` calls were removed.
 Application code that still uses `App::uses()` keeps working.
 :::
 
-`App::uses()` and `App::build()` are still available. When `App::uses()` is
-used, CakePHP looks for classes in the application directory (`src/`, or
+`App::uses()` and `App::build()` are still available. When `App::uses()` or a
+setting names a class, CakePHP looks for it in the application directory (`src/`, or
 `app/` in the legacy layout). Templates are also found in `templates/`,
 locales in `resources/locales/` and plugins in `plugins/`.
 
@@ -1574,8 +1575,7 @@ Configure::load('my_xml');
 ```
 
 With Composer classmap autoloading for `src/`, the reader class is found
-automatically after `composer dump-autoload`. Without it, load the class
-first with `App::uses('MyXmlReader', 'Configure');`.
+automatically after `composer dump-autoload`.
 
 > [!WARNING]
 > It is not a good idea to call your custom configure class `XmlReader` because that

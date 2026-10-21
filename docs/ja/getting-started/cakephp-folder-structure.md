@@ -126,7 +126,7 @@ CakePHP はこの構成もサポートしており、アプリケーションが
    `App::uses()` を含め、コード自体を変更する必要はありません。テストスイートは `Test/Case/` と
    `tests/TestCase/` のどちらからもテストを見つけるので、テストはしばらく `app/Test/` に置いたままでも構いません。
 3. プラグインや外部ライブラリは `app/Plugin/` や `app/Vendor/` に置かず、Composer でインストールします。
-4. 必要に応じて `composer.json` の `autoload` に `"classmap": ["src/"]` を追加して `composer dump-autoload` を実行すると、
-   アプリケーションのクラスに対する `App::uses()` を取り除けます。
+4. `composer.json` の `autoload` に `"classmap": ["src/"]` を追加して `composer dump-autoload` を実行し、
+   アプリケーションのクラスに対する `App::uses()` を取り除きます。`App::uses()` は 2.13.0 で非推奨になりました。
 
 モダンな構成は CakePHP 5 と同じ構成なので、先に移行しておくと、フォルダの再編成と後のコードのアップグレードを分けて進められます。

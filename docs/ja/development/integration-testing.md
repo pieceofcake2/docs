@@ -124,9 +124,7 @@ class ArticlesControllerTest extends CakeTestCase
 }
 ```
 
-クラスはフレームワークの Composer classmap でオートロードされるため、
-`App::uses('IntegrationTestTrait', 'TestSuite')` と `App::uses('EmailTrait', 'TestSuite')` は
-書かなくてもかまいません。
+トレイトはフレームワークと一緒に Composer がオートロードするので、`App::uses()` は必要ありません。
 
 どちらのアプリケーション構成でも使い方は同じで、違うのはテストを置く場所だけです。
 

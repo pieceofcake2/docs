@@ -486,11 +486,12 @@ CakePHP フレームワークのクラスは Composer のオートローダー�
 }
 ```
 
-こうしておけば、`src/` にあるコントローラー、モデル、ヘルパーなどのクラスに対する
-`App::uses()` は削除できます。新しいクラスファイルを追加したら、classmap に含まれるように
-毎回 `composer dump-autoload` を実行してください。Composer のオートロードに対応していない
-プラグインでは、引き続き `App::uses()` が必要です
-(例: `App::uses('MyPluginHelper', 'MyPlugin.View/Helper')`)。
+この設定を加えたら、`src/` にあるコントローラー、モデル、ヘルパーなどのクラスに対する
+`App::uses()` を削除してください。`App::uses()` は 2.13.0 で非推奨になりました。新しいクラスファイルを
+追加したら、classmap に含まれるように毎回 `composer dump-autoload` を実行してください。
+Composer がオートロードしないプラグインは、`App::uses()` を呼び出す代わりに、
+アプリケーションの classmap にプラグインのフォルダを追加してください。
+[`App::uses()` の呼び出しを削除する](/ja/core-utility-libraries/app#removing-app-uses) を参照してください。
 
 ::: pieceofcake2
 フレームワークは include path ではなく Composer の classmap で
@@ -498,7 +499,7 @@ CakePHP フレームワークのクラスは Composer のオートローダー�
 `App::uses()` を使っているアプリケーションのコードはそのまま動きます。
 :::
 
-`App::uses()` と `App::build()` は引き続き使えます。`App::uses()` を使った場合、
+`App::uses()` と `App::build()` は引き続き使えます。`App::uses()` や設定でクラスを指定した場合、
 CakePHP はアプリケーションディレクトリ (`src/`、レガシー構成では `app/`) からクラスを探します。
 テンプレートは `templates/`、ロケールは `resources/locales/`、プラグインは `plugins/` からも探します。
 
@@ -1520,8 +1521,7 @@ Configure::load('my_xml');
 ```
 
 `src/` を Composer の classmap でオートロードしていれば、`composer dump-autoload`
-の後はリーダークラスが自動的に読み込まれます。classmap を使っていない場合は、
-先に `App::uses('MyXmlReader', 'Configure');` でクラスを読み込んでください。
+の後はリーダークラスが自動的に読み込まれます。
 
 > [!WARNING]
 > 独自の設定クラスに `XmlReader` という名前を付けるのはおすすめしません。

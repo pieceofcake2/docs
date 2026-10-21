@@ -173,8 +173,8 @@ $http = new HttpSocket();
 $http->responseClass = 'YourResponse';
 ```
 
-HttpSocket は `App::uses()` で `Network/Http` パッケージとしてクラスを登録します。
-そのため Composer の classmap を使わない場合は `src/Lib/Network/Http/` から探されます。
+HttpSocket は `App::className()` で `Network/Http` パッケージからクラスを探します。
+そのため Composer が読み込まない場合は `src/Lib/Network/Http/` から探されます。
 `'MyPlugin.YourResponse'` のようにプラグイン記法を使った場合は、プラグインの `Lib/Network/Http/` から探されます。
 
 ::: info Changed in version 2.3

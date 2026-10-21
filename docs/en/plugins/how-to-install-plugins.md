@@ -126,8 +126,9 @@ CakePlugin::load('ContactManager'); // Loads a single plugin
 settings for specific plugins. `load()` works similarly, but only loads the
 plugins you explicitly specify.
 
-Classes of plugins that are autoloaded by Composer can be used right away.
-For plugins that don't support Composer autoloading, load their classes with
-`App::uses()` as before, for example
-`App::uses('MyPluginHelper', 'MyPlugin.View/Helper');`. Check the plugin's
-documentation to see which applies.
+Classes of plugins that are autoloaded by Composer can be used right away, and
+CakePHP finds the classes of a plugin that you name in the configuration, such
+as `'MyPlugin.MyPlugin'` in `$helpers`. For a plugin that is not autoloaded,
+add its folder to the classmap of your application instead of calling
+`App::uses()`, which is deprecated as of 2.13.0. See
+[Removing App::uses() calls](/core-utility-libraries/app#removing-app-uses).

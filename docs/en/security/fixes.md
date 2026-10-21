@@ -21,6 +21,7 @@ CakePHP advisories, see [Upstream Advisories](/security/upstream-advisories).
 | [GHSA-w2mh-x92p-5p95](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-w2mh-x92p-5p95) | Path traversal in view, layout and element names (CakePHP 2 equivalent of CVE-2026-48820) | 2.12.5 |
 | [GHSA-x4p9-p4cx-gxwx](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-x4p9-p4cx-gxwx) | Open redirect after login via a protocol-relative `Auth.redirect` URL | 2.12.5 |
 | [GHSA-65v5-h65v-8pgg](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-65v5-h65v-8pgg) | Weak `'cipher'` encryption and `Security.cipherSeed`: the default `CookieComponent` type is not secure, and most long seeds become seed 0 (deprecated with warnings; switch to `'aes'`) | 2.12.6 |
+| [GHSA-wh43-gc93-wh4c](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-wh43-gc93-wh4c) | Form action and redirects to another host via a request URL that starts with `//` (`CakeRequest::here()` is protocol-relative) | 2.12.11 |
 
 All of these vulnerabilities are present in the original CakePHP 2.10.24, and
 the CakePHP team no longer releases fixes for it. If your application still
@@ -194,6 +195,42 @@ type and key in the controller instead. See
 [cipherSeed and the 'cipher' Cookie Type](/development/configuration#cipher-seed)
 for the details and the migration steps.
 
+### Protocol-relative `here` for request URLs that start with `//` {#request-here}
+
+`CakeRequest` removed only the first slash of the request URL. A request to
+`//example.com/posts` was routed like `/example.com/posts`, but
+`CakeRequest::$here` and `here()` were the protocol-relative URL
+`//example.com/posts`, which browsers treat as a URL on the host
+`example.com`. As a result:
+
+- `FormHelper::create()` without a `url` printed
+  `<form action="//example.com/posts">`, so a form with personal data or file
+  uploads was submitted to another host;
+- `$this->redirect($this->request->here(false))` redirected to another host
+  (open redirect);
+- with a base path, `here(false)` of `/base//example.com/posts` had the same
+  problem, and `/\example.com` worked like `//example.com`.
+
+This affects `pieceofcake2/cakephp` 2.12.10 and earlier, every
+`cakephp/cakephp` 2.x release and 3.0 to 3.3. CakePHP 3.4 and later are not
+affected, because zend/laminas-diactoros collapses the leading slashes of the
+path. The fix ([GHSA-wh43-gc93-wh4c](https://github.com/pieceofcake2/cakephp/security/advisories/GHSA-wh43-gc93-wh4c), [PR #90](https://github.com/pieceofcake2/cakephp/pull/90)) removes all the leading slashes and backslashes of
+the request URL, so `CakeRequest::$url` never starts with `/` or `\` and
+`here` starts with a single slash after the base path. `here()` also collapses
+the leading slashes and backslashes of its result, so a `$here` changed by the
+application can not become protocol-relative either. Routing is unchanged.
+
+**What you need to do:** update to the release with the fix; no code changes
+are needed. Until you can update, pass an explicit `url` to
+`FormHelper::create()`, and do not redirect to `here()` without collapsing its
+leading slashes, for example in `AppController::beforeFilter()`:
+
+```php
+if (preg_match('#^[/\\\\]{2}#', $this->request->here(false))) {
+    return $this->redirect('/' . ltrim($this->request->url, '/\\'));
+}
+```
+
 ## Other Security Changes
 
 ### SSL/TLS certificate validation
@@ -261,8 +298,16 @@ lost once, e.g. a "remember me" login. Switch with a release.
 
 ### XML external entities
 
-`Xml::build()` does not load `<!ENTITY` definitions unless you pass
-`'loadEntities' => true`. Keep the default when you parse untrusted XML.
+`Xml::build()` does not load external entities, `<!ENTITY` definitions that
+refer to a file or a URL, also when you parse untrusted XML.
+
+::: pieceofcake2 Changed in version 2.13.0
+The `'loadEntities'` option is removed and has no effect: passing it is
+ignored. Before, `'loadEntities' => true` only kept `Xml::build()` from calling
+`libxml_disable_entity_loader()`, which no longer changes anything with
+libxml 2.9 and later, which PHP 8 requires. External entities are not loaded
+either way.
+:::
 
 `Xml::build()` also reads a local file or fetches a URL when the input is a
 path or URL. When you pass user input, set `'readFile' => false`

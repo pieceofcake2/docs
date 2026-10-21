@@ -208,8 +208,6 @@ we'll start with the following:
 
 ```php
 // tests/TestCase/View/Helper/ProgressHelperTest.php
-App::uses('ProgressHelper', 'View/Helper');
-
 class ProgressHelperTest extends CakeTestCase
 {
     public $Progress;
@@ -224,8 +222,9 @@ class ProgressHelperTest extends CakeTestCase
 }
 ```
 
-CakePHP's own classes such as `Controller` and `View` are loaded by Composer's
-autoloader, so you only need `App::uses()` for your application classes.
+Composer loads CakePHP's own classes such as `Controller` and `View`, and your
+application classes such as `ProgressHelper` when your `composer.json`
+autoloads `src/` with a classmap, so the test case needs no `App::uses()`.
 
 We'll flesh out this skeleton in a minute. We've added two methods to start
 with. First is `setUp()`. This method is called before every *test* method
@@ -870,8 +869,6 @@ Let's now create a file named `ArticleTest.php` in your
 
 ```php
 // tests/TestCase/Model/ArticleTest.php
-App::uses('Article', 'Model');
-
 class ArticleTest extends CakeTestCase
 {
     public $fixtures = ['app.article'];
@@ -896,8 +893,6 @@ this:
 
 ```php
 // tests/TestCase/Model/ArticleTest.php
-App::uses('Article', 'Model');
-
 class ArticleTest extends CakeTestCase
 {
     public $fixtures = ['app.article'];
@@ -1025,8 +1020,6 @@ model. The controller code looks like:
 
 ```php
 // src/Controller/ArticlesController.php
-App::uses('AppController', 'Controller');
-
 class ArticlesController extends AppController
 {
     public $helpers = ['Form', 'Html'];
@@ -1124,8 +1117,6 @@ normal. And instead of your code exiting, it will continue to run code following
 the redirect. For example:
 
 ```php
-App::uses('AppController', 'Controller');
-
 class ArticlesController extends AppController
 {
     public function add()
@@ -1144,8 +1135,6 @@ When testing the above code, you will still run `// more code` even when the
 redirect is reached. Instead, you should write the code like:
 
 ```php
-App::uses('AppController', 'Controller');
-
 class ArticlesController extends AppController
 {
     public function add()
@@ -1420,8 +1409,6 @@ set correctly by the `adjust` method in our component. We create the file
 
 ```php
 // tests/TestCase/Controller/Component/PagematronComponentTest.php
-App::uses('PagematronComponent', 'Controller/Component');
-
 // A fake controller to test against
 class PagematronControllerTest extends Controller
 {
@@ -1495,8 +1482,6 @@ Now we create our tests:
 
 ```php
 // tests/TestCase/View/Helper/CurrencyRendererHelperTest.php
-App::uses('CurrencyRendererHelper', 'View/Helper');
-
 class CurrencyRendererHelperTest extends CakeTestCase
 {
     public $CurrencyRenderer = null;
@@ -1627,8 +1612,6 @@ prefix your plugin fixtures with `plugin.blog.blog_post`:
 
 ```php
 // plugins/Blog/tests/TestCase/Model/BlogPostTest.php
-App::uses('BlogPost', 'Blog.Model');
-
 class BlogPostTest extends CakeTestCase
 {
     // Plugin fixtures located in plugins/Blog/tests/Fixture/

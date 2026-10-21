@@ -103,7 +103,8 @@ define('VENDORS', ROOT . DS . 'vendor' . DS);
 
 `webroot/index.php`, `webroot/test.php` and `bin/cake` load this file. Your
 existing application code (`App::uses()`, controllers, models, views) works
-without modification in either layout.
+without modification in either layout. `App::uses()` is deprecated as of
+2.13.0, so remove its calls in step 5 below.
 
 ## Gradual migration to CakePHP 5
 
@@ -167,9 +168,10 @@ Step 3: CakePHP 5.x with CakePHP 5.x-style structure
    4. Tests: `app/Test/*` → `tests/`
    5. Dependencies: use Composer for plugins and vendors
 4. **Verify** that the application still works.
-5. **Optionally rely on Composer autoloading**: with `"classmap": ["src/"]`
-   and after `composer dump-autoload`, you can remove `App::uses()` calls from
-   your controllers, models, helpers and shells.
+5. **Rely on Composer autoloading**: with `"classmap": ["src/"]` and after
+   `composer dump-autoload`, remove the `App::uses()` calls from your
+   controllers, models, helpers and shells. `App::uses()` is deprecated as of
+   2.13.0.
 
    ```php
    // Before
@@ -190,8 +192,8 @@ Step 3: CakePHP 5.x with CakePHP 5.x-style structure
 ::: warning
 Run `composer dump-autoload` every time you create a new class file. The
 classmap must be regenerated before new classes can be found.
-Plugins that don't support Composer autoloading still need `App::uses()` or
-`CakePlugin::load()`.
+Plugins still have to be loaded with `CakePlugin::load()`. For a plugin that
+Composer does not autoload, add its folder to the classmap.
 :::
 
 ### Step 3: upgrade to CakePHP 5
