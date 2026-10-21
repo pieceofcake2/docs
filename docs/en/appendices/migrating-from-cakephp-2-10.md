@@ -141,8 +141,10 @@ code. Most applications only need to update. These changes may affect yours:
   class, because the framework uses the namespaced names. Copy the core file to
   `src/Cake/` instead. See
   [Overriding classes in CakePHP](/core-utility-libraries/app#overriding-classes-in-cakephp).
-- PHPStan needs pieceofcake2/phpstan-cakephp2 `^1.1`. See
-  [Namespaced Classes](/development/namespaced-classes#the-classes-of-the-framework).
+- PHPStan needs pieceofcake2/phpstan-cakephp2 `^1.1`: run
+  `composer require --dev pieceofcake2/phpstan-cakephp2:^1.1`. With version 1.0,
+  PHPStan no longer finds the type of components, models, tasks and behaviors.
+  See [Static Analysis](/development/static-analysis#installation).
 
 > [!WARNING]
 > `get_class()`, `::class` and `ReflectionClass::getName()` return the
