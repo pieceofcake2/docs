@@ -38,6 +38,62 @@ CakePHP 2.13 は機能を追加したリリースです。2.12 からは次の�
 3. 下の項目、特にログや出力に出るクラス名と、クラス名を文字列で比べているコードを確かめてから、
    テストを実行します。
 
+### 可変長引数 ([PR #89](https://github.com/pieceofcake2/cakephp/pull/89)) {#variadic-arguments}
+
+- `func_get_args()` で可変個の引数を読んでいたメソッドは、可変長引数のパラメーターを宣言するように
+  なりました。呼び出し方は変わりません。`$this->Auth->allow('index', 'view')` や
+  `$this->Post->query($sql, $params)` は、これまでどおり動きます。
+- これらのメソッドを**オーバーライド**しているクラスは、同じ可変長引数のパラメーターを宣言する必要が
+  あります。PHP はパラメーターの少ないオーバーライドを認めず、クラスを読み込んだときに止まります:
+  `Declaration of AppModel::query($sql) must be compatible with Model::query($sql, ...$params)`。
+
+  | メソッド | 新しいシグネチャ |
+  | --- | --- |
+  | `Shell::dispatchShell()` | `dispatchShell(...$args)` |
+  | `AuthComponent::allow()`、`deny()` | `allow(...$args)`、`deny(...$args)` |
+  | `SecurityComponent::requirePost()`、`requireGet()`、`requirePut()`、`requireDelete()`、`requireSecure()`、`requireAuth()` | `requirePost(...$args)` など |
+  | `Controller::setAction()` | `setAction($action, ...$args)` |
+  | `Controller::validate()`、`validateErrors()` | `validate(...$args)`、`validateErrors(...$objects)` |
+  | `ContainableBehavior::contain()` | `contain(Model $Model, ...$args)` |
+  | `DboSource::query()` | `query(...$args)` |
+  | `Model::isUnique()` | `isUnique($fields, $or = true, ...$args)` |
+  | `Model::query()` | `query($sql, ...$params)` |
+  | `CakeRequest::data()`、`param()` | `data($name, ...$args)`、`param($name, ...$args)` |
+  | `CakeRequest::input()` | `input($callback = null, ...$args)` |
+  | `CakeRequest::allowMethod()`、`onlyAllow()` | `allowMethod($methods, ...$args)`、`onlyAllow($methods, ...$args)` |
+  | `Router::parseExtensions()` | `parseExtensions(...$extensions)` |
+  | `CakeTestCase::loadFixtures()` | `loadFixtures(...$args)` |
+  | `Hash::merge()` | `merge(array $data, $merge, ...$args)` |
+  | `Sanitize::stripTags()` | `stripTags($str, ...$tags)` |
+  | `Set::merge()` | `merge($data, $merge = null, ...$args)` |
+  | `HtmlHelper::css()` | `css($path, $options = [], ...$args)` |
+  | `HtmlHelper::useTag()` | `useTag($tag, ...$args)` |
+
+  ```php
+  // 変更前
+  public function query($sql)
+  {
+      return parent::query(...func_get_args());
+  }
+
+  // 変更後
+  public function query($sql, ...$params)
+  {
+      return parent::query($sql, ...$params);
+  }
+  ```
+
+- pieceofcake2/upgrade の `rector` コマンドが、このパラメーターを追加します。書き換えたコードは前の
+  バージョンでも動くので、更新する前に実行してください。
+
+  ```bash
+  bin/cake upgrade rector --rules variadic-arguments src tests
+  ```
+
+  [Rector のルール](/ja/console-and-shells/upgrade-shell#rector-rules) を参照してください。
+- `CakeRequest::input(null)` は、`input()` と同じく、入力をそのまま返すようになりました。前は
+  `null` を呼び出していました。
+
 ### CakePHP 5 の構成のプラグイン ([PR #88](https://github.com/pieceofcake2/cakephp/pull/88)) {#plugin-modern-layout}
 
 - アプリケーションと同じように、プラグインも名前空間のあるクラスを `src/` (プラグインの `psr-4` で
