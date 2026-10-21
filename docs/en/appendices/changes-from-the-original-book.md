@@ -231,7 +231,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
 
 - [App Class](/core-utility-libraries/app)
   - Loading classes rewritten around Composer classmap autoloading; App::uses() only for classes Composer does not know (app classes without classmap, non-Composer plugins)
-  - Overriding core classes: `src/Lib` plus an explicit App::uses() call, exclude-from-classmap note
+  - Overriding core classes: a copy in `src/Cake/` loaded by the classmap, with the core file in exclude-from-classmap (v2.13.0)
   - Vendor files: Composer libraries need no loading; hand-copied files in `vendors/`; plugin paths in `plugins/`; removed CakePHP 1.3 to 2.0 migration notes
 - [CakeEmail](/core-utility-libraries/email)
   - Config in `config/email.php`, templates in `templates/Emails` and `templates/Layouts/Emails`, custom transports in `src/Lib/Network/Email`; removed EmailComponent comparisons and App::uses()

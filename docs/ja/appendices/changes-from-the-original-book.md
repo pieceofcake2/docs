@@ -226,7 +226,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
 
 - [App クラス](/ja/core-utility-libraries/app)
   - クラスのローディングを Composer の classmap オートロード前提に書き直し、App::uses() は Composer が把握しないクラス (classmap なしのアプリケーションクラス、Composer 非対応プラグイン) にのみ必要
-  - コアクラスのオーバーライドは `src/Lib` に置き App::uses() で登録、exclude-from-classmap の注意を追加
+  - コアクラスのオーバーライドは `src/Cake/` にコピーして classmap で読み込み、コアのファイルを exclude-from-classmap で除外 (v2.13.0)
   - ベンダーファイル: Composer のライブラリは読み込み不要、手作業で置くファイルは `vendors/`、プラグインのパスは `plugins/`、CakePHP 1.3 から 2.0 への移行に関する記述を削除
 - [CakeEmail](/ja/core-utility-libraries/email)
   - 設定は `config/email.php`、テンプレートは `templates/Emails` と `templates/Layouts/Emails`、独自トランスポートは `src/Lib/Network/Email`、EmailComponent との比較と App::uses() を削除
