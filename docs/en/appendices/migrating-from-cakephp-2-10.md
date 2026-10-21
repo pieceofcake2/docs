@@ -30,6 +30,44 @@ Before migrating to this fork, ensure:
 
 Changes in v2.13.0 that may affect applications already running on the fork.
 
+CakePHP 2.13 adds features; follow these steps to update from 2.12:
+
+1. Update the constraint in `composer.json` to `"pieceofcake2/cakephp": "^2.13"`
+   and run `composer update pieceofcake2/cakephp`.
+2. If you use pieceofcake2/phpstan-cakephp2, update it to `^1.1`, which knows
+   the classes of the `Cake` namespace.
+3. Read the items below, especially the class names in logs and output and the
+   comparisons of class names as strings, and run your tests.
+
+### Plugins in the CakePHP 5 layout ([PR #88](https://github.com/pieceofcake2/cakephp/pull/88)) {#plugin-modern-layout}
+
+- A plugin can put namespaced classes in `src/` (loaded by Composer with the
+  plugin's `psr-4` entry), its templates in `templates/`, its translations in
+  `resources/locales/`, its vendor files in `vendor/` and its bootstrap, routes,
+  configuration files and schemas in `config/`, as the application does.
+- CakePHP searches these directories first, and `Controller/`, `View/`,
+  `Locale/`, `Vendor/`, `Config/` and the other CakePHP 2 directories after
+  them. Nothing changes for a plugin that does not have them. See
+  [How To Create Plugins](/plugins/how-to-create-plugins).
+
+> [!WARNING]
+> In a plugin that already has one of these directories for another purpose,
+> its files are now found first. For example, `App::import('Vendor', ...)`
+> looks first in the Composer `vendor/` directory of a plugin checked out for
+> development.
+
+### Templates in the CakePHP 5 style ([PR #94](https://github.com/pieceofcake2/cakephp/pull/94)) {#php-templates}
+
+- In `templates/`, templates, layouts and elements may use the `.php`
+  extension and the CakePHP 5 directories `layout/`, `element/`, `email/` and
+  `Error/`, e.g. `templates/email/html/welcome.php`.
+- Nothing changes for `.ctp` templates and for the `View/` directories of the
+  legacy layout. See [Templates in the CakePHP 5 style](/views#templates-in-the-cakephp-5-style).
+
+> [!WARNING]
+> A `.php` file next to a `.ctp` file of the same name in `templates/` is now
+> used instead of it. Check that `templates/` holds no other `.php` files.
+
 ### PHP 8.1 to 8.5 deprecations ([PR #96](https://github.com/pieceofcake2/cakephp/pull/96)) {#php-deprecations}
 
 The core no longer triggers the deprecations of PHP 8.1 to 8.5 in its own

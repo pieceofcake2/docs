@@ -49,9 +49,53 @@ lives under `app/View/` instead:
 | Helpers | `src/View/Helper/` | `app/View/Helper/` |
 | View classes | `src/View/` | `app/View/` |
 
-Templates inside a plugin are always in the plugin's own `View/` directory,
-for example `plugins/Contacts/View/Contacts/index.ctp`. See
+Templates inside a plugin are in the plugin's own `View/` directory, for
+example `plugins/Contacts/View/Contacts/index.ctp`. See
 [CakePHP Folder Structure](/getting-started/cakephp-folder-structure) for the full mapping.
+
+::: pieceofcake2 Added in version 2.13.0
+A plugin can also keep its templates in `templates/`, as in CakePHP 5, for
+example `plugins/Contacts/templates/Contacts/index.ctp`. CakePHP looks there
+before `View/`. See [How To Create Plugins](/plugins/how-to-create-plugins).
+:::
+
+<a id="templates-in-the-cakephp-5-style"></a>
+
+### Templates in the CakePHP 5 style
+
+::: pieceofcake2 Added in version 2.13.0
+`.php` templates and the CakePHP 5 directories ([#94](https://github.com/pieceofcake2/cakephp/pull/94)).
+:::
+
+Templates in `templates/` (of the application, a plugin or a theme) can also be
+written as in CakePHP 5:
+
+| CakePHP 2 | CakePHP 5 style |
+|---|---|
+| `templates/Products/view.ctp` | `templates/Products/view.php` |
+| `templates/Layouts/default.ctp` | `templates/layout/default.php` |
+| `templates/Elements/menu.ctp` | `templates/element/menu.php` |
+| `templates/Emails/html/welcome.ctp` | `templates/email/html/welcome.php` |
+| `templates/Layouts/Emails/html/default.ctp` | `templates/layout/email/html/default.php` |
+| `templates/Errors/error400.ctp` | `templates/Error/error400.php` |
+
+In each directory, CakePHP looks for the `.php` file before the `.ctp` file and
+for the CakePHP 5 directory before the CakePHP 2 one. The order of the
+directories does not change, so a theme or a plugin still overrides a template
+of the application, whichever extension each one uses. Both styles can be
+mixed, so templates can be moved one by one.
+
+> [!NOTE]
+> `.php` templates are only looked up in `templates/`. The `View/` directories
+> of the CakePHP 2 layout also hold the view and helper classes, so CakePHP never
+> renders a `.php` file there as a template. A view class that sets
+> `$ext = '.php'` finds its templates everywhere, as before.
+
+> [!WARNING]
+> In `templates/`, a `.php` file is used instead of the `.ctp` file of the same
+> name next to it, and `layout/`, `element/`, `email/` and `Error/` instead of
+> `Layouts/`, `Elements/`, `Emails/` and `Errors/`. Keep only templates in
+> `templates/`.
 
 The view layer in CakePHP can be made up of a number of different
 parts. Each part has different uses, and will be covered in this
