@@ -30,6 +30,30 @@ Before migrating to this fork, ensure:
 
 Changes in v2.13.0 that may affect applications already running on the fork.
 
+### `App::uses()` is deprecated ([PR #98](https://github.com/pieceofcake2/cakephp/pull/98)) {#app-uses-deprecated}
+
+- Composer loads the classes of the core, of the application (pieceofcake2/app
+  loads `src/` with a classmap) and of the plugins installed with Composer.
+  The classes named in the configuration (`$components`, `$helpers`, `$uses`,
+  the associations, the engines and the other settings) are found without
+  `App::uses()`, as before.
+- The first call of `App::uses()` in a process logs a warning with the file
+  and line of the call. With `debug` above 0, it also triggers
+  `E_USER_DEPRECATED`. The call still works.
+- The core no longer calls `App::uses()`. `AppController`, `AppModel`,
+  `AppHelper` and `AppShell` of the application are found in their packages
+  without it.
+- To remove the calls, let Composer load your classes, then delete the
+  `App::uses()` lines: in an application, add `"classmap": ["src/"]` to the
+  `autoload` of its `composer.json` and run `composer dump-autoload`; in a
+  plugin, add a classmap or PSR-4 to the `composer.json` of the plugin. See
+  [Removing App::uses() calls](/core-utility-libraries/app#removing-app-uses).
+
+> [!WARNING]
+> Overriding a core class with a file in `src/Lib` still needs `App::uses()`,
+> so it logs the deprecation. See
+> [Overriding classes in CakePHP](/core-utility-libraries/app#overriding-classes-in-cakephp).
+
 ### The framework classes in the `Cake` namespace ([PR #92](https://github.com/pieceofcake2/cakephp/pull/92)) {#cake-namespace}
 
 - The classes of the framework moved into the `Cake` namespace, e.g.
