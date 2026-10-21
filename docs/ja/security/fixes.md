@@ -252,8 +252,14 @@ Cookie は `'cipher'` で暗号化されていました。
 
 ### XML の外部エンティティ
 
-`Xml::build()` は、`'loadEntities' => true` を指定しない限り `<!ENTITY` の定義を読み込みません。
-信頼できない XML を解析するときは、既定値のまま使ってください。
+`Xml::build()` は、信頼できない XML を解析するときも、外部エンティティ (ファイルや URL を参照する
+`<!ENTITY` の定義) を読み込みません。
+
+::: pieceofcake2 Changed in version 2.13.0
+`'loadEntities'` オプションは削除され、効果はありません。指定しても無視されます。これまでも
+`'loadEntities' => true` は、`Xml::build()` が `libxml_disable_entity_loader()` を呼ばないようにするだけで、
+PHP 8 が必要とする libxml 2.9 以降では何も変わりませんでした。どちらにしても外部エンティティは読み込まれません。
+:::
 
 `Xml::build()` は、入力がファイルパスや URL の場合、ローカルファイルを読み込んだり URL から取得したりします。
 ユーザーの入力を `Xml::build()` に渡す場合は、`'readFile' => false` を指定するか（[上記](#xml-build-ssrf) を参照）、
