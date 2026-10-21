@@ -193,7 +193,7 @@ The document root.
 | `app/Test/Case`, `app/Test/Fixture` | `tests/TestCase/`, `tests/Fixture/` |
 | `app/tmp`                 | `tmp/`                             |
 | `app/tmp/logs`            | `logs/`                            |
-| `app/Vendor`              | `vendor/` (managed by Composer)    |
+| `app/Vendor`              | `vendors/` (Composer packages are in `vendor/`) |
 | `app/View` (`.ctp` files) | `templates/`                       |
 | `app/View/Helper`         | `src/View/Helper/`                 |
 | `app/webroot`             | `webroot/`                         |

@@ -31,9 +31,9 @@ CakePHP 2.10 を知っていれば、その知識のほとんどはそのまま�
 - **Composer のみ。** `pieceofcake2/cakephp` を Composer でインストールします。アーカイブ、PEAR、
   `include_path` によるインストールは無くなりました。このパッケージは `cakephp/cakephp` を置き換える
   (replace する) ので、`cakephp/cakephp` 2.x に依存するプラグインもそのままインストールできます。
-  フレームワークは `vendor/pieceofcake2/cakephp/src/Cake/` (以前は `lib/Cake/`) にあり、
-  クラスは `App::uses()` ではなく Composer のクラスマップで読み込まれます。
-  [インストール](installation) と [クラスの読み込み](controllers#autoloading-classes) を参照してください。
+  フレームワークは `vendor/pieceofcake2/cakephp/src/` (以前は `lib/Cake/`) にあり、
+  クラスは `App::uses()` ではなく Composer が読み込みます。
+  [インストール](installation) と [クラスの読み込み](development/autoloading) を参照してください。
 - **PHP 8。** PHP 8.0 から 8.5 で動作します。現在の PHP で動作しない API はいくつか削除されました。
   たとえば `String` クラス (`CakeText` を使ってください) や、Xcache と Wincache のキャッシュエンジンです。
   [CakePHP 2.10 からの移行](/ja/appendices/migrating-from-cakephp-2-10) を参照してください。

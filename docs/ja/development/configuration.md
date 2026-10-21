@@ -1591,8 +1591,8 @@ Inflector::rules('singular', [
 Inflector::rules('plural', ['irregular' => ['phylum' => 'phyla']]);
 ```
 
-これらのコードは、指定されたルールをフレームワークの `src/Cake/Utility/Inflector.php`
-(`vendor/pieceofcake2/cakephp/src/Cake/Utility/Inflector.php`) で定義されている
+これらのコードは、指定されたルールをフレームワークの `src/Utility/Inflector.php`
+(`vendor/pieceofcake2/cakephp/src/Utility/Inflector.php`) で定義されている
 inflection セットにマージし、コアのルールより優先度の高いルールとして追加します。
 
 ## CakePHP の起動(bootstrap)

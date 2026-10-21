@@ -182,7 +182,7 @@ app/webroot
 | `app/Test/Case`、`app/Test/Fixture` | `tests/TestCase/`、`tests/Fixture/` |
 | `app/tmp`                 | `tmp/`                             |
 | `app/tmp/logs`            | `logs/`                            |
-| `app/Vendor`              | `vendor/` (Composer で管理)         |
+| `app/Vendor`              | `vendors/` (Composer のパッケージは `vendor/`) |
 | `app/View` (`.ctp` ファイル) | `templates/`                     |
 | `app/View/Helper`         | `src/View/Helper/`                 |
 | `app/webroot`             | `webroot/`                         |

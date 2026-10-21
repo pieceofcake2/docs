@@ -134,5 +134,5 @@ name, with `App::import()`. See
 ## Overriding Core Classes {#overriding-core-classes}
 
 A copy of a core class in `src/Cake/`, at the path of its namespace, replaces
-the class of the core. See
+the class of the core. Exclude the core file with `exclude-from-classmap`. See
 [Overriding classes in CakePHP](../core-utility-libraries/app#overriding-classes-in-cakephp).

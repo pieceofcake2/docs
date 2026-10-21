@@ -1647,8 +1647,8 @@ Inflector::rules('plural', ['irregular' => ['phylum' => 'phyla']]);
 ```
 
 Will merge the supplied rules into the inflection sets defined in
-the framework's `src/Cake/Utility/Inflector.php`
-(`vendor/pieceofcake2/cakephp/src/Cake/Utility/Inflector.php`), with the
+the framework's `src/Utility/Inflector.php`
+(`vendor/pieceofcake2/cakephp/src/Utility/Inflector.php`), with the
 added rules taking precedence over the core rules.
 
 ## Bootstrapping CakePHP

@@ -125,4 +125,5 @@ Composer でインストールしたライブラリは自動で読み込まれ�
 ## コアのクラスのオーバーライド {#overriding-core-classes}
 
 コアのクラスを `src/Cake/` の名前空間に合ったパスにコピーすると、コアのクラスの代わりに使われます。
+コアのファイルは `exclude-from-classmap` で除外します。
 [CakePHP のクラスをオーバーライドする](../core-utility-libraries/app#overriding-classes-in-cakephp) を参照してください。
