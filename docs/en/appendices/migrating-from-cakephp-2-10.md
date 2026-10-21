@@ -30,57 +30,61 @@ Before migrating to this fork, ensure:
 
 Changes in v2.13.0 that may affect applications already running on the fork.
 
-### `App::uses()` is deprecated ([PR #98](https://github.com/pieceofcake2/cakephp/pull/98)) {#app-uses-deprecated}
+CakePHP 2.13 adds features; follow these steps to update from 2.12:
 
-- Composer loads the classes of the core, of the application (pieceofcake2/app
-  loads `src/` with a classmap) and of the plugins installed with Composer.
-  The classes named in the configuration (`$components`, `$helpers`, `$uses`,
-  the associations, the engines and the other settings) are found without
-  `App::uses()`, as before.
-- The first call of `App::uses()` in a process logs a warning with the file
-  and line of the call. With `debug` above 0, it also triggers
-  `E_USER_DEPRECATED`. The call still works.
-- The core no longer calls `App::uses()`. `AppController`, `AppModel`,
-  `AppHelper` and `AppShell` of the application are found in their packages
-  without it.
-- To remove the calls, let Composer load your classes, then delete the
-  `App::uses()` lines: in an application, add `"classmap": ["src/"]` to the
-  `autoload` of its `composer.json` and run `composer dump-autoload`; in a
-  plugin, add a classmap or PSR-4 to the `composer.json` of the plugin. See
-  [Removing App::uses() calls](/core-utility-libraries/app#removing-app-uses).
+1. Update the constraint in `composer.json` to `"pieceofcake2/cakephp": "^2.13"`
+   and run `composer update pieceofcake2/cakephp`.
+2. If you use pieceofcake2/phpstan-cakephp2, update it to `^1.1`, which knows
+   the classes of the `Cake` namespace.
+3. Read the items below, especially the class names in logs and output and the
+   comparisons of class names as strings, and run your tests.
 
-### The framework classes in the `Cake` namespace ([PR #92](https://github.com/pieceofcake2/cakephp/pull/92)) {#cake-namespace}
+### Plugins in the CakePHP 5 layout ([PR #88](https://github.com/pieceofcake2/cakephp/pull/88)) {#plugin-modern-layout}
 
-- The classes of the framework moved into the `Cake` namespace, e.g.
-  `Cake\Controller\Controller`. The global names of CakePHP 2 are aliases of the
-  same classes: code that extends, type-hints, catches or loads `Controller`,
-  `CakeRequest` or `NotFoundException` keeps working.
-- The files of the framework moved from `src/Cake/` to `src/`, loaded by
-  Composer with PSR-4 (`Cake\` in `src/`), and `CAKE` points to `src/`.
-  `src/Cake/bootstrap.php`, which `webroot/index.php` requires, and
-  `src/Cake/TestSuite/Fixture/CakeFixtureInjector.php`, the listener of
-  `phpunit.xml.dist`, stay at their paths and keep working. If you include other
-  files of `vendor/pieceofcake2/cakephp/src/Cake/` by path, change them to `src/`.
-- Objects serialized before the update still unserialize. Objects serialized
-  after it name the namespaced classes and cannot be read by an older version.
-- A global class registered with `App::uses()` no longer overrides a core
-  class, because the framework uses the namespaced names. Copy the core file to
-  `src/Cake/` instead. See
-  [Overriding classes in CakePHP](/core-utility-libraries/app#overriding-classes-in-cakephp).
-- PHPStan needs pieceofcake2/phpstan-cakephp2 `^1.1`. See
-  [Namespaced Classes](/development/namespaced-classes#the-classes-of-the-framework).
+- A plugin can put namespaced classes in `src/` (loaded by Composer with the
+  plugin's `psr-4` entry), its templates in `templates/`, its translations in
+  `resources/locales/`, its vendor files in `vendor/` and its bootstrap, routes,
+  configuration files and schemas in `config/`, as the application does.
+- CakePHP searches these directories first, and `Controller/`, `View/`,
+  `Locale/`, `Vendor/`, `Config/` and the other CakePHP 2 directories after
+  them. Nothing changes for a plugin that does not have them. See
+  [How To Create Plugins](/plugins/how-to-create-plugins).
 
 > [!WARNING]
-> `get_class()`, `::class` and `ReflectionClass::getName()` return the
-> namespaced names, so a comparison like `get_class($x) === 'CakeRequest'` is
-> now false. The error log, `Debugger` output and the debug error pages show
-> the namespaced names too, e.g. `[Cake\Error\NotFoundException]`: update the
-> log filters and alerts that match the global names.
+> In a plugin that already has one of these directories for another purpose,
+> its files are now found first. For example, `App::import('Vendor', ...)`
+> looks first in the Composer `vendor/` directory of a plugin checked out for
+> development.
 
-> [!TIP]
-> `bin/cake upgrade rector --rules namespaced-classes src tests` of
-> [pieceofcake2/upgrade](https://github.com/pieceofcake2/upgrade) rewrites the
-> comparisons with `get_class()` and imports the namespaced classes.
+### Templates in the CakePHP 5 style ([PR #94](https://github.com/pieceofcake2/cakephp/pull/94)) {#php-templates}
+
+- In `templates/`, templates, layouts and elements may use the `.php`
+  extension and the CakePHP 5 directories `layout/`, `element/`, `email/` and
+  `Error/`, e.g. `templates/email/html/welcome.php`.
+- Nothing changes for `.ctp` templates and for the `View/` directories of the
+  legacy layout. See [Templates in the CakePHP 5 style](/views#templates-in-the-cakephp-5-style).
+
+> [!WARNING]
+> A `.php` file next to a `.ctp` file of the same name in `templates/` is now
+> used instead of it. Check that `templates/` holds no other `.php` files.
+
+### PHP 8.1 to 8.5 deprecations ([PR #96](https://github.com/pieceofcake2/cakephp/pull/96)) {#php-deprecations}
+
+The core no longer triggers the deprecations of PHP 8.1 to 8.5 in its own
+code. Most applications only need to update. These changes may affect yours:
+
+- `Xml::build()` no longer has the `loadEntities` option. It only decided
+  whether `libxml_disable_entity_loader()` was called, which PHP 8 deprecates
+  and which no longer changes anything with libxml 2.9 and later: external
+  entities are not loaded either way. Passing the option is ignored, so you
+  can remove it from your calls. See [Xml](/core-utility-libraries/xml).
+- `CakeRequest::input()` with a decoding callback returns `null` without
+  calling the callback when the request has no body. `RequestHandlerComponent`
+  sets the same empty data as before. If your own callback handled an empty
+  body, handle `null` instead. See
+  [Request and Response objects](/controllers/request-response).
+- The core requires `symfony/polyfill-php84` for the `Pdo\Mysql` constants on
+  PHP 8.0 to 8.3. Composer installs it.
 
 ### Classes in a namespace: `App::className()` and `App.namespace` ([PR #91](https://github.com/pieceofcake2/cakephp/pull/91)) {#app-classname}
 
@@ -118,6 +122,58 @@ Changes in v2.13.0 that may affect applications already running on the fork.
 > [!WARNING]
 > A namespaced controller now merges `$components` and `$helpers` with its
 > parent class `AppController` in any namespace, also without `App.namespace`.
+
+### The framework classes in the `Cake` namespace ([PR #92](https://github.com/pieceofcake2/cakephp/pull/92)) {#cake-namespace}
+
+- The classes of the framework moved into the `Cake` namespace, e.g.
+  `Cake\Controller\Controller`. The global names of CakePHP 2 are aliases of the
+  same classes: code that extends, type-hints, catches or loads `Controller`,
+  `CakeRequest` or `NotFoundException` keeps working.
+- The files of the framework moved from `src/Cake/` to `src/`, loaded by
+  Composer with PSR-4 (`Cake\` in `src/`), and `CAKE` points to `src/`.
+  `src/Cake/bootstrap.php`, which `webroot/index.php` requires, and
+  `src/Cake/TestSuite/Fixture/CakeFixtureInjector.php`, the listener of
+  `phpunit.xml.dist`, stay at their paths and keep working. If you include other
+  files of `vendor/pieceofcake2/cakephp/src/Cake/` by path, change them to `src/`.
+- Objects serialized before the update still unserialize. Objects serialized
+  after it name the namespaced classes and cannot be read by an older version.
+- A global class registered with `App::uses()` no longer overrides a core
+  class, because the framework uses the namespaced names. Copy the core file to
+  `src/Cake/` instead. See
+  [Overriding classes in CakePHP](/core-utility-libraries/app#overriding-classes-in-cakephp).
+- PHPStan needs pieceofcake2/phpstan-cakephp2 `^1.1`. See
+  [Namespaced Classes](/development/namespaced-classes#the-classes-of-the-framework).
+
+> [!WARNING]
+> `get_class()`, `::class` and `ReflectionClass::getName()` return the
+> namespaced names, so a comparison like `get_class($x) === 'CakeRequest'` is
+> now false. The error log, `Debugger` output and the debug error pages show
+> the namespaced names too, e.g. `[Cake\Error\NotFoundException]`: update the
+> log filters and alerts that match the global names.
+
+> [!TIP]
+> `bin/cake upgrade rector --rules namespaced-classes src tests` of
+> [pieceofcake2/upgrade](https://github.com/pieceofcake2/upgrade) rewrites the
+> comparisons with `get_class()` and imports the namespaced classes.
+
+### `App::uses()` is deprecated ([PR #98](https://github.com/pieceofcake2/cakephp/pull/98)) {#app-uses-deprecated}
+
+- Composer loads the classes of the core, of the application (pieceofcake2/app
+  loads `src/` with a classmap) and of the plugins installed with Composer.
+  The classes named in the configuration (`$components`, `$helpers`, `$uses`,
+  the associations, the engines and the other settings) are found without
+  `App::uses()`, as before.
+- The first call of `App::uses()` in a process logs a warning with the file
+  and line of the call. With `debug` above 0, it also triggers
+  `E_USER_DEPRECATED`. The call still works.
+- The core no longer calls `App::uses()`. `AppController`, `AppModel`,
+  `AppHelper` and `AppShell` of the application are found in their packages
+  without it.
+- To remove the calls, let Composer load your classes, then delete the
+  `App::uses()` lines: in an application, add `"classmap": ["src/"]` to the
+  `autoload` of its `composer.json` and run `composer dump-autoload`; in a
+  plugin, add a classmap or PSR-4 to the `composer.json` of the plugin. See
+  [Removing App::uses() calls](/core-utility-libraries/app#removing-app-uses).
 
 ## v2.12.11
 

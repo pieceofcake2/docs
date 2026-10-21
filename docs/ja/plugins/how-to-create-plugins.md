@@ -18,10 +18,56 @@
 名前のフォルダになることが重要です。
 
 プラグインはプロジェクトルートの `plugins/` ディレクトリに置きます (従来の `app/` レイアウトの
-アプリケーションでは `app/Plugin/` も使えます)。アプリケーション本体とは異なり、プラグインの
-*内部* は CakePHP 2 の構成のままです。PHP のクラスは `Controller/` や `Model/` などに置き、
-テンプレートは `View/Helper/` と並べて `View/` に置きます。プラグインのテストには
-`Test/Case/` と `Test/Fixture/`、または `tests/TestCase/` と `tests/Fixture/` のどちらも使えます。
+アプリケーションでは `app/Plugin/` も使えます)。プラグインの中は、上のような CakePHP 2 の構成です。
+PHP のクラスは `Controller/` や `Model/` などに置き、テンプレートは `View/Helper/` と並べて
+`View/` に置きます。プラグインのテストには `Test/Case/` と `Test/Fixture/`、または
+`tests/TestCase/` と `tests/Fixture/` のどちらも使えます。
+
+::: pieceofcake2 Added in version 2.13.0
+アプリケーションや CakePHP 5 と同じ構成も使えます。
+
+    /plugins
+        /ContactManager
+            /config
+                bootstrap.php
+                routes.php
+            /src
+                /Controller
+                    /Component
+                /Model
+                    /Behavior
+                /View
+                    /Helper
+            /templates
+                /Contacts
+                /Layouts
+            /resources
+                /locales
+            /webroot
+
+- `src/` には、CakePHP 5 と同じく名前空間のあるクラスを置きます。たとえば
+  `src/Controller/Component/ContactsComponent.php` には
+  `ContactManager\Controller\Component\ContactsComponent` を置きます。プラグインの `composer.json` の
+  `psr-4` (`"ContactManager\\": "src/"`) で Composer が読み込みます。設定にはプラグインの接頭辞を付けた
+  名前 (`'ContactManager.Contacts'`) か `ContactsComponent::class` を書きます。
+  [名前空間のあるクラス](/ja/development/namespaced-classes) を参照してください。
+- `templates/`、`resources/locales/`、`vendor/` には、テンプレート、翻訳、ベンダーのファイルを置きます。
+- `config/` には、CakePHP 2 の構成の `Config/` と同じく、`bootstrap.php`、`routes.php`、
+  `Configure::load('ContactManager.file')` で読む設定ファイル、`config/Schema/` のスキーマを置きます。
+:::
+
+CakePHP は CakePHP 5 の構成のディレクトリを先に探し、CakePHP 2 の構成のディレクトリをその後に探します。
+そのため、プラグインを 1 ディレクトリずつ新しい構成に移せます。
+
+> [!NOTE]
+> `App::uses()` は `src/` を探しません。`src/` のクラスは名前空間のあるクラスで、Composer が読み込みます。
+> `src/` はテンプレート、翻訳、ベンダーのファイルを探す場所でもないので、`src/View/` のビュークラスを
+> テンプレートとして描画することはありません。
+
+> [!WARNING]
+> `templates/`、`resources/locales/`、`config/` のファイルは、`View/`、`Locale/`、`Config/` にある同じ名前の
+> ファイルより先に使われます。これらのディレクトリをプラグインに足す前に、別の目的ですでに使っていないかを
+> 確かめてください。たとえば、開発用にチェックアウトしたプラグインには Composer の `vendor/` があります。
 新しくプラグインを作るときは、 [pieceofcake2/plugin](https://github.com/pieceofcake2/plugin)
 スケルトンをひな形にするとよいでしょう。
 

@@ -298,8 +298,16 @@ lost once, e.g. a "remember me" login. Switch with a release.
 
 ### XML external entities
 
-`Xml::build()` does not load `<!ENTITY` definitions unless you pass
-`'loadEntities' => true`. Keep the default when you parse untrusted XML.
+`Xml::build()` does not load external entities, `<!ENTITY` definitions that
+refer to a file or a URL, also when you parse untrusted XML.
+
+::: pieceofcake2 Changed in version 2.13.0
+The `'loadEntities'` option is removed and has no effect: passing it is
+ignored. Before, `'loadEntities' => true` only kept `Xml::build()` from calling
+`libxml_disable_entity_loader()`, which no longer changes anything with
+libxml 2.9 and later, which PHP 8 requires. External entities are not loaded
+either way.
+:::
 
 `Xml::build()` also reads a local file or fetches a URL when the input is a
 path or URL. When you pass user input, set `'readFile' => false`

@@ -276,8 +276,6 @@ SimpleXMLElement または DOMDocument を初期化します。
 
 - `return` SimpleXMLElement を返す `'simplexml'` (デフォルト) か、
   DOMDocument を返す `'domdocument'` を指定します。
-- `loadEntities` `<!ENTITY` 定義を読み込むかどうかです。セキュリティ上の理由からデフォルトは `false` です。
-  信頼できる XML を扱う場合にだけ有効にしてください。
 - `readFile` ローカルのファイルパスや URL を読み込むかどうかです。デフォルトは `true` です。
   ユーザーの入力を渡す可能性がある場合は `false` にしてください。ファイルパスや URL を渡すと
   `XmlException` が投げられます。
@@ -287,6 +285,12 @@ SimpleXMLElement または DOMDocument を初期化します。
 v2.12.3 から、`'readFile' => false` で URL も読み込まなくなりました。それより前のバージョン
 (および本家 CakePHP 2.6.6 以降) では、`https://` の URL は取得されていました。
 [脆弱性への対応](/ja/security/fixes#xml-build-ssrf) を参照してください。
+:::
+
+::: pieceofcake2 Changed in version 2.13.0
+`loadEntities` オプションは削除されました。指定しても無視されます。このオプションは
+`libxml_disable_entity_loader()` を呼ぶかどうかを決めるだけのもので、libxml 2.9 以降では
+何も変わりません。どちらにしても外部エンティティは読み込まれません。
 :::
 
 入力が配列の場合は、`Xml::fromArray()` のオプション (`format` や `pretty` など) も指定できます。

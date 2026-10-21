@@ -148,6 +148,12 @@ $data = $this->request->input('json_decode');
 $data = $this->request->input('Xml::build', ['return' => 'domdocument']);
 ```
 
+::: pieceofcake2 Changed in version 2.13.0
+デコード関数を渡した `input()` は、リクエストにボディが無いとき、デコード関数を呼ばずに `null` を返します。
+これまでは空文字列でデコード関数を呼んでいました。独自のデコード関数で空のボディを扱っていた場合は、
+代わりに `null` を確認してください。
+:::
+
 ## パス情報にアクセス
 
 `CakeRequest` はまたアプリケーションのパスについての役立つ情報を提供しています。
