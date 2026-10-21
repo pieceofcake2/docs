@@ -191,19 +191,15 @@ settings
 :::
 
 接続は `'dsn'` キーに書いた 1 つの DSN で設定できます。環境ごとの認証情報を 1 つの環境変数に
-まとめられます。
+まとめられます。DSN で決まるキー (`datasource`、`host`、`port`、`login`、`password`、`database`) は
+配列に書かず、それ以外の設定だけを書いてください。
 
 ```php
 // config/database.php
 class DATABASE_CONFIG
 {
     public $default = [
-        'datasource' => 'Database/Mysql',
         'persistent' => false,
-        'host' => 'localhost',
-        'login' => 'user',
-        'password' => 'password',
-        'database' => 'my_app',
         'prefix' => '',
     ];
 

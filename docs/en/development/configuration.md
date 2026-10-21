@@ -199,19 +199,16 @@ called `url`, and uses the `DATABASE_URL` format of CakePHP, Doctrine and Symfon
 :::
 
 A connection can be set with one DSN in the `'dsn'` key. This keeps the
-credentials of each environment in one environment variable:
+credentials of each environment in one environment variable. Leave out of the
+array the keys that the DSN sets (`datasource`, `host`, `port`, `login`,
+`password` and `database`), and keep only the other settings:
 
 ```php
 // config/database.php
 class DATABASE_CONFIG
 {
     public $default = [
-        'datasource' => 'Database/Mysql',
         'persistent' => false,
-        'host' => 'localhost',
-        'login' => 'user',
-        'password' => 'password',
-        'database' => 'my_app',
         'prefix' => '',
     ];
 
