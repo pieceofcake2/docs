@@ -22,15 +22,11 @@ CakePHP のフレームワークのほぼすべてのクラスは、あなた独
 `App::uses()` で登録すると、 App は CakePHP 内部のファイルの代わりにあなたが再定義したファイルを
 ロードします。
 
-## クラスのローディング
+## クラスのローディング {#loading-classes}
 
-`static` App::**uses**(string $class, string $package)
-
-戻り値の型: `void`
-
-CakePHP ではクラスは遅延ロードされます。CakePHP 自身のクラスは Composer の classmap
-オートローダで読み込まれるため、宣言する必要はありません。アプリケーションスケルトンのように
-`composer.json` でアプリケーションのクラスを classmap に指定している場合も同様です。
+CakePHP ではクラスは遅延ロードされます。CakePHP のクラス、アプリケーションのクラス、Composer で
+インストールしたプラグインのクラスは Composer が読み込むため、宣言する必要はありません。
+アプリケーションスケルトン (pieceofcake2/app) は、`composer.json` の classmap で `src/` を読み込みます。
 
 ```json
 "autoload": {
@@ -40,16 +36,34 @@ CakePHP ではクラスは遅延ロードされます。CakePHP 自身のクラ�
 
 classmap を使う場合は、新しいクラスファイルを追加したら `composer dump-autoload` を実行してください。
 
-`App::uses()` が必要なのは、Composer が把握していないクラスです。つまり classmap を使っていない場合の
-アプリケーションのクラスと、Composer のオートロードに対応していないプラグインのクラスです。
-どのパッケージでクラスを発見できるのかを App に伝えることで、あるクラスを初めて使用するときに
-適切にファイルを見つけることができるのです。
+`$components`、`$helpers`、`$uses`、アソシエーション、キャッシュエンジンなど、設定に書いたクラスも、
+CakePHP がそれぞれのパッケージから探します。基底クラスの `AppController`、`AppModel`、`AppHelper`、
+`AppShell` も同様です。
 
-::: pieceofcake2
-フレームワークのクラスは Composer の classmap オートローダで読み込まれ、
-クラス同士で `App::uses()` を呼び出さなくなりました。既存の `App::uses()` 呼び出しはそのまま動作します。
-詳しくは [CakePHP 2.10 からの移行](/ja/appendices/migrating-from-cakephp-2-10) を参照してください。
+`static` App::**uses**(string $class, string $package)
+
+戻り値の型: `void`
+
+::: pieceofcake2 Deprecated in version 2.13.0
+代わりに Composer でクラスを読み込んでください
+([#98](https://github.com/pieceofcake2/cakephp/pull/98))。プロセスで最初に `App::uses()`
+を呼び出したとき、呼び出したファイルと行を含む警告がログに書かれます。`debug` が 0 より大きいときは
+`E_USER_DEPRECATED` も発生します。呼び出しはこれまでどおり動作します。フレームワークは
+`App::uses()` を呼び出しません。
 :::
+
+`App::uses()` は、クラスがどのパッケージにあるかを App に伝えます。これにより App は、
+そのクラスを初めて使うときにファイルを見つけてロードできます。
+
+### `App::uses()` の呼び出しを削除する {#removing-app-uses}
+
+1. Composer でクラスを読み込むようにします。
+   - アプリケーションでは、上の `src/` の classmap を `composer.json` に追加します。
+   - プラグインでは、プラグインの `composer.json` に classmap か PSR-4 を追加します。
+     それが無いプラグインは、アプリケーションの classmap にプラグインのフォルダを追加することもできます。
+     例: `"classmap": ["src/", "plugins/MyPlugin/"]`
+2. `composer dump-autoload` を実行します。
+3. `App::uses()` の行を削除します。
 
 一般的なクラスの例をいくつか挙げます:
 
@@ -123,14 +137,15 @@ App::className('Post', 'Model');
 
 バックスラッシュを含む名前は完全なクラス名として扱い、名前がサフィックスで終わらないときだけ
 サフィックスを付けます。ほかの名前は、プラグインの名前空間か `App.namespace` で
-`<名前空間>\<種類>\<名前><サフィックス>` を探し、次に `<種類>` のパッケージに `App::uses()`
-で宣言したグローバルなクラス `<名前><サフィックス>` を探します。
+`<名前空間>\<種類>\<名前><サフィックス>` を探し、次にグローバルなクラス `<名前><サフィックス>`
+を、Composer か `<種類>` のパッケージから探します。
 [名前空間のあるクラス](/ja/development/namespaced-classes) を参照してください。
 
 ### プラグイン内のファイルをロードする
 
-プラグインからのクラスのローディングは、ロード元になるプラグインを指定する以外は、app や
-core のクラスのローディングとまったく同じように動作します:
+プラグインの `composer.json` に classmap か PSR-4 があれば、プラグインのクラスは Composer が
+読み込みます。無い場合は `App::uses()` で、ロード元になるプラグインを指定する以外は、app の
+クラスと同じようにロードします:
 
 ```php
 // plugins/PluginName/Model/Comment.php にある Comment クラスをロードする
@@ -314,10 +329,6 @@ $Users = new UsersController();
 $Users->constructClasses();
 ```
 
-**かつて App::import('Core', \$class) を用いてロードされたすべてのクラスは、
-App::uses() を用いた、正しいパッケージを参照したロードが必要になりました。
-この変更は、フレームワークに大きなパフォーマンスの向上をもたらしました。**
-
 次の点に注意してください。
 
 - このメソッドはファイルを再帰的に検索せず、 `App::build()`
@@ -355,27 +366,24 @@ App::uses() を用いた、正しいパッケージを参照したロードが�
 アップグレード後はオーバーライドが効いているか確認してください。
 :::
 
+> [!WARNING]
+> この方法でのオーバーライドには `App::uses()` が必要ですが、2.13.0 で非推奨になりました。
+> 最初の呼び出しで非推奨の警告がログに書かれます。
+> [クラスのローディング](#loading-classes) を参照してください。
+
 ## Vendor ファイルをローディングする
 
 Composer でインストールしたライブラリはオートロードされるため、特別なコードは不要です。
 この節は、手作業でプロジェクトにコピーしたファイルを対象としています。それらのファイルは、
 Composer が管理しないプロジェクトの `vendors/` ディレクトリ (レガシーレイアウトでは `app/Vendor/`) に置きます。
 
-`App::uses()` をベンダーのディレクトリ内のクラスをロードするのに使うことが出来ます。
-これは他のファイルを読み込むのと同じ規則に従います:
+それでも `vendors/` とそのサブディレクトリにあるクラスは Composer で読み込めます。
+`composer.json` の classmap にディレクトリを追加し、`composer dump-autoload` を実行してください。
 
-```php
-// vendors/Geshi.php 内の Geshi クラスをロードする
-App::uses('Geshi', 'Vendor');
-```
-
-サブディレクトリ内のクラスをロードするには、それらのパスを `App::build()` で追加する必要があります:
-
-```php
-// vendors/SomePackage/ClassInSomePackage.php 内の
-// ClassInSomePackage クラスをロードする
-App::build(['Vendor' => [ROOT . DS . 'vendors' . DS . 'SomePackage' . DS]]);
-App::uses('ClassInSomePackage', 'Vendor');
+```json
+"autoload": {
+    "classmap": ["src/", "vendors/"]
+}
 ```
 
 ベンダーのファイルは、規則に従っていなかったり、ファイル名と異なるクラスを持っていたり、
@@ -459,7 +467,7 @@ App のキャッシュを初期化し、シャットダウン関数を登録し�
 戻り値の型: `boolean`
 
 自動的なクラスローディングを処理するメソッド。これは、`App::uses()`
-を使用して定義された各クラスのパッケージを探し出し、その情報を元に、クラスをロードするための
+で定義されたか `App::className()` が見つけた各クラスのパッケージを探し出し、その情報を元に、クラスをロードするための
 フルパスとしてパッケージ名を解決します。各クラスのファイル名はクラス名に従ってください。
 たとえばクラス名が `MyCustomClass` である場合、ファイル名は `MyCustomClass.php`
 でなければなりません。
