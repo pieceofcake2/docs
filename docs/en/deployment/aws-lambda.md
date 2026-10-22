@@ -749,6 +749,14 @@ the plugin creates are under `/tmp`. The AWS plugin can also register the
 that PHP file functions accept `s3://bucket/key` paths; pieceofcake2/async-aws
 has the [same wrapper](https://pieceofcake2.github.io/async-aws/s3.html#s3-stream-wrapper).
 
+The [Filebinder plugin](https://pieceofcake2.github.io/filebinder/) stores the
+files of a model on S3 through pieceofcake2/async-aws (or pieceofcake2/aws).
+On Lambda, set its `filePath` under `/tmp`, or to `false` to keep no local
+files. With a private ACL, its Label helper shows each file with a presigned
+URL that expires after a short time. See
+[Amazon S3](https://pieceofcake2.github.io/filebinder/s3) in its
+documentation.
+
 ### Static Assets
 
 Bref runs PHP-FPM only for the handler file, `webroot/index.php`. A request for
