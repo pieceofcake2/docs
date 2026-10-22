@@ -86,6 +86,7 @@ AI ツールから直接読み込めます。
 ### ファイル
 
 - [Upload Plugin](https://pieceofcake2.github.io/upload/ja/) ([Markdown](https://github.com/pieceofcake2/upload/blob/2.x/docs/ja/README.md)) - ファイルアップロードの処理
+- [Filebinder Plugin](https://pieceofcake2.github.io/filebinder/ja/) ([Markdown](https://github.com/pieceofcake2/filebinder/blob/2.x/docs/ja/README.md)) - モデルのレコードへのファイルの添付。ローカルのディレクトリ、データベース、Amazon S3 に保存
 - [Imagine Plugin](https://pieceofcake2.github.io/imagine/ja/) ([Markdown](https://github.com/pieceofcake2/imagine/blob/1.x/docs/ja/README.md)) - 画像処理ライブラリのラッパー
 - [Image Plugin](https://pieceofcake2.github.io/image/ja/) ([Markdown](https://github.com/pieceofcake2/image/blob/1.x/docs/ja/README.md)) - アップロードされた画像の中身による検証 (JPEG、PNG、GIF、WebP、SVG)
 - [CakePdf Plugin](https://pieceofcake2.github.io/cakepdf/ja/) ([Markdown](https://github.com/pieceofcake2/cakepdf/blob/1.x/docs/ja/README.md)) - PDF の生成
