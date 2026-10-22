@@ -88,6 +88,7 @@ directly.
 ### Files
 
 - [Upload Plugin](https://pieceofcake2.github.io/upload/) ([Markdown](https://github.com/pieceofcake2/upload/blob/2.x/docs/README.md)) - File upload handling
+- [Filebinder Plugin](https://pieceofcake2.github.io/filebinder/) ([Markdown](https://github.com/pieceofcake2/filebinder/blob/2.x/docs/README.md)) - File attachment for model records, stored in a local directory, in the database or on Amazon S3
 - [Imagine Plugin](https://pieceofcake2.github.io/imagine/) ([Markdown](https://github.com/pieceofcake2/imagine/blob/1.x/docs/README.md)) - Image processing library wrapper
 - [Image Plugin](https://pieceofcake2.github.io/image/) ([Markdown](https://github.com/pieceofcake2/image/blob/1.x/docs/README.md)) - Validation of uploaded images by their contents (JPEG, PNG, GIF, WebP and SVG)
 - [CakePdf Plugin](https://pieceofcake2.github.io/cakepdf/) ([Markdown](https://github.com/pieceofcake2/cakepdf/blob/1.x/docs/README.md)) - PDF generation
