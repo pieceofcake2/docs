@@ -743,6 +743,12 @@ public function download($id)
 でき、PHP のファイル関数で `s3://bucket/key` のパスを使えるようになります。
 pieceofcake2/async-aws にも[同じラッパー](https://pieceofcake2.github.io/async-aws/ja/s3.html#s3-stream-wrapper)があります。
 
+[Filebinder プラグイン](https://pieceofcake2.github.io/filebinder/ja/) は、モデルのファイルを
+pieceofcake2/async-aws（または pieceofcake2/aws）で S3 に保存します。Lambda では、`filePath` を
+`/tmp` の下にするか、ローカルにファイルを残さないよう `false` にします。ACL を非公開にすると、
+Label ヘルパーは各ファイルを、短い時間だけ使える署名付き URL で表示します。詳しくは
+ドキュメントの [Amazon S3](https://pieceofcake2.github.io/filebinder/ja/s3) を見てください。
+
 <a id="static-assets"></a>
 
 ### 静的なアセット
