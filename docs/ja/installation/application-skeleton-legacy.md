@@ -1,4 +1,4 @@
-# グローバルなクラスのアプリケーションスケルトン
+# 従来のアプリケーションスケルトン
 
 [pieceofcake2/app-legacy](https://github.com/pieceofcake2/app-legacy) は、本家の CakePHP 2 と同じように
 クラスがグローバルで、テンプレートが `.ctp` ファイルの CakePHP 2 アプリケーションのためのアプリケーション
