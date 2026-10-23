@@ -88,6 +88,49 @@ CakePHP 5 のディレクトリを探します。ディレクトリを探す順�
 > `Emails/`、`Errors/` より `layout/`、`element/`、`email/`、`Error/` が使われます。`templates/` には
 > テンプレートだけを置いてください。
 
+#### ビューがテンプレートを探す仕組み {#template-lookup}
+
+`View::$ext` (と、コントローラーがビューに渡す `Controller::$ext`) のデフォルトは `.ctp` です。デフォルトのままなら、
+CakePHP はいつもの順番 (テーマ、アプリケーションにあるプラグインのテンプレート、プラグイン、アプリケーション、コア) で
+ビューのパスをたどり、それぞれのパスで次のファイルを探します。最初に見つかったファイルが使われます。
+
+| 順番 | `templates/` のパス | `View/` のパス |
+|---|---|---|
+| 1 | `layout/default.php` | `Layouts/default.ctp` |
+| 2 | `Layouts/default.php` | |
+| 3 | `layout/default.ctp` | |
+| 4 | `Layouts/default.ctp` | |
+
+表はレイアウト `default` の例です。ほかのテンプレートも同じように探します。
+
+- `templates/` のパスでは、`.ctp` より先に `.php` を探し、それぞれの拡張子で CakePHP 2 のディレクトリより先に
+  CakePHP 5 のディレクトリを探します。読み替えるのは名前の最初のディレクトリだけで、`Layouts/` は `layout/`
+  (`Layouts/Emails/` は `layout/email/`)、`Elements/` は `element/`、`Emails/` は `email/`、`Errors/` は `Error/`
+  になります。`Products/view` のようなビューには別の名前がないので、`Products/view.php`、`Products/view.ctp`
+  の順に探します。
+- `templates/` のパスとは、アプリケーション、プラグイン、コアの `templates/` ディレクトリと、その中の
+  `Plugin/<Name>/` と `Themed/<Theme>/` のディレクトリです。たとえば `templates/Plugin/DebugKit/`、
+  `templates/Themed/Mobile/`、`templates/Themed/Mobile/Plugin/DebugKit/` です。
+- CakePHP 2 の構成の `View/` のパス (`app/View/` やプラグインの `View/`) では、名前に拡張子を付けたファイル
+  だけを探します。`.ctp` だけで、CakePHP 5 のディレクトリは探しません。`.php` のテンプレートや CakePHP 5 の
+  ディレクトリを使うには、テンプレートを `templates/` に移してください。
+  [pieceofcake2/upgrade](https://pieceofcake2.github.io/upgrade/ja/#layout) の `bin/cake upgrade layout` で移せます
+  ([モダン構成への移行](appendices/migrating-to-the-modern-layout) を参照)。
+- 1 つのパスのファイルをすべて探してから次のパスに進むので、テーマやプラグインは、拡張子に関係なく
+  アプリケーションのテンプレートを上書きします。
+
+コントローラーやビュークラスで `$ext` に別の拡張子 (たとえば `'.php'` や、Twig のビュークラスの `'.twig'`) を
+設定しても、CakePHP は同じ順番でビューのパスをたどり、それぞれのパスで `.ctp` より先にその拡張子を探します。
+`View/` のパスでは `Layouts/default.twig`、`Layouts/default.ctp` の順、`templates/` のパスでは
+`layout/default.twig`、`Layouts/default.twig` のあとに上の表のファイルを探します。そのため、拡張子に関係なく、
+テーマやプラグインはアプリケーションを、アプリケーションはコアを上書きします。`View/` のパスで `.php` の
+ファイルを探すのは、`$ext` が `'.php'` のときだけです。
+
+::: pieceofcake2 Changed in the release after 2.13.0
+以前は、`.ctp` より先にすべてのビューのパスで `$ext` を探していました。そのため `$ext = '.php'` では、テーマや
+アプリケーションの `.ctp` のテンプレートより、アプリケーションやコアの `.php` のテンプレートが先に使われていました。
+:::
+
 CakePHP のビューレイヤーはいくつかの異なるパーツによって作り上げられています。
 各パーツはそれぞれ役割を持っており、この章で説明していきます。
 
