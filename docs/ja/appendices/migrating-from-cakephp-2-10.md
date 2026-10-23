@@ -93,10 +93,14 @@
       $this->layout = 'dev_error';
 
       $this->assign('title', $message);
-      $this->assign('templateName', 'error400.ctp');
+      $this->assign('templateName', 'error400.php');
       // ...
   endif;
   ```
+
+  コアのテンプレートは、CakePHP 5 と同じように `templateName` に `.php` の名前を設定します。
+  `error400.ctp` のままでもかまいません。どちらでも、カスタマイズのヒントはアプリケーションの構成に合った
+  ファイル (`templates/Error/error400.php`、従来のレイアウトでは `app/View/Errors/error400.ctp`) を示します。
 
 - 本番モードでフレームワークのエラーページをデフォルトのレイアウトのまま表示するには、アプリケーションに
   `error` レイアウト (たとえばデフォルトのレイアウトのコピー) を追加するか、独自の `error400` と

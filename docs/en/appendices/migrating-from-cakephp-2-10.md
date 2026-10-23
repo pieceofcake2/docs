@@ -100,10 +100,15 @@ Changes in the next release that may affect applications already running on the 
       $this->layout = 'dev_error';
 
       $this->assign('title', $message);
-      $this->assign('templateName', 'error400.ctp');
+      $this->assign('templateName', 'error400.php');
       // ...
   endif;
   ```
+
+  The core templates assign `templateName` with `.php`, as in CakePHP 5.
+  `error400.ctp` also works: the customization hint names the file in the
+  layout of your application either way (`templates/Error/error400.php`, or
+  `app/View/Errors/error400.ctp` in the legacy layout).
 
 - To keep the default layout for the error pages of the framework in
   production mode, add an `error` layout to the application (e.g. a copy of the
