@@ -1,4 +1,4 @@
-# Application Skeleton with Global Classes
+# Legacy Application Skeleton
 
 [pieceofcake2/app-legacy](https://github.com/pieceofcake2/app-legacy) is the
 application skeleton for CakePHP 2 applications whose classes are global and
