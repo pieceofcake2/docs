@@ -45,7 +45,7 @@ CakePHP's internal Model class. It is this core Model class that bestows the
 functionality onto your Ingredient model.
 
 If your `composer.json` has a classmap for `src/` (as in the
-[pieceofcake2/app](https://pieceofcake2.github.io/app/) skeleton), `AppModel`
+[pieceofcake2/app-legacy](/installation/application-skeleton-legacy) skeleton), `AppModel`
 is loaded automatically by Composer. Without a classmap, CakePHP finds
 `AppModel` in the `Model` package, so the file needs no `App::uses()`.
 

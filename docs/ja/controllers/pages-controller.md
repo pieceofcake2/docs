@@ -6,7 +6,7 @@ CakePHPはデフォルトコントローラ `PagesController.php` を提供し�
 Pages Controllerは必要に応じて気軽に修正できます。
 
 Pages Controller はアプリケーションの一部で、 `src/Controller/PagesController.php` にあります。
-[pieceofcake2/app](https://pieceofcake2.github.io/app/ja/) スケルトンに含まれているほか、
+[pieceofcake2/app](/ja/installation/application-skeleton) スケルトンに含まれているほか、
 [Bake プラグイン](https://pieceofcake2.github.io/bake/ja/) でプロジェクトを作成した場合は、
 プラグインの `Console/Templates/skel/Controller/` フォルダからコピーされます。
 従来の `app/` レイアウトでは、コントローラは `app/Controller/` に、ページのビューは

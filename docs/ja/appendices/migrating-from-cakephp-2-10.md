@@ -623,7 +623,7 @@ chmod +x app/Console/cake
 - `webroot/test.php`
 
 CakePHP 2.x と 5.x の両方に対応したモダンなアプリケーションスケルトンは
-[`pieceofcake2/app`](https://pieceofcake2.github.io/app/ja/) を参照してください。
+[`pieceofcake2/app`](/ja/installation/application-skeleton) を参照してください。
 [インストール](/ja/installation) と
 [ディレクトリ構成](/ja/appendices/migrating-to-the-modern-layout) も参照してください。
 
@@ -682,7 +682,7 @@ CakePHP 2.x と 5.x の両方に対応したモダンなアプリケーション
 **新規プロジェクト、またはモダン構成（`src/`）の場合:**
 
 - 推奨: `composer.json` に classmap オートロードの設定を追加します
-  （[pieceofcake2/app](https://pieceofcake2.github.io/app/ja/) と同様）。
+  （[pieceofcake2/app-legacy](/ja/installation/application-skeleton-legacy) と同様）。
 
   ```json
   {
@@ -1085,7 +1085,7 @@ PHP 8 では `'aes'` を使う場合も `Security.useOpenSsl` の設定が必要
 `Security::encrypt()` と `Security::decrypt()` は `Security.useOpenSsl` が有効な場合にだけ
 OpenSSL を使い、そうでなければ `mcrypt_*` 関数を呼び出して失敗します。これらのメソッドを使う
 `CookieComponent` の `'aes'` タイプも同様です。フレームワークのデフォルトではこの設定は有効になっていません。
-[pieceofcake2/app](https://pieceofcake2.github.io/app/ja/) のスケルトン (v2.3.1 以降) から作成したアプリケーションでは
+[pieceofcake2/app](/ja/installation/application-skeleton) のスケルトン (v2.3.1 以降) から作成したアプリケーションでは
 `config/core.php` で有効になっています。既存のアプリケーションでは、`app/Config/core.php`（レガシー構成）または
 `config/core.php`（モダン構成）に追加してください。
 

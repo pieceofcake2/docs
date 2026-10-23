@@ -161,7 +161,7 @@ class AppError
 
 This class/method will print out 'There has been an error!' each time an error
 occurs. Composer loads the class when your `composer.json` autoloads `src/`
-with a classmap, as in [pieceofcake2/app](https://pieceofcake2.github.io/app/).
+with a classmap, as in [pieceofcake2/app-legacy](/installation/application-skeleton-legacy).
 Run `composer dump-autoload` after adding the file.
 
 PHP 8 no longer passes the fifth `$context` argument to error handlers, so

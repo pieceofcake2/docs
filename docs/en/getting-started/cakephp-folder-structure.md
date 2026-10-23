@@ -4,7 +4,7 @@ An application can use one of two layouts:
 
 - The **modern layout** keeps `config/`, `src/`, `templates/`, `tests/` and the
   other folders at the project root, as in CakePHP 5. The
-  [pieceofcake2/app](https://pieceofcake2.github.io/app/) skeleton uses it (see
+  [pieceofcake2/app](/installation/application-skeleton) skeleton uses it (see
   [Installation](../installation)).
 - The **legacy `app/` layout** keeps the code in an `app/` folder. Applications
   created with older versions of CakePHP 2 use it.

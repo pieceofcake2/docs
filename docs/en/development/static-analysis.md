@@ -43,7 +43,7 @@ same way `webroot/index.php` does.
 ### Modern Layout
 
 This is the configuration of the
-[pieceofcake2/app](https://pieceofcake2.github.io/app/) skeleton:
+[pieceofcake2/app](/installation/application-skeleton) skeleton:
 
 ```yaml
 # phpstan.neon

@@ -46,7 +46,7 @@ AppModel は CakePHP 内部の Model クラスを extend しています。
 つまり Ingredient クラスに上記の機能を与えているのはコアの Model クラスです。
 
 `composer.json` で `src/` を classmap に指定していれば
-([pieceofcake2/app](https://pieceofcake2.github.io/app/ja/) スケルトンの設定です)、
+([pieceofcake2/app-legacy](/ja/installation/application-skeleton-legacy) スケルトンの設定です)、
 AppModel は Composer によって自動的に読み込まれます。
 classmap を使わない場合も、CakePHP が `Model` パッケージから `AppModel` を見つけるので、
 ファイルに `App::uses()` を書く必要はありません。

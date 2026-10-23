@@ -3,7 +3,7 @@
 アプリケーションの構成には、次の 2 つがあります。
 
 - **モダンな構成** では、`config/`、`src/`、`templates/`、`tests/` などのフォルダをプロジェクトのルートに置きます。
-  CakePHP 5 と同じ構成です。[pieceofcake2/app](https://pieceofcake2.github.io/app/ja/) スケルトンはこの構成です
+  CakePHP 5 と同じ構成です。[pieceofcake2/app](/ja/installation/application-skeleton) スケルトンはこの構成です
   ([インストール](../installation) を参照)。
 - **従来の `app/` 構成** では、コードを `app/` フォルダに置きます。CakePHP 2 の古いバージョンで作成したアプリケーションは、この構成です。
 

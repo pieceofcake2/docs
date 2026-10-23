@@ -21,7 +21,7 @@ The CakePHP project ended support for CakePHP 2.x in
 
 This cookbook describes CakePHP 2 as it works on the fork: installation with
 Composer, PHP 8, and the modern directory layout used by
-[pieceofcake2/app](https://pieceofcake2.github.io/app/).
+[pieceofcake2/app](/installation/application-skeleton).
 [Changes from the Original Book](/appendices/changes-from-the-original-book)
 lists how it differs from the original CakePHP 2.x documentation. The
 [Piece of Cake 2 website](https://pieceofcake2.github.io/) links to the

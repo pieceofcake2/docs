@@ -308,7 +308,7 @@ skeleton can load them from a `.env` file.
 ### Loading .env Files {#loading-env-files}
 
 Applications created from the
-[pieceofcake2/app](https://pieceofcake2.github.io/app/) skeleton load
+[pieceofcake2/app](/installation/application-skeleton) skeleton load
 environment variables from `.env` files in `config/` at the top of
 `config/core.php`, with
 [symfony/dotenv](https://symfony.com/doc/current/configuration.html#configuring-environment-variables-in-env-files),
@@ -334,7 +334,7 @@ v2.5.0, it uses symfony/dotenv and the files described here. Earlier versions
 use josegonzalez/dotenv and also read `.env` files in the project root: v2.4.2
 loads only the first file that exists, v2.4.1 merges the files with the earlier
 file winning, and v2.4.0 loads `config/.env` and the root `.env`. See
-[Migrating from an Earlier Skeleton](https://pieceofcake2.github.io/app/#migrating-from-an-earlier-skeleton)
+[Migrating from an Earlier Skeleton](/installation/application-skeleton#migrating-from-an-earlier-skeleton)
 to switch. For other applications, see
 [Adding .env Support to an Existing Application](#adding-env-support-to-an-existing-application).
 :::
@@ -498,7 +498,7 @@ DATABASE_URL="mysql://my_app:secret@127.0.0.1:3306/test_my_app?encoding=utf8mb4"
 CakePHP framework classes are loaded by Composer's autoloader, so you never
 need `App::uses()` for them. Your own classes can be autoloaded the same way by
 adding a classmap to your application's `composer.json`, as the
-[pieceofcake2/app](https://pieceofcake2.github.io/app/) skeleton does:
+[pieceofcake2/app-legacy](/installation/application-skeleton-legacy) skeleton does:
 
 ```json
 "autoload": {
@@ -818,7 +818,7 @@ Configure::write('Security.useOpenSsl', true);
 ```
 
 The default is false. Applications created from the
-[pieceofcake2/app](https://pieceofcake2.github.io/app/) skeleton (v2.3.1 and
+[pieceofcake2/app](/installation/application-skeleton) skeleton (v2.3.1 and
 later) already have this line; add it to existing applications.
 
 Asset.timestamp  

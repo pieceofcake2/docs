@@ -26,7 +26,7 @@ original CakePHP 2 standard, see
 
 ## Checking Your Code
 
-The framework and the [pieceofcake2/app](https://pieceofcake2.github.io/app/)
+The framework and the [pieceofcake2/app](/installation/application-skeleton)
 application skeleton install the standard as a development dependency. To add it to an
 existing application, run:
 
@@ -853,7 +853,7 @@ files.
 
 ## A phpcs.xml for Your Application
 
-The [pieceofcake2/app](https://pieceofcake2.github.io/app/) skeleton ships the
+The [pieceofcake2/app-legacy](/installation/application-skeleton-legacy) skeleton ships the
 following `phpcs.xml` for the modern directory layout. All the CakePHP 2
 exceptions come from the `CakePHP2` standard, so the file only says what to
 check:
@@ -876,6 +876,12 @@ check:
     <rule ref="CakePHP2"/>
 </ruleset>
 ```
+
+The [pieceofcake2/app](/installation/application-skeleton#code-standards)
+skeleton, whose classes are in the `App` namespace, uses
+`<rule ref="CakePHP2Namespace"/>` instead. It also checks that each class is
+declared in a namespace, in a file named after the class, and that the classes
+it uses are imported with `use` statements.
 
 If your application uses the legacy `app/` layout, change the `<file>`
 entries to the legacy paths, for example `./app/Config`, `./app/Controller`,

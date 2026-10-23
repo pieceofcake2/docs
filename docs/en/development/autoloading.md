@@ -33,7 +33,7 @@ you need nothing in your own `composer.json`. See
 
 ## An Application in the Modern Layout {#modern-layout}
 
-The [pieceofcake2/app](https://pieceofcake2.github.io/app/) skeleton loads
+The [pieceofcake2/app-legacy](/installation/application-skeleton-legacy) skeleton loads
 `src/` with a classmap:
 
 ```json
@@ -58,7 +58,9 @@ finds your controllers, models and other classes by their short names:
 }
 ```
 
-See [Namespaced Classes](namespaced-classes).
+The [pieceofcake2/app](/installation/application-skeleton#namespace) skeleton,
+whose classes are all in the `App` namespace, loads `src/` with PSR-4 only. See
+[Namespaced Classes](namespaced-classes).
 
 ## An Application in the Legacy `app/` Layout {#legacy-layout}
 

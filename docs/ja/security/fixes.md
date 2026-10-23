@@ -218,7 +218,7 @@ mcrypt 拡張は PHP 7.2 以降同梱されておらず、[PECL](https://pecl.ph
 Configure::write('Security.useOpenSsl', true);
 ```
 
-[pieceofcake2/app](https://pieceofcake2.github.io/app/ja/) のスケルトン (v2.3.1 以降) から作成したアプリケーションには
+[pieceofcake2/app](/ja/installation/application-skeleton) のスケルトン (v2.3.1 以降) から作成したアプリケーションには
 この行が含まれています。既存のアプリケーションでは追加してください。
 
 `Security::rijndael()` と Cookie の `'rijndael'` タイプは、常に mcrypt が必要です。

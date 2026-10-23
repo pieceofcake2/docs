@@ -82,7 +82,7 @@ bdi はドライバーを `drivers/` に保存し、Panther はそこからド�
 Symfony のアプリケーションと同じように、End-to-End テストはほかのテストと並べて
 `tests/TestCase/EndToEnd/` (従来の構成では `app/Test/Case/EndToEnd/`) に置き、同じ
 `phpunit.xml.dist` から実行し、Panther の `PANTHER_*` 変数を `<server>` 要素で設定します。
-[pieceofcake2/app](https://pieceofcake2.github.io/app/ja/) スケルトンにはこの設定が含まれているので、
+[pieceofcake2/app](/ja/installation/application-skeleton) スケルトンにはこの設定が含まれているので、
 拡張のコメントを外してください。
 
 ```xml

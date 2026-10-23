@@ -2,7 +2,7 @@
 
 継続的インテグレーション (CI) は、プッシュやプルリクエストのたびにチェックを実行し、壊れたテスト、
 コーディング規約の違反、型のエラーを変更のマージ前に見つけます。このページでは、
-[pieceofcake2/app](https://pieceofcake2.github.io/app/ja/) スケルトンで作ったアプリケーションのための
+[pieceofcake2/app](/ja/installation/application-skeleton) スケルトンで作ったアプリケーションのための
 GitHub Actions のワークフローを示し、各ジョブを、そのツールを詳しく説明しているページへのリンクとともに
 紹介します。また、各ジョブの短いサマリーを実行結果のページに表示する方法も説明します。
 Jenkins でテストを実行する方法は、最後の [Jenkins](#jenkins) で説明します。

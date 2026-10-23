@@ -80,7 +80,7 @@ As in a Symfony application, the End-to-End tests live next to your other
 tests, in `tests/TestCase/EndToEnd/` (`app/Test/Case/EndToEnd/` in the legacy
 layout), run from the same `phpunit.xml.dist`, and are configured with Panther's
 `PANTHER_*` variables as `<server>` elements. The
-[pieceofcake2/app](https://pieceofcake2.github.io/app/) skeleton already has
+[pieceofcake2/app](/installation/application-skeleton) skeleton already has
 this configuration; uncomment the extension there:
 
 ```xml

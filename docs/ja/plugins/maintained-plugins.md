@@ -11,7 +11,8 @@ AI ツールから直接読み込めます。
 ## コアリポジトリ
 
 - [CakePHP](https://github.com/pieceofcake2/cakephp) - CakePHP 2.x フレームワーク
-- [App Skeleton](https://pieceofcake2.github.io/app/ja/) ([Markdown](https://github.com/pieceofcake2/app/blob/2.x/docs/ja/README.md)) - アプリケーションスケルトン
+- [App Skeleton](/ja/installation/application-skeleton) ([Markdown](https://github.com/pieceofcake2/docs/blob/2.x/docs/ja/installation/application-skeleton.md)) - アプリケーションスケルトン
+- [App Legacy Skeleton](/ja/installation/application-skeleton-legacy) ([Markdown](https://github.com/pieceofcake2/docs/blob/2.x/docs/ja/installation/application-skeleton-legacy.md)) - グローバルなクラスと `.ctp` のテンプレートのアプリケーションスケルトン
 - [Plugin Skeleton](https://github.com/pieceofcake2/plugin) - プラグインスケルトン
 - [Bake Plugin](https://pieceofcake2.github.io/bake/ja/) ([Markdown](https://github.com/pieceofcake2/bake/blob/1.x/docs/ja/README.md)) - コード生成ツール
 - [Upgrade Plugin](https://pieceofcake2.github.io/upgrade/ja/) ([Markdown](https://github.com/pieceofcake2/upgrade/blob/1.x/docs/ja/README.md)) - アップグレード用ユーティリティ（CakePHP 1.3 から 2.0）
@@ -123,6 +124,7 @@ Composer が読み込まないプラグインのそのほかのクラスは、�
 | --- | --- | --- | --- |
 | [pieceofcake2/cakephp](https://github.com/pieceofcake2/cakephp) | [cakephp/cakephp](https://github.com/cakephp/cakephp) のフォーク。PHP 8 対応は [kamilwylegala/cakephp2-php8](https://github.com/kamilwylegala/cakephp2-php8) を取り込み | CakePHP コミュニティ (Cake Software Foundation、Inc.) | 2.10.24 |
 | [pieceofcake2/app](https://github.com/pieceofcake2/app) | [cakephp/cakephp](https://github.com/cakephp/cakephp) がベース (`app/`) | CakePHP コミュニティ (Cake Software Foundation, Inc.) | 2.10.24 |
+| [pieceofcake2/app-legacy](https://github.com/pieceofcake2/app-legacy) | [cakephp/cakephp](https://github.com/cakephp/cakephp) がベース (`app/`) | CakePHP コミュニティ (Cake Software Foundation, Inc.) | 2.10.24 |
 | [pieceofcake2/plugin](https://github.com/pieceofcake2/plugin) | オリジナル | - | - |
 | [pieceofcake2/bake](https://github.com/pieceofcake2/bake) | [cakephp/cakephp](https://github.com/cakephp/cakephp) がベース (BakeShell) | CakePHP コミュニティ (Cake Software Foundation, Inc.) | 2.10.24 |
 | [pieceofcake2/upgrade](https://github.com/pieceofcake2/upgrade) | [cakephp/cakephp](https://github.com/cakephp/cakephp) がベース (UpgradeShell) | CakePHP コミュニティ (Cake Software Foundation, Inc.) | 2.10.24 |

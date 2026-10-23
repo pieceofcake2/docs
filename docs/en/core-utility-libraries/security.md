@@ -15,7 +15,7 @@ hashing and encrypting data.
 > Configure::write('Security.useOpenSsl', true);
 > ```
 >
-> Applications created from the [pieceofcake2/app](https://pieceofcake2.github.io/app/)
+> Applications created from the [pieceofcake2/app](/installation/application-skeleton)
 > skeleton (v2.3.1 and later) already have this line. Add it to existing
 > applications.
 >
