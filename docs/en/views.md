@@ -136,12 +136,19 @@ same way:
   one uses.
 
 If a controller or a view class sets `$ext` to another extension, for example
-`'.php'` or the `'.twig'` of a Twig view class, CakePHP first looks for that
-extension in all the view paths: `default.php` in a `View/` path, and
-`layout/default.php` and `Layouts/default.php` in a `templates/` path. Only
-when no path has it, it looks again with `.ctp` as in the table above. So with
-`$ext = '.php'`, a `.php` template of the application is used before a `.ctp`
-template of a theme.
+`'.php'` or the `'.twig'` of a Twig view class, CakePHP still goes through the
+view paths in the same order, and in each path tries that extension before
+`.ctp`: `Layouts/default.twig` and then `Layouts/default.ctp` in a `View/`
+path, and `layout/default.twig` and `Layouts/default.twig` and then the files
+of the table in a `templates/` path. So a theme or a plugin still overrides the
+application, and the application the core, whichever extension each one uses.
+A `View/` path is searched for `.php` files only when `$ext` is `'.php'`.
+
+::: pieceofcake2 Changed in the release after 2.13.0
+Before, CakePHP looked for `$ext` in all the view paths before `.ctp`, so with
+`$ext = '.php'` a `.php` template of the application or the core was used
+before a `.ctp` template of a theme or the application.
+:::
 
 The view layer in CakePHP can be made up of a number of different
 parts. Each part has different uses, and will be covered in this
