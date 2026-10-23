@@ -45,7 +45,7 @@ PHPStan はプロジェクトルートの `phpstan.neon` から設定を読み�
 
 ### モダン構成
 
-[pieceofcake2/app](https://pieceofcake2.github.io/app/ja/) スケルトンの設定は次のとおりです。
+[pieceofcake2/app](/ja/installation/application-skeleton) スケルトンの設定は次のとおりです。
 
 ```yaml
 # phpstan.neon

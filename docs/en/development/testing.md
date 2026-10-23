@@ -50,7 +50,7 @@ dependency by running the following in the directory that contains your
 composer require --dev phpunit/phpunit:^9.6
 ```
 
-The [pieceofcake2/app](https://pieceofcake2.github.io/app/) skeleton already
+The [pieceofcake2/app](/installation/application-skeleton) skeleton already
 requires `phpunit/phpunit` in its `require-dev` section, so `composer install`
 is all you need there. PHPUnit is loaded through Composer's autoloader together
 with CakePHP, and the `phpunit` command is installed as `vendor/bin/phpunit`.
@@ -88,7 +88,7 @@ The connection can also be a DSN in the `'dsn'` key. See
 
 ### The Test Database of the Skeleton {#the-test-database-of-the-skeleton}
 
-The [pieceofcake2/app](https://pieceofcake2.github.io/app/) skeleton has one
+The [pieceofcake2/app](/installation/application-skeleton) skeleton has one
 database variable, as in Symfony: `DATABASE_URL` is the database of the current
 environment, and `config/database.php.default` gives it to both connections:
 
@@ -286,7 +286,7 @@ the test cases very frequently. It's a good idea to run tests before committing
 any changes to help ensure you haven't broken anything.
 
 The recommended way to run tests is from the command line. The
-[pieceofcake2/app](https://pieceofcake2.github.io/app/) skeleton contains a
+[pieceofcake2/app](/installation/application-skeleton) skeleton contains a
 `phpunit.xml.dist` in the project root that configures PHPUnit for CakePHP:
 
 ```xml
@@ -439,7 +439,7 @@ avoided.
 CakePHP also provides a web interface for running tests, so you can execute your
 tests through a browser if you're more comfortable in that environment. The web
 runner is the `webroot/test.php` file, next to `index.php`; the
-[pieceofcake2/app](https://pieceofcake2.github.io/app/) skeleton includes it.
+[pieceofcake2/app](/installation/application-skeleton) skeleton includes it.
 You can access it by going to `http://localhost/your_app/test.php`. It is only
 available when debug is 1 or higher.
 

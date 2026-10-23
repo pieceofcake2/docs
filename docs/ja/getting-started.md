@@ -17,7 +17,7 @@ CakePHP プロジェクトによる CakePHP 2.x のサポートは
 [2021年6月に終了](https://bakery.cakephp.org/2021/10/02/cakephp_2_eol.html)しました。
 
 このクックブックは、フォーク上で動く CakePHP 2 に合わせて、Composer でのインストール、PHP 8、
-[pieceofcake2/app](https://pieceofcake2.github.io/app/ja/) で使っているモダンなディレクトリ構成を前提に説明しています。
+[pieceofcake2/app](/ja/installation/application-skeleton) で使っているモダンなディレクトリ構成を前提に説明しています。
 本家の CakePHP 2.x のドキュメントとの違いは [本家ドキュメントからの変更点](/ja/appendices/changes-from-the-original-book)
 にまとめています。フォークのほかのプロジェクトやリソースは
 [Piece of Cake 2 のサイト](https://pieceofcake2.github.io/) から参照できます。

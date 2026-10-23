@@ -3,7 +3,7 @@
 Continuous integration (CI) runs your checks on every push and pull request,
 so that a broken test, a coding standard violation or a type error is found
 before the change is merged. This page shows a GitHub Actions workflow for an
-application built on the [pieceofcake2/app](https://pieceofcake2.github.io/app/)
+application built on the [pieceofcake2/app](/installation/application-skeleton)
 skeleton, introduces each of its jobs with a link to the page that covers the
 tool in detail, and shows how to add a short summary of each job to the run
 page. Running the tests on a Jenkins server is described at the end, in

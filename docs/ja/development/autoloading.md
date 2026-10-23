@@ -28,7 +28,7 @@ CakePHP のクラスは `Cake` 名前空間にあり、ファイルは `vendor/p
 
 ## モダンな構成のアプリケーション {#modern-layout}
 
-[pieceofcake2/app](https://pieceofcake2.github.io/app/ja/) スケルトンは、`src/` をクラスマップで読み込みます。
+[pieceofcake2/app-legacy](/ja/installation/application-skeleton-legacy) スケルトンは、`src/` をクラスマップで読み込みます。
 
 ```json
 "autoload": {
@@ -52,7 +52,8 @@ CakePHP のクラスは `Cake` 名前空間にあり、ファイルは `vendor/p
 }
 ```
 
-[名前空間のあるクラス](namespaced-classes) を参照してください。
+すべてのクラスが `App` 名前空間にある [pieceofcake2/app](/ja/installation/application-skeleton#namespace)
+スケルトンは、`src/` を PSR-4 だけで読み込みます。[名前空間のあるクラス](namespaced-classes) を参照してください。
 
 ## 従来の `app/` 構成のアプリケーション {#legacy-layout}
 

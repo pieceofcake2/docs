@@ -294,7 +294,7 @@ ConnectionManager::parseDsn('postgres://user:secret@db:5432/app');
 
 ### .env ファイルの読み込み
 
-[pieceofcake2/app](https://pieceofcake2.github.io/app/ja/) スケルトンから作成したアプリケーションは、
+[pieceofcake2/app](/ja/installation/application-skeleton) スケルトンから作成したアプリケーションは、
 Symfony のアプリケーションと同じように、`config/core.php` の先頭で
 [symfony/dotenv](https://symfony.com/doc/current/configuration.html#configuring-environment-variables-in-env-files)
 を使って `config/` の `.env` ファイルから環境変数を読み込みます。`config/core.php` は最初に読み込まれるので、
@@ -317,7 +317,7 @@ CakePHP 3〜5 のアプリケーションスケルトン ([cakephp/app](https://
 symfony/dotenv を使い、ここで説明するファイルを読み込みます。それより前のバージョンは josegonzalez/dotenv を使い、
 プロジェクトルートの `.env` ファイルも読み込みます。v2.4.2 は最初に見つかったファイルだけを読み込み、v2.4.1 は
 先のファイルを優先してファイルをマージし、v2.4.0 は `config/.env` とルートの `.env` を読み込みます。切り替える
-方法は [以前のスケルトンからの移行](https://pieceofcake2.github.io/app/ja/#migrating-from-an-earlier-skeleton)
+方法は [以前のスケルトンからの移行](/ja/installation/application-skeleton#migrating-from-an-earlier-skeleton)
 を参照してください。ほかのアプリケーションについては、
 [既存のアプリケーションに .env サポートを追加する](#adding-env-support-to-an-existing-application)
 を参照してください。
@@ -473,7 +473,7 @@ DATABASE_URL="mysql://my_app:secret@127.0.0.1:3306/test_my_app?encoding=utf8mb4"
 
 CakePHP フレームワークのクラスは Composer のオートローダーで読み込まれるので、
 `App::uses()` を書く必要はありません。アプリケーションのクラスも、
-[pieceofcake2/app](https://pieceofcake2.github.io/app/ja/) スケルトンのように
+[pieceofcake2/app-legacy](/ja/installation/application-skeleton-legacy) スケルトンのように
 `composer.json` に classmap を追加すれば同じようにオートロードできます。
 
 ```json
@@ -800,7 +800,7 @@ true にすると、`Security::encrypt()` と `Security::decrypt()` (つまり C
 Configure::write('Security.useOpenSsl', true);
 ```
 
-デフォルトは false です。[pieceofcake2/app](https://pieceofcake2.github.io/app/ja/) のスケルトン (v2.3.1 以降) から
+デフォルトは false です。[pieceofcake2/app](/ja/installation/application-skeleton) のスケルトン (v2.3.1 以降) から
 作成したアプリケーションにはこの行が含まれています。既存のアプリケーションでは追加してください。
 
 Asset.timestamp  

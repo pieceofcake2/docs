@@ -686,7 +686,7 @@ The following files need to be updated:
 - `webroot/index.php`
 - `webroot/test.php`
 
-See [`pieceofcake2/app`](https://pieceofcake2.github.io/app/) for the modern
+See [`pieceofcake2/app`](/installation/application-skeleton) for the modern
 application skeleton compatible with both CakePHP 2.x and 5.x.
 See also [Installation](/installation) and
 [Directory Structure](/appendices/migrating-to-the-modern-layout).
@@ -756,7 +756,7 @@ tooling.
 **For new projects or modern directory structure (`src/`):**
 
 - Recommended: Update your `composer.json` to include classmap autoloading
-  (similar to [pieceofcake2/app](https://pieceofcake2.github.io/app/)):
+  (similar to [pieceofcake2/app-legacy](/installation/application-skeleton-legacy)):
 
   ```json
   {
@@ -1174,7 +1174,7 @@ not installed (it is available from [PECL](https://pecl.php.net/package/mcrypt))
 `Security.useOpenSsl` is enabled; otherwise they call `mcrypt_*` functions and
 fail. The same applies to `CookieComponent` with the `'aes'` type, which uses
 these methods. The framework does not enable the setting by default.
-Applications created from the [pieceofcake2/app](https://pieceofcake2.github.io/app/)
+Applications created from the [pieceofcake2/app](/installation/application-skeleton)
 skeleton (v2.3.1 and later) already have it in `config/core.php`. In existing
 applications, add it to `app/Config/core.php` (legacy) or `config/core.php`
 (modern):

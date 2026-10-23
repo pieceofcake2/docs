@@ -34,7 +34,7 @@ Let's get started!
 ## Getting CakePHP
 
 First, let's create a new application with Composer. The
-[pieceofcake2/app](https://pieceofcake2.github.io/app/) application skeleton
+[pieceofcake2/app](/installation/application-skeleton) application skeleton
 installs CakePHP for you:
 
 ```bash

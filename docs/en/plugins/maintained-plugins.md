@@ -12,7 +12,8 @@ directly.
 ## Core repositories
 
 - [CakePHP](https://github.com/pieceofcake2/cakephp) - CakePHP 2.x framework
-- [App Skeleton](https://pieceofcake2.github.io/app/) ([Markdown](https://github.com/pieceofcake2/app/blob/2.x/docs/README.md)) - Application skeleton
+- [App Skeleton](/installation/application-skeleton) ([Markdown](https://github.com/pieceofcake2/docs/blob/2.x/docs/en/installation/application-skeleton.md)) - Application skeleton
+- [App Legacy Skeleton](/installation/application-skeleton-legacy) ([Markdown](https://github.com/pieceofcake2/docs/blob/2.x/docs/en/installation/application-skeleton-legacy.md)) - Application skeleton with global classes and `.ctp` templates
 - [Plugin Skeleton](https://github.com/pieceofcake2/plugin) - Plugin skeleton
 - [Bake Plugin](https://pieceofcake2.github.io/bake/) ([Markdown](https://github.com/pieceofcake2/bake/blob/1.x/docs/README.md)) - Code generation tool
 - [Upgrade Plugin](https://pieceofcake2.github.io/upgrade/) ([Markdown](https://github.com/pieceofcake2/upgrade/blob/1.x/docs/README.md)) - Upgrade utility (CakePHP 1.3 to 2.0)
@@ -126,6 +127,7 @@ and its LICENSE file keeps the copyright notices of the original authors.
 | --- | --- | --- | --- |
 | [pieceofcake2/cakephp](https://github.com/pieceofcake2/cakephp) | Fork of [cakephp/cakephp](https://github.com/cakephp/cakephp), with the PHP 8 work of [kamilwylegala/cakephp2-php8](https://github.com/kamilwylegala/cakephp2-php8) | CakePHP community (Cake Software Foundation, Inc.) | 2.10.24 |
 | [pieceofcake2/app](https://github.com/pieceofcake2/app) | Based on [cakephp/cakephp](https://github.com/cakephp/cakephp) (`app/`) | CakePHP community (Cake Software Foundation, Inc.) | 2.10.24 |
+| [pieceofcake2/app-legacy](https://github.com/pieceofcake2/app-legacy) | Based on [cakephp/cakephp](https://github.com/cakephp/cakephp) (`app/`) | CakePHP community (Cake Software Foundation, Inc.) | 2.10.24 |
 | [pieceofcake2/plugin](https://github.com/pieceofcake2/plugin) | Original | - | - |
 | [pieceofcake2/bake](https://github.com/pieceofcake2/bake) | Based on [cakephp/cakephp](https://github.com/cakephp/cakephp) (BakeShell) | CakePHP community (Cake Software Foundation, Inc.) | 2.10.24 |
 | [pieceofcake2/upgrade](https://github.com/pieceofcake2/upgrade) | Based on [cakephp/cakephp](https://github.com/cakephp/cakephp) (UpgradeShell) | CakePHP community (Cake Software Foundation, Inc.) | 2.10.24 |

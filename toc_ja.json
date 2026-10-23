@@ -13,6 +13,14 @@
           "link": "/ja/installation"
         },
         {
+          "text": "アプリケーションスケルトン",
+          "link": "/ja/installation/application-skeleton"
+        },
+        {
+          "text": "グローバルなクラスのアプリケーションスケルトン",
+          "link": "/ja/installation/application-skeleton-legacy"
+        },
+        {
           "text": "高度なインストール",
           "link": "/ja/installation/advanced-installation"
         },

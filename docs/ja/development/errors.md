@@ -150,7 +150,7 @@ class AppError
 ```
 
 このクラス／メソッドはエラーが発生するたびに「エラー発生！」と表示します。
-[pieceofcake2/app](https://pieceofcake2.github.io/app/ja/) のように `composer.json` で `src/`
+[pieceofcake2/app-legacy](/ja/installation/application-skeleton-legacy) のように `composer.json` で `src/`
 をクラスマップでオートロードしていれば、このクラスは Composer が読み込みます。ファイルを追加したら
 `composer dump-autoload` を実行してください。
 

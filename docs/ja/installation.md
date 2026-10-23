@@ -13,7 +13,7 @@ CakePHP を nginx や lighttpd、Microsoft IIS のような様々なウェブサ
 > CakePHP 2 は既存アプリケーションの保守のためのものです。
 > 新しくプロジェクトを始める場合は [CakePHP 5](https://book.cakephp.org/5/ja/) を使ってください。
 
-## システム要件
+## システム要件 {#requirements}
 
 - HTTPサーバー。例: Apache。mod_rewriteが推奨されますが、必須ではありません。
 - PHP 8.0、8.1、8.2、8.3、8.4、8.5
@@ -107,7 +107,7 @@ CakePHP 2.10.24 からのその他の変更点は [アップグレードガイ�
 
 ## 新しいアプリケーションの作成 {#creating-a-new-application}
 
-アプリケーションのスケルトンは [pieceofcake2/app](https://pieceofcake2.github.io/app/ja/)
+アプリケーションのスケルトンは [pieceofcake2/app](/ja/installation/application-skeleton)
 パッケージとして提供されています。Composer の `create-project` コマンドで新しいアプリケーションを作成します。
 
 ```bash
@@ -135,6 +135,16 @@ my_app/
 ```
 
 詳しくは [CakePHP のフォルダ構造](getting-started/cakephp-folder-structure) を参照してください。
+
+pieceofcake2/app のアプリケーションのクラスは `App` 名前空間にあり、テンプレートは CakePHP 5 のディレクトリにある
+`.php` ファイルです。グローバルなクラスと `.ctp` のテンプレートを使う場合は、代わりに
+[pieceofcake2/app-legacy](installation/application-skeleton-legacy) からアプリケーションを作成します。
+
+```bash
+composer create-project pieceofcake2/app-legacy my_app
+```
+
+スケルトンの内容は [アプリケーションスケルトン](installation/application-skeleton) をご覧ください。
 
 続いて設定を済ませます。
 

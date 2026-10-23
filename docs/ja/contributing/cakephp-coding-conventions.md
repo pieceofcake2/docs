@@ -24,7 +24,7 @@ CakePHP の開発者は以下のコーディング規約を使います。これ
 
 ## コードのチェック
 
-フレームワークと [pieceofcake2/app](https://pieceofcake2.github.io/app/ja/) アプリケーションスケルトンは、
+フレームワークと [pieceofcake2/app](/ja/installation/application-skeleton) アプリケーションスケルトンは、
 この規約を開発用の依存パッケージとしてインストールします。
 既存のアプリケーションに追加するには次のコマンドを実行します。
 
@@ -819,7 +819,7 @@ CakePHP 5 の規約は、名前空間とネイティブの型宣言を使うコ�
 
 ## アプリケーション用の phpcs.xml
 
-[pieceofcake2/app](https://pieceofcake2.github.io/app/ja/) スケルトンには、
+[pieceofcake2/app-legacy](/ja/installation/application-skeleton-legacy) スケルトンには、
 モダンなディレクトリ構成用の次の `phpcs.xml` が含まれています。
 CakePHP 2 のための除外はすべて `CakePHP2` 規約にあるので、このファイルにはチェックする対象だけを書きます。
 
@@ -841,6 +841,10 @@ CakePHP 2 のための除外はすべて `CakePHP2` 規約にあるので、こ�
     <rule ref="CakePHP2"/>
 </ruleset>
 ```
+
+クラスが `App` 名前空間にある [pieceofcake2/app](/ja/installation/application-skeleton#code-standards) スケルトンは、
+代わりに `<rule ref="CakePHP2Namespace"/>` を使います。この規約は、クラスが名前空間の中で、クラス名と同じ名前の
+ファイルに宣言されていることと、使うクラスが `use` 文でインポートされていることもチェックします。
 
 アプリケーションが従来の `app/` 構成の場合は、`<file>` を従来のパスに変更してください。
 たとえば `./app/Config`、`./app/Controller`、`./app/Model`、`./app/View`、`./app/Test` を指定します。

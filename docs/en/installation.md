@@ -121,7 +121,7 @@ CakePHP 2.10.24.
 
 ## Creating a New Application
 
-The [pieceofcake2/app](https://pieceofcake2.github.io/app/) package is the
+The [pieceofcake2/app](/installation/application-skeleton) package is the
 application skeleton. Create a new application with Composer's
 `create-project` command:
 
@@ -151,6 +151,18 @@ my_app/
 
 See [CakePHP Folder Structure](getting-started/cakephp-folder-structure) for
 details.
+
+The application classes of pieceofcake2/app are in the `App` namespace, and its
+templates are `.php` files in the directories of CakePHP 5. For global classes
+and `.ctp` templates, create the application from
+[pieceofcake2/app-legacy](installation/application-skeleton-legacy) instead:
+
+```bash
+composer create-project pieceofcake2/app-legacy my_app
+```
+
+See [Application Skeleton](installation/application-skeleton) for what the
+skeleton contains.
 
 Next, finish the configuration:
 
