@@ -13,6 +13,14 @@
           "link": "/installation"
         },
         {
+          "text": "Application Skeleton",
+          "link": "/installation/application-skeleton"
+        },
+        {
+          "text": "Application Skeleton with Global Classes",
+          "link": "/installation/application-skeleton-legacy"
+        },
+        {
           "text": "Advanced Installation",
           "link": "/installation/advanced-installation"
         },

@@ -13,7 +13,7 @@ CakePHP を nginx や lighttpd、Microsoft IIS のような様々なウェブサ
 > CakePHP 2 は既存アプリケーションの保守のためのものです。
 > 新しくプロジェクトを始める場合は [CakePHP 5](https://book.cakephp.org/5/ja/) を使ってください。
 
-## システム要件
+## システム要件 {#requirements}
 
 - HTTPサーバー。例: Apache。mod_rewriteが推奨されますが、必須ではありません。
 - PHP 8.0、8.1、8.2、8.3、8.4、8.5
