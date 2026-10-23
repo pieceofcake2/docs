@@ -208,12 +208,18 @@ Configure::write('Debugger.editorBasePath', '/home/me/projects/my_app');
 ```
 
 `Debugger::editorUrl()`, `Debugger::setEditor()` and `Debugger::addEditor()`
-work as in CakePHP 5. Production mode (`debug` = 0), AJAX requests and the
-console are unchanged. Error templates provided by your application, plugin
-or theme keep rendering in your layout, and a `Layouts/dev_error.ctp` in the
-application or theme overrides the core layout. See
+work as in CakePHP 5. Production mode (`debug` = 0) and the console are
+unchanged. Error templates provided by your application, plugin or theme keep
+rendering in your layout, and a `Layouts/dev_error.ctp` (or
+`layout/dev_error.php`) in the application or theme overrides the core layout,
+`templates/layout/dev_error.php` of the framework. See
 [Migrating from CakePHP 2.10](/appendices/migrating-from-cakephp-2-10#dev-error-pages)
 for how to keep the old look.
+
+Since the release after CakePHP 2.13.0, the core error templates switch layouts
+as in CakePHP 5: AJAX requests in debug mode also get this page, and the core
+`error400` and `error500` templates use the `error` layout in production mode.
+See [Layouts of the core error pages](/appendices/migrating-from-cakephp-2-10#error-page-layouts).
 :::
 
 ## Using Logging to debug

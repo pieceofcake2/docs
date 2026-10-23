@@ -24,6 +24,91 @@
 4. **PHP をアップグレードする**: PHP 8.0 以降に更新します
 5. **十分にテストする**: アプリケーションのテストスイートを実行し、互換性を確認します
 
+## 未リリース
+
+次のリリースの変更のうち、すでにフォークで動いているアプリケーションに影響する可能性があるものです。
+
+### デバッグ用のエラーページのヒント ([PR #116](https://github.com/pieceofcake2/cakephp/pull/116)) {#error-page-hints}
+
+- `templates/` のあるアプリケーションでは、Missing View と Missing Layout のページとカスタマイズの
+  ヒントが、View が最初に探すファイルを示します。たとえば `templates/Pages/home.php`、
+  `templates/layout/default.php`、`templates/Error/error400.php` です。これまでは `src/View/` と
+  `templates/Errors/` の `.ctp` のファイルを示していました。
+- `App.namespace` を設定していると、コントローラー、アクション、コンポーネント、ヘルパー、
+  ビヘイビアが見つからないときのページは、アプリケーションまたはプラグインの名前空間のクラスを、
+  親クラスの `use` とあわせて示します。読み込まれていないプラグインは `plugins/<Plugin>/src/` に示します。
+- 従来のレイアウトのアプリケーションのヒントは変わりません。
+
+### コアのテンプレートを `.php` と CakePHP 5 のディレクトリに ([PR #117](https://github.com/pieceofcake2/cakephp/pull/117)) {#core-templates-php}
+
+- フレームワークのテンプレートは、CakePHP 5 のディレクトリにある `.php` のファイルになりました。
+  `Errors/`、`Layouts/` (`Layouts/Emails/`)、`Elements/`、`Emails/` の `.ctp` に代わって、
+  `templates/Error/`、`templates/layout/` (`layout/email/`)、`templates/element/`、
+  `templates/email/` です。たとえば `templates/layout/dev_error.php` です。`Pages/`、`Scaffolds/` と
+  サブディレクトリ (`element/Flash/`、`layout/js/` など) の名前は変わりません。
+- アプリケーション、プラグイン、テーマのテンプレートは、どちらのディレクトリ名でも、どちらの拡張子でも、
+  これまでどおりコアのテンプレートより優先されます。
+- コントローラーやビューが `$ext` に `.ctp` 以外を設定していても、ビューはテンプレート、レイアウト、エレメントを
+  パスごとに探します。それぞれのビューのパスで `$ext`、`.ctp` の順に探します。以前は、すべてのビューのパスで
+  先に `$ext` を探していました。`$ext = '.php'` でも、アプリケーションの `.ctp` のテンプレートはコアの
+  テンプレート (たとえば `Error/error400.php`) より優先され、テーマやプラグインの `.ctp` のテンプレートは
+  アプリケーションの `.php` のテンプレートより先に使われます。デフォルトの `.ctp` では何も変わりません。
+- テンプレート、レイアウト、エレメントが見つからないときのメッセージは、ビューが最初に探すファイルを示します。
+  `templates/` では `Pages/home.php`、`layout/default.php`、`element/foo.php`、`View/` では `.ctp` の名前です。
+
+**移行方法:**
+
+- コアのテンプレートのパスを組み立てているコード (たとえば
+  `CORE_ROOT . DS . 'templates' . DS . 'Layouts' . DS . 'default.ctp'`) は、新しいパスに変えてください。
+
+### コアのエラーページのレイアウト ([PR #117](https://github.com/pieceofcake2/cakephp/pull/117)) {#error-page-layouts}
+
+- コアのエラーテンプレートは、CakePHP 5 のエラーテンプレートと同じようにレイアウトを切り替えます。
+  `error400` と `error500` は、まず `error` レイアウトを設定し、デバッグモードでは `dev_error`
+  レイアウトを使います。デバッグモードでしか表示されないほかのコアのエラーページは、常に `dev_error`
+  を使います。
+- デバッグモードでは、AJAX リクエストにもデバッグ用のエラーページを返します。これまではリクエストの
+  レイアウトの中にエラーを表示していました。
+- 本番モードでは、アプリケーションにテンプレートがないときに使うコアの `error400` と `error500` を、
+  デフォルトのレイアウトではなく `error` レイアウトで表示します。アプリケーションに `error`
+  レイアウトがなければ、フレームワークの `error` レイアウトを使います。
+
+**移行方法:**
+
+- pieceofcake2/app v2.5.3 以前、または pieceofcake2/app-legacy から作ったアプリケーションのエラー
+  テンプレートは、フレームワークに `templates/Layouts/dev_error.ctp` があるときだけ `dev_error`
+  レイアウトを使います。
+
+  ```php
+  $devErrorLayout = is_file(dirname(CAKE_CORE_INCLUDE_PATH) . DS . 'templates' . DS . 'Layouts' . DS . 'dev_error.ctp');
+  ```
+
+  このファイルは `templates/layout/dev_error.php` になったので、これらのテンプレートはデバッグモードで
+  エラーをアプリケーションのデフォルトのレイアウトに表示します。`error400.ctp` と `error500.ctp`
+  (`templates/Errors/`、従来のレイアウトでは `app/View/Errors/`) からこのチェックを削除してください。
+  フレームワークには v2.12.6 からこのレイアウトがあります。あわせて、コアのテンプレートと同じように
+  レイアウトを切り替えます。
+
+  ```php
+  $this->layout = 'error';
+
+  if (Configure::read('debug')) :
+      $this->layout = 'dev_error';
+
+      $this->assign('title', $message);
+      $this->assign('templateName', 'error400.php');
+      // ...
+  endif;
+  ```
+
+  コアのテンプレートは、CakePHP 5 と同じように `templateName` に `.php` の名前を設定します。
+  `error400.ctp` のままでもかまいません。どちらでも、カスタマイズのヒントはアプリケーションの構成に合った
+  ファイル (`templates/Error/error400.php`、従来のレイアウトでは `app/View/Errors/error400.ctp`) を示します。
+
+- 本番モードでフレームワークのエラーページをデフォルトのレイアウトのまま表示するには、アプリケーションに
+  `error` レイアウト (たとえばデフォルトのレイアウトのコピー) を追加するか、独自の `error400` と
+  `error500` のテンプレートを用意してください。
+
 ## v2.13.0
 
 v2.13.0 の変更のうち、すでにフォークで動いているアプリケーションに影響する可能性があるものです。

@@ -335,7 +335,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - （日本語版）優先度とプラグイン記法に関する誤訳を修正
 - [例外(Exception)](/ja/development/exceptions)
   - 組み込み例外の一覧で欠けていた例外クラス名を表形式で復元
-  - パスをモダン構成（`templates/Errors`、`templates/Layouts`、`src/Lib/Error`、`config/core.php`）に変更し、`Exception.skipLog` を追記
+  - パスをモダン構成（`templates/Errors`、`templates/Layouts`、`src/Lib/Error`、`config/core.php`）に変更し、`Exception.skipLog` を追記。フレームワークの `templates/Error/` のコアテンプレートと、`error` と `dev_error` のレイアウトを追記
   - 例外ハンドラはすべての Throwable を受け取ることを説明し、例を Throwable 型に変更、PHP 5.3 の注意書きとフレームワーククラスの App::uses() を削除
   - 変更点: Composer クラスマップのため、アプリでの CakeErrorController の上書きは確実ではない。_getController() を使う
 - [エラーハンドリング](/ja/development/errors)
@@ -349,7 +349,7 @@ CakePHP 2 と本家の CakePHP 2.10.24 との違いをまとめ、本家のド�
   - ログの出力先を `logs/`（`debug.log`/`error.log`）に変更し、Object を CakeObject に、App::uses('CakeLog') を削除
   - DebugKit: pieceofcake2/debug_kit を Composer でインストールし、`config/bootstrap.php` で読み込む。フォークの DebugKit のドキュメントへのリンクを追加
   - DebugKit: 現在のツールバー (右下の CakePHP アイコン、パネル、リクエスト履歴) の説明に更新
-  - 「デバッグ用のエラーページ」の節を追加 (v2.12.6): CakePHP 5 から移植した `dev_error` レイアウト、`(edit)` リンク用の `Debugger.editor` と `Debugger.editorBasePath`、`Layouts/dev_error.ctp` での置き換え
+  - 「デバッグ用のエラーページ」の節を追加 (v2.12.6): CakePHP 5 から移植した `dev_error` レイアウト、`(edit)` リンク用の `Debugger.editor` と `Debugger.editorBasePath`、`Layouts/dev_error.ctp` での置き換え。2.13.0 の次のリリースからの CakePHP 5 と同じレイアウトの切り替え (デバッグモードの AJAX リクエスト、本番モードの `error` レイアウト)
 - [テスト](/ja/development/testing)
   - PHPUnit 9.6 を Composer (require-dev) でインストール。PHPUnit 3.7/4.x/5.x、.phar、オートローダー回避策の手順を削除
   - テストケースは `tests/TestCase`、フィクスチャは `tests/Fixture`、設定は `config/` に変更。レガシーな `app/Test` 構成は代替として記載
