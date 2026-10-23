@@ -97,6 +97,52 @@ mixed, so templates can be moved one by one.
 > `Layouts/`, `Elements/`, `Emails/` and `Errors/`. Keep only templates in
 > `templates/`.
 
+#### How the View Finds a Template {#template-lookup}
+
+`View::$ext` (and `Controller::$ext`, which the controller passes to the view)
+is `.ctp` by default. With this default, CakePHP goes through the view paths
+in their usual order (the theme, the templates of the plugin in the
+application, the plugin, the application, the core) and, in each path, tries
+the following files. The first file that exists is used.
+
+| Order | In a `templates/` path | In a `View/` path |
+|---|---|---|
+| 1 | `layout/default.php` | `Layouts/default.ctp` |
+| 2 | `Layouts/default.php` | |
+| 3 | `layout/default.ctp` | |
+| 4 | `Layouts/default.ctp` | |
+
+The table shows the layout `default`; the other templates are looked up the
+same way:
+
+- In a `templates/` path, CakePHP tries `.php` before `.ctp`, and for each
+  extension the CakePHP 5 directory before the CakePHP 2 one. Only the first
+  directory of the name is mapped: `Layouts/` to `layout/` (`Layouts/Emails/`
+  to `layout/email/`), `Elements/` to `element/`, `Emails/` to `email/` and
+  `Errors/` to `Error/`. A view such as `Products/view` has no other name, so
+  `Products/view.php` and then `Products/view.ctp` are tried.
+- A `templates/` path is the `templates/` directory of the application, of a
+  plugin or of the core, and the `Plugin/<Name>/` and `Themed/<Theme>/`
+  directories in it, such as `templates/Plugin/DebugKit/`,
+  `templates/Themed/Mobile/` or `templates/Themed/Mobile/Plugin/DebugKit/`.
+- In a `View/` path of the CakePHP 2 layout (`app/View/`, or `View/` of a
+  plugin), only the name with the extension is tried: `.ctp`, without the
+  directories of CakePHP 5. To use `.php` templates or the CakePHP 5
+  directories, move the templates to `templates/`; `bin/cake upgrade layout`
+  of [pieceofcake2/upgrade](https://pieceofcake2.github.io/upgrade/#layout)
+  does it (see [Migrating to the Modern Layout](appendices/migrating-to-the-modern-layout)).
+- All the files of a path are tried before the next path, so a theme or a
+  plugin overrides a template of the application whichever extension each
+  one uses.
+
+If a controller or a view class sets `$ext` to another extension, for example
+`'.php'` or the `'.twig'` of a Twig view class, CakePHP first looks for that
+extension in all the view paths: `default.php` in a `View/` path, and
+`layout/default.php` and `Layouts/default.php` in a `templates/` path. Only
+when no path has it, it looks again with `.ctp` as in the table above. So with
+`$ext = '.php'`, a `.php` template of the application is used before a `.ctp`
+template of a theme.
+
 The view layer in CakePHP can be made up of a number of different
 parts. Each part has different uses, and will be covered in this
 chapter:
