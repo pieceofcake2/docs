@@ -53,13 +53,19 @@ Changes in the next release that may affect applications already running on the 
   the subdirectories (`element/Flash/`, `layout/js/`, ...) keep their names.
 - The templates of your application, plugins and themes still override them,
   in either directory and with either extension.
+- The View looks up templates, layouts and elements path by path also when a
+  controller or view sets another `$ext` than `.ctp`: in each view path it
+  tries `$ext` and then `.ctp`. Before, it tried `$ext` in all the view paths
+  first. With `$ext = '.php'`, a `.ctp` template of the application still
+  overrides a core template such as `Error/error400.php`, and a `.ctp`
+  template of a theme or plugin now comes before a `.php` template of the
+  application. Nothing changes with the default `.ctp`.
+- The messages for a missing template, layout or element name the file that
+  the View looks for first, e.g. `Pages/home.php`, `layout/default.php` or
+  `element/foo.php` in `templates/`, and `.ctp` names in `View/`.
 
 **Migration:**
 
-- A controller or view that sets `$ext = '.php'` looks for `.php` templates in
-  all the view paths before `.ctp` templates, so it now renders a core
-  template, e.g. `Error/error400.php`, instead of a `.ctp` template of the
-  application with the same name. Rename such templates to `.php`.
 - Code that builds the path of a core template, e.g.
   `CORE_ROOT . DS . 'templates' . DS . 'Layouts' . DS . 'default.ctp'`, must use
   the new path.
