@@ -189,11 +189,18 @@ Configure::write('Debugger.editorBasePath', '/home/me/projects/my_app');
 ```
 
 `Debugger::editorUrl()`、`Debugger::setEditor()`、`Debugger::addEditor()` は CakePHP 5 と同じように
-動作します。本番モード (`debug` = 0)、AJAX リクエスト、コンソールでは何も変わりません。
+動作します。本番モード (`debug` = 0) とコンソールでは何も変わりません。
 アプリケーション、プラグイン、テーマが用意したエラーテンプレートは、これまでどおりアプリケーションの
-レイアウトで表示されます。アプリケーションまたはテーマの `Layouts/dev_error.ctp` はコアのレイアウトより
-優先されます。以前の見た目のままにする方法は
+レイアウトで表示されます。アプリケーションまたはテーマの `Layouts/dev_error.ctp` (または
+`layout/dev_error.php`) は、フレームワークの `templates/layout/dev_error.php` より優先されます。
+以前の見た目のままにする方法は
 [CakePHP 2.10 からの移行](/ja/appendices/migrating-from-cakephp-2-10#dev-error-pages) を参照してください。
+
+CakePHP 2.13.0 の次のリリースからは、コアのエラーテンプレートが CakePHP 5 と同じようにレイアウトを
+切り替えます。デバッグモードでは AJAX リクエストにもこのページを返し、本番モードではコアの `error400`
+と `error500` のテンプレートが `error` レイアウトを使います。
+[コアのエラーページのレイアウト](/ja/appendices/migrating-from-cakephp-2-10#error-page-layouts)
+を参照してください。
 :::
 
 ## ログ出力によるデバッグ

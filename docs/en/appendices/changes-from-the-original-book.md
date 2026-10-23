@@ -341,7 +341,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - (ja) Corrected mistranslation about filter priority and plugin notation
 - [Exceptions](/development/exceptions)
   - Restored the missing exception class names in the built-in exception lists (as tables)
-  - Paths use the modern layout (`templates/Errors`, `templates/Layouts`, `src/Lib/Error`, `config/core.php`); documented `Exception.skipLog`
+  - Paths use the modern layout (`templates/Errors`, `templates/Layouts`, `src/Lib/Error`, `config/core.php`); documented `Exception.skipLog`; the core templates in `templates/Error/` of the framework, with the `error` and `dev_error` layouts
   - Exception handlers receive any Throwable; examples typed with Throwable, PHP 5.3 caveat removed, no App::uses() for framework classes
   - Change note: overriding CakeErrorController in the app is unreliable with Composer classmap autoloading; use _getController()
 - [Error Handling](/development/errors)
@@ -355,7 +355,7 @@ plugins point to their documentation sites (`https://pieceofcake2.github.io/<rep
   - Logs written to `logs/` (`debug.log`/`error.log`); Object replaced with CakeObject; App::uses('CakeLog') removed
   - DebugKit: install pieceofcake2/debug_kit with Composer and load it in `config/bootstrap.php`; links to the DebugKit documentation of the fork
   - DebugKit: describes the current toolbar (CakePHP icon in the bottom right-hand corner, panels, request history)
-  - New "Debug Error Pages" section (v2.12.6): the `dev_error` layout ported from CakePHP 5, `Debugger.editor` and `Debugger.editorBasePath` for the `(edit)` links, and overriding `Layouts/dev_error.ctp`
+  - New "Debug Error Pages" section (v2.12.6): the `dev_error` layout ported from CakePHP 5, `Debugger.editor` and `Debugger.editorBasePath` for the `(edit)` links, and overriding `Layouts/dev_error.ctp`; the layout switching of CakePHP 5 (AJAX requests in debug mode, the `error` layout in production) since the release after 2.13.0
 - [Testing](/development/testing)
   - PHPUnit 9.6 installed with Composer (require-dev); PHPUnit 3.7/4.x/5.x, .phar and autoloader workaround instructions removed
   - Test cases in `tests/TestCase` and fixtures in `tests/Fixture`; configuration in `config/`; legacy `app/Test` layout mentioned as fallback

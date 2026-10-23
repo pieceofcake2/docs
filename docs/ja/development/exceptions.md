@@ -171,9 +171,12 @@ ExceptionRenderer クラスは `CakeErrorController` を活用して、あなた
 `error400.ctp` と `error500.ctp` に `$this->layout = 'my_error';` のステートメントを
 加えてください。エラーページのレンダリング自体に失敗した場合は、`error` レイアウト
 （`templates/Layouts/error.ctp`）を使った最小限のレンダリングに切り替わります。
+アプリケーションに `error400` や `error500` のテンプレートがないときは、フレームワークのテンプレートが
+使われます。本番モードでは `error` レイアウトで、デバッグモードでは `dev_error` レイアウトで表示されます
+（[デバッグ用のエラーページ](/ja/development/debugging#debug-error-pages) を参照してください）。
 
 フレームワーク層の例外はそれぞれ、自身の view ファイルをコアテンプレート（フレームワークパッケージの
-`templates/Errors/` ディレクトリ）の中に持っていますが、
+`templates/Error/` ディレクトリ）の中に持っていますが、
 それらは開発時にのみ使われるものですから、カスタマイズを思い悩む必要はまったくありません。
 デバッグモードが OFF の場合は、フレームワーク層の例外はすべて `InternalErrorException` に
 変換されます。

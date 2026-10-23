@@ -181,9 +181,13 @@ for your error pages, then simply edit the error views and add the statement
 `$this->layout = 'my_error';` to the `error400.ctp` and `error500.ctp`.
 If rendering the error page itself fails, CakePHP falls back to a minimal
 rendering that uses the `error` layout (`templates/Layouts/error.ctp`).
+When the application has no `error400` or `error500` template, the templates
+of the framework are used: in production mode they are rendered in the `error`
+layout, and in debug mode in the `dev_error` layout (see
+[Debug Error Pages](/development/debugging#debug-error-pages)).
 
 Each framework layer exception has its own view file located in the core
-templates (the `templates/Errors/` directory of the framework package), but
+templates (the `templates/Error/` directory of the framework package), but
 you really don't need to bother customizing them as they are used only during development.
 With debug turned off all framework layer exceptions are converted to `InternalErrorException`.
 
