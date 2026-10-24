@@ -68,7 +68,7 @@ my_app/
 │   └── TestCase/
 ├── tmp/                cache, sessions and test files
 ├── vendor/             Composer packages, including CakePHP
-└── webroot/            document root (index.php, test.php, css/, js/, img/)
+└── webroot/            document root (index.php, test.php, css/, font/, img/, js/, test_suite/)
 ```
 
 CakePHP がディレクトリを見つける仕組みは [ディレクトリ構成](application-skeleton#directory-layout) と

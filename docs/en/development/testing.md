@@ -441,7 +441,10 @@ tests through a browser if you're more comfortable in that environment. The web
 runner is the `webroot/test.php` file, next to `index.php`; the
 [pieceofcake2/app](/installation/application-skeleton) skeleton includes it.
 You can access it by going to `http://localhost/your_app/test.php`. It is only
-available when debug is 1 or higher.
+available when debug is 1 or higher. Its stylesheet and icons are in
+`webroot/test_suite/` of the skeleton. Applications created from earlier
+skeletons have them in `webroot/css/` and `webroot/img/`, where the runner
+still finds them.
 
 Once you've loaded up the test runner, you can navigate App, Core and Plugin
 test suites. Clicking an individual test case will run that test and display the

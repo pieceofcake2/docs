@@ -157,7 +157,7 @@ my_app/
 │   └── TestCase/
 ├── tmp/                cache, sessions and test files
 ├── vendor/             Composer packages, including CakePHP
-└── webroot/            document root (index.php, test.php, css/, js/, img/)
+└── webroot/            document root (index.php, test.php, css/, font/, img/, js/, test_suite/)
 ```
 
 `webroot/index.php`、`webroot/test.php` と `bin/cake` は `config/define.php` を読み込みます。
@@ -498,7 +498,16 @@ bin/cake server
 | `fonts.css` | `webroot/font/` から配信する Raleway フォント (フォントサービスへのリクエストはありません) |
 | `cake.css` | アプリケーションのスタイル: レイアウト、フラッシュメッセージ、フォーム、テーブル、ページネーター、エラーページ、デバッグ出力 |
 | `home.css` | ホームページだけのスタイル |
-| `cake.generic.css` | 以前のスケルトンのスタイルシート。テンプレートはもう読み込みませんが、そのクラスを使っているビュー (たとえば `legacy` bake テーマで bake したビュー) のために残してあり、コアのフォールバック用レイアウトが読み込みます |
+
+`webroot/` のアセットは、CakePHP 5 のスケルトンと同じ名前とディレクトリです。`css/`、`font/`
+(`raleway-400-*` と `raleway-700-*` のファイルの Raleway と、ホームページのアイコンの cakedingbats)、
+`img/`、`favicon.ico` です。
+
+ブラウザーのテストランナー (`webroot/test.php`) のスタイルシートとアイコン、`cake.generic.css` と
+`test-*-icon.png` は、分けて `webroot/test_suite/` に置いてあります。このディレクトリは `test.php` と同じく
+開発でだけ必要なものなので、本番環境や CDN、アセット用の S3 バケットには含めないでください。スケルトンの
+テンプレートは `cake.generic.css` を使いません。自分のビュー (たとえば `legacy` bake テーマで bake したビュー)
+で使うには、`webroot/css/` にコピーしてレイアウトで読み込んでください。
 
 テンプレート:
 

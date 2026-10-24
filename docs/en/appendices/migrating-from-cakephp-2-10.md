@@ -137,6 +137,14 @@ Changes in the next release that may affect applications already running on the 
 - Applications without `App.namespace` and their global plugins load their
   classes as before.
 
+### Assets of the browser test runner ([PR #122](https://github.com/pieceofcake2/cakephp/pull/122)) {#test-suite-assets}
+
+- The browser test runner (`webroot/test.php`) loads `cake.generic.css` and
+  the `test-*-icon.png` icons from `webroot/test_suite/` when they are there,
+  as in the application skeletons, and from `webroot/css/` and `webroot/img/`
+  otherwise. Applications that keep the files in `webroot/css/` and
+  `webroot/img/` do not need to change anything.
+
 ## v2.13.0
 
 Changes in v2.13.0 that may affect applications already running on the fork.
