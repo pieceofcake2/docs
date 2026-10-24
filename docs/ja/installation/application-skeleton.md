@@ -62,7 +62,7 @@ composer create-project pieceofcake2/app my_app
 - `vendor/` と、Composer が `plugins/` にインストールするプラグイン (`plugins/Bake/` と
   `plugins/DebugKit/`)。Composer でさらにプラグインをインストールした場合は、それらを `.gitignore` に
   追加してください。`plugins/` にあるアプリケーション独自のプラグインはコミットされます。
-- `tmp/` と `logs/` の中身。ディレクトリを残すための `empty` ファイルはコミットされます。
+- `tmp/` と `logs/` の中身。ディレクトリを残すための `.gitkeep` ファイルはコミットされます。
 - 各マシンの設定や認証情報を含む `config/database.php`、`config/email.php` と、`.env` の `.local` のファイル
   (`config/.env.local`、`config/.env.*.local`)。`config/.env` と `config/.env.test` は
   Symfony と同じくコミットします。本当の秘密の値は `.local` のファイルか実際の環境変数に置いてください。

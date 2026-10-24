@@ -74,7 +74,7 @@ can run `git init` right after `create-project`. It ignores:
   (`plugins/Bake/` and `plugins/DebugKit/`). If you install more plugins with
   Composer, add them to `.gitignore`; the plugins of your own application in
   `plugins/` are committed.
-- the contents of `tmp/` and `logs/`. The `empty` files that keep the
+- the contents of `tmp/` and `logs/`. The `.gitkeep` files that keep the
   directories are committed.
 - `config/database.php` and `config/email.php`, and the `.local` files of
   `.env` (`config/.env.local` and `config/.env.*.local`), which hold the
