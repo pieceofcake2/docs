@@ -156,7 +156,8 @@ repository, and do not write them to logs.
 
 Deploy the application without the `.git/` directory, the `.local` `.env`
 files of your machine, `tests/` and other development files, and delete
-`webroot/test.php`, which is only needed to run tests in the browser. Even
+`webroot/test.php` and `webroot/test_suite/`, which are only needed to run
+tests in the browser. Even
 outside the document root, these files are not needed on the server, and
 `.git/` and the `.local` files can contain secrets. Keep the committed
 `config/.env`, which the skeleton requires.

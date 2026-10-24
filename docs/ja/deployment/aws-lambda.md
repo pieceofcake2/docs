@@ -393,6 +393,7 @@ constructs:
         type: server-side-website
         assets:
             '/css/*': webroot/css
+            '/font/*': webroot/font
             '/js/*': webroot/js
             '/img/*': webroot/img
             '/favicon.ico': webroot/favicon.ico
@@ -754,7 +755,7 @@ Label ヘルパーは各ファイルを、短い時間だけ使える署名付�
 ### 静的なアセット
 
 Bref が PHP-FPM で実行するのはハンドラーのファイル `webroot/index.php` だけです。
-`/css/cake.generic.css` へのリクエストは CakePHP に届き、`webroot/` のファイルを配信するものが
+`/css/cake.css` へのリクエストは CakePHP に届き、`webroot/` のファイルを配信するものが
 ないので 404 エラーになります。
 [Bref のウェブサイトについてのドキュメント](https://bref.sh/docs/use-cases/websites)
 が推奨しているように、これらのファイルは CloudFront を通して S3 から配信します。
@@ -764,7 +765,7 @@ Bref が PHP-FPM で実行するのはハンドラーのファイル `webroot/in
 CloudFront は `assets` に書いたパスをバケットに、それ以外のリクエストを API Gateway に送ります。
 Lift はデプロイのたびに、書いたファイルをアップロードします。アプリケーションが参照する
 `webroot/` のファイルやディレクトリはすべて追加してください。ただし `index.php`、`test.php`、
-`.htaccess` は追加しません。Lift はバケットを非公開にし、CloudFront だけが読めるようにします。
+`test_suite/`、`.htaccess` は追加しません。Lift はバケットを非公開にし、CloudFront だけが読めるようにします。
 S3 と CloudFront を自分で設定する場合も同じようにしてください。バケットのパブリックアクセスをブロックし、
 バケットやそのウェブサイトエンドポイントを公開する代わりに、オリジンアクセスコントロール (OAC) で
 CloudFront にアクセスを許可します。

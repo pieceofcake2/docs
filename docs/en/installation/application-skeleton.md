@@ -74,7 +74,7 @@ can run `git init` right after `create-project`. It ignores:
   (`plugins/Bake/` and `plugins/DebugKit/`). If you install more plugins with
   Composer, add them to `.gitignore`; the plugins of your own application in
   `plugins/` are committed.
-- the contents of `tmp/` and `logs/`. The `empty` files that keep the
+- the contents of `tmp/` and `logs/`. The `.gitkeep` files that keep the
   directories are committed.
 - `config/database.php` and `config/email.php`, and the `.local` files of
   `.env` (`config/.env.local` and `config/.env.*.local`), which hold the
@@ -178,7 +178,7 @@ my_app/
 │   └── TestCase/
 ├── tmp/                cache, sessions and test files
 ├── vendor/             Composer packages, including CakePHP
-└── webroot/            document root (index.php, test.php, css/, js/, img/)
+└── webroot/            document root (index.php, test.php, css/, font/, img/, js/, test_suite/)
 ```
 
 `webroot/index.php`, `webroot/test.php` and `bin/cake` load
@@ -563,7 +563,19 @@ use its stylesheets in `webroot/css/`:
 | `fonts.css` | The Raleway font, served from `webroot/font/` (no request to a font service) |
 | `cake.css` | The application styles: layout, flash messages, forms, tables, paginator, error pages and debug output |
 | `home.css` | The styles of the home page only |
-| `cake.generic.css` | The stylesheet of the earlier skeleton. The templates no longer load it; it is kept for views that still use its classes (for example views baked with the `legacy` bake theme) and is loaded by the fallback layouts of the core |
+
+The assets in `webroot/` have the names and directories of the CakePHP 5
+skeleton: `css/`, `font/` (Raleway in `raleway-400-*` and `raleway-700-*`
+files, and the cakedingbats icons of the home page), `img/` and
+`favicon.ico`.
+
+The stylesheet and the icons of the browser test runner (`webroot/test.php`),
+`cake.generic.css` and `test-*-icon.png`, are kept apart in
+`webroot/test_suite/`. Like `test.php`, this directory is only needed in
+development: leave it out of production, of a CDN or of an S3 bucket for the
+assets. The templates of the skeleton do not use `cake.generic.css`; to use it
+in your own views (for example views baked with the `legacy` bake theme), copy
+it to `webroot/css/` and load it in your layout.
 
 Templates:
 

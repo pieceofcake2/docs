@@ -394,6 +394,7 @@ constructs:
         type: server-side-website
         assets:
             '/css/*': webroot/css
+            '/font/*': webroot/font
             '/js/*': webroot/js
             '/img/*': webroot/img
             '/favicon.ico': webroot/favicon.ico
@@ -760,7 +761,7 @@ documentation.
 ### Static Assets
 
 Bref runs PHP-FPM only for the handler file, `webroot/index.php`. A request for
-`/css/cake.generic.css` reaches CakePHP, which returns a 404 error, because
+`/css/cake.css` reaches CakePHP, which returns a 404 error, because
 nothing serves the files in `webroot/`. Serve them from S3 through CloudFront,
 as recommended by the
 [Bref documentation on websites](https://bref.sh/docs/use-cases/websites).
@@ -771,10 +772,10 @@ in the `serverless.yml` example creates an S3 bucket and a CloudFront
 distribution. CloudFront sends the paths listed under `assets` to the bucket,
 and all other requests to API Gateway. Lift uploads the listed files on every
 deployment. Add every file or directory of `webroot/` that the application
-references, but not `index.php`, `test.php` or `.htaccess`. Lift keeps the
-bucket private and lets only CloudFront read it. If you set up S3 and
-CloudFront yourself, do the same: block public access to the bucket and give
-CloudFront access with Origin Access Control (OAC) instead of making the
+references, but not `index.php`, `test.php`, `test_suite/` or `.htaccess`.
+Lift keeps the bucket private and lets only CloudFront read it. If you set up
+S3 and CloudFront yourself, do the same: block public access to the bucket and
+give CloudFront access with Origin Access Control (OAC) instead of making the
 bucket or its website endpoint public.
 
 Plugin and theme assets are served by CakePHP's `AssetDispatcher` filter from

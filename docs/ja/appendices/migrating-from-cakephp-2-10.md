@@ -123,6 +123,13 @@
   で指定します。
 - `App.namespace` の無いアプリケーションと、そのグローバルなプラグインは、これまでどおりクラスを読み込みます。
 
+### ブラウザーのテストランナーのアセット ([PR #122](https://github.com/pieceofcake2/cakephp/pull/122)) {#test-suite-assets}
+
+- ブラウザーのテストランナー (`webroot/test.php`) は、`cake.generic.css` と `test-*-icon.png` のアイコンを、
+  アプリケーションスケルトンのように `webroot/test_suite/` にあればそこから、無ければ `webroot/css/` と
+  `webroot/img/` から読み込みます。`webroot/css/` と `webroot/img/` にファイルを置いているアプリケーションは、
+  何も変更する必要はありません。
+
 ## v2.13.0
 
 v2.13.0 の変更のうち、すでにフォークで動いているアプリケーションに影響する可能性があるものです。
