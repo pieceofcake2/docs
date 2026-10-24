@@ -466,6 +466,10 @@ App のキャッシュを初期化し、シャットダウン関数を登録し�
 たとえばクラス名が `MyCustomClass` である場合、ファイル名は `MyCustomClass.php`
 でなければなりません。
 
+名前空間のあるアプリケーションやプラグインでは、CakePHP 2 のディレクトリにその名前のグローバルなクラスが
+無いとき、プラグインか `App.namespace` の名前空間にある同じ名前のクラスを Composer で読み込みます。
+たとえば `Model` パッケージの `Post` なら `App\Model\Post` です。そのクラスにグローバルな名前は付けません。
+
 `static` App::**shutdown**( )
 
 戻り値の型: `void`

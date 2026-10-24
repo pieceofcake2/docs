@@ -493,6 +493,12 @@ will resolve the package name to a full path to load the class from. File
 name for each class should follow the class name. For instance, if a class
 is name `MyCustomClass` the file name should be `MyCustomClass.php`
 
+In a namespaced application or plugin, when the CakePHP 2 directories have no
+global class of that name, it loads the class of the same name in the
+namespace of the plugin or of `App.namespace` with Composer, e.g.
+`App\Model\Post` for `Post` in the `Model` package. It declares no global name
+for that class.
+
 `static` App::**shutdown**( )
 
 Return type: `void`

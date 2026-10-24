@@ -442,7 +442,10 @@ CakePHP は、まずその名前空間のクラスを探し、無ければグロ
 
 ## 使えないもの
 
-- `App::uses()` では名前空間のあるクラスを読み込めません。`App::load()` は、名前全体を
-  ファイル名にしてパッケージの中を探します。名前空間のあるクラスは Composer が読み込むので、
-  `App::uses()` は要りません。`App::import()` は、名前空間のあるクラスも
+- `App::uses()` は、名前空間のあるクラスにグローバルな名前を付けません。名前空間のあるアプリケーションや
+  プラグインでは、`App::uses('Post', 'Model')` と `App::uses('Comment', 'Blog.Model')` は
+  `App\Model\Post` と `Blog\Model\Comment` を Composer で読み込むので、まだ `App::uses()` を
+  呼び出すプラグインも動きます。ただし `new Post()` ではクラスが見つかりません。設定に書く名前
+  (`'Post'`、`'Blog.Comment'`) で指定するか、`use` でインポートします。名前空間のあるクラスは
+  Composer が読み込むので、`App::uses()` は要りません。`App::import()` は、名前空間のあるクラスも
   [`App::className()`](/ja/core-utility-libraries/app) で探します。
