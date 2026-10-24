@@ -458,7 +458,12 @@ by `CacheHelper` create a namespaced controller by that name.
 
 ## What Does Not Work
 
-- `App::uses()` does not load namespaced classes: `App::load()` would look for
-  a file named after the whole name in the package. Composer loads them, so
-  `App::uses()` is not needed. `App::import()` also finds namespaced classes
-  with [`App::className()`](/core-utility-libraries/app).
+- `App::uses()` gives no global name to a namespaced class. In a namespaced
+  application or plugin, `App::uses('Post', 'Model')` and
+  `App::uses('Comment', 'Blog.Model')` load `App\Model\Post` and
+  `Blog\Model\Comment` with Composer, so that plugins that still call
+  `App::uses()` keep working, but `new Post()` does not find the class. Refer
+  to it by its name in the configuration (`'Post'`, `'Blog.Comment'`) or import
+  it with `use`. Composer loads it, so `App::uses()` is not needed.
+  `App::import()` also finds namespaced classes with
+  [`App::className()`](/core-utility-libraries/app).

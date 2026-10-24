@@ -120,6 +120,23 @@ Changes in the next release that may affect applications already running on the 
   production mode, add an `error` layout to the application (e.g. a copy of the
   default layout), or your own `error400` and `error500` templates.
 
+### `App::uses()` in namespaced applications and plugins ([PR #119](https://github.com/pieceofcake2/cakephp/pull/119)) {#app-uses-namespaces}
+
+- In an application with `App.namespace` and in a namespaced plugin,
+  `App::load()` loads a class declared with `App::uses()` from the namespace
+  with Composer, when the CakePHP 2 directories have no global class of that
+  name: `App::uses('Comment', 'Blog.Model')` loads `Blog\Model\Comment`. This
+  also works in the packages that `App::path()` does not list, such as
+  `Blog.Utility` or `Blog.Lib/Custom`, and when two plugins have a class of the
+  same name. Before, `App::load()` returned `false` for those packages, and for
+  the second plugin it included the file of the first plugin instead.
+- No global name is declared for these classes, as before. `AppController`,
+  `AppModel`, `AppHelper` and `AppShell` keep their global names. Refer to the
+  classes by their names in the configuration (`'Post'`, `'Blog.Comment'`),
+  which [`App::className()`](/core-utility-libraries/app) resolves.
+- Applications without `App.namespace` and their global plugins load their
+  classes as before.
+
 ## v2.13.0
 
 Changes in v2.13.0 that may affect applications already running on the fork.

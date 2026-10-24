@@ -109,6 +109,20 @@
   `error` レイアウト (たとえばデフォルトのレイアウトのコピー) を追加するか、独自の `error400` と
   `error500` のテンプレートを用意してください。
 
+### 名前空間のあるアプリケーションとプラグインでの `App::uses()` ([PR #119](https://github.com/pieceofcake2/cakephp/pull/119)) {#app-uses-namespaces}
+
+- `App.namespace` のあるアプリケーションと名前空間のあるプラグインでは、CakePHP 2 のディレクトリに
+  その名前のグローバルなクラスが無いとき、`App::load()` は `App::uses()` で宣言したクラスを名前空間から
+  Composer で読み込みます。`App::uses('Comment', 'Blog.Model')` は `Blog\Model\Comment` を読み込みます。
+  `Blog.Utility` や `Blog.Lib/Custom` のように `App::path()` に無いパッケージでも、二つのプラグインに
+  同じ名前のクラスがあるときも読み込めます。これまでは、そのようなパッケージでは `App::load()` が
+  `false` を返し、二つめのプラグインでは一つめのプラグインのファイルをインクルードしていました。
+- これまでどおり、これらのクラスにグローバルな名前は付けません。`AppController`、`AppModel`、
+  `AppHelper`、`AppShell` は、グローバルな名前のままです。クラスは、
+  [`App::className()`](/ja/core-utility-libraries/app) が解決する設定の名前 (`'Post'`、`'Blog.Comment'`)
+  で指定します。
+- `App.namespace` の無いアプリケーションと、そのグローバルなプラグインは、これまでどおりクラスを読み込みます。
+
 ## v2.13.0
 
 v2.13.0 の変更のうち、すでにフォークで動いているアプリケーションに影響する可能性があるものです。
